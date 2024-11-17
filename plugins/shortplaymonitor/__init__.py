@@ -74,7 +74,7 @@ class ShortPlayMonitor(_PluginBase):
     # 加载顺序
     plugin_order = 26
     # 可使用的用户级别
-    auth_level = 1
+    auth_level = 2
 
     # 私有属性
     _enabled = False
