@@ -3,16 +3,26 @@
     "name": "短剧刮削",
     "description": "监控视频短剧创建，刮削。",
     "labels": "刮削",
-    "version": "3.3.3",
+    "version": "0.0.1",
     "icon": "Amule_B.png",
-    "author": "thsrite",
+    "author": "shy",
     "level": 2,
     "v2": true,
     "history": {
-      "v3.3.3": "自用",
-      "v3.2": "支持消息发送",
-      "v3.1": "支持自定义转移方式",
-      "v3.0": "默认从tmdb刮削，刮削失败则从pt站刮削"
+        "v0.0.1": "自用",
     }
+  },    
+  "DownloadSiteTag": {
+    "name": "自用下载任务分类与标签",
+    "description": "自动给下载任务分类与打站点标签、剧集名称标签",
+    "labels": "下载管理",
+    "version": "0.0.1",
+    "icon": "Youtube-dl_B.png",
+    "author": "shy",
+    "level": 2,
+    "v2": true,
+    "history": {
+        "v0.0.1": "MoviePilot V2 版本下载任务分类与标签插件"
   }
+ }
 }
