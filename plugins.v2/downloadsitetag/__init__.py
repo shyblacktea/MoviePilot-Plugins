@@ -20,7 +20,7 @@ from app.schemas.types import EventType, MediaType
 from app.utils.string import StringUtils
 
 
-class DownloadSiteTag(_PluginBase):
+class DownloadSiteTag1(_PluginBase):
     # 插件名称
     plugin_name = "自用下载任务分类与标签"
     # 插件描述
@@ -34,13 +34,13 @@ class DownloadSiteTag(_PluginBase):
     # 作者主页
     author_url = "https://github.com/shyblacktea"
     # 插件配置项ID前缀
-    plugin_config_prefix = "DownloadSiteTag_"
+    plugin_config_prefix = "DownloadSiteTag1_"
     # 加载顺序
     plugin_order = 2
     # 可使用的用户级别
     auth_level = 2
     # 日志前缀
-    LOG_TAG = "[DownloadSiteTag] "
+    LOG_TAG = "[DownloadSiteTag1] "
 
     # 退出事件
     _event = threading.Event()
@@ -157,7 +157,7 @@ class DownloadSiteTag(_PluginBase):
                 if self._interval == "固定间隔":
                     if self._interval_unit == "小时":
                         return [{
-                            "id": "DownloadSiteTag",
+                            "id": "DownloadSiteTag1",
                             "name": "补全下载历史的标签与分类",
                             "trigger": "interval",
                             "func": self._complemented_history,
@@ -170,7 +170,7 @@ class DownloadSiteTag(_PluginBase):
                             self._interval_time = 5
                             logger.info(f"{self.LOG_TAG}启动定时服务: 最小不少于5分钟, 防止执行间隔太短任务冲突")
                         return [{
-                            "id": "DownloadSiteTag",
+                            "id": "DownloadSiteTag1",
                             "name": "补全下载历史的标签与分类",
                             "trigger": "interval",
                             "func": self._complemented_history,
@@ -180,7 +180,7 @@ class DownloadSiteTag(_PluginBase):
                         }]
                 else:
                     return [{
-                        "id": "DownloadSiteTag",
+                        "id": "DownloadSiteTag1",
                         "name": "补全下载历史的标签与分类",
                         "trigger": CronTrigger.from_crontab(self._interval_cron),
                         "func": self._complemented_history,
