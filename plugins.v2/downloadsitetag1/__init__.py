@@ -81,7 +81,7 @@ class DownloadSiteTag1(_PluginBase):
             movie_config = self.config_data['movie']
             for category, conditions in movie_config.items():
                 if all(media_info.get(key) in value.split(',') if key in media_info and value else True
-                       for key, value in conditions.items()):
+                       for key, value in conditions.items():
                     return category
             return '未分类'
 
