@@ -9,7 +9,7 @@ from app.db.downloadhistory_oper import DownloadHistoryOper
 from app.db.models.downloadhistory import DownloadHistory
 from app.helper.downloader import DownloaderHelper
 from app.helper.sites import SitesHelper
-from app.log import logger
+from app.log import.logger
 from app.plugins import _PluginBase
 from app.schemas import ServiceInfo
 from app.schemas.types import EventType, MediaType
@@ -77,7 +77,7 @@ class DownloadSiteTag1(_PluginBase):
         return config_data
 
     def _genre_ids_get_cat(self, mtype, media_info):
-        if mtype == MediaType.MOVIE or mtype == MediaType.MOVIE.value:
+        if mtype == MediaType.MOVIE or mtype == MediaType.MOVIE.value):
             movie_config = self.config_data['movie']
             for category, conditions in movie_config.items():
                 # 修正这里的条件判断逻辑，使其语法正确且清晰可读
@@ -92,7 +92,7 @@ class DownloadSiteTag1(_PluginBase):
                     return category
             return '未分类'
 
-        elif mtype == MediaType.TV or mtype == MediaType.TV.value:
+        elif mtype == MediaType.TV or mtype == MediaType.TV.value):
             tv_config = self.config_data['tv']
             for category, conditions in tv_config.items():
                 condition_met = True
@@ -167,7 +167,7 @@ class DownloadSiteTag1(_PluginBase):
                 downloader_obj.set_torrent_tag(ids=_hash, tags=_tags)
 
         logger.warn(
-            f"{self.LOG_TAG}下载器: {service.name} 种子id: {_hash} {('  标签: ' + ','.join(_tags)) if _tags else ''} {('  标签: ' + _cat) if _cat else ''}")
+            f"{self.LOG_TAG}下载器: {service.name} 种子id: {_hash} {('  标签: ' + ','.join(_tags)) if _tags else ''} {('  分类: ' + _cat) if _cat else ''}")
 
     @eventmanager.register(EventType.DownloadAdded)
     def download_added(self, event: Event):
@@ -214,7 +214,7 @@ class DownloadSiteTag1(_PluginBase):
                 self._set_torrent_info(service=service, _hash=_hash, _tags=_tags, _cat=_cat)
         except Exception as e:
             logger.error(
-                f"{self.LOG_TAG}分析下载事件时发生了错误: {str(e)}")
+            f"{self.LOG_TAG}分析下载事件时发生了错误: {str(e)}")
 
     def get_state(self):
         # 这里假设你有相关逻辑来获取插件的启用状态，示例中暂未详细实现
@@ -253,7 +253,7 @@ class DownloadSiteTag1(_PluginBase):
                                     {
                                         'component': 'VSwitch',
                                         'props': {
-                                            'model': 'enabled',
+                                            'model': '启用插件',
                                             'label': '启用插件',
                                         }
                                     }
@@ -268,27 +268,11 @@ class DownloadSiteTag1(_PluginBase):
                                 'content': [
                                     {
                                         'component': 'VCheckboxBtn',
-                                    'props': {
-                                        'model': 'enabled_tag',
-                                        'label': '自动站点标签',
+                                        'props': {
+                                            'model': 'enabled_tag',
+                                            'label': '自动站点标签',
+                                        }
                                     }
-                                }
-                                ]
-                            },
-                            {
-                                'image': 'VCol',
-                                'props': {
-                                    'cols': 12,
-                                    'md': 3
-                                },
-                                'content': [
-                                    {
-                                        'component': 'VCheckboxBtn',
-                                    'props': {
-                                        'model': 'enabled_media_tag',
-                                        'label': '自动剧名标签',
-                                    }
-                                }
                                 ]
                             },
                             {
@@ -300,11 +284,27 @@ class DownloadSiteTag1(_PluginBase):
                                 'content': [
                                     {
                                         'component': 'VCheckboxBtn',
-                                    'props': {
-                                        'model': 'enabled_category',
-                                        'label': '自动设置分类',
+                                        'props': {
+                                            'model': 'enabled_media_tag',
+                                            'label': '自动剧名标签',
+                                        }
                                     }
-                                }
+                                ]
+                            },
+                            {
+                                'component': 'VCol',
+                                'props': {
+                                    'cols': 12,
+                                    'md': 3
+                                },
+                                'content': [
+                                    {
+                                        'component': 'VCheckboxBtn',
+                                        'props': {
+                                            'model': 'enabled_category',
+                                            'label': '自动设置分类',
+                                        }
+                                    }
                                 ]
                             }
                         ]
@@ -320,11 +320,11 @@ class DownloadSiteTag1(_PluginBase):
                                 'content': [
                                     {
                                         'component': 'VCheckboxBtn',
-                                    'props': {
-                                        'model': 'onlyonce',
-                                        'label': '补全下载历史的标签与分类(一次性任务)'
+                                        'props': {
+                                            'model': 'onlyonce',
+                                            'label': '补全下载历史的标签与分类(一次性任务)'
+                                        }
                                     }
-                                }
                                 ]
                             }
                         ]
@@ -336,21 +336,21 @@ class DownloadSiteTag1(_PluginBase):
                                 'component': 'VCol',
                                 'props': {
                                     'cols': 12
-                                }
+                                },
                                 'content': [
                                     {
                                         'component': 'VSelect',
-                                    'props': {
-                                        'multiple': True,
-                                        'chips': True,
-                                        'clearable': True,
-                                        'model': 'downloaders',
-                                        'label': '下载器',
-                                        'items': [{"title": config.name, "value": config.name}
-                                                  for config in self.downloader_helper.get_configs().
-                                                  values()]
+                                        'props': {
+                                            'multiple': True,
+                                            'chips': True,
+                                            'clearable': True,
+                                            'model': 'downloaders',
+                                            'label': '下载器',
+                                            'items': [{"title": config.name, "value": config.name}
+                                                      for config in self.downloader_helper.get_configs().
+                                                      values()]
+                                        }
                                     }
-                                }
                                 ]
                             }
                         ]
@@ -363,20 +363,20 @@ class DownloadSiteTag1(_PluginBase):
                                 'props': {
                                     'cols': 12,
                                     'md': 3
-                                }
+                                },
                                 'content': [
                                     {
                                         'component': 'VSelect',
-                                    'props': {
-                                        'model': 'interval',
-                                        'label': '定时任务',
-                                        'items': [
-                                            {'title': '禁用', 'value': '禁用'},
-                                            {'title': '计划任务', '.swing': '计划任务'},
-                                            {'title': '固定间隔', 'value': '固定间隔'}
-                                        ]
+                                        'props': {
+                                            'model': 'interval',
+                                            'label': '定时任务',
+                                            'items': [
+                                                {'title': '禁用', 'value': '禁用'},
+                                                {'title': '计划任务', 'value': '计划任务'},
+                                                {'title': '固定间隔', 'value': '固定间隔'}
+                                            ]
+                                        }
                                     }
-                                }
                                 ]
                             },
                         {
@@ -403,23 +403,25 @@ class DownloadSiteTag1(_PluginBase):
                                 'md': 3,
                             }
                             'content': [
-                                'component': 'VTextField',
-                                'props': {
-                                    'model': 'interval_time',
-                                    'label': '固定间隔设置, 间隔每',
-                                    'placeholder': '6'
+                                {
+                                    'component': 'VTextField',
+                                    'props': {
+                                        'model': 'interval_time',
+                                        'label': '固定间隔设置, 间隔每',
+                                        'placeholder': '6'
+                                    }
                                 }
-                                ]
-                            },
-                            {
-                                'component': 'VCol',
-                                'props': {
-                                    'cols': 6,
+                            ]
+                        },
+                        {
+                            'component': 'VCol',
+                            'props': {
+                                'cols': 6,
                                 'md': 3,
-                                }
-                                'content': [
-                                    {
-                                        'component': 'VSelect',
+                            }
+                            'content': [
+                                {
+                                    'component': 'VSelect',
                                     'props': {
                                         'model': 'interval_unit',
                                         'label': '单位',
@@ -429,26 +431,24 @@ class DownloadSiteTag1(_PluginBase):
                                         ]
                                     }
                                 }
-                                ]
-                            },
+                            ]
+                        },
+                        {
+                            'component': 'VRow',
+                            'content': [
                             {
-                                'component': 'VRow',
+                                'component': 'VCol',
+                                'props': {
+                                    'cols': 12,
+                                }
                                 'content': [
                                     {
-                                        'component': 'VCol',
+                                        'component': 'VTextField',
                                         'props': {
-                                            'cols': 12,
+                                            'model': 'category_movie',
+                                            'label': '电影分类名称(默认: 电影)',
+                                            'placeholder': '电影'
                                         }
-                                        'content': [
-                                            {
-                                                'component': 'VTextField',
-                                                'props': {
-                                                    'model': 'category_movie',
-                                                    'label': '电影分类名称(默认: 电影)',
-                                                    'placeholder': '电影'
-                                                }
-                                            }
-                                        ]
                                     }
                                 ]
                             }
@@ -456,3 +456,4 @@ class DownloadSiteTag1(_PluginBase):
                     }
                 ]
             }
+        ]
