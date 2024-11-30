@@ -9,7 +9,7 @@ from app.db.downloadhistory_oper import DownloadHistoryOper
 from app.db.models.downloadhistory import DownloadHistory
 from app.helper.downloader import DownloaderHelper
 from app.helper.sites import SitesHelper
-from app.log import.logger
+from app.log import logger
 from app.plugins import _PluginBase
 from app.schemas import ServiceInfo
 from app.schemas.types import EventType, MediaType
@@ -77,7 +77,7 @@ class DownloadSiteTag1(_PluginBase):
         return config_data
 
     def _genre_ids_get_cat(self, mtype, media_info):
-        if mtype == MediaType.MOVIE or mtype == MediaType.MOVIE.value):
+        if mtype == MediaType.MOVIE or mtype == MediaType.MOVIE.value:
             movie_config = self.config_data['movie']
             for category, conditions in movie_config.items():
                 # 修正这里的条件判断逻辑，使其语法正确且清晰可读
@@ -92,7 +92,7 @@ class DownloadSiteTag1(_PluginBase):
                     return category
             return '未分类'
 
-        elif mtype == MediaType.TV or mtype == MediaType.TV.value):
+        elif mtype == MediaType.TV or mtype == MediaType.TV.value:
             tv_config = self.config_data['tv']
             for category, conditions in tv_config.items():
                 condition_met = True
@@ -151,10 +151,10 @@ class DownloadSiteTag1(_PluginBase):
                 try:
                     _torrent.setCategory(category=_cat)
                 except Exception as e:
-                    logger.warn(f"下载器 {service.name} 种子id: {_hash} 设置分类 {_cat} 失败：{str(e)}, "
-                                f"尝试创建分类再设置...")
-                    downloader_obj.qbc.torents_createCategory(name=_cat)
-                    _torrent.setCategory(category=_cat)
+                logger.warn(f"下载器 {service.name} 种子id: {_hash} 设置分类 {_cat} 失败：{str(e)}, "
+                            f"尝试创建分类再设置...")
+                downloader_obj.qbc.torents_createCategory(name=_cat)
+                _torrent.setCategory(category=_cat)
         else:
             # 设置标签
             if _tags:
@@ -167,7 +167,7 @@ class DownloadSiteTag1(_PluginBase):
                 downloader_obj.set_torrent_tag(ids=_hash, tags=_tags)
 
         logger.warn(
-            f"{self.LOG_TAG}下载器: {service.name} 种子id: {_hash} {('  标签: ' + ','.join(_tags)) if _tags else ''} {('  分类: ' + _cat) if _cat else ''}")
+            f"{self.LOG_TAG}下载器: {service.name} 种子id: {hash} {('  标签: ' + ','.join(_tags)) if _tags else ''} {('  分类: ' + _cat) if _cat else ''}")
 
     @eventmanager.register(EventType.DownloadAdded)
     def download_added(self, event: Event):
@@ -201,7 +201,7 @@ class DownloadSiteTag1(_PluginBase):
                 'genre_ids': _media.genre_ids if hasattr(_media, 'genre_ids') else None,
                 'original_language': _media.original_language if hasattr(_media, 'original_language') else None,
                 'production_countries': _media.production_countries if hasattr(_media, 'production_countries') else None,
-                'origin_country': _media.origin_country if hasattr(_media, 'origin_country') else None
+                'origin_country': _media.origin_country if hasattr(_media, 'origin_country") else None
             }
 
             secondary_category = self._genre_ids_get_cat(media_info['media_type'], media_info)
@@ -435,7 +435,7 @@ class DownloadSiteTag1(_PluginBase):
                         },
                         {
                             'component': 'VRow',
-                            'content': [
+                        'content': [
                             {
                                 'component': 'VCol',
                                 'props': {
