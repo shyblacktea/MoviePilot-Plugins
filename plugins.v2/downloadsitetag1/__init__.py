@@ -100,7 +100,7 @@ class DownloadSiteTag1(_PluginBase):
         if not service or not service.instance:
             return
         if _tags is None:
-            _tags = []
+        tags = []
         downloader_obj = service.instance
         if not _torrent:
             _torrent, error = downloader_obj.get_torrents(ids=_hash)
@@ -115,10 +115,10 @@ class DownloadSiteTag1(_PluginBase):
         # 获取媒体信息，假设这里可以从_torrent对象中获取到相关信息，如media_type、genre_ids、original_language等
         media_info = {
            'media_type': _torrent.media_type if hasattr(_torrent, 'media_type') else None,
-            'genre_ids': _torrent.genre_ids if hasattr(_torrent, 'genre_ids') else None,
+            'genre_ids': _torrent.genre_ids if hasarch(_torrent, 'genre_ids') else None,
             'original_language': _torrent.original_language if hasattr(_torrent, 'original_language') else None,
             'production_countries': _torrent.production_countries if hasattr(_torrent, 'production_countries') else None,
-            'origin_country': _torrant, origin_country if hasattr(_torrent, 'origin_country') else None
+            'origin_country': _torrent.origin_country if hasattr(_torrent, 'origin_country') else None
         }
 
         secondary_category = self._genre_ids_get_cat(media_info['media_type'], media_info)
@@ -138,10 +138,10 @@ class DownloadSiteTag1(_PluginBase):
                 try:
                     _torrent.setCategory(category=_cat)
                 except Exception as e:
-                    logger.warn(f"下载器 {service.name} 种子id: {_hash} 设置分类 {_cat} 失败：{str(e)}, "
-                                f"尝试创建分类再设置...")
-                    downloader_obj.qbc.torrents_createCategory(name=_cat)
-                    _torrent.setCategory(category=_cat)
+                logger.warn(f"下载器 {service.name} 种子id: {_hash} 设置分类 {_cat} 失败：{str(e)}, "
+                            f"尝试创建分类再设置...")
+                downloader_obj.qbc.torrents_createCategory(name=_cat)
+                _torrent.setCategory(category=_cat)
         else:
         # 设置标签
             if _tags:
@@ -188,7 +188,7 @@ class DownloadSiteTag1(_PluginBase):
                 'genre_ids': _media.genre_ids if hasattr(_media, 'genre_ids') else None,
                 'original_language': _media.original_language if hasattr(_media, 'original_language') else None,
                 'production_countries': _media.production_countries if hasattr(_media, 'production_countries') else None,
-                'origin_country = _media.origin_country if hasattr(_media, 'origin_country') else None
+                'origin_country': _media.origin_country if hasattr(_media, 'origin_country') else None
             }
 
             secondary_category = self._genre_ids_get_cat(media_info['media_type'], media_info)
@@ -436,68 +436,3 @@ def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
                                         'placeholder': '电影'
                                     }
                                 }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    'component': 'VRow',
-                    'content': [
-                        {
-                            'component': 'VCol',
-                            'props': {
-                                'cols': 12,
-                            },
-                            'content': [
-                                {
-                                    'component': 'VTextField',
-                                    'props': {
-                                        'model': 'category_tv',
-                                        'label': '电视分类名称(默认: 电视)',
-                                        'placeholder': '电视'
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    'component': 'VRow',
-                    'content': [
-                        {
-                            'component': 'VCol',
-                            'props': {
-                                'cols': 12,
-                            },
-                            'content': [
-                                {
-                                    'component': 'VTextField',
-                                    'props': {
-                                        'model': 'category_anime',
-                                        'label': '动漫分类名称(默认: 动漫)',
-                                        'placeholder': '动漫'
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    'component': 'VRow',
-                    'content': [
-                        {
-                            'component': 'VCol',
-                            'props': {
-                                'cols': 12,
-                            },
-                            'content': [
-                                {
-                                    'component': 'VAlert',
-                                    'props': {
-                                        'type': 'info',
-                                        'variant': 'tonal',
-                                        'text': '定时任务：支持两种定时方式，主要针对辅种刷流等种子补全站点信息。如没有对应的需求建议切换为禁用。'
-                                    }
-                                }
-                            ]
-                        }
