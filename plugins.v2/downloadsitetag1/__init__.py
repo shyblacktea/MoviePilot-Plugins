@@ -59,9 +59,9 @@ class DownloadSiteTag1(_PluginBase):
     _enabled_media_tag = False
     _enabled_tag = True
     _enabled_category = False
-    _category_movie = None
-    _category_tv = None
-    _category_anime = None
+    _category_movie = []
+    _category_tv = []
+    _category_anime = []
     _downloaders = None
 
     def __init__(self):
@@ -89,7 +89,7 @@ class DownloadSiteTag1(_PluginBase):
             tv_config = self.config_data['tv']
             for category, conditions in tv_config.items():
                 if all(media_info.get(key) in value.split(',') if key in media_info and value else True
-                       for key, value in conditions.items()):
+                       for key, value in conditions.items():
                     return category
             return '未分类'
 
@@ -106,7 +106,7 @@ class DownloadSiteTag1(_PluginBase):
             _torrent, error = downloader_obj.get_torrents(ids=_hash)
             if not _torrent or error:
                 logger.error(
-                    f"{self.LOG_TAG}设置种子标签与分类时发生了错误: 通过 {_hash} 查询不到任何种子!")
+                    f"{self.LOG_TAG}设置种子标签与分类时发生了错误: 通过 {hash} 查询不到任何种子!")
                 return
             logger.info(
                 f"{self.LOG_TAG}设置种子标签与分类: {_hash} 查询到 {len(_torrent)} 个种子")
@@ -118,7 +118,7 @@ class DownloadSiteTag1(_PluginBase):
             'genre_ids': _torrent.genre_ids if hasattr(_torrent, 'genre_ids') else None,
             'original_language': _torrent.original_language if hasattr(_torrent, 'original_language') else None,
             'production_countries': _torrent.production_countries if hasattr(_torrent, 'production_countries') else None,
-            'origin_country': _torrent.origin_country if hasattr(_torrent, 'origin_country') else None
+            'origin_country': _torrant, origin_country if hasattr(_torrent, 'origin_country') else None
         }
 
         secondary_category = self._genre_ids_get_cat(media_info['media_type'], media_info)
@@ -127,7 +127,7 @@ class DownloadSiteTag1(_PluginBase):
             if secondary_category not in _tags:
                 _tags.append(secondary_category)
 
-        # 下载器api不通用, 因此需要分开处理
+        # 下载器api不通用, 所以需要分开处理
         if service.type == "qbittorrent":
             # 设置标签
             if _tags:
@@ -145,7 +145,7 @@ class DownloadSiteTag1(_PluginBase):
         else:
         # 设置标签
             if _tags:
-                # _original_tags = None表示未指定, 因此需要获取原始标签
+                # _original_tags = None表示未指定, 所以需要获取原始标签
                 if _original_tags is None:
                     _original_tags = self._get_label(torrent=_torrent, dl_type=service.type)
                 # 如果原始标签不是空的, 那么合并原始标签
@@ -188,20 +188,20 @@ class DownloadSiteTag1(_PluginBase):
                 'genre_ids': _media.genre_ids if hasattr(_media, 'genre_ids') else None,
                 'original_language': _media.original_language if hasattr(_media, 'original_language') else None,
                 'production_countries': _media.production_countries if hasattr(_media, 'production_countries') else None,
-                'origin_country': _media.origin_country if hasattr(_media, 'origin_country') else None
+                'origin_country = _media.origin_country if hasattr(_media, 'origin_country') else None
             }
 
             secondary_category = self._genre_ids_get_cat(media_info['media_type'], media_info)
 
             if secondary_category:
                 if secondary_category not in _tags:
-                    _tags.append(secondary_category)
+                _tags.append(secondary_category)
 
             if _hash and (_tags or _cat):
                 self._set_torrent_info(service=service, _hash=_hash, _tags=_tags, _cat=_cat)
         except Exception as e:
-            logger.error(
-                f"{self.LOG_TAG}分析下载事件时发生了错误: {str(e)}")
+        logger.error(
+            f"{self.LOG_TAG}分析下载事件时发生了错误: {str(e)}")
 
     def get_state(self):
         # 这里假设你有相关逻辑来获取插件的启用状态，示例中暂未详细实现
@@ -365,59 +365,57 @@ def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
                                 }
                             ]
                         },
+                {
+                    'component': 'VCol',
+                    'props': {
+                        'cols': 12,
+                        'md': 3,
+                    },
+                    'content': [
                         {
-                            'component': 'VCol',
+                            'component': 'VTextField',
                             'props': {
-                                'cols': 12,
-                                'md': 3,
-                            },
-                            'content': [
-                                {
-                                    'component': 'VTextField',
-                                    'props': {
-                                        'model': 'interval_cron',
-                                        'label': '计划任务设置',
-                                        'placeholder': '5 4 * * *'
-                                    }
-                                }
-                            ]
-                        },
+                                'model': 'interval_cron',
+                                'label': '计划任务设置',
+                                'placeholder': '5 4 * * *'
+                            }
+                        }
+                    ]
+                },
+                {
+                    'component': 'VCol',
+                    'props': {
+                        'cols': 6,
+                        'md': 3,
+                    },
+                    'content': [
                         {
-                            'component': 'VCol',
+                            'component': 'VTextField',
                             'props': {
-                                'cols': 6,
-                                'md': 3,
-                            },
-                            'content': [
-                                {
-                                    'component': 'VTextField',
-                                    'props': {
-                                        'model': 'interval_time',
-                                        'label': '固定间隔设置, 间隔每',
-                                        'placeholder': '6'
-                                    }
-                                }
-                            ]
-                        },
+                                'model': 'interval_time',
+                                'label': '固定间隔设置, 间隔每',
+                                'placeholder': '6'
+                            }
+                        }
+                    ]
+                },
+                {
+                    'component': 'VCol',
+                    'props': {
+                        'cols': 6,
+                        'md': 3,
+                    },
+                    'content': [
                         {
-                            'component': 'VCol',
+                            'component': 'VSelect',
                             'props': {
-                                'cols': 6,
-                                'md': 3,
-                            },
-                            'content': [
-                                {
-                                    'component': 'VSelect',
-                                    'props': {
-                                        'model': 'interval_unit',
-                                        'label': '单位',
-                                        'items': [
-                                            {'title': '小时', 'value': '小时'},
-                                            {'title': '分钟', 'value': '分钟'}
-                                        ]
-                                    }
-                                }
-                            ]
+                                'model': 'interval_unit',
+                                'label': '单位',
+                                'items': [
+                                    {'title': '小时', 'value': '小时'},
+                                    {'title': '分钟', 'value': '分钟'}
+                                ]
+                            }
                         }
                     ]
                 },
@@ -453,7 +451,7 @@ def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
                             'content': [
                                 {
                                     'component': 'VTextField',
-                            'props': {
+                                    'props': {
                                         'model': 'category_tv',
                                         'label': '电视分类名称(默认: 电视)',
                                         'placeholder': '电视'
@@ -499,3 +497,7 @@ def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
                                         'type': 'info',
                                         'variant': 'tonal',
                                         'text': '定时任务：支持两种定时方式，主要针对辅种刷流等种子补全站点信息。如没有对应的需求建议切换为禁用。'
+                                    }
+                                }
+                            ]
+                        }
