@@ -1,6 +1,6 @@
 {
   "P1115StrmHelper": {
-    "name": "VUE-115网盘STRM助手",
+    "name": "115网盘STRM助手-VUE",
     "description": "自用版本",
     "labels": "STRM,115,网盘",
     "version": "0.0.1",
@@ -9,7 +9,7 @@
     "level": 1,
     "v2": true,
     "history": {
-      "v0.1.1": "集成MediaWarp"
+      "v0.0.1": "集成MediaWarp"
     }
   }
 }
