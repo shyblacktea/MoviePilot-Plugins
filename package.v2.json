@@ -1,15 +1,15 @@
 {
-  "ShortPlayMonitor": {
-    "name": "短剧刮削",
-    "description": "监控视频短剧创建，刮削。",
-    "labels": "刮削",
-    "version": "0.0.1",
-    "icon": "Amule_B.png",
-    "author": "thsrite",
-    "level": 2,
+  "P1115StrmHelper": {
+    "name": "VUE-115网盘STRM助手",
+    "description": "测试版仅供测试",
+    "labels": "STRM,115,网盘",
+    "version": "100000.1.1",
+    "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Frontend/refs/heads/v2/src/assets/images/misc/u115.png",
+    "author": "VUE测试版",
+    "level": 1,
     "v2": true,
     "history": {
-      "v0.0.1": "自用"
+      "v100000.1.1": "集成MediaWarp"
     }
   }
 }
