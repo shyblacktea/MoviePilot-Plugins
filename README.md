@@ -15,7 +15,7 @@
 ## CleanInvalidPlugin — 清理无效插件
 
 - **原作者**: [cddjr](https://github.com/cddjr)
-- **原仓库**: [jxxghp/MoviePilot-Plugins](https://github.com/jxxghp/MoviePilot-Plugins)
+- **原仓库**: [cddjr/MoviePilot-Plugins](https://github.com/cddjr/MoviePilot-Plugins)
 - **说明**: 删除或重新安装数据库中无法安装的插件记录。（小k自用版）
 
 ---
