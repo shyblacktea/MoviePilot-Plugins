@@ -2,7 +2,7 @@
   "P115StrmHelper": {
     "v2": true,
     "name": "115网盘STRM助手",
-    "description": "115网盘STRM生成一条龙服务。",
+    "description": "115网盘STRM生成一条龙服务（小k自用版）",
     "version": "2.8.49",
     "author": "DDSRem,shyblacktea",
     "level": 2,
@@ -24,7 +24,7 @@
   },
   "CleanInvalidPlugin": {
     "name": "清理无效插件",
-    "description": "删除或重新安装数据库中无法安装的插件记录。",
+    "description": "删除或重新安装数据库中无法安装的插件记录。（小k自用版）",
     "version": "1.1",
     "author": "cddjr,shyblacktea",
     "level": 1,
