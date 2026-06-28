@@ -11,5 +11,28 @@
     "history": {
       "v0.0.1": "集成MediaWarp"
     }
+  },
+  "P115StrmHelper": {
+    "v2": true,
+    "name": "115网盘STRM助手",
+    "description": "115网盘STRM生成一条龙服务（本地修复版）",
+    "version": "2.8.49",
+    "author": "DDSRem",
+    "level": 2,
+    "history": {
+      "2.8.49": [
+        "fix: 修复扫码登录 - 绕过 login_qrcode() 直接请求带 uid 的官方二维码地址",
+        "fix: 修复全量同步 - 切换 Python 模式，解决 Rust Core v0.1.5 过滤 bug",
+        "fix: 修复 syntax error - full/__init__.py 括号不匹配"
+      ],
+      "2.8.48": [
+        "fix: full_sync_cleanup_confirm_mode=none 时跳过阈值安全检测，直接清理无效 STRM",
+        "fix: 清理不被部分文件生成失败阻塞"
+      ],
+      "2.8.47": [
+        "feat: 兼容新版 P115Client",
+        "fix: 修复 strm 文件名特殊符号问题"
+      ]
+    }
   }
 }
