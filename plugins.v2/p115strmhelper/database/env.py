@@ -1,1 +1,79 @@
-ZnJvbSBsb2dnaW5nLmNvbmZpZyBpbXBvcnQgZmlsZUNvbmZpZwoKZnJvbSBzcWxhbGNoZW15IGltcG9ydCBlbmdpbmVfZnJvbV9jb25maWcKZnJvbSBzcWxhbGNoZW15IGltcG9ydCBwb29sCgpmcm9tIGFsZW1iaWMgaW1wb3J0IGNvbnRleHQKCmZyb20gYXBwLnBsdWdpbnMucDExNXN0cm1oZWxwZXIuZGJfbWFuYWdlciBpbXBvcnQgUDExNVN0cm1IZWxwZXJCYXNlCgojIHRoaXMgaXMgdGhlIEFsZW1iaWMgQ29uZmlnIG9iamVjdCwgd2hpY2ggcHJvdmlkZXMKIyBhY2Nlc3MgdG8gdGhlIHZhbHVlcyB3aXRoaW4gdGhlIC5pbmkgZmlsZSBpbiB1c2UKY29uZmlnID0gY29udGV4dC5jb25maWcKCiMgSW50ZXJwcmV0IHRoZSBjb25maWcgZmlsZSBmb3IgUHl0aG9uIGxvZ2dpbmcKIyBUaGlzIGxpbmUgc2V0cyB1cCBsb2dnZXJzIGJhc2ljYWxseQppZiBjb25maWcuY29uZmlnX2ZpbGVfbmFtZSBpcyBub3QgTm9uZToKICAgIGZpbGVDb25maWcoY29uZmlnLmNvbmZpZ19maWxlX25hbWUpCgojIGFkZCB5b3VyIG1vZGVsJ3MgTWV0YURhdGEgb2JqZWN0IGhlcmUKIyBmb3IgJ2F1dG9nZW5lcmF0ZScgc3VwcG9ydAojIGZyb20gbXlhcHAgaW1wb3J0IG15bW9kZWwKIyB0YXJnZXRfbWV0YWRhdGEgPSBteW1vZGVsLkJhc2UubWV0YWRhdGEKdGFyZ2V0X21ldGFkYXRhID0gUDExNVN0cm1IZWxwZXJCYXNlLm1ldGFkYXRhCgojIG90aGVyIHZhbHVlcyBmcm9tIHRoZSBjb25maWcsIGRlZmluZWQgYnkgdGhlIG5lZWRzIG9mIGVudi5weSwKIyBjYW4gYmUgYWNxdWlyZWQ6CiMgbXlfaW1wb3J0YW50X29wdGlvbiA9IGNvbmZpZy5nZXRfbWFpbl9vcHRpb24oIm15X2ltcG9ydGFudF9vcHRpb24iKQojIC4uLiBldGMKCgpkZWYgcnVuX21pZ3JhdGlvbnNfb2ZmbGluZSgpIC0+IE5vbmU6CiAgICAiIiJSdW4gbWlncmF0aW9ucyBpbiAnb2ZmbGluZScgbW9kZS4KCiAgICBUaGlzIGNvbmZpZ3VyZXMgdGhlIGNvbnRleHQgd2l0aCBqdXN0IGEgVVJMCiAgICBhbmQgbm90IGFuIEVuZ2luZSwgdGhvdWdoIGFuIEVuZ2luZSBpcyBhY2NlcHRhYmxlCiAgICBoZXJlIGFzIHdlbGwuICBCeSBza2lwcGluZyB0aGUgRW5naW5lIGNyZWF0aW9uCiAgICB3ZSBkb24ndCBldmVuIG5lZWQgYSBEQkFQSSB0byBiZSBhdmFpbGFibGUKCiAgICBDYWxscyB0byBjb250ZXh0LmV4ZWN1dGUoKSBoZXJlIGVtaXQgdGhlIGdpdmVuIHN0cmluZyB0byB0aGUKICAgIHNjcmlwdCBvdXRwdXQKCiAgICAiIiIKICAgIHVybCA9IGNvbmZpZy5nZXRfbWFpbl9vcHRpb24oInNxbGFsY2hlbXkudXJsIikKICAgIGNvbnRleHQuY29uZmlndXJlKAogICAgICAgIHVybD11cmwsCiAgICAgICAgdGFyZ2V0X21ldGFkYXRhPXRhcmdldF9tZXRhZGF0YSwKICAgICAgICBsaXRlcmFsX2JpbmRzPVRydWUsCiAgICAgICAgZGlhbGVjdF9vcHRzPXsicGFyYW1zdHlsZSI6ICJuYW1lZCJ9LAogICAgICAgIHJlbmRlcl9hc19iYXRjaD1UcnVlLAogICAgKQoKICAgIHdpdGggY29udGV4dC5iZWdpbl90cmFuc2FjdGlvbigpOgogICAgICAgIGNvbnRleHQucnVuX21pZ3JhdGlvbnMoKQoKCmRlZiBydW5fbWlncmF0aW9uc19vbmxpbmUoKSAtPiBOb25lOgogICAgIiIiUnVuIG1pZ3JhdGlvbnMgaW4gJ29ubGluZScgbW9kZS4KCiAgICBJbiB0aGlzIHNjZW5hcmlvIHdlIG5lZWQgdG8gY3JlYXRlIGFuIEVuZ2luZQogICAgYW5kIGFzc29jaWF0ZSBhIGNvbm5lY3Rpb24gd2l0aCB0aGUgY29udGV4dAoKICAgICIiIgogICAgY29ubmVjdGFibGUgPSBlbmdpbmVfZnJvbV9jb25maWcoCiAgICAgICAgY29uZmlnLmdldF9zZWN0aW9uKGNvbmZpZy5jb25maWdfaW5pX3NlY3Rpb24pLAogICAgICAgIHByZWZpeD0ic3FsYWxjaGVteS4iLAogICAgICAgIHBvb2xjbGFzcz1wb29sLk51bGxQb29sLAogICAgKQoKICAgIHdpdGggY29ubmVjdGFibGUuY29ubmVjdCgpIGFzIGNvbm5lY3Rpb246CiAgICAgICAgY29udGV4dC5jb25maWd1cmUoY29ubmVjdGlvbj1jb25uZWN0aW9uLCB0YXJnZXRfbWV0YWRhdGE9dGFyZ2V0X21ldGFkYXRhKQoKICAgICAgICB3aXRoIGNvbnRleHQuYmVnaW5fdHJhbnNhY3Rpb24oKToKICAgICAgICAgICAgY29udGV4dC5ydW5fbWlncmF0aW9ucygpCgoKaWYgY29udGV4dC5pc19vZmZsaW5lX21vZGUoKToKICAgIHJ1bl9taWdyYXRpb25zX29mZmxpbmUoKQplbHNlOgogICAgcnVuX21pZ3JhdGlvbnNfb25saW5lKCkK
+from logging.config import fileConfig
+
+from sqlalchemy import engine_from_config
+from sqlalchemy import pool
+
+from alembic import context
+
+from app.plugins.p115strmhelper.db_manager import P115StrmHelperBase
+
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use
+config = context.config
+
+# Interpret the config file for Python logging
+# This line sets up loggers basically
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
+
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
+target_metadata = P115StrmHelperBase.metadata
+
+# other values from the config, defined by the needs of env.py,
+# can be acquired:
+# my_important_option = config.get_main_option("my_important_option")
+# ... etc
+
+
+def run_migrations_offline() -> None:
+    """Run migrations in 'offline' mode.
+
+    This configures the context with just a URL
+    and not an Engine, though an Engine is acceptable
+    here as well.  By skipping the Engine creation
+    we don't even need a DBAPI to be available
+
+    Calls to context.execute() here emit the given string to the
+    script output
+
+    """
+    url = config.get_main_option("sqlalchemy.url")
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+        render_as_batch=True,
+    )
+
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+def run_migrations_online() -> None:
+    """Run migrations in 'online' mode.
+
+    In this scenario we need to create an Engine
+    and associate a connection with the context
+
+    """
+    connectable = engine_from_config(
+        config.get_section(config.config_ini_section),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+
+    with connectable.connect() as connection:
+        context.configure(connection=connection, target_metadata=target_metadata)
+
+        with context.begin_transaction():
+            context.run_migrations()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()

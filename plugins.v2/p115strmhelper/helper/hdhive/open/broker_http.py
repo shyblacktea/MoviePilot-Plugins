@@ -1,1 +1,44 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IERpY3QKCmZyb20gaHR0cHggaW1wb3J0IENsaWVudAoKZnJvbSBhcHAuY29yZS5jb25maWcgaW1wb3J0IHNldHRpbmdzCmZyb20gYXBwLnV0aWxzLmh0dHAgaW1wb3J0IEFzeW5jUmVxdWVzdFV0aWxzCgpmcm9tIC4uLi5jb3JlLmNvbmZpZyBpbXBvcnQgY29uZmlnZXIKZnJvbSAuY29uc3RhbnRzIGltcG9ydCBIREhJVkVfT0FVVEhfQlJPS0VSX0JBU0UKCgpkZWYgYnJva2VyX2h0dHBfY2xpZW50KCkgLT4gQ2xpZW50OgogICAgIiIiCiAgICDliJvlu7rorr/pl64gT0F1dGgg5Lit6L2s55qEIGh0dHB4IOWuouaIt+errwoKICAgIDpyZXR1cm4gQ2xpZW50OiDphY3nva7lpb0gYmFzZV91cmwg5LiO5Luj55CG55qEIENsaWVudAogICAgIiIiCiAgICBwcm94eV9oID0gKAogICAgICAgIEFzeW5jUmVxdWVzdFV0aWxzLl9jb252ZXJ0X3Byb3hpZXNfZm9yX2h0dHB4KHNldHRpbmdzLlBST1hZKQogICAgICAgIGlmIHNldHRpbmdzLlBST1hZCiAgICAgICAgZWxzZSBOb25lCiAgICApCiAgICByZXR1cm4gQ2xpZW50KAogICAgICAgIGJhc2VfdXJsPUhESElWRV9PQVVUSF9CUk9LRVJfQkFTRS5yc3RyaXAoIi8iKSwKICAgICAgICB0aW1lb3V0PTMwLjAsCiAgICAgICAgcHJveHk9cHJveHlfaCwKICAgICkKCgpkZWYgYnJva2VyX3JlcXVlc3RfaGVhZGVycyhpbnN0YW5jZV9rZXk6IHN0cikgLT4gRGljdFtzdHIsIHN0cl06CiAgICAiIiIKICAgIOS4rei9rOivt+axgumAmueUqOWktO+8iOWunuS+i+agh+ivhiArIOWPr+mAiSBNYWNoaW5lIElE77yJCgogICAgOnBhcmFtIGluc3RhbmNlX2tleSAoc3RyKTog5a6e5L6LIGtleQogICAgOnJldHVybiBEaWN0OiDor7fmsYLlpLQgZGljdAogICAgIiIiCiAgICBoZWFkZXJzID0gewogICAgICAgICJYLUluc3RhbmNlLUtleSI6IGluc3RhbmNlX2tleSwKICAgICAgICAiQ29udGVudC1UeXBlIjogImFwcGxpY2F0aW9uL2pzb24iLAogICAgfQogICAgbWFjaGluZV9pZCA9IGdldGF0dHIoY29uZmlnZXIsICJtYWNoaW5lX2lkIiwgTm9uZSkgb3IgIiIKICAgIGlmIG1hY2hpbmVfaWQ6CiAgICAgICAgaGVhZGVyc1siWC1NYWNoaW5lLUlkIl0gPSBzdHIobWFjaGluZV9pZCkKICAgIHJldHVybiBoZWFkZXJzCg==
+from typing import Dict
+
+from httpx import Client
+
+from app.core.config import settings
+from app.utils.http import AsyncRequestUtils
+
+from ....core.config import configer
+from .constants import HDHIVE_OAUTH_BROKER_BASE
+
+
+def broker_http_client() -> Client:
+    """
+    创建访问 OAuth 中转的 httpx 客户端
+
+    :return Client: 配置好 base_url 与代理的 Client
+    """
+    proxy_h = (
+        AsyncRequestUtils._convert_proxies_for_httpx(settings.PROXY)
+        if settings.PROXY
+        else None
+    )
+    return Client(
+        base_url=HDHIVE_OAUTH_BROKER_BASE.rstrip("/"),
+        timeout=30.0,
+        proxy=proxy_h,
+    )
+
+
+def broker_request_headers(instance_key: str) -> Dict[str, str]:
+    """
+    中转请求通用头（实例标识 + 可选 Machine ID）
+
+    :param instance_key (str): 实例 key
+    :return Dict: 请求头 dict
+    """
+    headers = {
+        "X-Instance-Key": instance_key,
+        "Content-Type": "application/json",
+    }
+    machine_id = getattr(configer, "machine_id", None) or ""
+    if machine_id:
+        headers["X-Machine-Id"] = str(machine_id)
+    return headers

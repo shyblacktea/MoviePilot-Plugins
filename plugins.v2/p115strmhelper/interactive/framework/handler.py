@@ -1,1 +1,28 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IERpY3QsIExpc3QNCg0KZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXINCg0KZnJvbSAuY2FsbGJhY2tzIGltcG9ydCBBY3Rpb24NCmZyb20gLnJlZ2lzdHJ5IGltcG9ydCBjb21tYW5kX3JlZ2lzdHJ5DQpmcm9tIC5zY2hlbWFzIGltcG9ydCBUU2Vzc2lvbg0KDQoNCmNsYXNzIEJhc2VBY3Rpb25IYW5kbGVyOg0KICAgICIiIg0KICAgIOWkhOeQhuWZqOWfuuexuw0KICAgICIiIg0KDQogICAgZGVmIHByb2Nlc3Moc2VsZiwgc2Vzc2lvbjogVFNlc3Npb24sIGFjdGlvbjogQWN0aW9uKSAtPiBMaXN0W0RpY3RdOg0KICAgICAgICAiIiINCiAgICAgICAg5aSE55CG5Yqo5L2cDQogICAgICAgICIiIg0KICAgICAgICBjb21tYW5kX2RlZiA9IGNvbW1hbmRfcmVnaXN0cnkuZ2V0X2J5X25hbWUoYWN0aW9uLmNvbW1hbmQpDQogICAgICAgIGlmIG5vdCBjb21tYW5kX2RlZjoNCiAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKGYi5pyq5om+5Yiw5ZG95LukICd7YWN0aW9uLmNvbW1hbmR9JyDnmoTlpITnkIblmajjgIIiKQ0KICAgICAgICAgICAgcmV0dXJuIFtdDQogICAgICAgIHRyeToNCiAgICAgICAgICAgIGhhbmRsZXJfbWV0aG9kID0gZ2V0YXR0cihzZWxmLCBjb21tYW5kX2RlZi5oYW5kbGVyX25hbWUpDQogICAgICAgICAgICByZXR1cm4gaGFuZGxlcl9tZXRob2Qoc2Vzc2lvbiwgYWN0aW9uKSBvciBbXQ0KICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6DQogICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLlpITnkIblkb3ku6QgJ3thY3Rpb24uY29tbWFuZH0nIOaXtuWPkeeUn+mUmeivrzoge2V9IiwgZXhjX2luZm89VHJ1ZSkNCiAgICAgICAgICAgIHJldHVybiBbeyJ0eXBlIjogImVycm9yX21lc3NhZ2UiLCAidGV4dCI6ICLlpITnkIbor7fmsYLml7blj5HnlJ/lhoXpg6jplJnor6/jgIIifV0NCg==
+from typing import Dict, List
+
+from app.log import logger
+
+from .callbacks import Action
+from .registry import command_registry
+from .schemas import TSession
+
+
+class BaseActionHandler:
+    """
+    处理器基类
+    """
+
+    def process(self, session: TSession, action: Action) -> List[Dict]:
+        """
+        处理动作
+        """
+        command_def = command_registry.get_by_name(action.command)
+        if not command_def:
+            logger.warning(f"未找到命令 '{action.command}' 的处理器。")
+            return []
+        try:
+            handler_method = getattr(self, command_def.handler_name)
+            return handler_method(session, action) or []
+        except Exception as e:
+            logger.error(f"处理命令 '{action.command}' 时发生错误: {e}", exc_info=True)
+            return [{"type": "error_message", "text": "处理请求时发生内部错误。"}]

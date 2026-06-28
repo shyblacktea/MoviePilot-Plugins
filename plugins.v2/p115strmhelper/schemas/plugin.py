@@ -1,1 +1,64 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IExpc3QsIE9wdGlvbmFsCgpmcm9tIHB5ZGFudGljIGltcG9ydCBCYXNlTW9kZWwsIEZpZWxkCgoKY2xhc3MgQ2hlY2tMaWZlRXZlbnRTdGF0dXNQYXlsb2FkKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOeUn+a0u+S6i+S7tuaVhemanOajgOafpeivt+axguS9kwogICAgIiIiCgogICAgc3RhcnRfdGltZTogT3B0aW9uYWxbaW50XSA9IEZpZWxkKAogICAgICAgIGRlZmF1bHQ9Tm9uZSwKICAgICAgICBkZXNjcmlwdGlvbj0i5ouJ5Y+W5oyH5a6a5pe26Ze05YaF55qE5YWo6YOo5pWw5o2u55qE5byA5aeL5pe26Ze077yIVW5peCDml7bpl7TmiLPvvIznp5LvvIkiLAogICAgKQoKCmNsYXNzIFBsdWdpblN0YXR1c0RhdGEoQmFzZU1vZGVsKToKICAgICIiIgogICAg5o+S5Lu26L+Q6KGM54q25oCB5pWw5o2uCiAgICAiIiIKCiAgICBlbmFibGVkOiBib29sID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i5piv5ZCm5ZCv55SoIikKICAgIGhhc19jbGllbnQ6IGJvb2wgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLmmK/lkKbmnInlrqLmiLfnq68iKQogICAgcnVubmluZzogYm9vbCA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuaYr+WQpui/kOihjOS4rSIpCgoKY2xhc3MgTGlmZUV2ZW50Q2hlY2tTdW1tYXJ5KEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOeUn+a0u+S6i+S7tuajgOafpeaRmOimgQogICAgIiIiCgogICAgcGx1Z2luX2VuYWJsZWQ6IGJvb2wgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLmj5Lku7bmmK/lkKblkK/nlKgiKQogICAgY2xpZW50X2luaXRpYWxpemVkOiBib29sID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i5a6i5oi356uv5piv5ZCm5Yid5aeL5YyWIikKICAgIG1vbml0b3JsaWZlX2luaXRpYWxpemVkOiBib29sID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i55uR5o6n55Sf5rS75piv5ZCm5Yid5aeL5YyWIikKICAgIHRocmVhZF9ydW5uaW5nOiBib29sID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i57q/56iL5piv5ZCm6L+Q6KGMIikKICAgIGNvbmZpZ192YWxpZDogYm9vbCA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IumFjee9ruaYr+WQpuacieaViCIpCgoKY2xhc3MgU3RybUNsZWFudXBSZXF1ZXN0SWRQYXlsb2FkKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOW+heehruiupCBTVFJNIOa4heeQhuaJueasoeaTjeS9nO+8iOaJp+ihjOaIluWPlua2iO+8iQogICAgIiIiCgogICAgcmVxdWVzdF9pZDogc3RyID0gRmllbGQoLi4uLCBtaW5fbGVuZ3RoPTgsIGRlc2NyaXB0aW9uPSLmibnmrKEgcmVxdWVzdF9pZCIpCgoKY2xhc3MgU2hhcmVTdHJtTWlzc2luZ01lZGlhQ2xlYXJQYXlsb2FkKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOWIhuS6qyBTVFJNIOe8uuWkseWqkuS9k+WIl+ihqOa4heepuuaIluWNleadoeWIoOmZpAogICAgIiIiCgogICAgdWlkOiBPcHRpb25hbFtzdHJdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5Y2V5p2h6K6w5b2VIHVpZCIpCiAgICBjbGVhcl9hbGw6IGJvb2wgPSBGaWVsZChkZWZhdWx0PUZhbHNlLCBkZXNjcmlwdGlvbj0i5piv5ZCm5riF56m65YWo6YOoIikKCgpjbGFzcyBMaWZlRXZlbnRDaGVja0RhdGEoQmFzZU1vZGVsKToKICAgICIiIgogICAg55Sf5rS75LqL5Lu25qOA5p+l5pWw5o2uCiAgICAiIiIKCiAgICBzdWNjZXNzOiBib29sID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i5piv5ZCm5oiQ5YqfIikKICAgIGVycm9yX21lc3NhZ2VzOiBMaXN0W3N0cl0gPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLplJnor6/mtojmga/liJfooagiKQogICAgZGVidWdfaW5mbzogc3RyID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i6LCD6K+V5L+h5oGvIikKICAgIHN1bW1hcnk6IExpZmVFdmVudENoZWNrU3VtbWFyeSA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuajgOafpeaRmOimgSIpCg==
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
+
+class CheckLifeEventStatusPayload(BaseModel):
+    """
+    生活事件故障检查请求体
+    """
+
+    start_time: Optional[int] = Field(
+        default=None,
+        description="拉取指定时间内的全部数据的开始时间（Unix 时间戳，秒）",
+    )
+
+
+class PluginStatusData(BaseModel):
+    """
+    插件运行状态数据
+    """
+
+    enabled: bool = Field(..., description="是否启用")
+    has_client: bool = Field(..., description="是否有客户端")
+    running: bool = Field(..., description="是否运行中")
+
+
+class LifeEventCheckSummary(BaseModel):
+    """
+    生活事件检查摘要
+    """
+
+    plugin_enabled: bool = Field(..., description="插件是否启用")
+    client_initialized: bool = Field(..., description="客户端是否初始化")
+    monitorlife_initialized: bool = Field(..., description="监控生活是否初始化")
+    thread_running: bool = Field(..., description="线程是否运行")
+    config_valid: bool = Field(..., description="配置是否有效")
+
+
+class StrmCleanupRequestIdPayload(BaseModel):
+    """
+    待确认 STRM 清理批次操作（执行或取消）
+    """
+
+    request_id: str = Field(..., min_length=8, description="批次 request_id")
+
+
+class ShareStrmMissingMediaClearPayload(BaseModel):
+    """
+    分享 STRM 缺失媒体列表清空或单条删除
+    """
+
+    uid: Optional[str] = Field(default=None, description="单条记录 uid")
+    clear_all: bool = Field(default=False, description="是否清空全部")
+
+
+class LifeEventCheckData(BaseModel):
+    """
+    生活事件检查数据
+    """
+
+    success: bool = Field(..., description="是否成功")
+    error_messages: List[str] = Field(..., description="错误消息列表")
+    debug_info: str = Field(..., description="调试信息")
+    summary: LifeEventCheckSummary = Field(..., description="检查摘要")

@@ -1,1 +1,280 @@
-X19hbGxfXyA9IFsiUGF0aFV0aWxzIiwgIlBhdGhSZW1vdmVVdGlscyJdCgoKZnJvbSBvcyBpbXBvcnQgbmFtZSBhcyBvc19uYW1lCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aCwgUHVyZVBvc2l4UGF0aApmcm9tIHNodXRpbCBpbXBvcnQgcm10cmVlCmZyb20gdHlwaW5nIGltcG9ydCBMaXN0LCBPcHRpb25hbCwgVHVwbGUKCmZyb20gYXBwLmxvZyBpbXBvcnQgbG9nZ2VyCmZyb20gYXBwLnV0aWxzLnN5c3RlbSBpbXBvcnQgU3lzdGVtVXRpbHMKCgpjbGFzcyBQYXRoVXRpbHM6CiAgICAiIiIKICAgIOi3r+W+hOWMuemFjQogICAgIiIiCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIHNhbml0aXplX3BhdGhfcGFydHMocmVsX3BhdGg6IFBhdGgpIC0+IFBhdGg6CiAgICAgICAgIiIiCiAgICAgICAg5bCG55u45a+56Lev5b6E5ZCE5YiG6YeP5Lit55qE6Z2e5rOV5paH5Lu25ZCN5a2X56ym5pu/5o2i5Li65LiL5YiS57q/77yI5LuFIFdpbmRvd3Mg55Sf5pWI77yM5YW25LuW5bmz5Y+w55u05o6l6L+U5Zue5Y6f6Lev5b6E77yJCgogICAgICAgIDpwYXJhbSByZWxfcGF0aCAoUGF0aCk6IOW+heWkhOeQhueahOebuOWvuei3r+W+hAoKICAgICAgICA6cmV0dXJuIFBhdGg6IOWkhOeQhuWQjueahOebuOWvuei3r+W+hAogICAgICAgICIiIgogICAgICAgIGlmIG9zX25hbWUgIT0gIm50IjoKICAgICAgICAgICAgcmV0dXJuIHJlbF9wYXRoCiAgICAgICAgaWxsZWdhbF9jaGFycyA9ICc8PiJ8PyonCiAgICAgICAgcGFydHMgPSBsaXN0KHJlbF9wYXRoLnBhcnRzKQogICAgICAgIGlmIG5vdCBwYXJ0czoKICAgICAgICAgICAgcmV0dXJuIHJlbF9wYXRoCiAgICAgICAgc2FuaXRpemVkID0gW10KICAgICAgICBmb3IgcGFydCBpbiBwYXJ0czoKICAgICAgICAgICAgcGFydCA9IHBhcnQucmVwbGFjZSgiOiIsICLvvJoiKQogICAgICAgICAgICBmb3IgY2hhciBpbiBpbGxlZ2FsX2NoYXJzOgogICAgICAgICAgICAgICAgcGFydCA9IHBhcnQucmVwbGFjZShjaGFyLCAiXyIpCiAgICAgICAgICAgIHNhbml0aXplZC5hcHBlbmQocGFydCkKICAgICAgICByZXN1bHQgPSBQYXRoKHNhbml0aXplZFswXSkKICAgICAgICBmb3IgcGFydCBpbiBzYW5pdGl6ZWRbMTpdOgogICAgICAgICAgICByZXN1bHQgPSByZXN1bHQgLyBwYXJ0CiAgICAgICAgcmV0dXJuIHJlc3VsdAoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBoYXNfcHJlZml4KGZ1bGxfcGF0aCwgcHJlZml4X3BhdGgpIC0+IGJvb2w6CiAgICAgICAgIiIiCiAgICAgICAg5Yik5pat6Lev5b6E5piv5ZCm5YyF5ZCrCgogICAgICAgIDpwYXJhbSBmdWxsX3BhdGggKHN0cik6IOWujOaVtOi3r+W+hAogICAgICAgIDpwYXJhbSBwcmVmaXhfcGF0aCAoc3RyKTog5Yy56YWN6Lev5b6ECgogICAgICAgIDpyZXR1cm4gYm9vbDog5piv5ZCm5YyF5ZCrCiAgICAgICAgIiIiCiAgICAgICAgaWYgbm90IGZ1bGxfcGF0aCBvciBub3QgcHJlZml4X3BhdGg6CiAgICAgICAgICAgIHJldHVybiBGYWxzZQogICAgICAgIGZ1bGwgPSBQYXRoKGZ1bGxfcGF0aCkucGFydHMKICAgICAgICBwcmVmaXggPSBQYXRoKHByZWZpeF9wYXRoKS5wYXJ0cwoKICAgICAgICBpZiBsZW4ocHJlZml4KSA+IGxlbihmdWxsKToKICAgICAgICAgICAgcmV0dXJuIEZhbHNlCgogICAgICAgIHJldHVybiBmdWxsWzogbGVuKHByZWZpeCldID09IHByZWZpeAoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBnZXRfcnVuX3RyYW5zZmVyX3BhdGgocGF0aHMsIHRyYW5zZmVyX3BhdGgpIC0+IGJvb2w6CiAgICAgICAgIiIiCiAgICAgICAg5Yik5pat6Lev5b6E5piv5ZCm5Li65pW055CG6Lev5b6ECgogICAgICAgIDpwYXJhbSBwYXRocyAoc3RyKTog5o2i6KGM5YiG6ZqU55qE5pW055CG6Lev5b6E5YiX6KGoCiAgICAgICAgOnBhcmFtIHRyYW5zZmVyX3BhdGggKHN0cik6IOW+heWIpOaWreeahOi9rOenu+i3r+W+hAoKICAgICAgICA6cmV0dXJuIGJvb2w6IOaYr+WQpuS4uuaVtOeQhui3r+W+hAogICAgICAgICIiIgogICAgICAgIHRyYW5zZmVyX3BhdGhzID0gcGF0aHMuc3BsaXQoIlxuIikKICAgICAgICBmb3IgcGF0aCBpbiB0cmFuc2Zlcl9wYXRoczoKICAgICAgICAgICAgaWYgbm90IHBhdGg6CiAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICBpZiBQYXRoVXRpbHMuaGFzX3ByZWZpeCh0cmFuc2Zlcl9wYXRoLCBwYXRoKToKICAgICAgICAgICAgICAgIHJldHVybiBUcnVlCiAgICAgICAgcmV0dXJuIEZhbHNlCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIGdldF9zY3JhcGVfbWV0YWRhdGFfZXhjbHVkZV9wYXRoKHBhdGhzLCBzY3JhcGVfcGF0aCkgLT4gYm9vbDoKICAgICAgICAiIiIKICAgICAgICDmo4Dmn6Xnm67lvZXmmK/lkKblnKjmjpLpmaTnm67lvZXlhoUKCiAgICAgICAgOnBhcmFtIHBhdGhzIChzdHIpOiDmjaLooYzliIbpmpTnmoTmjpLpmaTot6/lvoTliJfooagKICAgICAgICA6cGFyYW0gc2NyYXBlX3BhdGggKHN0cik6IOW+heajgOafpeeahOWIruWJiui3r+W+hAoKICAgICAgICA6cmV0dXJuIGJvb2w6IOaYr+WQpuWcqOaOkumZpOebruW9leWGhQogICAgICAgICIiIgogICAgICAgIGV4Y2x1ZGVfcGF0aCA9IHBhdGhzLnNwbGl0KCJcbiIpCiAgICAgICAgZm9yIHBhdGggaW4gZXhjbHVkZV9wYXRoOgogICAgICAgICAgICBpZiBub3QgcGF0aDoKICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgIGlmIFBhdGhVdGlscy5oYXNfcHJlZml4KHNjcmFwZV9wYXRoLCBwYXRoKToKICAgICAgICAgICAgICAgIHJldHVybiBUcnVlCiAgICAgICAgcmV0dXJuIEZhbHNlCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIGdldF9tZWRpYV9wYXRoKHBhdGhzLCBtZWRpYV9wYXRoKSAtPiBUdXBsZVtib29sLCBPcHRpb25hbFtzdHJdLCBPcHRpb25hbFtzdHJdXToKICAgICAgICAiIiIKICAgICAgICDojrflj5blqpLkvZPnm67lvZXot6/lvoQKCiAgICAgICAgOnBhcmFtIHBhdGhzIChzdHIpOiDmjaLooYzliIbpmpTnmoTlqpLkvZPnm67lvZXmmKDlsIQKICAgICAgICA6cGFyYW0gbWVkaWFfcGF0aCAoc3RyKTog5b6F5Yy56YWN55qE5aqS5L2T6Lev5b6ECgogICAgICAgIDpyZXR1cm4gVHVwbGU6ICjmmK/lkKbljLnphY0sIOWqkuS9k+acjeWKoeWZqOi3r+W+hCwg572R55uY6Lev5b6EKQogICAgICAgICIiIgogICAgICAgIG1lZGlhX3BhdGhzID0gcGF0aHMuc3BsaXQoIlxuIikKICAgICAgICBmb3IgcGF0aCBpbiBtZWRpYV9wYXRoczoKICAgICAgICAgICAgaWYgbm90IHBhdGg6CiAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICBwYXJ0cyA9IHBhdGguc3BsaXQoIiMiLCAyKQogICAgICAgICAgICBpZiBQYXRoVXRpbHMuaGFzX3ByZWZpeChtZWRpYV9wYXRoLCBwYXJ0c1sxXSk6CiAgICAgICAgICAgICAgICByZXR1cm4gVHJ1ZSwgcGFydHNbMF0sIHBhcnRzWzFdCiAgICAgICAgcmV0dXJuIEZhbHNlLCBOb25lLCBOb25lCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIGdldF9wMTE1X3N0cm1fcGF0aChwYXRocywgbWVkaWFfcGF0aCkgLT4gVHVwbGVbYm9vbCwgT3B0aW9uYWxbc3RyXV06CiAgICAgICAgIiIiCiAgICAgICAg5Yy56YWN5YWo6YeP55uu5b2V77yM6Ieq5Yqo55Sf5oiQ5paw55qEIHBhdGhzCgogICAgICAgIDpwYXJhbSBwYXRocyAoc3RyKTog5o2i6KGM5YiG6ZqU55qE5YWo6YeP55uu5b2V5pig5bCECiAgICAgICAgOnBhcmFtIG1lZGlhX3BhdGggKHN0cik6IOW+heWMuemFjeeahOWqkuS9k+i3r+W+hAoKICAgICAgICA6cmV0dXJuIFR1cGxlOiAo5piv5ZCm5Yy56YWNLCDnlJ/miJDnmoTot6/lvoTlrZfnrKbkuLIpCiAgICAgICAgIiIiCiAgICAgICAgbWVkaWFfcGF0aHMgPSBwYXRocy5zcGxpdCgiXG4iKQogICAgICAgIGZvciBwYXRoIGluIG1lZGlhX3BhdGhzOgogICAgICAgICAgICBpZiBub3QgcGF0aDoKICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgIHBhcnRzID0gcGF0aC5zcGxpdCgiIyIsIDIpCiAgICAgICAgICAgIGlmIFBhdGhVdGlscy5oYXNfcHJlZml4KG1lZGlhX3BhdGgsIHBhcnRzWzFdKToKICAgICAgICAgICAgICAgIGxvY2FsX3BhdGggPSBQYXRoKHBhcnRzWzBdKSAvIFBhdGgobWVkaWFfcGF0aCkucmVsYXRpdmVfdG8ocGFydHNbMV0pCiAgICAgICAgICAgICAgICBmaW5hbF9wYXRocyA9IGYie2xvY2FsX3BhdGh9I3ttZWRpYV9wYXRofSIKICAgICAgICAgICAgICAgIHJldHVybiBUcnVlLCBmaW5hbF9wYXRocwogICAgICAgIHJldHVybiBGYWxzZSwgTm9uZQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBnZXRfcDExNV9tZWRpYV9wYXRoKAogICAgICAgIG1lZGlhX3BhdGg6IHN0ciwgcDExNV9saWJyYXJ5X3BhdGg6IHN0cgogICAgKSAtPiBUdXBsZVtib29sLCBPcHRpb25hbFtMaXN0W3N0cl1dXToKICAgICAgICAiIiIKICAgICAgICDojrflj5YgMTE1IOe9keebmOWqkuS9k+ebruW9lei3r+W+hAoKICAgICAgICA6cGFyYW0gbWVkaWFfcGF0aCAoc3RyKTog5aqS5L2T6Lev5b6ECiAgICAgICAgOnBhcmFtIHAxMTVfbGlicmFyeV9wYXRoIChzdHIpOiAxMTUg572R55uY5aqS5L2T5bqT6Lev5b6E5pig5bCE77yI5qC85byP77ya5aqS5L2T5pyN5Yqh5ZmoU1RSTei3r+W+hCNNb3ZpZVBpbG906Lev5b6EIyAxMTUg572R55uY6Lev5b6E77yJCgogICAgICAgIDpyZXR1cm4gVHVwbGU6ICjmmK/lkKbljLnphY0sIOi3r+W+hOmDqOWIhuWIl+ihqCkKICAgICAgICAiIiIKICAgICAgICBpZiBub3QgcDExNV9saWJyYXJ5X3BhdGg6CiAgICAgICAgICAgIHJldHVybiBGYWxzZSwgTm9uZQogICAgICAgIG1lZGlhX3BhdGhzID0gcDExNV9saWJyYXJ5X3BhdGguc3BsaXQoIlxuIikKICAgICAgICBmb3IgcGF0aCBpbiBtZWRpYV9wYXRoczoKICAgICAgICAgICAgaWYgbm90IHBhdGg6CiAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICBwYXJ0cyA9IHBhdGguc3BsaXQoIiMiLCAyKQogICAgICAgICAgICBpZiBQYXRoVXRpbHMuaGFzX3ByZWZpeChtZWRpYV9wYXRoLCBwYXJ0c1swXSk6CiAgICAgICAgICAgICAgICByZXR1cm4gVHJ1ZSwgcGFydHMKICAgICAgICByZXR1cm4gRmFsc2UsIE5vbmUKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgZ2V0X21lZGlhX2ZpbGVfcGF0aHNfd2l0aF9zdWZmaXgoCiAgICAgICAgZmlsZV9wYXRoOiBzdHIsIG1lZGlhX3N1ZmZpeDogT3B0aW9uYWxbc3RyXQogICAgKSAtPiBUdXBsZVtzdHIsIHN0cl06CiAgICAgICAgIiIiCiAgICAgICAg5qC55o2u5aqS5L2T5bqT5paH5Lu26Lev5b6E5ZKM55yf5a6e5aqS5L2T5ZCO57yA6L+Y5Y6f572R55uY5aqS5L2T6Lev5b6ECgogICAgICAgIDpwYXJhbSBmaWxlX3BhdGggKHN0cik6IOWqkuS9k+W6k+aWh+S7tui3r+W+hAogICAgICAgIDpwYXJhbSBtZWRpYV9zdWZmaXggKHN0cik6IOecn+WunuWqkuS9k+WQjue8gAoKICAgICAgICA6cmV0dXJuIFR1cGxlOiDmraPluLjlpKflsI/lhpnot6/lvoTlkozlpKflsI/lhpnliIfmjaLot6/lvoQKICAgICAgICAiIiIKICAgICAgICBub3JtYWxpemVkX3BhdGggPSBmaWxlX3BhdGgucmVwbGFjZSgiXFwiLCAiLyIpCiAgICAgICAgcGF0aCA9IFB1cmVQb3NpeFBhdGgobm9ybWFsaXplZF9wYXRoKQogICAgICAgIGlmIG5vdCBwYXRoLnN1ZmZpeCBvciBub3QgbWVkaWFfc3VmZml4OgogICAgICAgICAgICByZXR1cm4gbm9ybWFsaXplZF9wYXRoLCBub3JtYWxpemVkX3BhdGgKCiAgICAgICAgc3VmZml4ID0gbWVkaWFfc3VmZml4LmxzdHJpcCgiLiIpCiAgICAgICAgaWYgbm90IHN1ZmZpeDoKICAgICAgICAgICAgcmV0dXJuIG5vcm1hbGl6ZWRfcGF0aCwgbm9ybWFsaXplZF9wYXRoCgogICAgICAgIHN0ZW0gPSBwYXRoLnN0ZW0KICAgICAgICBzdWZmaXhfbWFya2VyID0gZiIue3N1ZmZpeH0iCiAgICAgICAgaWYgc3RlbS5sb3dlcigpLmVuZHN3aXRoKHN1ZmZpeF9tYXJrZXIubG93ZXIoKSk6CiAgICAgICAgICAgIGJhc2Vfc3RlbSA9IHN0ZW1bOiAtKGxlbihzdWZmaXgpICsgMSldCiAgICAgICAgICAgIHByaW1hcnlfc3VmZml4ID0gc3RlbVstbGVuKHN1ZmZpeCkgOl0KICAgICAgICBlbHNlOgogICAgICAgICAgICBiYXNlX3N0ZW0gPSBzdGVtCiAgICAgICAgICAgIHByaW1hcnlfc3VmZml4ID0gc3VmZml4CgogICAgICAgIG1lZGlhX3BhdGggPSBzdHIocGF0aC5wYXJlbnQgLyBmIntiYXNlX3N0ZW19LntwcmltYXJ5X3N1ZmZpeH0iKQogICAgICAgIGlmIHByaW1hcnlfc3VmZml4LmlzdXBwZXIoKToKICAgICAgICAgICAgZmluYWxfc3VmZml4ID0gcHJpbWFyeV9zdWZmaXgubG93ZXIoKQogICAgICAgIGVsaWYgcHJpbWFyeV9zdWZmaXguaXNsb3dlcigpOgogICAgICAgICAgICBmaW5hbF9zdWZmaXggPSBwcmltYXJ5X3N1ZmZpeC51cHBlcigpCiAgICAgICAgZWxzZToKICAgICAgICAgICAgZmluYWxfc3VmZml4ID0gcHJpbWFyeV9zdWZmaXgKCiAgICAgICAgbWVkaWFfcGF0aF9maW5hbCA9ICgKICAgICAgICAgICAgc3RyKHBhdGgucGFyZW50IC8gZiJ7YmFzZV9zdGVtfS57ZmluYWxfc3VmZml4fSIpCiAgICAgICAgICAgIGlmIGZpbmFsX3N1ZmZpeCAhPSBwcmltYXJ5X3N1ZmZpeAogICAgICAgICAgICBlbHNlIG1lZGlhX3BhdGgKICAgICAgICApCiAgICAgICAgcmV0dXJuIG1lZGlhX3BhdGgsIG1lZGlhX3BhdGhfZmluYWwKCgpjbGFzcyBQYXRoUmVtb3ZlVXRpbHM6CiAgICAiIiIKICAgIOebruW9leWIoOmZpOW3peWFtwogICAgIiIiCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIHJlbW92ZV9wYXJlbnRfZGlyKAogICAgICAgIGZpbGVfcGF0aDogUGF0aCwKICAgICAgICBtb2RlOiBzdHIgfCBsaXN0ID0gImFsbCIsCiAgICAgICAgZnVuY190eXBlOiBzdHIgPSBOb25lLAogICAgKToKICAgICAgICAiIiIKICAgICAgICDliKDpmaTniLbnm67lvZUKCiAgICAgICAgOnBhcmFtIGZpbGVfcGF0aCAoUGF0aCk6IOaWh+S7tuWkuei3r+W+hAogICAgICAgIDpwYXJhbSBtb2RlIChzdHIpOiDliKDpmaTmqKHlvI/vvIzmlK/mjIHlhajpg6jljLnphY3vvIhcImFsbFwi77yJ44CB5paH5Lu25ZCO57yA5Yy56YWN77yIbGlzdO+8ieWSjOa3t+WQiOaooeW8j++8iFwibWl4ZWRcIu+8jAogICAgICAgICAgICAgICAgICAgICDnrKzkuIDlsYLku6UgXCJhbGxcIiDliKTmlq3nqbrnm67lvZXvvIzkuIrlsYLku6UgW1wic3RybVwiXSDliKTmlq3vvIkKICAgICAgICA6cGFyYW0gZnVuY190eXBlIChzdHIpOiDml6Xlv5fovpPlh7rlh73mlbDlkI3np7AKICAgICAgICAiIiIKICAgICAgICAjIOWIpOaWreW9k+WJjeWqkuS9k+eItui3r+W+hOS4i+aYr+WQpuacieWqkuS9k+aWh+S7tu+8jOWmguacieWImeaXoOmcgOmBjeWOhueItue6pwogICAgICAgIGlmIG1vZGUgaW4gKCJhbGwiLCAibWl4ZWQiKToKICAgICAgICAgICAgZnVuY19ib29sID0gYW55KGZpbGVfcGF0aC5wYXJlbnQuaXRlcmRpcigpKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGZ1bmNfYm9vbCA9IFN5c3RlbVV0aWxzLmV4aXRzX2ZpbGVzKAogICAgICAgICAgICAgICAgZGlyZWN0b3J5PWZpbGVfcGF0aC5wYXJlbnQsIGV4dGVuc2lvbnM9bW9kZQogICAgICAgICAgICApCiAgICAgICAgaWYgbm90IGZ1bmNfYm9vbDoKICAgICAgICAgICAgIyDliKTmlq3niLbnm67lvZXmmK/lkKbkuLrnqbosIOS4uuepuuWImeWIoOmZpAogICAgICAgICAgICBpID0gMAogICAgICAgICAgICBmb3IgcGFyZW50X3BhdGggaW4gZmlsZV9wYXRoLnBhcmVudHM6CiAgICAgICAgICAgICAgICBpICs9IDEKICAgICAgICAgICAgICAgIGlmIGkgPiAzOgogICAgICAgICAgICAgICAgICAgIGJyZWFrCiAgICAgICAgICAgICAgICBpZiBzdHIocGFyZW50X3BhdGgucGFyZW50KSAhPSBzdHIoZmlsZV9wYXRoLnJvb3QpOgogICAgICAgICAgICAgICAgICAgICMg54i255uu5b2V6Z2e5qC555uu5b2V77yM5omN5Yig6Zmk54i255uu5b2VCiAgICAgICAgICAgICAgICAgICAgaWYgbW9kZSA9PSAiYWxsIiBvciAobW9kZSA9PSAibWl4ZWQiIGFuZCBpID09IDEpOgogICAgICAgICAgICAgICAgICAgICAgICBmdW5jX2Jvb2wgPSBhbnkocGFyZW50X3BhdGguaXRlcmRpcigpKQogICAgICAgICAgICAgICAgICAgIGVsaWYgbW9kZSA9PSAibWl4ZWQiOgogICAgICAgICAgICAgICAgICAgICAgICAjIOa3t+WQiOaooeW8j++8muS4iuWxguS7pSBbInN0cm0iXSDliKTmlq3vvIzlhYHorrjnqb/pgI/lkKsgc2lkZWNhciDnmoTkuIrnuqfnm67lvZUKICAgICAgICAgICAgICAgICAgICAgICAgZnVuY19ib29sID0gU3lzdGVtVXRpbHMuZXhpdHNfZmlsZXMoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBkaXJlY3Rvcnk9cGFyZW50X3BhdGgsIGV4dGVuc2lvbnM9WyJzdHJtIl0KICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICAgICAgICAgIGZ1bmNfYm9vbCA9IFN5c3RlbVV0aWxzLmV4aXRzX2ZpbGVzKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgZGlyZWN0b3J5PXBhcmVudF9wYXRoLCBleHRlbnNpb25zPW1vZGUKICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIGlmIG5vdCBmdW5jX2Jvb2w6CiAgICAgICAgICAgICAgICAgICAgICAgICMg5b2T5YmN6Lev5b6E5LiL5rKh5pyJ5aqS5L2T5paH5Lu25YiZ5Yig6ZmkCiAgICAgICAgICAgICAgICAgICAgICAgIHJtdHJlZShwYXJlbnRfcGF0aCkKICAgICAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLndhcm4oZiJ7ZnVuY190eXBlfeacrOWcsOepuuebruW9lSB7cGFyZW50X3BhdGh9IOW3suWIoOmZpCIpCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIGNsZWFuX3JlbGF0ZWRfZmlsZXMoZmlsZV9wYXRoOiBQYXRoLCBmdW5jX3R5cGU6IHN0ciA9IE5vbmUpOgogICAgICAgICIiIgogICAgICAgIOagueaNruS4gOS4quaWh+S7tueahOi3r+W+hO+8jOa4heeQhuWQjOS4gOaWh+S7tuWkueS4i+aWh+S7tuWQjeWMheWQq+atpOaWh+S7tuWQjeeahOWFtuS7luaWh+S7tgoKICAgICAgICDlr7nkuo4gLnN0cm0g5ZCO57yA5paH5Lu26L+b6KGM5L+d5oqk77yM5LiN5YGa5Yig6Zmk5pON5L2cCgogICAgICAgIDpwYXJhbSBmaWxlX3BhdGggKFBhdGgpOiDln7rlh4bmlofku7bot6/lvoQKICAgICAgICA6cGFyYW0gZnVuY190eXBlIChzdHIpOiDml6Xlv5fovpPlh7rlh73mlbDlkI3np7AKICAgICAgICAiIiIKICAgICAgICBkaXJlY3RvcnkgPSBmaWxlX3BhdGgucGFyZW50CiAgICAgICAgZmlsZV9zdGVtID0gZmlsZV9wYXRoLnN0ZW0KICAgICAgICBmb3IgaXRlbV90b19jaGVjayBpbiBkaXJlY3RvcnkuaXRlcmRpcigpOgogICAgICAgICAgICBpZiAoCiAgICAgICAgICAgICAgICBpdGVtX3RvX2NoZWNrLmlzX2ZpbGUoKQogICAgICAgICAgICAgICAgYW5kIGl0ZW1fdG9fY2hlY2sgIT0gZmlsZV9wYXRoCiAgICAgICAgICAgICAgICBhbmQgZmlsZV9zdGVtIGluIGl0ZW1fdG9fY2hlY2suc3RlbQogICAgICAgICAgICAgICAgYW5kIGl0ZW1fdG9fY2hlY2suc3VmZml4Lmxvd2VyKCkgIT0gIi5zdHJtIgogICAgICAgICAgICApOgogICAgICAgICAgICAgICAgbG9nZ2VyLndhcm4oZiJ7ZnVuY190eXBlfeWIoOmZpOaWh+S7tiB7aXRlbV90b19jaGVja30iKQogICAgICAgICAgICAgICAgaXRlbV90b19jaGVjay51bmxpbmsobWlzc2luZ19vaz1UcnVlKQo=
+__all__ = ["PathUtils", "PathRemoveUtils"]
+
+
+from os import name as os_name
+from pathlib import Path, PurePosixPath
+from shutil import rmtree
+from typing import List, Optional, Tuple
+
+from app.log import logger
+from app.utils.system import SystemUtils
+
+
+class PathUtils:
+    """
+    路径匹配
+    """
+
+    @staticmethod
+    def sanitize_path_parts(rel_path: Path) -> Path:
+        """
+        将相对路径各分量中的非法文件名字符替换为下划线（仅 Windows 生效，其他平台直接返回原路径）
+
+        :param rel_path (Path): 待处理的相对路径
+
+        :return Path: 处理后的相对路径
+        """
+        if os_name != "nt":
+            return rel_path
+        illegal_chars = '<>"|?*'
+        parts = list(rel_path.parts)
+        if not parts:
+            return rel_path
+        sanitized = []
+        for part in parts:
+            part = part.replace(":", "：")
+            for char in illegal_chars:
+                part = part.replace(char, "_")
+            sanitized.append(part)
+        result = Path(sanitized[0])
+        for part in sanitized[1:]:
+            result = result / part
+        return result
+
+    @staticmethod
+    def has_prefix(full_path, prefix_path) -> bool:
+        """
+        判断路径是否包含
+
+        :param full_path (str): 完整路径
+        :param prefix_path (str): 匹配路径
+
+        :return bool: 是否包含
+        """
+        if not full_path or not prefix_path:
+            return False
+        full = Path(full_path).parts
+        prefix = Path(prefix_path).parts
+
+        if len(prefix) > len(full):
+            return False
+
+        return full[: len(prefix)] == prefix
+
+    @staticmethod
+    def get_run_transfer_path(paths, transfer_path) -> bool:
+        """
+        判断路径是否为整理路径
+
+        :param paths (str): 换行分隔的整理路径列表
+        :param transfer_path (str): 待判断的转移路径
+
+        :return bool: 是否为整理路径
+        """
+        transfer_paths = paths.split("\n")
+        for path in transfer_paths:
+            if not path:
+                continue
+            if PathUtils.has_prefix(transfer_path, path):
+                return True
+        return False
+
+    @staticmethod
+    def get_scrape_metadata_exclude_path(paths, scrape_path) -> bool:
+        """
+        检查目录是否在排除目录内
+
+        :param paths (str): 换行分隔的排除路径列表
+        :param scrape_path (str): 待检查的刮削路径
+
+        :return bool: 是否在排除目录内
+        """
+        exclude_path = paths.split("\n")
+        for path in exclude_path:
+            if not path:
+                continue
+            if PathUtils.has_prefix(scrape_path, path):
+                return True
+        return False
+
+    @staticmethod
+    def get_media_path(paths, media_path) -> Tuple[bool, Optional[str], Optional[str]]:
+        """
+        获取媒体目录路径
+
+        :param paths (str): 换行分隔的媒体目录映射
+        :param media_path (str): 待匹配的媒体路径
+
+        :return Tuple: (是否匹配, 媒体服务器路径, 网盘路径)
+        """
+        media_paths = paths.split("\n")
+        for path in media_paths:
+            if not path:
+                continue
+            parts = path.split("#", 2)
+            if PathUtils.has_prefix(media_path, parts[1]):
+                return True, parts[0], parts[1]
+        return False, None, None
+
+    @staticmethod
+    def get_p115_strm_path(paths, media_path) -> Tuple[bool, Optional[str]]:
+        """
+        匹配全量目录，自动生成新的 paths
+
+        :param paths (str): 换行分隔的全量目录映射
+        :param media_path (str): 待匹配的媒体路径
+
+        :return Tuple: (是否匹配, 生成的路径字符串)
+        """
+        media_paths = paths.split("\n")
+        for path in media_paths:
+            if not path:
+                continue
+            parts = path.split("#", 2)
+            if PathUtils.has_prefix(media_path, parts[1]):
+                local_path = Path(parts[0]) / Path(media_path).relative_to(parts[1])
+                final_paths = f"{local_path}#{media_path}"
+                return True, final_paths
+        return False, None
+
+    @staticmethod
+    def get_p115_media_path(
+        media_path: str, p115_library_path: str
+    ) -> Tuple[bool, Optional[List[str]]]:
+        """
+        获取 115 网盘媒体目录路径
+
+        :param media_path (str): 媒体路径
+        :param p115_library_path (str): 115 网盘媒体库路径映射（格式：媒体服务器STRM路径#MoviePilot路径# 115 网盘路径）
+
+        :return Tuple: (是否匹配, 路径部分列表)
+        """
+        if not p115_library_path:
+            return False, None
+        media_paths = p115_library_path.split("\n")
+        for path in media_paths:
+            if not path:
+                continue
+            parts = path.split("#", 2)
+            if PathUtils.has_prefix(media_path, parts[0]):
+                return True, parts
+        return False, None
+
+    @staticmethod
+    def get_media_file_paths_with_suffix(
+        file_path: str, media_suffix: Optional[str]
+    ) -> Tuple[str, str]:
+        """
+        根据媒体库文件路径和真实媒体后缀还原网盘媒体路径
+
+        :param file_path (str): 媒体库文件路径
+        :param media_suffix (str): 真实媒体后缀
+
+        :return Tuple: 正常大小写路径和大小写切换路径
+        """
+        normalized_path = file_path.replace("\\", "/")
+        path = PurePosixPath(normalized_path)
+        if not path.suffix or not media_suffix:
+            return normalized_path, normalized_path
+
+        suffix = media_suffix.lstrip(".")
+        if not suffix:
+            return normalized_path, normalized_path
+
+        stem = path.stem
+        suffix_marker = f".{suffix}"
+        if stem.lower().endswith(suffix_marker.lower()):
+            base_stem = stem[: -(len(suffix) + 1)]
+            primary_suffix = stem[-len(suffix) :]
+        else:
+            base_stem = stem
+            primary_suffix = suffix
+
+        media_path = str(path.parent / f"{base_stem}.{primary_suffix}")
+        if primary_suffix.isupper():
+            final_suffix = primary_suffix.lower()
+        elif primary_suffix.islower():
+            final_suffix = primary_suffix.upper()
+        else:
+            final_suffix = primary_suffix
+
+        media_path_final = (
+            str(path.parent / f"{base_stem}.{final_suffix}")
+            if final_suffix != primary_suffix
+            else media_path
+        )
+        return media_path, media_path_final
+
+
+class PathRemoveUtils:
+    """
+    目录删除工具
+    """
+
+    @staticmethod
+    def remove_parent_dir(
+        file_path: Path,
+        mode: str | list = "all",
+        func_type: str = None,
+    ):
+        """
+        删除父目录
+
+        :param file_path (Path): 文件夹路径
+        :param mode (str): 删除模式，支持全部匹配（\"all\"）、文件后缀匹配（list）和混合模式（\"mixed\"，
+                     第一层以 \"all\" 判断空目录，上层以 [\"strm\"] 判断）
+        :param func_type (str): 日志输出函数名称
+        """
+        # 判断当前媒体父路径下是否有媒体文件，如有则无需遍历父级
+        if mode in ("all", "mixed"):
+            func_bool = any(file_path.parent.iterdir())
+        else:
+            func_bool = SystemUtils.exits_files(
+                directory=file_path.parent, extensions=mode
+            )
+        if not func_bool:
+            # 判断父目录是否为空, 为空则删除
+            i = 0
+            for parent_path in file_path.parents:
+                i += 1
+                if i > 3:
+                    break
+                if str(parent_path.parent) != str(file_path.root):
+                    # 父目录非根目录，才删除父目录
+                    if mode == "all" or (mode == "mixed" and i == 1):
+                        func_bool = any(parent_path.iterdir())
+                    elif mode == "mixed":
+                        # 混合模式：上层以 ["strm"] 判断，允许穿透含 sidecar 的上级目录
+                        func_bool = SystemUtils.exits_files(
+                            directory=parent_path, extensions=["strm"]
+                        )
+                    else:
+                        func_bool = SystemUtils.exits_files(
+                            directory=parent_path, extensions=mode
+                        )
+                    if not func_bool:
+                        # 当前路径下没有媒体文件则删除
+                        rmtree(parent_path)
+                        logger.warn(f"{func_type}本地空目录 {parent_path} 已删除")
+
+    @staticmethod
+    def clean_related_files(file_path: Path, func_type: str = None):
+        """
+        根据一个文件的路径，清理同一文件夹下文件名包含此文件名的其他文件
+
+        对于 .strm 后缀文件进行保护，不做删除操作
+
+        :param file_path (Path): 基准文件路径
+        :param func_type (str): 日志输出函数名称
+        """
+        directory = file_path.parent
+        file_stem = file_path.stem
+        for item_to_check in directory.iterdir():
+            if (
+                item_to_check.is_file()
+                and item_to_check != file_path
+                and file_stem in item_to_check.stem
+                and item_to_check.suffix.lower() != ".strm"
+            ):
+                logger.warn(f"{func_type}删除文件 {item_to_check}")
+                item_to_check.unlink(missing_ok=True)

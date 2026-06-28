@@ -1,1 +1,149 @@
-X19hbGxfXyA9IFsiQ3JvblV0aWxzIl0KCgpmcm9tIHR5cGluZyBpbXBvcnQgVHVwbGUKCmZyb20gYXBzY2hlZHVsZXIudHJpZ2dlcnMuY3JvbiBpbXBvcnQgQ3JvblRyaWdnZXIKCgpjbGFzcyBDcm9uVXRpbHM6CiAgICAiIiIKICAgIGNyb24g6KGo6L6+5byP5bel5YW357G7CiAgICAiIiIKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgdmFsaWRhdGVfY3Jvbl9leHByZXNzaW9uKGNyb25fZXhwcjogc3RyKSAtPiBUdXBsZVtib29sLCBzdHJdOgogICAgICAgICIiIgogICAgICAgIOmqjOivgSBjcm9uIOihqOi+vuW8j+aYr+WQpuacieaViAoKICAgICAgICA6cGFyYW0gY3Jvbl9leHByIChzdHIpOiBjcm9uIOihqOi+vuW8j+Wtl+espuS4sgoKICAgICAgICA6cmV0dXJuIFR1cGxlOiAo5piv5ZCm5pyJ5pWILCDplJnor6/kv6Hmga8pCiAgICAgICAgIiIiCiAgICAgICAgaWYgbm90IGNyb25fZXhwciBvciBub3QgY3Jvbl9leHByLnN0cmlwKCk6CiAgICAgICAgICAgIHJldHVybiBGYWxzZSwgIiIKCiAgICAgICAgdHJ5OgogICAgICAgICAgICBDcm9uVHJpZ2dlci5mcm9tX2Nyb250YWIoY3Jvbl9leHByKQogICAgICAgICAgICByZXR1cm4gVHJ1ZSwgIiIKICAgICAgICBleGNlcHQgKFZhbHVlRXJyb3IsIFR5cGVFcnJvcikgYXMgZToKICAgICAgICAgICAgcmV0dXJuIEZhbHNlLCBmIuaXoOaViOeahCBjcm9uIOihqOi+vuW8jyAne2Nyb25fZXhwcn0nOiB7ZX0iCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICByZXR1cm4gRmFsc2UsIGYi6aqM6K+BIGNyb24g6KGo6L6+5byP5pe25Y+R55Sf6ZSZ6K+vICd7Y3Jvbl9leHByfSc6IHtlfSIKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgZml4X2Nyb25fZXhwcmVzc2lvbihjcm9uX2V4cHI6IHN0cikgLT4gc3RyOgogICAgICAgICIiIgogICAgICAgIOS/ruWkjSBjcm9uIOihqOi+vuW8j+mUmeivrwoKICAgICAgICA6cGFyYW0gY3Jvbl9leHByIChzdHIpOiDljp/lp4sgY3JvbiDooajovr7lvI8KCiAgICAgICAgOnJldHVybiBzdHI6IOS/ruWkjeWQjueahCBjcm9uIOihqOi+vuW8jwogICAgICAgICIiIgogICAgICAgIGlmIG5vdCBjcm9uX2V4cHI6CiAgICAgICAgICAgIHJldHVybiBjcm9uX2V4cHIKCiAgICAgICAgcGFydHMgPSBjcm9uX2V4cHIuc3BsaXQoKQogICAgICAgIGlmIGxlbihwYXJ0cykgIT0gNToKICAgICAgICAgICAgcmV0dXJuIGNyb25fZXhwcgoKICAgICAgICAjIOWumuS5ieWQhOWtl+auteeahOiMg+WbtAogICAgICAgIGZpZWxkX3JhbmdlcyA9IFsKICAgICAgICAgICAgKDAsIDU5KSwgICMg5YiG6ZKfICgwLTU5KQogICAgICAgICAgICAoMCwgMjMpLCAgIyDlsI/ml7YgKDAtMjMpCiAgICAgICAgICAgICgxLCAzMSksICAjIOaXpeacnyAoMS0zMSkKICAgICAgICAgICAgKDEsIDEyKSwgICMg5pyI5Lu9ICgxLTEyKQogICAgICAgICAgICAoMCwgNyksICAjIOaYn+acnyAoMC03LCAw5ZKMN+mDveihqOekuuWRqOaXpSkKICAgICAgICBdCgogICAgICAgIGZpeGVkX3BhcnRzID0gW10KCiAgICAgICAgZm9yIGksIHBhcnQgaW4gZW51bWVyYXRlKHBhcnRzKToKICAgICAgICAgICAgbWluX3ZhbCwgbWF4X3ZhbCA9IGZpZWxkX3Jhbmdlc1tpXQogICAgICAgICAgICBmaXhlZF9wYXJ0ID0gQ3JvblV0aWxzLl9maXhfY3Jvbl9maWVsZChwYXJ0LCBtaW5fdmFsLCBtYXhfdmFsKQogICAgICAgICAgICBmaXhlZF9wYXJ0cy5hcHBlbmQoZml4ZWRfcGFydCkKCiAgICAgICAgcmV0dXJuICIgIi5qb2luKGZpeGVkX3BhcnRzKQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBfZml4X2Nyb25fZmllbGQoZmllbGQ6IHN0ciwgbWluX3ZhbDogaW50LCBtYXhfdmFsOiBpbnQpIC0+IHN0cjoKICAgICAgICAiIiIKICAgICAgICDkv67lpI3ljZXkuKogY3JvbiDlrZfmrrUKCiAgICAgICAgOnBhcmFtIGZpZWxkIChzdHIpOiDlrZfmrrXlgLwKICAgICAgICA6cGFyYW0gbWluX3ZhbCAoaW50KTog5pyA5bCP5YC8CiAgICAgICAgOnBhcmFtIG1heF92YWwgKGludCk6IOacgOWkp+WAvAoKICAgICAgICA6cmV0dXJuIHN0cjog5L+u5aSN5ZCO55qE5a2X5q615YC8CiAgICAgICAgIiIiCiAgICAgICAgaWYgZmllbGQgPT0gIioiOgogICAgICAgICAgICByZXR1cm4gZmllbGQKCiAgICAgICAgIyDpgJflj7fliIbpmpTnmoTliJfooajmmK/mnIDpq5jnuqfliKvnmoTnu5PmnoQKICAgICAgICBpZiAiLCIgaW4gZmllbGQ6CiAgICAgICAgICAgIHZhbHVlcyA9IGZpZWxkLnNwbGl0KCIsIikKICAgICAgICAgICAgZml4ZWRfdmFsdWVzID0gWwogICAgICAgICAgICAgICAgQ3JvblV0aWxzLl9maXhfY3Jvbl9maWVsZCh2YWwuc3RyaXAoKSwgbWluX3ZhbCwgbWF4X3ZhbCkKICAgICAgICAgICAgICAgIGZvciB2YWwgaW4gdmFsdWVzCiAgICAgICAgICAgIF0KICAgICAgICAgICAgcmV0dXJuICIsIi5qb2luKGZpeGVkX3ZhbHVlcykKCiAgICAgICAgIyDlhbbmrKHmmK/mraXplb8KICAgICAgICBpZiAiLyIgaW4gZmllbGQ6CiAgICAgICAgICAgIGJhc2VfcGFydCwgc3RlcF9zdHIgPSBmaWVsZC5zcGxpdCgiLyIsIDEpCiAgICAgICAgICAgICMg6YCS5b2S5L+u5aSNIGJhc2VfcGFydAogICAgICAgICAgICBmaXhlZF9iYXNlID0gQ3JvblV0aWxzLl9maXhfY3Jvbl9maWVsZChiYXNlX3BhcnQsIG1pbl92YWwsIG1heF92YWwpCiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHN0ZXBfdmFsID0gaW50KHN0ZXBfc3RyKQogICAgICAgICAgICAgICAgaWYgc3RlcF92YWwgPiBtYXhfdmFsOgogICAgICAgICAgICAgICAgICAgIHN0ZXBfdmFsID0gbWF4X3ZhbAogICAgICAgICAgICAgICAgZWxpZiBzdGVwX3ZhbCA8IDE6CiAgICAgICAgICAgICAgICAgICAgc3RlcF92YWwgPSAxCiAgICAgICAgICAgICAgICByZXR1cm4gZiJ7Zml4ZWRfYmFzZX0ve3N0ZXBfdmFsfSIKICAgICAgICAgICAgZXhjZXB0IFZhbHVlRXJyb3I6CiAgICAgICAgICAgICAgICByZXR1cm4gZmllbGQgICMg5peg5rOV5L+u5aSNCgogICAgICAgICMg54S25ZCO5piv6IyD5Zu0CiAgICAgICAgaWYgIi0iIGluIGZpZWxkOgogICAgICAgICAgICBzdGFydCwgZW5kID0gZmllbGQuc3BsaXQoIi0iLCAxKQogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICBzdGFydF92YWwsIGVuZF92YWwgPSBpbnQoc3RhcnQpLCBpbnQoZW5kKQogICAgICAgICAgICAgICAgc3RhcnRfdmFsID0gbWF4KG1pbl92YWwsIG1pbihzdGFydF92YWwsIG1heF92YWwpKQogICAgICAgICAgICAgICAgZW5kX3ZhbCA9IG1heChtaW5fdmFsLCBtaW4oZW5kX3ZhbCwgbWF4X3ZhbCkpCiAgICAgICAgICAgICAgICBpZiBzdGFydF92YWwgPiBlbmRfdmFsOgogICAgICAgICAgICAgICAgICAgIHN0YXJ0X3ZhbCwgZW5kX3ZhbCA9IGVuZF92YWwsIHN0YXJ0X3ZhbAogICAgICAgICAgICAgICAgcmV0dXJuIGYie3N0YXJ0X3ZhbH0te2VuZF92YWx9IgogICAgICAgICAgICBleGNlcHQgVmFsdWVFcnJvcjoKICAgICAgICAgICAgICAgIHJldHVybiBmaWVsZAoKICAgICAgICAjIOacgOWQjuaYr+WNleS4quWAvAogICAgICAgIHRyeToKICAgICAgICAgICAgaW50X3ZhbCA9IGludChmaWVsZCkKICAgICAgICAgICAgaWYgaW50X3ZhbCA+IG1heF92YWw6CiAgICAgICAgICAgICAgICBpbnRfdmFsID0gbWF4X3ZhbAogICAgICAgICAgICBlbGlmIGludF92YWwgPCBtaW5fdmFsOgogICAgICAgICAgICAgICAgaW50X3ZhbCA9IG1pbl92YWwKICAgICAgICAgICAgcmV0dXJuIHN0cihpbnRfdmFsKQogICAgICAgIGV4Y2VwdCBWYWx1ZUVycm9yOgogICAgICAgICAgICByZXR1cm4gZmllbGQKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgZ2V0X2RlZmF1bHRfY3JvbigpIC0+IHN0cjoKICAgICAgICAiIiIKICAgICAgICDojrflj5bpu5jorqTnmoQgY3JvbiDooajovr7lvI8KCiAgICAgICAgOnJldHVybiBzdHI6IOm7mOiupCBjcm9uIOihqOi+vuW8jwogICAgICAgICIiIgogICAgICAgIHJldHVybiAiMCAqLzYgKiAqICoiCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIGlzX3ZhbGlkX2Nyb24oY3Jvbl9leHByOiBzdHIpIC0+IGJvb2w6CiAgICAgICAgIiIiCiAgICAgICAg566A5Y2V5qOA5p+lIGNyb24g6KGo6L6+5byP5piv5ZCm5pyJ5pWICgogICAgICAgIDpwYXJhbSBjcm9uX2V4cHIgKHN0cik6IGNyb24g6KGo6L6+5byPCgogICAgICAgIDpyZXR1cm4gYm9vbDog5piv5ZCm5pyJ5pWICiAgICAgICAgIiIiCiAgICAgICAgc3RhdHVzLCBfID0gQ3JvblV0aWxzLnZhbGlkYXRlX2Nyb25fZXhwcmVzc2lvbihjcm9uX2V4cHIpCiAgICAgICAgcmV0dXJuIHN0YXR1cwo=
+__all__ = ["CronUtils"]
+
+
+from typing import Tuple
+
+from apscheduler.triggers.cron import CronTrigger
+
+
+class CronUtils:
+    """
+    cron 表达式工具类
+    """
+
+    @staticmethod
+    def validate_cron_expression(cron_expr: str) -> Tuple[bool, str]:
+        """
+        验证 cron 表达式是否有效
+
+        :param cron_expr (str): cron 表达式字符串
+
+        :return Tuple: (是否有效, 错误信息)
+        """
+        if not cron_expr or not cron_expr.strip():
+            return False, ""
+
+        try:
+            CronTrigger.from_crontab(cron_expr)
+            return True, ""
+        except (ValueError, TypeError) as e:
+            return False, f"无效的 cron 表达式 '{cron_expr}': {e}"
+        except Exception as e:
+            return False, f"验证 cron 表达式时发生错误 '{cron_expr}': {e}"
+
+    @staticmethod
+    def fix_cron_expression(cron_expr: str) -> str:
+        """
+        修复 cron 表达式错误
+
+        :param cron_expr (str): 原始 cron 表达式
+
+        :return str: 修复后的 cron 表达式
+        """
+        if not cron_expr:
+            return cron_expr
+
+        parts = cron_expr.split()
+        if len(parts) != 5:
+            return cron_expr
+
+        # 定义各字段的范围
+        field_ranges = [
+            (0, 59),  # 分钟 (0-59)
+            (0, 23),  # 小时 (0-23)
+            (1, 31),  # 日期 (1-31)
+            (1, 12),  # 月份 (1-12)
+            (0, 7),  # 星期 (0-7, 0和7都表示周日)
+        ]
+
+        fixed_parts = []
+
+        for i, part in enumerate(parts):
+            min_val, max_val = field_ranges[i]
+            fixed_part = CronUtils._fix_cron_field(part, min_val, max_val)
+            fixed_parts.append(fixed_part)
+
+        return " ".join(fixed_parts)
+
+    @staticmethod
+    def _fix_cron_field(field: str, min_val: int, max_val: int) -> str:
+        """
+        修复单个 cron 字段
+
+        :param field (str): 字段值
+        :param min_val (int): 最小值
+        :param max_val (int): 最大值
+
+        :return str: 修复后的字段值
+        """
+        if field == "*":
+            return field
+
+        # 逗号分隔的列表是最高级别的结构
+        if "," in field:
+            values = field.split(",")
+            fixed_values = [
+                CronUtils._fix_cron_field(val.strip(), min_val, max_val)
+                for val in values
+            ]
+            return ",".join(fixed_values)
+
+        # 其次是步长
+        if "/" in field:
+            base_part, step_str = field.split("/", 1)
+            # 递归修复 base_part
+            fixed_base = CronUtils._fix_cron_field(base_part, min_val, max_val)
+            try:
+                step_val = int(step_str)
+                if step_val > max_val:
+                    step_val = max_val
+                elif step_val < 1:
+                    step_val = 1
+                return f"{fixed_base}/{step_val}"
+            except ValueError:
+                return field  # 无法修复
+
+        # 然后是范围
+        if "-" in field:
+            start, end = field.split("-", 1)
+            try:
+                start_val, end_val = int(start), int(end)
+                start_val = max(min_val, min(start_val, max_val))
+                end_val = max(min_val, min(end_val, max_val))
+                if start_val > end_val:
+                    start_val, end_val = end_val, start_val
+                return f"{start_val}-{end_val}"
+            except ValueError:
+                return field
+
+        # 最后是单个值
+        try:
+            int_val = int(field)
+            if int_val > max_val:
+                int_val = max_val
+            elif int_val < min_val:
+                int_val = min_val
+            return str(int_val)
+        except ValueError:
+            return field
+
+    @staticmethod
+    def get_default_cron() -> str:
+        """
+        获取默认的 cron 表达式
+
+        :return str: 默认 cron 表达式
+        """
+        return "0 */6 * * *"
+
+    @staticmethod
+    def is_valid_cron(cron_expr: str) -> bool:
+        """
+        简单检查 cron 表达式是否有效
+
+        :param cron_expr (str): cron 表达式
+
+        :return bool: 是否有效
+        """
+        status, _ = CronUtils.validate_cron_expression(cron_expr)
+        return status

@@ -1,1 +1,23 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IE9wdGlvbmFsCgpmcm9tIHB5ZGFudGljIGltcG9ydCBCYXNlTW9kZWwsIEZpZWxkCgoKY2xhc3MgRnVzZU1vdW50UGF5bG9hZChCYXNlTW9kZWwpOgogICAgIiIiCiAgICBGVVNFIOaMgui9veivt+axguS9kwogICAgIiIiCgogICAgbW91bnRwb2ludDogc3RyID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i5oyC6L2954K56Lev5b6EIikKICAgIHJlYWRkaXJfdHRsOiBmbG9hdCA9IEZpZWxkKGRlZmF1bHQ9NjAsIGdlPTAsIGRlc2NyaXB0aW9uPSLnm67lvZXor7vlj5bnvJPlrZggVFRM77yI56eS77yJIikKCgpjbGFzcyBGdXNlU3RhdHVzRGF0YShCYXNlTW9kZWwpOgogICAgIiIiCiAgICBGVVNFIOeKtuaAgeaVsOaNrgogICAgIiIiCgogICAgZW5hYmxlZDogYm9vbCA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuaYr+WQpuWQr+eUqCIpCiAgICBtb3VudGVkOiBib29sID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i5piv5ZCm5bey5oyC6L29IikKICAgIG1vdW50cG9pbnQ6IE9wdGlvbmFsW3N0cl0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLmjILovb3ngrnot6/lvoQiKQogICAgcmVhZGRpcl90dGw6IGZsb2F0ID0gRmllbGQoZGVmYXVsdD02MCwgZGVzY3JpcHRpb249IuebruW9leivu+WPlue8k+WtmCBUVEzvvIjnp5LvvIkiKQo=
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+
+class FuseMountPayload(BaseModel):
+    """
+    FUSE 挂载请求体
+    """
+
+    mountpoint: str = Field(..., description="挂载点路径")
+    readdir_ttl: float = Field(default=60, ge=0, description="目录读取缓存 TTL（秒）")
+
+
+class FuseStatusData(BaseModel):
+    """
+    FUSE 状态数据
+    """
+
+    enabled: bool = Field(..., description="是否启用")
+    mounted: bool = Field(..., description="是否已挂载")
+    mountpoint: Optional[str] = Field(default=None, description="挂载点路径")
+    readdir_ttl: float = Field(default=60, description="目录读取缓存 TTL（秒）")

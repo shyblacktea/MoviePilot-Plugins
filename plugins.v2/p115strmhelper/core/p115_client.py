@@ -1,1 +1,224 @@
-ZnJvbSBpbnNwZWN0IGltcG9ydCBzaWduYXR1cmUgYXMgaW5zcGVjdF9zaWduYXR1cmUKZnJvbSB0eXBpbmcgaW1wb3J0IEFueSwgQ2FsbGFibGUsIERpY3QsIE9wdGlvbmFsCgpmcm9tIHAxMTVjbGllbnQgaW1wb3J0IFAxMTVDbGllbnQKCmZyb20gYXBwLmxvZyBpbXBvcnQgbG9nZ2VyCgoKU0xPV19NRVRIT0RTID0gewogICAgImRvd25sb2FkX3VybCIsCiAgICAiZG93bmxvYWRfdXJsX2FwcCIsCiAgICAiZG93bmxvYWRfdXJscyIsCiAgICAidXBsb2FkX2ZpbGVfaW5pdCIsCiAgICAidXBsb2FkX2dldHRva2VuIiwKICAgICJ1cGxvYWRfZmlsZSIsCiAgICAic2hhcmVfc25hcCIsCiAgICAic2hhcmVfc25hcF9hcHAiLAogICAgInNoYXJlX3NuYXBfY29va2llIiwKICAgICJzaGFyZV9yZWNlaXZlIiwKICAgICJsaWZlX2JlaGF2aW9yX2RldGFpbCIsCiAgICAibGlmZV9iZWhhdmlvcl9kZXRhaWxfYXBwIiwKICAgICJvZmZsaW5lX2FkZF91cmxzIiwKfQoKTk9fVElNRU9VVF9NRVRIT0RTID0gewogICAgInRvX3BpY2tjb2RlIiwKICAgICJ0b19pZCIsCiAgICAiZ2V0X2ZzIiwKICAgICJsb2dpbl9hcHAiLAogICAgImxvZ2luX3FyY29kZSIsCiAgICAibG9naW5fcXJjb2RlX3Rva2VuIiwKICAgICJsb2dpbl9xcmNvZGVfc2Nhbl9zdGF0dXMiLAogICAgImxvZ2luX3FyY29kZV9zY2FuX3Jlc3VsdCIsCn0KCgpkZWYgX2FjY2VwdHNfZXh0cmFfa3dhcmdzKGZ1bmM6IENhbGxhYmxlKSAtPiBib29sOgogICAgdHJ5OgogICAgICAgIHNpZyA9IGluc3BlY3Rfc2lnbmF0dXJlKGZ1bmMpCiAgICAgICAgcmV0dXJuIGFueShwLmtpbmQgPT0gcC5WQVJfS0VZV09SRCBmb3IgcCBpbiBzaWcucGFyYW1ldGVycy52YWx1ZXMoKSkKICAgIGV4Y2VwdCAoVmFsdWVFcnJvciwgVHlwZUVycm9yKToKICAgICAgICByZXR1cm4gRmFsc2UKCgpkZWYgX21ha2VfdGltZW91dF93cmFwcGVyKAogICAgZGVmYXVsdF90aW1lb3V0OiBEaWN0W3N0ciwgQW55XSwgc2xvd190aW1lb3V0OiBEaWN0W3N0ciwgQW55XQopOgogICAgZGVmIF9fZ2V0YXR0cmlidXRlX18oc2VsZiwgbmFtZTogc3RyKToKICAgICAgICBpZiBuYW1lLnN0YXJ0c3dpdGgoIl8iKSBvciBuYW1lIGluICgKICAgICAgICAgICAgIl9faW5pdF9fIiwKICAgICAgICAgICAgIl9fY2xhc3NfXyIsCiAgICAgICAgICAgICJfX2RpY3RfXyIsCiAgICAgICAgICAgICJfX2dldGF0dHJpYnV0ZV9fIiwKICAgICAgICAgICAgIl9fZ2V0YXR0cl9fIiwKICAgICAgICApOgogICAgICAgICAgICByZXR1cm4gb2JqZWN0Ll9fZ2V0YXR0cmlidXRlX18oc2VsZiwgbmFtZSkKCiAgICAgICAgYXR0ciA9IG9iamVjdC5fX2dldGF0dHJpYnV0ZV9fKHNlbGYsIG5hbWUpCgogICAgICAgIGlmIG5hbWUgaW4gTk9fVElNRU9VVF9NRVRIT0RTOgogICAgICAgICAgICByZXR1cm4gYXR0cgoKICAgICAgICB0aW1lb3V0ID0gc2xvd190aW1lb3V0IGlmIG5hbWUgaW4gU0xPV19NRVRIT0RTIGVsc2UgZGVmYXVsdF90aW1lb3V0CgogICAgICAgIGlmIGNhbGxhYmxlKGF0dHIpIGFuZCB0aW1lb3V0OgogICAgICAgICAgICBpZiBub3QgX2FjY2VwdHNfZXh0cmFfa3dhcmdzKGF0dHIpOgogICAgICAgICAgICAgICAgcmV0dXJuIGF0dHIKCiAgICAgICAgICAgIGRlZiB3cmFwcGVyKCphcmdzLCAqKmt3YXJncyk6CiAgICAgICAgICAgICAgICAiIiIKICAgICAgICAgICAgICAgIOaLpuaIqiBBUEkg5pa55rOV6LCD55So77yM6Ieq5Yqo5rOo5YWl6LaF5pe26YWN572u5YiwIGV4dGVuc2lvbnMg5Y+C5pWw5LitCgogICAgICAgICAgICAgICAg6Iul6LCD55So6ICF5bey5pi+5byP5oyH5a6aIGV4dGVuc2lvbnNbInRpbWVvdXQiXe+8jOWImei3s+i/h+azqOWFpQogICAgICAgICAgICAgICAgIiIiCiAgICAgICAgICAgICAgICBpZiAiZXh0ZW5zaW9ucyIgaW4ga3dhcmdzIGFuZCAidGltZW91dCIgaW4ga3dhcmdzLmdldCgiZXh0ZW5zaW9ucyIsIHt9KToKICAgICAgICAgICAgICAgICAgICBsb2dnZXIuZGVidWcoZiLjgJDotoXml7bljIXoo4XjgJF7bmFtZX0g6LCD55So6ICF5bey5oyH5a6a6LaF5pe277yM6Lez6L+H5rOo5YWlIikKICAgICAgICAgICAgICAgICAgICByZXR1cm4gYXR0cigqYXJncywgKiprd2FyZ3MpCiAgICAgICAgICAgICAgICBpZiAiZXh0ZW5zaW9ucyIgbm90IGluIGt3YXJnczoKICAgICAgICAgICAgICAgICAgICBrd2FyZ3NbImV4dGVuc2lvbnMiXSA9IHt9CiAgICAgICAgICAgICAgICBrd2FyZ3NbImV4dGVuc2lvbnMiXVsidGltZW91dCJdID0gdGltZW91dAogICAgICAgICAgICAgICAgdGltZW91dF90eXBlID0gIuaFouaTjeS9nCIgaWYgbmFtZSBpbiBTTE9XX01FVEhPRFMgZWxzZSAi5pmu6YCaIgogICAgICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKGYi44CQ6LaF5pe25YyF6KOF44CRe25hbWV9IOazqOWFpXt0aW1lb3V0X3R5cGV96LaF5pe2OiB7dGltZW91dH0iKQogICAgICAgICAgICAgICAgcmV0dXJuIGF0dHIoKmFyZ3MsICoqa3dhcmdzKQoKICAgICAgICAgICAgcmV0dXJuIHdyYXBwZXIKICAgICAgICByZXR1cm4gYXR0cgoKICAgIHJldHVybiBfX2dldGF0dHJpYnV0ZV9fCgoKZGVmIGNyZWF0ZV9jbGllbnRfd2l0aF90aW1lb3V0KAogICAgY2xpZW50OiBQMTE1Q2xpZW50LAogICAgZGVmYXVsdF90aW1lb3V0OiBPcHRpb25hbFtEaWN0W3N0ciwgQW55XV0gPSBOb25lLAogICAgc2xvd190aW1lb3V0OiBPcHRpb25hbFtEaWN0W3N0ciwgQW55XV0gPSBOb25lLAopIC0+IFAxMTVDbGllbnQ6CiAgICAiIiIKICAgIOS4uueOsOacieeahCBQMTE1Q2xpZW50IOWunuS+i+a3u+WKoOi2heaXtuaUr+aMgQoKICAgIDpwYXJhbSBjbGllbnQ6IFAxMTVDbGllbnQg5a6e5L6L77yI5oiW5YW25a2Q57G777yJCiAgICA6cGFyYW0gZGVmYXVsdF90aW1lb3V0OiDmma7pgJrmk43kvZzotoXml7bphY3nva4KICAgIDpwYXJhbSBzbG93X3RpbWVvdXQ6IOaFouaTjeS9nOi2heaXtumFjee9rgogICAgOnJldHVybjog5bim6LaF5pe25pSv5oyB55qE5a6i5oi356uvCiAgICAiIiIKICAgIGlmIG5vdCBkZWZhdWx0X3RpbWVvdXQ6CiAgICAgICAgcmV0dXJuIGNsaWVudAoKICAgIHNsb3dfdGltZW91dCA9IHNsb3dfdGltZW91dCBvciBkZWZhdWx0X3RpbWVvdXQKCiAgICBjbGFzcyBUaW1lb3V0TWl4aW46CiAgICAgICAgIiIiCiAgICAgICAg6LaF5pe25rOo5YWl5re35YWl57G777yM6YCa6L+H6Ieq5a6a5LmJIF9fZ2V0YXR0cmlidXRlX18g5oum5oiq5pa55rOV6LCD55So5bm25rOo5YWl6LaF5pe25Y+C5pWwCiAgICAgICAgIiIiCgogICAgICAgIF9fZ2V0YXR0cmlidXRlX18gPSBfbWFrZV90aW1lb3V0X3dyYXBwZXIoZGVmYXVsdF90aW1lb3V0LCBzbG93X3RpbWVvdXQpCgogICAgd3JhcHBlcl9jbGFzcyA9IHR5cGUoCiAgICAgICAgZiJ7dHlwZShjbGllbnQpLl9fbmFtZV9ffVdpdGhUaW1lb3V0IiwKICAgICAgICAoVGltZW91dE1peGluLCB0eXBlKGNsaWVudCkpLAogICAgICAgIHt9LAogICAgKQoKICAgIHdyYXBwZXIgPSBvYmplY3QuX19uZXdfXyh3cmFwcGVyX2NsYXNzKQogICAgZm9yIGtleSwgdmFsdWUgaW4gY2xpZW50Ll9fZGljdF9fLml0ZW1zKCk6CiAgICAgICAgb2JqZWN0Ll9fc2V0YXR0cl9fKHdyYXBwZXIsIGtleSwgdmFsdWUpCiAgICByZXR1cm4gd3JhcHBlcgoKCmNsYXNzIFAxMTVDbGllbnRXaXRoVGltZW91dChQMTE1Q2xpZW50KToKICAgICIiIgogICAgUDExNUNsaWVudCDlrZDnsbvvvIzoh6rliqjms6jlhaXotoXml7bphY3nva7liLDmiYDmnIkgQVBJIOiwg+eUqAoKICAgIOaUr+aMgeS4pOenjei2heaXtue6p+WIq++8mgogICAgLSBkZWZhdWx0X3RpbWVvdXQ6IOaZrumAmuaTjeS9nO+8iGxpc3QvZGV0YWlsL3JlbmFtZSDnrYnvvIkKICAgIC0gc2xvd190aW1lb3V0OiDmhaLmk43kvZzvvIh1cGxvYWQvZG93bmxvYWQvaXRlciDnrYnvvIkKCiAgICDlpoLmnpzosIPnlKjogIXmmL7lvI/mjIflrpogZXh0ZW5zaW9uc1sidGltZW91dCJd77yM5YiZ5LyY5YWI5L2/55So6LCD55So6ICF55qE6YWN572uCiAgICAiIiIKCiAgICBkZWYgX19pbml0X18oCiAgICAgICAgc2VsZiwKICAgICAgICBjb29raWVzOiBBbnksCiAgICAgICAgZGVmYXVsdF90aW1lb3V0OiBPcHRpb25hbFtEaWN0W3N0ciwgQW55XV0gPSBOb25lLAogICAgICAgIHNsb3dfdGltZW91dDogT3B0aW9uYWxbRGljdFtzdHIsIEFueV1dID0gTm9uZSwKICAgICAgICAqKmt3YXJncywKICAgICk6CiAgICAgICAgIiIiCiAgICAgICAg5Yid5aeL5YyW6LaF5pe25YyF6KOF5ZmoCgogICAgICAgIDpwYXJhbSBjb29raWVzOiAxMTUgQ29va2ll77yI5a2X56ym5Liy5oiW6Lev5b6E77yJCiAgICAgICAgOnBhcmFtIGRlZmF1bHRfdGltZW91dDog5pmu6YCa5pON5L2c6LaF5pe26YWN572u77yM5aaCIHsiY29ubmVjdCI6IDMwLCAicmVhZCI6IDYwfQogICAgICAgIDpwYXJhbSBzbG93X3RpbWVvdXQ6IOaFouaTjeS9nOi2heaXtumFjee9ru+8jOWmgiB7ImNvbm5lY3QiOiAzMCwgInJlYWQiOiAzMDB9CiAgICAgICAgIiIiCiAgICAgICAgc3VwZXIoKS5fX2luaXRfXyhjb29raWVzLCAqKmt3YXJncykKICAgICAgICBzZWxmLl9kZWZhdWx0X3RpbWVvdXQgPSBkZWZhdWx0X3RpbWVvdXQKICAgICAgICBzZWxmLl9zbG93X3RpbWVvdXQgPSBzbG93X3RpbWVvdXQgb3IgZGVmYXVsdF90aW1lb3V0CgogICAgZGVmIF9fZ2V0YXR0cmlidXRlX18oc2VsZiwgbmFtZTogc3RyKToKICAgICAgICBpZiBuYW1lLnN0YXJ0c3dpdGgoIl8iKSBvciBuYW1lIGluICgKICAgICAgICAgICAgIl9faW5pdF9fIiwKICAgICAgICAgICAgIl9fY2xhc3NfXyIsCiAgICAgICAgICAgICJfX2RpY3RfXyIsCiAgICAgICAgICAgICJfX2dldGF0dHJpYnV0ZV9fIiwKICAgICAgICAgICAgIl9fZ2V0YXR0cl9fIiwKICAgICAgICApOgogICAgICAgICAgICByZXR1cm4gb2JqZWN0Ll9fZ2V0YXR0cmlidXRlX18oc2VsZiwgbmFtZSkKCiAgICAgICAgYXR0ciA9IG9iamVjdC5fX2dldGF0dHJpYnV0ZV9fKHNlbGYsIG5hbWUpCgogICAgICAgIHRyeToKICAgICAgICAgICAgZGVmYXVsdF90aW1lb3V0ID0gb2JqZWN0Ll9fZ2V0YXR0cmlidXRlX18oc2VsZiwgIl9kZWZhdWx0X3RpbWVvdXQiKQogICAgICAgICAgICBzbG93X3RpbWVvdXQgPSBvYmplY3QuX19nZXRhdHRyaWJ1dGVfXyhzZWxmLCAiX3Nsb3dfdGltZW91dCIpCiAgICAgICAgZXhjZXB0IEF0dHJpYnV0ZUVycm9yOgogICAgICAgICAgICByZXR1cm4gYXR0cgoKICAgICAgICBpZiBuYW1lIGluIE5PX1RJTUVPVVRfTUVUSE9EUzoKICAgICAgICAgICAgcmV0dXJuIGF0dHIKCiAgICAgICAgdGltZW91dCA9IHNsb3dfdGltZW91dCBpZiBuYW1lIGluIFNMT1dfTUVUSE9EUyBlbHNlIGRlZmF1bHRfdGltZW91dAoKICAgICAgICBpZiBjYWxsYWJsZShhdHRyKSBhbmQgdGltZW91dDoKICAgICAgICAgICAgaWYgbm90IF9hY2NlcHRzX2V4dHJhX2t3YXJncyhhdHRyKToKICAgICAgICAgICAgICAgIHJldHVybiBhdHRyCgogICAgICAgICAgICBkZWYgd3JhcHBlcigqYXJncywgKiprd2FyZ3MpOgogICAgICAgICAgICAgICAgIiIiCiAgICAgICAgICAgICAgICDmi6bmiKogQVBJIOaWueazleiwg+eUqO+8jOiHquWKqOazqOWFpei2heaXtumFjee9ruWIsCBleHRlbnNpb25zIOWPguaVsOS4rQoKICAgICAgICAgICAgICAgIOiLpeiwg+eUqOiAheW3suaYvuW8j+aMh+WumiBleHRlbnNpb25zWyJ0aW1lb3V0Il3vvIzliJnot7Pov4fms6jlhaUKICAgICAgICAgICAgICAgICIiIgogICAgICAgICAgICAgICAgaWYgImV4dGVuc2lvbnMiIGluIGt3YXJncyBhbmQgInRpbWVvdXQiIGluIGt3YXJncy5nZXQoImV4dGVuc2lvbnMiLCB7fSk6CiAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKGYi44CQ6LaF5pe25YyF6KOF44CRe25hbWV9IOiwg+eUqOiAheW3suaMh+Wumui2heaXtu+8jOi3s+i/h+azqOWFpSIpCiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIGF0dHIoKmFyZ3MsICoqa3dhcmdzKQogICAgICAgICAgICAgICAgaWYgImV4dGVuc2lvbnMiIG5vdCBpbiBrd2FyZ3M6CiAgICAgICAgICAgICAgICAgICAga3dhcmdzWyJleHRlbnNpb25zIl0gPSB7fQogICAgICAgICAgICAgICAga3dhcmdzWyJleHRlbnNpb25zIl1bInRpbWVvdXQiXSA9IHRpbWVvdXQKICAgICAgICAgICAgICAgIHRpbWVvdXRfdHlwZSA9ICLmhaLmk43kvZwiIGlmIG5hbWUgaW4gU0xPV19NRVRIT0RTIGVsc2UgIuaZrumAmiIKICAgICAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZyhmIuOAkOi2heaXtuWMheijheOAkXtuYW1lfSDms6jlhaV7dGltZW91dF90eXBlfei2heaXtjoge3RpbWVvdXR9IikKICAgICAgICAgICAgICAgIHJldHVybiBhdHRyKCphcmdzLCAqKmt3YXJncykKCiAgICAgICAgICAgIHJldHVybiB3cmFwcGVyCiAgICAgICAgcmV0dXJuIGF0dHIKCgpkZWYgY3JlYXRlX2NsaWVudCgKICAgIGNvb2tpZXM6IEFueSwKICAgIGRlZmF1bHRfdGltZW91dDogT3B0aW9uYWxbRGljdFtzdHIsIEFueV1dID0gTm9uZSwKICAgIHNsb3dfdGltZW91dDogT3B0aW9uYWxbRGljdFtzdHIsIEFueV1dID0gTm9uZSwKKSAtPiBQMTE1Q2xpZW50OgogICAgIiIiCiAgICDliJvlu7ogUDExNUNsaWVudO+8jOWPr+mAieW4pui2heaXtumFjee9rgoKICAgIDpwYXJhbSBjb29raWVzOiAxMTUgQ29va2ll77yI5a2X56ym5Liy5oiW6Lev5b6E77yJCiAgICA6cGFyYW0gZGVmYXVsdF90aW1lb3V0OiDmma7pgJrmk43kvZzotoXml7bvvIzlpoIgeyJjb25uZWN0IjogMzAsICJyZWFkIjogNjB977yMTm9uZSDooajnpLrkuI3lkK/nlKgKICAgIDpwYXJhbSBzbG93X3RpbWVvdXQ6IOaFouaTjeS9nOi2heaXtu+8jOWmgiB7ImNvbm5lY3QiOiAzMCwgInJlYWQiOiAzMDB977yMTm9uZSDliJnkuI4gZGVmYXVsdF90aW1lb3V0IOebuOWQjAogICAgOnJldHVybjogUDExNUNsaWVudCDlrp7kvovvvIjlj6/og73ooqsgUDExNUNsaWVudFdpdGhUaW1lb3V0IOWMheijhe+8iQogICAgIiIiCiAgICBpZiBub3QgZGVmYXVsdF90aW1lb3V0OgogICAgICAgIHJldHVybiBQMTE1Q2xpZW50KGNvb2tpZXMpCgogICAgc2xvd190aW1lb3V0ID0gc2xvd190aW1lb3V0IG9yIGRlZmF1bHRfdGltZW91dAogICAgbG9nZ2VyLmRlYnVnKAogICAgICAgIGYi44CQ6LaF5pe25YyF6KOF44CR5bey5ZCv55So77yM6buY6K6k6LaF5pe2OiB7ZGVmYXVsdF90aW1lb3V0fSwg5oWi5pON5L2c6LaF5pe2OiB7c2xvd190aW1lb3V0fSIKICAgICkKICAgIHJldHVybiBQMTE1Q2xpZW50V2l0aFRpbWVvdXQoY29va2llcywgZGVmYXVsdF90aW1lb3V0LCBzbG93X3RpbWVvdXQpCg==
+from inspect import signature as inspect_signature
+from typing import Any, Callable, Dict, Optional
+
+from p115client import P115Client
+
+from app.log import logger
+
+
+SLOW_METHODS = {
+    "download_url",
+    "download_url_app",
+    "download_urls",
+    "upload_file_init",
+    "upload_gettoken",
+    "upload_file",
+    "share_snap",
+    "share_snap_app",
+    "share_snap_cookie",
+    "share_receive",
+    "life_behavior_detail",
+    "life_behavior_detail_app",
+    "offline_add_urls",
+}
+
+NO_TIMEOUT_METHODS = {
+    "to_pickcode",
+    "to_id",
+    "get_fs",
+    "login_app",
+    "login_qrcode",
+    "login_qrcode_token",
+    "login_qrcode_scan_status",
+    "login_qrcode_scan_result",
+}
+
+
+def _accepts_extra_kwargs(func: Callable) -> bool:
+    try:
+        sig = inspect_signature(func)
+        return any(p.kind == p.VAR_KEYWORD for p in sig.parameters.values())
+    except (ValueError, TypeError):
+        return False
+
+
+def _make_timeout_wrapper(
+    default_timeout: Dict[str, Any], slow_timeout: Dict[str, Any]
+):
+    def __getattribute__(self, name: str):
+        if name.startswith("_") or name in (
+            "__init__",
+            "__class__",
+            "__dict__",
+            "__getattribute__",
+            "__getattr__",
+        ):
+            return object.__getattribute__(self, name)
+
+        attr = object.__getattribute__(self, name)
+
+        if name in NO_TIMEOUT_METHODS:
+            return attr
+
+        timeout = slow_timeout if name in SLOW_METHODS else default_timeout
+
+        if callable(attr) and timeout:
+            if not _accepts_extra_kwargs(attr):
+                return attr
+
+            def wrapper(*args, **kwargs):
+                """
+                拦截 API 方法调用，自动注入超时配置到 extensions 参数中
+
+                若调用者已显式指定 extensions["timeout"]，则跳过注入
+                """
+                if "extensions" in kwargs and "timeout" in kwargs.get("extensions", {}):
+                    logger.debug(f"【超时包装】{name} 调用者已指定超时，跳过注入")
+                    return attr(*args, **kwargs)
+                if "extensions" not in kwargs:
+                    kwargs["extensions"] = {}
+                kwargs["extensions"]["timeout"] = timeout
+                timeout_type = "慢操作" if name in SLOW_METHODS else "普通"
+                logger.debug(f"【超时包装】{name} 注入{timeout_type}超时: {timeout}")
+                return attr(*args, **kwargs)
+
+            return wrapper
+        return attr
+
+    return __getattribute__
+
+
+def create_client_with_timeout(
+    client: P115Client,
+    default_timeout: Optional[Dict[str, Any]] = None,
+    slow_timeout: Optional[Dict[str, Any]] = None,
+) -> P115Client:
+    """
+    为现有的 P115Client 实例添加超时支持
+
+    :param client: P115Client 实例（或其子类）
+    :param default_timeout: 普通操作超时配置
+    :param slow_timeout: 慢操作超时配置
+    :return: 带超时支持的客户端
+    """
+    if not default_timeout:
+        return client
+
+    slow_timeout = slow_timeout or default_timeout
+
+    class TimeoutMixin:
+        """
+        超时注入混入类，通过自定义 __getattribute__ 拦截方法调用并注入超时参数
+        """
+
+        __getattribute__ = _make_timeout_wrapper(default_timeout, slow_timeout)
+
+    wrapper_class = type(
+        f"{type(client).__name__}WithTimeout",
+        (TimeoutMixin, type(client)),
+        {},
+    )
+
+    wrapper = object.__new__(wrapper_class)
+    for key, value in client.__dict__.items():
+        object.__setattr__(wrapper, key, value)
+    return wrapper
+
+
+class P115ClientWithTimeout(P115Client):
+    """
+    P115Client 子类，自动注入超时配置到所有 API 调用
+
+    支持两种超时级别：
+    - default_timeout: 普通操作（list/detail/rename 等）
+    - slow_timeout: 慢操作（upload/download/iter 等）
+
+    如果调用者显式指定 extensions["timeout"]，则优先使用调用者的配置
+    """
+
+    def __init__(
+        self,
+        cookies: Any,
+        default_timeout: Optional[Dict[str, Any]] = None,
+        slow_timeout: Optional[Dict[str, Any]] = None,
+        **kwargs,
+    ):
+        """
+        初始化超时包装器
+
+        :param cookies: 115 Cookie（字符串或路径）
+        :param default_timeout: 普通操作超时配置，如 {"connect": 30, "read": 60}
+        :param slow_timeout: 慢操作超时配置，如 {"connect": 30, "read": 300}
+        """
+        super().__init__(cookies, **kwargs)
+        self._default_timeout = default_timeout
+        self._slow_timeout = slow_timeout or default_timeout
+
+    def __getattribute__(self, name: str):
+        if name.startswith("_") or name in (
+            "__init__",
+            "__class__",
+            "__dict__",
+            "__getattribute__",
+            "__getattr__",
+        ):
+            return object.__getattribute__(self, name)
+
+        attr = object.__getattribute__(self, name)
+
+        try:
+            default_timeout = object.__getattribute__(self, "_default_timeout")
+            slow_timeout = object.__getattribute__(self, "_slow_timeout")
+        except AttributeError:
+            return attr
+
+        if name in NO_TIMEOUT_METHODS:
+            return attr
+
+        timeout = slow_timeout if name in SLOW_METHODS else default_timeout
+
+        if callable(attr) and timeout:
+            if not _accepts_extra_kwargs(attr):
+                return attr
+
+            def wrapper(*args, **kwargs):
+                """
+                拦截 API 方法调用，自动注入超时配置到 extensions 参数中
+
+                若调用者已显式指定 extensions["timeout"]，则跳过注入
+                """
+                if "extensions" in kwargs and "timeout" in kwargs.get("extensions", {}):
+                    logger.debug(f"【超时包装】{name} 调用者已指定超时，跳过注入")
+                    return attr(*args, **kwargs)
+                if "extensions" not in kwargs:
+                    kwargs["extensions"] = {}
+                kwargs["extensions"]["timeout"] = timeout
+                timeout_type = "慢操作" if name in SLOW_METHODS else "普通"
+                logger.debug(f"【超时包装】{name} 注入{timeout_type}超时: {timeout}")
+                return attr(*args, **kwargs)
+
+            return wrapper
+        return attr
+
+
+def create_client(
+    cookies: Any,
+    default_timeout: Optional[Dict[str, Any]] = None,
+    slow_timeout: Optional[Dict[str, Any]] = None,
+) -> P115Client:
+    """
+    创建 P115Client，可选带超时配置
+
+    :param cookies: 115 Cookie（字符串或路径）
+    :param default_timeout: 普通操作超时，如 {"connect": 30, "read": 60}，None 表示不启用
+    :param slow_timeout: 慢操作超时，如 {"connect": 30, "read": 300}，None 则与 default_timeout 相同
+    :return: P115Client 实例（可能被 P115ClientWithTimeout 包装）
+    """
+    if not default_timeout:
+        return P115Client(cookies)
+
+    slow_timeout = slow_timeout or default_timeout
+    logger.debug(
+        f"【超时包装】已启用，默认超时: {default_timeout}, 慢操作超时: {slow_timeout}"
+    )
+    return P115ClientWithTimeout(cookies, default_timeout, slow_timeout)

@@ -1,1 +1,29 @@
-ZnJvbSAuLi5jb3JlLnUxMTVfb3BlbiBpbXBvcnQgVTExNU9wZW5IZWxwZXIKCgpjbGFzcyBPcGVuU3RybUhlbHBlcjoKICAgICIiIgogICAg5Z+65LqOIE9wZW4gQVBJIOaOpeWPo+eahOWQjOatpeaWueahiAogICAgIiIiCgogICAgZGVmIF9faW5pdF9fKHNlbGYpOgogICAgICAgIHNlbGYub3BlbiA9IFUxMTVPcGVuSGVscGVyKCkKCiAgICBkZWYgX19kZWxfXyhzZWxmKToKICAgICAgICBwYXNzCgogICAgZGVmIGZ1bGwoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAg5YWo6YeP5ZCM5q2lIFNUUk0g5paH5Lu277yI5pqC5pyq5a6e546w77yJCgogICAgICAgIOWfuuS6jiBPcGVuIEFQSSDmjqXlj6Pov5vooYzlhajph48gU1RSTSDlkIzmraUKICAgICAgICAiIiIKICAgICAgICBwYXNzCgogICAgZGVmIGluYyhzZWxmKToKICAgICAgICAiIiIKICAgICAgICDlop7ph4/lkIzmraUgU1RSTSDmlofku7bvvIjmmoLmnKrlrp7njrDvvIkKCiAgICAgICAg5Z+65LqOIE9wZW4gQVBJIOaOpeWPo+i/m+ihjOWinumHjyBTVFJNIOWQjOatpQogICAgICAgICIiIgogICAgICAgIHBhc3MK
+from ...core.u115_open import U115OpenHelper
+
+
+class OpenStrmHelper:
+    """
+    基于 Open API 接口的同步方案
+    """
+
+    def __init__(self):
+        self.open = U115OpenHelper()
+
+    def __del__(self):
+        pass
+
+    def full(self):
+        """
+        全量同步 STRM 文件（暂未实现）
+
+        基于 Open API 接口进行全量 STRM 同步
+        """
+        pass
+
+    def inc(self):
+        """
+        增量同步 STRM 文件（暂未实现）
+
+        基于 Open API 接口进行增量 STRM 同步
+        """
+        pass

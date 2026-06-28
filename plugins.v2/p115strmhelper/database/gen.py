@@ -1,1 +1,162 @@
-aW1wb3J0IGpzb24KaW1wb3J0IGltcG9ydGxpYgoKZnJvbSBhbGVtYmljLmNvbmZpZyBpbXBvcnQgQ29uZmlnIGFzIEFsZW1iaWNDb25maWcKZnJvbSBhbGVtYmljLmNvbW1hbmQgaW1wb3J0IHJldmlzaW9uIGFzIGFsZW1iaWNfcmV2aXNpb24KCmZyb20gYXBwLmNvcmUuY29uZmlnIGltcG9ydCBzZXR0aW5ncwoKcGx1Z2luX2lkID0gTm9uZQp3aGlsZSBub3QgcGx1Z2luX2lkOgogICAgcGx1Z2luX2lkID0gaW5wdXQoIuivt+i+k+WFpeaPkuS7tklEKOWkp+Wwj+WGmeS4jeaVj+aEn++8jOWQjue7rei9rOaNouS4uuWwj+WGmeS9v+eUqCnvvJoiKS5zdHJpcCgpCiAgICAjIOajgOafpei/meS4qmlk5a+55bqU55qE5o+S5Lu255uu5b2V5piv5ZCm5a2Y5ZyoCiAgICBpZiBub3QgKHNldHRpbmdzLlJPT1RfUEFUSCAvICJhcHAiIC8gInBsdWdpbnMiIC8gcGx1Z2luX2lkLmxvd2VyKCkpLmV4aXN0cygpOgogICAgICAgIHByaW50KGYi5o+S5Lu2SUQgW3twbHVnaW5faWR9XSDkuI3lrZjlnKjvvIzor7fph43mlrDovpPlhaUiKQogICAgICAgIHBsdWdpbl9pZCA9IE5vbmUKICAgIGVsc2U6CiAgICAgICAgY2hlY2sgPSBpbnB1dChmIuaPkuS7tklEIFt7cGx1Z2luX2lkfV0g56Gu6K6kKFkvbik6ICIpLnN0cmlwKCkubG93ZXIoKQogICAgICAgIGlmIG5vdCBjaGVjayA9PSAieSI6CiAgICAgICAgICAgIHBsdWdpbl9pZCA9IE5vbmUKcGx1Z2luX2lkID0gcGx1Z2luX2lkLmxvd2VyKCkKCiMg6K+75Y+WIG1pZ3JhdGlvbl9tZXRhLmpzb24KaWYgbm90ICgKICAgIGNvbmZpZ19maWxlX3BhdGggOj0gKAogICAgICAgIHNldHRpbmdzLlJPT1RfUEFUSCAvICJhcHAiIC8gInBsdWdpbnMiIC8gcGx1Z2luX2lkIC8gIm1pZ3JhdGlvbl9tZXRhLmpzb24iCiAgICApCikuZXhpc3RzKCk6CiAgICBwcmludChmIuaPkuS7tklEIFt7cGx1Z2luX2lkfV0g5LiL5pyq5om+5YiwIG1pZ3JhdGlvbl9tZXRhLmpzb24g5paH5Lu277yM5peg5rOV57un57utIikKICAgIGV4aXQoMSkKCmRiX2ZpbGVfbmFtZSA9IE5vbmUKdmVyc2lvbiA9IE5vbmUKc2NyaXB0X2xvY2F0aW9uID0gImRhdGFiYXNlIgp2ZXJzaW9uX2xvY2F0aW9uID0gIiIKbW9kZWxzID0gTm9uZQppc19uZXdfYnJhbmNoID0gRmFsc2UKY29uZmlnX2RhdGEgPSB7fQoKaWYgY29uZmlnX2ZpbGVfcGF0aC5pc19maWxlKCk6CiAgICB0cnk6CiAgICAgICAgd2l0aCBvcGVuKGNvbmZpZ19maWxlX3BhdGgsICJyIiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjoKICAgICAgICAgICAgY29uZmlnX2RhdGEgPSBqc29uLmxvYWQoZikKCiAgICAgICAgbW9kZWxzID0gY29uZmlnX2RhdGEuZ2V0KCJtb2RlbHMiLCAiIikKICAgICAgICBzY3JpcHRfbG9jYXRpb24gPSBjb25maWdfZGF0YS5nZXQoInNjcmlwdF9sb2NhdGlvbiIsIHNjcmlwdF9sb2NhdGlvbikKICAgICAgICB2ZXJzaW9uX2xvY2F0aW9uID0gY29uZmlnX2RhdGEuZ2V0KCJ2ZXJzaW9uX2xvY2F0aW9uIiwgdmVyc2lvbl9sb2NhdGlvbikKICAgICAgICB2ZXJzaW9uID0gY29uZmlnX2RhdGEuZ2V0KCJ2ZXJzaW9uIiwgIjEuMC4wIikKICAgICAgICBkYl9maWxlX25hbWUgPSBjb25maWdfZGF0YS5nZXQoImRiX2ZpbGVfbmFtZSIsIE5vbmUpCiAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGVycjoKICAgICAgICBwcmludChmIuivu+WPliBtaWdyYXRpb24uanNvbiDlh7rplJk6IHtlcnJ9IikKCmlmIG5vdCBtb2RlbHM6CiAgICBwcmludChmIuaPkuS7tklEIFt7cGx1Z2luX2lkfV0g5LiLIG1pZ3JhdGlvbl9tZXRhLmpzb24g5pyq6YWN572uIG1vZGVscyDnmoTot6/lvoTvvIzml6Dms5Xnu6fnu60iKQogICAgZXhpdCgxKQplbHNlOgogICAgbW9kZWxzX2ZzX3BhdGggPSBtb2RlbHMucmVwbGFjZSgiLiIsICIvIikKCiMg5Lqk5LqS5byP6L6T5YWl54mI5pys5Y+3Cm5ld192ZXJzaW9uID0gaW5wdXQoZiLor7fovpPlhaXniYjmnKzlj7cgKOW9k+WJjeeJiOacrDoge3ZlcnNpb259Ke+8miIpIG9yIHZlcnNpb24KCiMg5p6E6YCg5pWw5o2u5bqT5paH5Lu26Lev5b6E77yM5aaC5p6cIGRiX2ZpbGVfbmFtZSDkuLrnqbrliJnkvb/nlKjpu5jorqTnmoQgdXNlci5kYgppZiBub3QgZGJfZmlsZV9uYW1lOgogICAgZGJfbG9jYXRpb24gPSBzZXR0aW5ncy5DT05GSUdfUEFUSCAvICJ1c2VyLmRiIgplbHNlOgogICAgZGJfbG9jYXRpb24gPSBzZXR0aW5ncy5QTFVHSU5fREFUQV9QQVRIIC8gcGx1Z2luX2lkIC8gZGJfZmlsZV9uYW1lCgojIOaehOmAoOiEmuacrOi3r+W+hO+8jGVudi5weSDlkowgbWFrbyDpnIDopoHlnKjov5nkuKrot6/lvoTkuIsKc2NyaXB0X2ZzX3BhdGggPSBzY3JpcHRfbG9jYXRpb24ucmVwbGFjZSgiLiIsICIvIikKc2NyaXB0X2xvY2F0aW9uX3BhdGggPSAoCiAgICBzZXR0aW5ncy5ST09UX1BBVEggLyAiYXBwIiAvICJwbHVnaW5zIiAvIHBsdWdpbl9pZCAvIHNjcmlwdF9mc19wYXRoCikKCiMgdmVyc2lvbnMg5a2Y5pS+55uu5b2VCnZlcnNpb25fZnNfcGF0aCA9IHZlcnNpb25fbG9jYXRpb24ucmVwbGFjZSgiLiIsICIvIikKdmVyc2lvbl9sb2NhdGlvbl9wYXRoID0gKAogICAgc2V0dGluZ3MuUk9PVF9QQVRIIC8gImFwcCIgLyAicGx1Z2lucyIgLyBwbHVnaW5faWQgLyB2ZXJzaW9uX2ZzX3BhdGgKKQojIOWmguaenOe7k+WwvuS4jeaYryB2ZXJzaW9uc++8jOWImeihpeS4igppZiB2ZXJzaW9uX2xvY2F0aW9uX3BhdGggYW5kIG5vdCBzdHIodmVyc2lvbl9sb2NhdGlvbl9wYXRoKS5lbmRzd2l0aCgidmVyc2lvbnMiKToKICAgIHZlcnNpb25fbG9jYXRpb25fcGF0aCA9IHZlcnNpb25fbG9jYXRpb25fcGF0aCAvICJ2ZXJzaW9ucyIKCiMg5qOA5p+l54mI5pys55uu5b2V5piv5ZCm5a2Y5Zyo77yM5LiU5YyF5ZCr6Iez5bCR5LiA5LiqIC5weSDmlofku7YKaWYgKAogICAgbm90IHZlcnNpb25fbG9jYXRpb25fcGF0aC5leGlzdHMoKQogICAgb3Igbm90IHZlcnNpb25fbG9jYXRpb25fcGF0aC5pc19kaXIoKQogICAgb3Igbm90IGFueSh2ZXJzaW9uX2xvY2F0aW9uX3BhdGguZ2xvYigiKi5weSIpKQopOgogICAgcHJpbnQoCiAgICAgICAgZiLohJrmnKzot6/lvoQge3ZlcnNpb25fbG9jYXRpb25fcGF0aH0g5LiN5a2Y5Zyo77yM6KeG5Li66aaW5qyh5Yib5bu677yM5YeG5aSH5YiG6YWNIHtwbHVnaW5faWR9IOWIhuaUryIKICAgICkKICAgIGlzX25ld19icmFuY2ggPSBUcnVlCgojIOmFjee9riBBbGVtYmljCmFsZW1iaWNfY2ZnID0gQWxlbWJpY0NvbmZpZygpCmFsZW1iaWNfY2ZnLnNldF9tYWluX29wdGlvbigic2NyaXB0X2xvY2F0aW9uIiwgc3RyKHNjcmlwdF9sb2NhdGlvbl9wYXRoKSkKYWxlbWJpY19jZmcuc2V0X21haW5fb3B0aW9uKCJ2ZXJzaW9uX2xvY2F0aW9ucyIsIHN0cih2ZXJzaW9uX2xvY2F0aW9uX3BhdGgpKQphbGVtYmljX2NmZy5zZXRfbWFpbl9vcHRpb24oInNxbGFsY2hlbXkudXJsIiwgZiJzcWxpdGU6Ly8ve2RiX2xvY2F0aW9ufSIpCgojIOiuvue9ruaWh+S7tuWQjeagvOW8jwpmaWxlbmFtZV9wcmVmaXggPSBmIntwbHVnaW5faWR9LXZ7bmV3X3ZlcnNpb259IgphbGVtYmljX2NmZy5zZXRfbWFpbl9vcHRpb24oImZpbGVfdGVtcGxhdGUiLCBmIntmaWxlbmFtZV9wcmVmaXh9LSUlKHJldilzIikKCiMg5Lyg6YCS6Ieq5a6a5LmJ5Y+Y6YePCmFsZW1iaWNfY2ZnLmF0dHJpYnV0ZXNbInBsdWdpbl9pZCJdID0gcGx1Z2luX2lkCmFsZW1iaWNfY2ZnLmF0dHJpYnV0ZXNbInZlcnNpb24iXSA9IG5ld192ZXJzaW9uCgoKIyDmnoTpgKDmraPnoa7nmoTmlofku7bmkJzntKLot6/lvoQKc2VhcmNoX3BhdGggPSBzZXR0aW5ncy5ST09UX1BBVEguam9pbnBhdGgoImFwcCIsICJwbHVnaW5zIiwgcGx1Z2luX2lkLCBtb2RlbHNfZnNfcGF0aCkKCgpmb3IgbW9kdWxlX2ZpbGUgaW4gc2VhcmNoX3BhdGguZ2xvYigiKi5weSIpOgogICAgIyDlv73nlaUgX19pbml0X18ucHkg5paH5Lu2CiAgICBpZiBtb2R1bGVfZmlsZS5zdGVtID09ICJfX2luaXRfXyI6CiAgICAgICAgY29udGludWUKCiAgICAjIOaehOmAoFB5dGhvbuaooeWdl+WvvOWFpei3r+W+hAogICAgbW9kdWxlX3RvX2ltcG9ydCA9IGYiYXBwLnBsdWdpbnMue3BsdWdpbl9pZH0ue21vZGVsc30ue21vZHVsZV9maWxlLnN0ZW19IgogICAgcHJpbnQoZiJcbuWKqOaAgeWvvOWFpeaooeWei+aWh+S7tjoge21vZHVsZV90b19pbXBvcnR9IikKCiAgICAjIOaJp+ihjOWvvOWFpQogICAgdHJ5OgogICAgICAgIGltcG9ydGxpYi5pbXBvcnRfbW9kdWxlKG1vZHVsZV90b19pbXBvcnQpCiAgICBleGNlcHQgSW1wb3J0RXJyb3IgYXMgZToKICAgICAgICBwcmludChmIlxu5a+85YWlIHttb2R1bGVfdG9faW1wb3J0fSDlpLHotKU6IHtlfSIpCgpuZXdfcmV2aXNpb25fc2NyaXB0ID0gYWxlbWJpY19yZXZpc2lvbigKICAgIGNvbmZpZz1hbGVtYmljX2NmZywKICAgIG1lc3NhZ2U9bmV3X3ZlcnNpb24sCiAgICBhdXRvZ2VuZXJhdGU9VHJ1ZSwKICAgIGJyYW5jaF9sYWJlbD1wbHVnaW5faWQgaWYgaXNfbmV3X2JyYW5jaCBlbHNlIE5vbmUsCikKCm5ld19yZXZpc2lvbl9pZCA9IE5vbmUKaWYgbmV3X3JldmlzaW9uX3NjcmlwdDoKICAgICMgYXV0b2dlbmVyYXRlIOWPr+iDvei/lOWbnuWIl+ihqO+8jOS5n+WPr+iDvei/lOWbnuWNleS4quWvueixoQogICAgc2NyaXB0X29iamVjdCA9ICgKICAgICAgICBuZXdfcmV2aXNpb25fc2NyaXB0WzBdCiAgICAgICAgaWYgaXNpbnN0YW5jZShuZXdfcmV2aXNpb25fc2NyaXB0LCBsaXN0KQogICAgICAgIGVsc2UgbmV3X3JldmlzaW9uX3NjcmlwdAogICAgKQogICAgaWYgc2NyaXB0X29iamVjdDoKICAgICAgICBuZXdfcmV2aXNpb25faWQgPSBzY3JpcHRfb2JqZWN0LnJldmlzaW9uCiAgICAgICAgcHJpbnQoZiJcbuaIkOWKn+eUn+aIkOaWsOeahCBSZXZpc2lvbiBJRDoge25ld19yZXZpc2lvbl9pZH0iKQplbHNlOgogICAgcHJpbnQoIlxu6K2m5ZGK77yaQWxlbWJpYyDmnKrov5Tlm57mlrDnmoQgcmV2aXNpb24g5a+56LGh77yM5Y+v6IO95Zug5Li65qih5Z6L5rKh5pyJ5Y+Y5YyW44CCIikKCnByaW50KCJcbui/geenu+iEmuacrOeUn+aIkOaIkOWKn++8jOato+WcqOabtOaWsCBtaWdyYXRpb25fbWV0YS5qc29uLi4uIikKdHJ5OgogICAgIyDmm7TmlrDlhoXlrZjkuK3nmoTlrZflhbgKICAgIGNvbmZpZ19kYXRhWyJ2ZXJzaW9uIl0gPSBuZXdfdmVyc2lvbgogICAgaWYgbmV3X3JldmlzaW9uX2lkOgogICAgICAgIGNvbmZpZ19kYXRhWyJyZXZpc2lvbiJdID0gbmV3X3JldmlzaW9uX2lkCiAgICAjIOS7peWGmeWFpeaooeW8j+aJk+W8gOaWh+S7tuW5tuWGmeWbngogICAgd2l0aCBvcGVuKGNvbmZpZ19maWxlX3BhdGgsICJ3IiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjoKICAgICAgICBqc29uLmR1bXAoY29uZmlnX2RhdGEsIGYsIGVuc3VyZV9hc2NpaT1GYWxzZSwgaW5kZW50PTQpCgogICAgcHJpbnQoZiLmiJDlip/lsIYgdmVyc2lvbiDmm7TmlrDkuLo6IHtuZXdfdmVyc2lvbn0iKQogICAgcHJpbnQoZiLmiJDlip/lsIYgcmV2aXNpb24g5pu05paw5Li6OiB7bmV3X3JldmlzaW9uX2lkfSIpCgpleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICBwcmludChmIumUmeivr++8muabtOaWsCBtaWdyYXRpb25fbWV0YS5qc29uIOaWh+S7tuWksei0pToge2V9IikK
+import json
+import importlib
+
+from alembic.config import Config as AlembicConfig
+from alembic.command import revision as alembic_revision
+
+from app.core.config import settings
+
+plugin_id = None
+while not plugin_id:
+    plugin_id = input("请输入插件ID(大小写不敏感，后续转换为小写使用)：").strip()
+    # 检查这个id对应的插件目录是否存在
+    if not (settings.ROOT_PATH / "app" / "plugins" / plugin_id.lower()).exists():
+        print(f"插件ID [{plugin_id}] 不存在，请重新输入")
+        plugin_id = None
+    else:
+        check = input(f"插件ID [{plugin_id}] 确认(Y/n): ").strip().lower()
+        if not check == "y":
+            plugin_id = None
+plugin_id = plugin_id.lower()
+
+# 读取 migration_meta.json
+if not (
+    config_file_path := (
+        settings.ROOT_PATH / "app" / "plugins" / plugin_id / "migration_meta.json"
+    )
+).exists():
+    print(f"插件ID [{plugin_id}] 下未找到 migration_meta.json 文件，无法继续")
+    exit(1)
+
+db_file_name = None
+version = None
+script_location = "database"
+version_location = ""
+models = None
+is_new_branch = False
+config_data = {}
+
+if config_file_path.is_file():
+    try:
+        with open(config_file_path, "r", encoding="utf-8") as f:
+            config_data = json.load(f)
+
+        models = config_data.get("models", "")
+        script_location = config_data.get("script_location", script_location)
+        version_location = config_data.get("version_location", version_location)
+        version = config_data.get("version", "1.0.0")
+        db_file_name = config_data.get("db_file_name", None)
+    except Exception as err:
+        print(f"读取 migration.json 出错: {err}")
+
+if not models:
+    print(f"插件ID [{plugin_id}] 下 migration_meta.json 未配置 models 的路径，无法继续")
+    exit(1)
+else:
+    models_fs_path = models.replace(".", "/")
+
+# 交互式输入版本号
+new_version = input(f"请输入版本号 (当前版本: {version})：") or version
+
+# 构造数据库文件路径，如果 db_file_name 为空则使用默认的 user.db
+if not db_file_name:
+    db_location = settings.CONFIG_PATH / "user.db"
+else:
+    db_location = settings.PLUGIN_DATA_PATH / plugin_id / db_file_name
+
+# 构造脚本路径，env.py 和 mako 需要在这个路径下
+script_fs_path = script_location.replace(".", "/")
+script_location_path = (
+    settings.ROOT_PATH / "app" / "plugins" / plugin_id / script_fs_path
+)
+
+# versions 存放目录
+version_fs_path = version_location.replace(".", "/")
+version_location_path = (
+    settings.ROOT_PATH / "app" / "plugins" / plugin_id / version_fs_path
+)
+# 如果结尾不是 versions，则补上
+if version_location_path and not str(version_location_path).endswith("versions"):
+    version_location_path = version_location_path / "versions"
+
+# 检查版本目录是否存在，且包含至少一个 .py 文件
+if (
+    not version_location_path.exists()
+    or not version_location_path.is_dir()
+    or not any(version_location_path.glob("*.py"))
+):
+    print(
+        f"脚本路径 {version_location_path} 不存在，视为首次创建，准备分配 {plugin_id} 分支"
+    )
+    is_new_branch = True
+
+# 配置 Alembic
+alembic_cfg = AlembicConfig()
+alembic_cfg.set_main_option("script_location", str(script_location_path))
+alembic_cfg.set_main_option("version_locations", str(version_location_path))
+alembic_cfg.set_main_option("sqlalchemy.url", f"sqlite:///{db_location}")
+
+# 设置文件名格式
+filename_prefix = f"{plugin_id}-v{new_version}"
+alembic_cfg.set_main_option("file_template", f"{filename_prefix}-%%(rev)s")
+
+# 传递自定义变量
+alembic_cfg.attributes["plugin_id"] = plugin_id
+alembic_cfg.attributes["version"] = new_version
+
+
+# 构造正确的文件搜索路径
+search_path = settings.ROOT_PATH.joinpath("app", "plugins", plugin_id, models_fs_path)
+
+
+for module_file in search_path.glob("*.py"):
+    # 忽略 __init__.py 文件
+    if module_file.stem == "__init__":
+        continue
+
+    # 构造Python模块导入路径
+    module_to_import = f"app.plugins.{plugin_id}.{models}.{module_file.stem}"
+    print(f"\n动态导入模型文件: {module_to_import}")
+
+    # 执行导入
+    try:
+        importlib.import_module(module_to_import)
+    except ImportError as e:
+        print(f"\n导入 {module_to_import} 失败: {e}")
+
+new_revision_script = alembic_revision(
+    config=alembic_cfg,
+    message=new_version,
+    autogenerate=True,
+    branch_label=plugin_id if is_new_branch else None,
+)
+
+new_revision_id = None
+if new_revision_script:
+    # autogenerate 可能返回列表，也可能返回单个对象
+    script_object = (
+        new_revision_script[0]
+        if isinstance(new_revision_script, list)
+        else new_revision_script
+    )
+    if script_object:
+        new_revision_id = script_object.revision
+        print(f"\n成功生成新的 Revision ID: {new_revision_id}")
+else:
+    print("\n警告：Alembic 未返回新的 revision 对象，可能因为模型没有变化。")
+
+print("\n迁移脚本生成成功，正在更新 migration_meta.json...")
+try:
+    # 更新内存中的字典
+    config_data["version"] = new_version
+    if new_revision_id:
+        config_data["revision"] = new_revision_id
+    # 以写入模式打开文件并写回
+    with open(config_file_path, "w", encoding="utf-8") as f:
+        json.dump(config_data, f, ensure_ascii=False, indent=4)
+
+    print(f"成功将 version 更新为: {new_version}")
+    print(f"成功将 revision 更新为: {new_revision_id}")
+
+except Exception as e:
+    print(f"错误：更新 migration_meta.json 文件失败: {e}")

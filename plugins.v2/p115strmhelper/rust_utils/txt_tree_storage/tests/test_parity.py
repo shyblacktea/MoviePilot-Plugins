@@ -1,1 +1,463 @@
-IiIiCnR4dF90cmVlX3N0b3JhZ2UgUnVzdCDmqKHlnZcg5LiOIOWOnyBQeXRob24g5a6e546wIOeahOihjOS4uuS4gOiHtOaAp+a1i+ivlQoK6L+Q6KGM5pa55byP77yI5Zyo5pys55uu5b2V5oiWIGNyYXRlIOagueebruW9le+8ie+8mgogICAgbWF0dXJpbiBkZXZlbG9wCiAgICBweXRlc3QgdGVzdHMvdGVzdF9wYXJpdHkucHkgLXYKCuWPguiAg+WunueOsCAoUHlSZWYpIOWujOaVtOWkjeWIuyBwbHVnaW5zLnYyL3AxMTVzdHJtaGVscGVyL3V0aWxzL3RyZWUucHkg5LitClR4dEZpbGVTdG9yYWdlIOWcqOmHjeaehOWJjeeahOihjOS4uu+8jOmBv+WFjeS+nei1liBhcHAuY29yZSAvIGFwcC5oZWxwZXIKIiIiCgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgpmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKZnJvbSB0eXBpbmcgaW1wb3J0IEdlbmVyYXRvciwgSXRlcmFibGUsIExpc3QsIFVuaW9uCgppbXBvcnQgcHl0ZXN0CgppbXBvcnQgdHh0X3RyZWVfc3RvcmFnZSBhcyBydXN0X21vZAoKCiMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiMg5Y+C6ICD5a6e546w77ya5Y6fIFB5dGhvbiBUeHRGaWxlU3RvcmFnZe+8iOS4jeWQqyBBQkMg5ZKMIFJlZGlzIOS+nei1lu+8iQojIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpjbGFzcyBQeVJlZjoKICAgIGRlZiBfX2luaXRfXyhzZWxmLCBmaWxlX3BhdGg6IFVuaW9uW3N0ciwgUGF0aF0pOgogICAgICAgIHNlbGYuZmlsZV9wYXRoID0gUGF0aChmaWxlX3BhdGgpCiAgICAgICAgc2VsZi5maWxlX3BhdGgucGFyZW50Lm1rZGlyKHBhcmVudHM9VHJ1ZSwgZXhpc3Rfb2s9VHJ1ZSkKCiAgICBkZWYgYWRkX3BhdGhzKHNlbGYsIHBhdGhzOiBJdGVyYWJsZVtzdHJdLCBhcHBlbmQ6IGJvb2wgPSBGYWxzZSk6CiAgICAgICAgbW9kZSA9ICJhIiBpZiBhcHBlbmQgZWxzZSAidyIKICAgICAgICBidWZmZXJfc2l6ZSA9IDEwNDg1NzYKICAgICAgICB3aXRoIG9wZW4oc2VsZi5maWxlX3BhdGgsIG1vZGUsIGVuY29kaW5nPSJ1dGYtOCIsIGJ1ZmZlcmluZz1idWZmZXJfc2l6ZSkgYXMgZjoKICAgICAgICAgICAgZi53cml0ZWxpbmVzKGYie3BhdGh9XG4iIGZvciBwYXRoIGluIHBhdGhzKQoKICAgIGRlZiBjb21wYXJlX3RyZWVzKHNlbGYsIG90aGVyOiAiUHlSZWYiKSAtPiBHZW5lcmF0b3Jbc3RyLCBOb25lLCBOb25lXToKICAgICAgICB0cnk6CiAgICAgICAgICAgIHdpdGggb3BlbihvdGhlci5maWxlX3BhdGgsICJyIiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjI6CiAgICAgICAgICAgICAgICB0cmVlMl9zZXQgPSBzZXQobGluZS5zdHJpcCgpIGZvciBsaW5lIGluIGYyKQogICAgICAgIGV4Y2VwdCBGaWxlTm90Rm91bmRFcnJvcjoKICAgICAgICAgICAgdHJlZTJfc2V0ID0gc2V0KCkKICAgICAgICB3aXRoIG9wZW4oc2VsZi5maWxlX3BhdGgsICJyIiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjE6CiAgICAgICAgICAgIGZvciBsaW5lIGluIGYxOgogICAgICAgICAgICAgICAgZnAgPSBsaW5lLnN0cmlwKCkKICAgICAgICAgICAgICAgIGlmIGZwIG5vdCBpbiB0cmVlMl9zZXQ6CiAgICAgICAgICAgICAgICAgICAgeWllbGQgZnAKCiAgICBkZWYgY29tcGFyZV90cmVlc19saW5lcyhzZWxmLCBvdGhlcjogIlB5UmVmIikgLT4gR2VuZXJhdG9yW2ludCwgTm9uZSwgTm9uZV06CiAgICAgICAgdHJ5OgogICAgICAgICAgICB3aXRoIG9wZW4ob3RoZXIuZmlsZV9wYXRoLCAiciIsIGVuY29kaW5nPSJ1dGYtOCIpIGFzIGYyOgogICAgICAgICAgICAgICAgdHJlZTJfc2V0ID0gc2V0KGxpbmUuc3RyaXAoKSBmb3IgbGluZSBpbiBmMikKICAgICAgICBleGNlcHQgRmlsZU5vdEZvdW5kRXJyb3I6CiAgICAgICAgICAgIHRyZWUyX3NldCA9IHNldCgpCiAgICAgICAgd2l0aCBvcGVuKHNlbGYuZmlsZV9wYXRoLCAiciIsIGVuY29kaW5nPSJ1dGYtOCIpIGFzIGYxOgogICAgICAgICAgICBmb3IgbGluZV9udW0sIGxpbmUgaW4gZW51bWVyYXRlKGYxLCBzdGFydD0xKToKICAgICAgICAgICAgICAgIGZwID0gbGluZS5zdHJpcCgpCiAgICAgICAgICAgICAgICBpZiBmcCBub3QgaW4gdHJlZTJfc2V0OgogICAgICAgICAgICAgICAgICAgIHlpZWxkIGxpbmVfbnVtCgogICAgZGVmIGdldF9wYXRoX2J5X2xpbmVfbnVtYmVyKHNlbGYsIGxpbmVfbnVtYmVyOiBpbnQpIC0+IFVuaW9uW3N0ciwgTm9uZV06CiAgICAgICAgaWYgbGluZV9udW1iZXIgPD0gMDoKICAgICAgICAgICAgcmV0dXJuIE5vbmUKICAgICAgICB0cnk6CiAgICAgICAgICAgIHdpdGggb3BlbihzZWxmLmZpbGVfcGF0aCwgInIiLCBlbmNvZGluZz0idXRmLTgiKSBhcyBmOgogICAgICAgICAgICAgICAgZm9yIGksIGxpbmUgaW4gZW51bWVyYXRlKGYsIDEpOgogICAgICAgICAgICAgICAgICAgIGlmIGkgPT0gbGluZV9udW1iZXI6CiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBsaW5lLnN0cmlwKCkKICAgICAgICBleGNlcHQgRmlsZU5vdEZvdW5kRXJyb3I6CiAgICAgICAgICAgIHJldHVybiBOb25lCiAgICAgICAgcmV0dXJuIE5vbmUKCiAgICBkZWYgY291bnQoc2VsZikgLT4gaW50OgogICAgICAgIGNudCA9IDAKICAgICAgICB0cnk6CiAgICAgICAgICAgIHdpdGggb3BlbihzZWxmLmZpbGVfcGF0aCwgInIiLCBlbmNvZGluZz0idXRmLTgiKSBhcyBmOgogICAgICAgICAgICAgICAgZm9yIGxpbmUgaW4gZjoKICAgICAgICAgICAgICAgICAgICBpZiBsaW5lLnN0cmlwKCk6CiAgICAgICAgICAgICAgICAgICAgICAgIGNudCArPSAxCiAgICAgICAgZXhjZXB0IEZpbGVOb3RGb3VuZEVycm9yOgogICAgICAgICAgICByZXR1cm4gMAogICAgICAgIHJldHVybiBjbnQKCiAgICBkZWYgY2xlYXIoc2VsZik6CiAgICAgICAgaWYgc2VsZi5maWxlX3BhdGguZXhpc3RzKCk6CiAgICAgICAgICAgIHNlbGYuZmlsZV9wYXRoLnVubGluaygpCgoKIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIyBSdXN0IOmAgumFjeWZqO+8muaKiiBydXN0X21vZCDnmoTlh73mlbDljIXoo4XmiJDkuI4gUHlSZWYg5ZCM5qC355qE5o6l5Y+jCiMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCmNsYXNzIFJ1c3RJbXBsOgogICAgZGVmIF9faW5pdF9fKHNlbGYsIGZpbGVfcGF0aDogVW5pb25bc3RyLCBQYXRoXSk6CiAgICAgICAgc2VsZi5maWxlX3BhdGggPSBQYXRoKGZpbGVfcGF0aCkKICAgICAgICBzZWxmLmZpbGVfcGF0aC5wYXJlbnQubWtkaXIocGFyZW50cz1UcnVlLCBleGlzdF9vaz1UcnVlKQoKICAgIGRlZiBhZGRfcGF0aHMoc2VsZiwgcGF0aHM6IEl0ZXJhYmxlW3N0cl0sIGFwcGVuZDogYm9vbCA9IEZhbHNlKToKICAgICAgICBydXN0X21vZC5hZGRfcGF0aHMoCiAgICAgICAgICAgIHNlbGYuZmlsZV9wYXRoLAogICAgICAgICAgICAocCBpZiBpc2luc3RhbmNlKHAsIHN0cikgZWxzZSBzdHIocCkgZm9yIHAgaW4gcGF0aHMpLAogICAgICAgICAgICBhcHBlbmQsCiAgICAgICAgKQoKICAgIGRlZiBjb21wYXJlX3RyZWVzKHNlbGYsIG90aGVyOiAiUnVzdEltcGwiKToKICAgICAgICByZXR1cm4gcnVzdF9tb2QuY29tcGFyZV90cmVlcyhzZWxmLmZpbGVfcGF0aCwgb3RoZXIuZmlsZV9wYXRoKQoKICAgIGRlZiBjb21wYXJlX3RyZWVzX2xpbmVzKHNlbGYsIG90aGVyOiAiUnVzdEltcGwiKToKICAgICAgICByZXR1cm4gcnVzdF9tb2QuY29tcGFyZV90cmVlc19saW5lcyhzZWxmLmZpbGVfcGF0aCwgb3RoZXIuZmlsZV9wYXRoKQoKICAgIGRlZiBnZXRfcGF0aF9ieV9saW5lX251bWJlcihzZWxmLCBsaW5lX251bWJlcjogaW50KToKICAgICAgICByZXR1cm4gcnVzdF9tb2QuZ2V0X3BhdGhfYnlfbGluZV9udW1iZXIoc2VsZi5maWxlX3BhdGgsIGxpbmVfbnVtYmVyKQoKICAgIGRlZiBjb3VudChzZWxmKSAtPiBpbnQ6CiAgICAgICAgcmV0dXJuIGludChydXN0X21vZC5jb3VudChzZWxmLmZpbGVfcGF0aCkpCgogICAgZGVmIGNsZWFyKHNlbGYpOgogICAgICAgIHJ1c3RfbW9kLmNsZWFyKHNlbGYuZmlsZV9wYXRoKQoKCiMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiMg5rWL6K+V5aS55YW3CiMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCkBweXRlc3QuZml4dHVyZQpkZWYgcGFpcih0bXBfcGF0aDogUGF0aCk6CiAgICAiIiLov5Tlm54gKFB5UmVmLCBSdXN0SW1wbCkg5Lik5Liq5oyH5ZCR5LiN5ZCM5paH5Lu255qEIHNlbGYg5a6e5L6L44CCIiIiCiAgICByZXR1cm4gUHlSZWYodG1wX3BhdGggLyAicHlfc2VsZi50eHQiKSwgUnVzdEltcGwodG1wX3BhdGggLyAicnNfc2VsZi50eHQiKQoKCkBweXRlc3QuZml4dHVyZQpkZWYgcGFpcl9vdGhlcih0bXBfcGF0aDogUGF0aCk6CiAgICAiIiLov5Tlm54gKFB5UmVmLCBSdXN0SW1wbCkg5Lik5Liq5oyH5ZCR5LiN5ZCM5paH5Lu255qEIG90aGVyIOWunuS+i+OAgiIiIgogICAgcmV0dXJuIFB5UmVmKHRtcF9wYXRoIC8gInB5X290aGVyLnR4dCIpLCBSdXN0SW1wbCh0bXBfcGF0aCAvICJyc19vdGhlci50eHQiKQoKCmRlZiBfc2VlZChweTogUHlSZWYsIHJzOiBSdXN0SW1wbCwgbGluZXM6IExpc3Rbc3RyXSwgYXBwZW5kOiBib29sID0gRmFsc2UpOgogICAgcHkuYWRkX3BhdGhzKGxpbmVzLCBhcHBlbmQ9YXBwZW5kKQogICAgcnMuYWRkX3BhdGhzKGxpbmVzLCBhcHBlbmQ9YXBwZW5kKQoKCmRlZiBfYXNzZXJ0X2ZpbGVzX2VxdWFsKHB5OiBQeVJlZiwgcnM6IFJ1c3RJbXBsKToKICAgIGFzc2VydCBweS5maWxlX3BhdGgucmVhZF9ieXRlcygpID09IHJzLmZpbGVfcGF0aC5yZWFkX2J5dGVzKCkKCgojIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQojIGFkZF9wYXRocwojIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpjbGFzcyBUZXN0QWRkUGF0aHM6CiAgICBkZWYgdGVzdF9iYXNpY193cml0ZShzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgZGF0YSA9IFsiYS9iLm1rdiIsICJhL2MubXA0IiwgImQvZS5ta3YiXQogICAgICAgIF9zZWVkKHB5LCBycywgZGF0YSkKICAgICAgICBfYXNzZXJ0X2ZpbGVzX2VxdWFsKHB5LCBycykKICAgICAgICBhc3NlcnQgcHkuY291bnQoKSA9PSBycy5jb3VudCgpID09IDMKCiAgICBkZWYgdGVzdF9vdmVyd3JpdGVfZGVmYXVsdChzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgX3NlZWQocHksIHJzLCBbIngiLCAieSJdKQogICAgICAgIF9zZWVkKHB5LCBycywgWyJvbmx5Il0pICAjIOm7mOiupCBhcHBlbmQ9RmFsc2XvvIzlupTlvZPopobnm5YKICAgICAgICBfYXNzZXJ0X2ZpbGVzX2VxdWFsKHB5LCBycykKICAgICAgICBhc3NlcnQgcHkuY291bnQoKSA9PSBycy5jb3VudCgpID09IDEKCiAgICBkZWYgdGVzdF9hcHBlbmRfbW9kZShzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgX3NlZWQocHksIHJzLCBbImEiLCAiYiJdKQogICAgICAgIF9zZWVkKHB5LCBycywgWyJjIiwgImQiXSwgYXBwZW5kPVRydWUpCiAgICAgICAgX2Fzc2VydF9maWxlc19lcXVhbChweSwgcnMpCiAgICAgICAgYXNzZXJ0IHB5LmNvdW50KCkgPT0gcnMuY291bnQoKSA9PSA0CgogICAgZGVmIHRlc3RfZW1wdHlfaXRlcihzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgX3NlZWQocHksIHJzLCBbXSkKICAgICAgICBfYXNzZXJ0X2ZpbGVzX2VxdWFsKHB5LCBycykKICAgICAgICBhc3NlcnQgcHkuY291bnQoKSA9PSBycy5jb3VudCgpID09IDAKCiAgICBkZWYgdGVzdF91bmljb2RlX3BhdGhzKHNlbGYsIHBhaXIpOgogICAgICAgIHB5LCBycyA9IHBhaXIKICAgICAgICBkYXRhID0gWyLnlLXlvbEv6Zi/5Yeh6L6+ICgyMDA5KS5ta3YiLCAi5Yqo5ryrL+i/m+WHu+eahOW3qOS6ui9TMDFFMDEubXA0IiwgIumfs+S5kC/wn461LmZsYWMiXQogICAgICAgIF9zZWVkKHB5LCBycywgZGF0YSkKICAgICAgICBfYXNzZXJ0X2ZpbGVzX2VxdWFsKHB5LCBycykKCiAgICBkZWYgdGVzdF9wYXRoc193aXRoX3NwYWNlcyhzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgZGF0YSA9IFsiYSBiL2MgZC5ta3YiLCAiICBsZWFkaW5nLm1rdiIsICJ0cmFpbGluZyAgLm1rdiJdCiAgICAgICAgX3NlZWQocHksIHJzLCBkYXRhKQogICAgICAgIF9hc3NlcnRfZmlsZXNfZXF1YWwocHksIHJzKQoKICAgIGRlZiB0ZXN0X3ZlcnlfbG9uZ19wYXRoKHNlbGYsIHBhaXIpOgogICAgICAgIHB5LCBycyA9IHBhaXIKICAgICAgICBsb25nX3NlZyA9ICJ4IiAqIDUwMAogICAgICAgIGRhdGEgPSBbZiJ7bG9uZ19zZWd9L3tsb25nX3NlZ30ubWt2IiBmb3IgXyBpbiByYW5nZSg1MCldCiAgICAgICAgX3NlZWQocHksIHJzLCBkYXRhKQogICAgICAgIF9hc3NlcnRfZmlsZXNfZXF1YWwocHksIHJzKQogICAgICAgIGFzc2VydCBweS5jb3VudCgpID09IHJzLmNvdW50KCkgPT0gNTAKCiAgICBkZWYgdGVzdF9sYXJnZV92b2x1bWUoc2VsZiwgcGFpcik6CiAgICAgICAgcHksIHJzID0gcGFpcgogICAgICAgIGRhdGEgPSBbZiJkaXJ7aSAvLyAxMDB9L2ZpbGVfe2l9Lm1rdiIgZm9yIGkgaW4gcmFuZ2UoMTBfMDAwKV0KICAgICAgICBfc2VlZChweSwgcnMsIGRhdGEpCiAgICAgICAgX2Fzc2VydF9maWxlc19lcXVhbChweSwgcnMpCiAgICAgICAgYXNzZXJ0IHB5LmNvdW50KCkgPT0gcnMuY291bnQoKSA9PSAxMF8wMDAKCiAgICBkZWYgdGVzdF9hcHBlbmRfdG9fbm9uZXhpc3RlbnQoc2VsZiwgcGFpcik6CiAgICAgICAgcHksIHJzID0gcGFpcgogICAgICAgICMg5paH5Lu25Y6f5pys5LiN5a2Y5Zyo77yMYXBwZW5kIOaooeW8j+W6lOivpeWIm+W7ugogICAgICAgIF9zZWVkKHB5LCBycywgWyJhIiwgImIiXSwgYXBwZW5kPVRydWUpCiAgICAgICAgX2Fzc2VydF9maWxlc19lcXVhbChweSwgcnMpCgoKIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIyBjb21wYXJlX3RyZWVzIC8gY29tcGFyZV90cmVlc19saW5lcwojIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpjbGFzcyBUZXN0Q29tcGFyZVRyZWVzOgogICAgZGVmIHRlc3RfYmFzaWNfZGlmZihzZWxmLCBwYWlyLCBwYWlyX290aGVyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgcHlfbywgcnNfbyA9IHBhaXJfb3RoZXIKICAgICAgICBfc2VlZChweSwgcnMsIFsiYSIsICJiIiwgImMiLCAiZCJdKQogICAgICAgIF9zZWVkKHB5X28sIHJzX28sIFsiYiIsICJkIl0pCiAgICAgICAgYXNzZXJ0IGxpc3QocHkuY29tcGFyZV90cmVlcyhweV9vKSkgPT0gbGlzdChycy5jb21wYXJlX3RyZWVzKHJzX28pKQogICAgICAgIGFzc2VydCBsaXN0KHB5LmNvbXBhcmVfdHJlZXNfbGluZXMocHlfbykpID09IGxpc3QocnMuY29tcGFyZV90cmVlc19saW5lcyhyc19vKSkKCiAgICBkZWYgdGVzdF9pZGVudGljYWwoc2VsZiwgcGFpciwgcGFpcl9vdGhlcik6CiAgICAgICAgcHksIHJzID0gcGFpcgogICAgICAgIHB5X28sIHJzX28gPSBwYWlyX290aGVyCiAgICAgICAgZGF0YSA9IFsiYSIsICJiIiwgImMiXQogICAgICAgIF9zZWVkKHB5LCBycywgZGF0YSkKICAgICAgICBfc2VlZChweV9vLCByc19vLCBkYXRhKQogICAgICAgIGFzc2VydCBsaXN0KHB5LmNvbXBhcmVfdHJlZXMocHlfbykpID09IGxpc3QocnMuY29tcGFyZV90cmVlcyhyc19vKSkgPT0gW10KICAgICAgICBhc3NlcnQgbGlzdChweS5jb21wYXJlX3RyZWVzX2xpbmVzKHB5X28pKSA9PSBsaXN0KHJzLmNvbXBhcmVfdHJlZXNfbGluZXMocnNfbykpID09IFtdCgogICAgZGVmIHRlc3RfZnVsbHlfZGlzam9pbnQoc2VsZiwgcGFpciwgcGFpcl9vdGhlcik6CiAgICAgICAgcHksIHJzID0gcGFpcgogICAgICAgIHB5X28sIHJzX28gPSBwYWlyX290aGVyCiAgICAgICAgX3NlZWQocHksIHJzLCBbImEiLCAiYiIsICJjIl0pCiAgICAgICAgX3NlZWQocHlfbywgcnNfbywgWyJ4IiwgInkiLCAieiJdKQogICAgICAgIGFzc2VydCBsaXN0KHB5LmNvbXBhcmVfdHJlZXMocHlfbykpID09IGxpc3QocnMuY29tcGFyZV90cmVlcyhyc19vKSkgPT0gWyJhIiwgImIiLCAiYyJdCiAgICAgICAgYXNzZXJ0IGxpc3QocHkuY29tcGFyZV90cmVlc19saW5lcyhweV9vKSkgPT0gbGlzdChycy5jb21wYXJlX3RyZWVzX2xpbmVzKHJzX28pKSA9PSBbMSwgMiwgM10KCiAgICBkZWYgdGVzdF9vdGhlcl9taXNzaW5nX2ZpbGUoc2VsZiwgcGFpciwgcGFpcl9vdGhlcik6CiAgICAgICAgIiIib3RoZXIg5paH5Lu25LiN5a2Y5Zyo5pe25bqU562J5Lu35LqO56m66ZuG77yIc2VsZiDlhajpg6jkuLogZGlmZu+8ieOAgiIiIgogICAgICAgIHB5LCBycyA9IHBhaXIKICAgICAgICBweV9vLCByc19vID0gcGFpcl9vdGhlcgogICAgICAgIF9zZWVkKHB5LCBycywgWyJhIiwgImIiXSkKICAgICAgICAjIOS4jeWGmeWFpSBvdGhlciDigJTigJQgUHlSZWYuYWRkX3BhdGhzIOS4jeiwg+eUqOWwseS4jeS8muWIm+W7uuaWh+S7tgogICAgICAgICMg5L2GIGZpeHR1cmUg5bey57uPIG1rZGly77yM5omA5Lul56Gu5L+d5paH5Lu25LiN5a2Y5ZyoCiAgICAgICAgaWYgcHlfby5maWxlX3BhdGguZXhpc3RzKCk6CiAgICAgICAgICAgIHB5X28uZmlsZV9wYXRoLnVubGluaygpCiAgICAgICAgaWYgcnNfby5maWxlX3BhdGguZXhpc3RzKCk6CiAgICAgICAgICAgIHJzX28uZmlsZV9wYXRoLnVubGluaygpCiAgICAgICAgYXNzZXJ0IGxpc3QocHkuY29tcGFyZV90cmVlcyhweV9vKSkgPT0gbGlzdChycy5jb21wYXJlX3RyZWVzKHJzX28pKSA9PSBbImEiLCAiYiJdCiAgICAgICAgYXNzZXJ0IGxpc3QocHkuY29tcGFyZV90cmVlc19saW5lcyhweV9vKSkgPT0gbGlzdChycy5jb21wYXJlX3RyZWVzX2xpbmVzKHJzX28pKSA9PSBbMSwgMl0KCiAgICBkZWYgdGVzdF9zZWxmX21pc3NpbmdfZmlsZV9yYWlzZXMoc2VsZiwgcGFpciwgcGFpcl9vdGhlcik6CiAgICAgICAgIiIic2VsZiDmlofku7bkuI3lrZjlnKjml7bkuKTovrnpg73lupTmipsgRmlsZU5vdEZvdW5kRXJyb3LvvIjov63ku6Pml7bpl7Tngrnlj6/og73kuI3lkIzvvInjgIIiIiIKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgcHlfbywgcnNfbyA9IHBhaXJfb3RoZXIKICAgICAgICBfc2VlZChweV9vLCByc19vLCBbImEiXSkKICAgICAgICBpZiBweS5maWxlX3BhdGguZXhpc3RzKCk6CiAgICAgICAgICAgIHB5LmZpbGVfcGF0aC51bmxpbmsoKQogICAgICAgIGlmIHJzLmZpbGVfcGF0aC5leGlzdHMoKToKICAgICAgICAgICAgcnMuZmlsZV9wYXRoLnVubGluaygpCgogICAgICAgIHdpdGggcHl0ZXN0LnJhaXNlcyhGaWxlTm90Rm91bmRFcnJvcik6CiAgICAgICAgICAgIGxpc3QocHkuY29tcGFyZV90cmVlcyhweV9vKSkKICAgICAgICB3aXRoIHB5dGVzdC5yYWlzZXMoRmlsZU5vdEZvdW5kRXJyb3IpOgogICAgICAgICAgICBsaXN0KHJzLmNvbXBhcmVfdHJlZXMocnNfbykpCiAgICAgICAgd2l0aCBweXRlc3QucmFpc2VzKEZpbGVOb3RGb3VuZEVycm9yKToKICAgICAgICAgICAgbGlzdChweS5jb21wYXJlX3RyZWVzX2xpbmVzKHB5X28pKQogICAgICAgIHdpdGggcHl0ZXN0LnJhaXNlcyhGaWxlTm90Rm91bmRFcnJvcik6CiAgICAgICAgICAgIGxpc3QocnMuY29tcGFyZV90cmVlc19saW5lcyhyc19vKSkKCiAgICBkZWYgdGVzdF9kdXBsaWNhdGVzX2luX3NlbGYoc2VsZiwgcGFpciwgcGFpcl9vdGhlcik6CiAgICAgICAgcHksIHJzID0gcGFpcgogICAgICAgIHB5X28sIHJzX28gPSBwYWlyX290aGVyCiAgICAgICAgX3NlZWQocHksIHJzLCBbImEiLCAiYSIsICJiIiwgImEiLCAiYyJdKQogICAgICAgIF9zZWVkKHB5X28sIHJzX28sIFsiYiJdKQogICAgICAgIGFzc2VydCBsaXN0KHB5LmNvbXBhcmVfdHJlZXMocHlfbykpID09IGxpc3QocnMuY29tcGFyZV90cmVlcyhyc19vKSkKICAgICAgICBhc3NlcnQgbGlzdChweS5jb21wYXJlX3RyZWVzX2xpbmVzKHB5X28pKSA9PSBsaXN0KHJzLmNvbXBhcmVfdHJlZXNfbGluZXMocnNfbykpCgogICAgZGVmIHRlc3RfdW5pY29kZV9kaWZmKHNlbGYsIHBhaXIsIHBhaXJfb3RoZXIpOgogICAgICAgIHB5LCBycyA9IHBhaXIKICAgICAgICBweV9vLCByc19vID0gcGFpcl9vdGhlcgogICAgICAgIF9zZWVkKHB5LCBycywgWyLnlLXlvbEvQS5ta3YiLCAi5Yqo5ryrL0IubXA0IiwgIumfs+S5kC/wn461LmZsYWMiXSkKICAgICAgICBfc2VlZChweV9vLCByc19vLCBbIuWKqOa8qy9CLm1wNCJdKQogICAgICAgIGFzc2VydCBsaXN0KHB5LmNvbXBhcmVfdHJlZXMocHlfbykpID09IGxpc3QocnMuY29tcGFyZV90cmVlcyhyc19vKSkKICAgICAgICBhc3NlcnQgbGlzdChweS5jb21wYXJlX3RyZWVzX2xpbmVzKHB5X28pKSA9PSBsaXN0KHJzLmNvbXBhcmVfdHJlZXNfbGluZXMocnNfbykpCgogICAgZGVmIHRlc3RfbGFyZ2VfZGlmZihzZWxmLCBwYWlyLCBwYWlyX290aGVyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgcHlfbywgcnNfbyA9IHBhaXJfb3RoZXIKICAgICAgICBzZWxmX2RhdGEgPSBbZiJmX3tpfSIgZm9yIGkgaW4gcmFuZ2UoNTAwMCldCiAgICAgICAgb3RoZXJfZGF0YSA9IFtmImZfe2l9IiBmb3IgaSBpbiByYW5nZSgwLCA1MDAwLCAyKV0gICMg5YG25pWw5L+d55WZCiAgICAgICAgX3NlZWQocHksIHJzLCBzZWxmX2RhdGEpCiAgICAgICAgX3NlZWQocHlfbywgcnNfbywgb3RoZXJfZGF0YSkKICAgICAgICBhc3NlcnQgbGlzdChweS5jb21wYXJlX3RyZWVzKHB5X28pKSA9PSBsaXN0KHJzLmNvbXBhcmVfdHJlZXMocnNfbykpCiAgICAgICAgYXNzZXJ0IGxpc3QocHkuY29tcGFyZV90cmVlc19saW5lcyhweV9vKSkgPT0gbGlzdChycy5jb21wYXJlX3RyZWVzX2xpbmVzKHJzX28pKQoKICAgIGRlZiB0ZXN0X2l0ZXJhdG9yX3Byb3RvY29sKHNlbGYsIHBhaXIsIHBhaXJfb3RoZXIpOgogICAgICAgICIiIlJ1c3Qg6L+U5Zue55qE5a+56LGh5pivIHNlbGYtaXRlcmF0b3LvvIzljZXmrKHmtojotLnvvIjkuI4gUHl0aG9uIGdlbmVyYXRvciDkuIDoh7TvvInjgIIiIiIKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgcHlfbywgcnNfbyA9IHBhaXJfb3RoZXIKICAgICAgICBfc2VlZChweSwgcnMsIFsiYSIsICJiIl0pCiAgICAgICAgX3NlZWQocHlfbywgcnNfbywgW10pCiAgICAgICAgaXQgPSBycy5jb21wYXJlX3RyZWVzKHJzX28pCiAgICAgICAgYXNzZXJ0IGl0ZXIoaXQpIGlzIGl0ICAjIF9faXRlcl9fIOi/lOWbnuiHqui6qwogICAgICAgIGFzc2VydCBsaXN0KGl0KSA9PSBbImEiLCAiYiJdCiAgICAgICAgIyDkuozmrKHmtojotLnlupTkuLrnqboKICAgICAgICBhc3NlcnQgbGlzdChpdCkgPT0gW10KCiAgICAgICAgaXQyID0gcnMuY29tcGFyZV90cmVlc19saW5lcyhyc19vKQogICAgICAgIGFzc2VydCBpdGVyKGl0MikgaXMgaXQyCiAgICAgICAgYXNzZXJ0IGxpc3QoaXQyKSA9PSBbMSwgMl0KICAgICAgICBhc3NlcnQgbGlzdChpdDIpID09IFtdCgoKIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIyBnZXRfcGF0aF9ieV9saW5lX251bWJlcgojIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpjbGFzcyBUZXN0R2V0UGF0aEJ5TGluZU51bWJlcjoKICAgIGRlZiB0ZXN0X3ZhbGlkX2xpbmVzKHNlbGYsIHBhaXIpOgogICAgICAgIHB5LCBycyA9IHBhaXIKICAgICAgICBkYXRhID0gWyJmaXJzdCIsICJzZWNvbmQiLCAidGhpcmQiXQogICAgICAgIF9zZWVkKHB5LCBycywgZGF0YSkKICAgICAgICBmb3IgbiBpbiAoMSwgMiwgMyk6CiAgICAgICAgICAgIGFzc2VydCBweS5nZXRfcGF0aF9ieV9saW5lX251bWJlcihuKSA9PSBycy5nZXRfcGF0aF9ieV9saW5lX251bWJlcihuKQoKICAgIGRlZiB0ZXN0X3plcm9fYW5kX25lZ2F0aXZlKHNlbGYsIHBhaXIpOgogICAgICAgIHB5LCBycyA9IHBhaXIKICAgICAgICBfc2VlZChweSwgcnMsIFsiYSJdKQogICAgICAgIGZvciBuIGluICgwLCAtMSwgLTEwMCk6CiAgICAgICAgICAgIGFzc2VydCBweS5nZXRfcGF0aF9ieV9saW5lX251bWJlcihuKSA9PSBycy5nZXRfcGF0aF9ieV9saW5lX251bWJlcihuKSBpcyBOb25lCgogICAgZGVmIHRlc3Rfb3V0X29mX3JhbmdlKHNlbGYsIHBhaXIpOgogICAgICAgIHB5LCBycyA9IHBhaXIKICAgICAgICBfc2VlZChweSwgcnMsIFsiYSIsICJiIl0pCiAgICAgICAgZm9yIG4gaW4gKDMsIDEwLCAxMDAwMDApOgogICAgICAgICAgICBhc3NlcnQgcHkuZ2V0X3BhdGhfYnlfbGluZV9udW1iZXIobikgPT0gcnMuZ2V0X3BhdGhfYnlfbGluZV9udW1iZXIobikgaXMgTm9uZQoKICAgIGRlZiB0ZXN0X21pc3NpbmdfZmlsZShzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgaWYgcHkuZmlsZV9wYXRoLmV4aXN0cygpOgogICAgICAgICAgICBweS5maWxlX3BhdGgudW5saW5rKCkKICAgICAgICBpZiBycy5maWxlX3BhdGguZXhpc3RzKCk6CiAgICAgICAgICAgIHJzLmZpbGVfcGF0aC51bmxpbmsoKQogICAgICAgIGFzc2VydCBweS5nZXRfcGF0aF9ieV9saW5lX251bWJlcigxKSA9PSBycy5nZXRfcGF0aF9ieV9saW5lX251bWJlcigxKSBpcyBOb25lCgogICAgZGVmIHRlc3RfZW1wdHlfZmlsZShzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgX3NlZWQocHksIHJzLCBbXSkKICAgICAgICBhc3NlcnQgcHkuZ2V0X3BhdGhfYnlfbGluZV9udW1iZXIoMSkgPT0gcnMuZ2V0X3BhdGhfYnlfbGluZV9udW1iZXIoMSkgaXMgTm9uZQoKICAgIGRlZiB0ZXN0X3VuaWNvZGVfbGluZShzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgX3NlZWQocHksIHJzLCBbIuaZrumAmiIsICLnlLXlvbEv6Zi/5Yeh6L6+Lm1rdiIsICLwn46sIl0pCiAgICAgICAgZm9yIG4gaW4gKDEsIDIsIDMpOgogICAgICAgICAgICBhc3NlcnQgcHkuZ2V0X3BhdGhfYnlfbGluZV9udW1iZXIobikgPT0gcnMuZ2V0X3BhdGhfYnlfbGluZV9udW1iZXIobikKCgojIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQojIGNvdW50CiMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCmNsYXNzIFRlc3RDb3VudDoKICAgIGRlZiB0ZXN0X25vcm1hbChzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgX3NlZWQocHksIHJzLCBbImEiLCAiYiIsICJjIl0pCiAgICAgICAgYXNzZXJ0IHB5LmNvdW50KCkgPT0gcnMuY291bnQoKSA9PSAzCgogICAgZGVmIHRlc3RfZW1wdHlfZmlsZShzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgX3NlZWQocHksIHJzLCBbXSkKICAgICAgICBhc3NlcnQgcHkuY291bnQoKSA9PSBycy5jb3VudCgpID09IDAKCiAgICBkZWYgdGVzdF9taXNzaW5nX2ZpbGUoc2VsZiwgcGFpcik6CiAgICAgICAgcHksIHJzID0gcGFpcgogICAgICAgIGlmIHB5LmZpbGVfcGF0aC5leGlzdHMoKToKICAgICAgICAgICAgcHkuZmlsZV9wYXRoLnVubGluaygpCiAgICAgICAgaWYgcnMuZmlsZV9wYXRoLmV4aXN0cygpOgogICAgICAgICAgICBycy5maWxlX3BhdGgudW5saW5rKCkKICAgICAgICBhc3NlcnQgcHkuY291bnQoKSA9PSBycy5jb3VudCgpID09IDAKCiAgICBkZWYgdGVzdF9za2lwc19ibGFua19saW5lcyhzZWxmLCB0bXBfcGF0aCk6CiAgICAgICAgIiIiY291bnQg6Lez6L+H56m655m96KGM4oCU4oCU55u05o6l5p6E6YCg5paH5Lu25Lul5YyF5ZCr56m66KGM44CCIiIiCiAgICAgICAgcHlfcGF0aCA9IHRtcF9wYXRoIC8gInB5LnR4dCIKICAgICAgICByc19wYXRoID0gdG1wX3BhdGggLyAicnMudHh0IgogICAgICAgIGNvbnRlbnQgPSAiYVxuXG5iXG4gICBcbmNcblxuIgogICAgICAgIHB5X3BhdGgud3JpdGVfdGV4dChjb250ZW50LCBlbmNvZGluZz0idXRmLTgiKQogICAgICAgIHJzX3BhdGgud3JpdGVfdGV4dChjb250ZW50LCBlbmNvZGluZz0idXRmLTgiKQogICAgICAgIHB5ID0gUHlSZWYocHlfcGF0aCkKICAgICAgICBycyA9IFJ1c3RJbXBsKHJzX3BhdGgpCiAgICAgICAgYXNzZXJ0IHB5LmNvdW50KCkgPT0gcnMuY291bnQoKSA9PSAzCgoKIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIyBjbGVhcgojIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpjbGFzcyBUZXN0Q2xlYXI6CiAgICBkZWYgdGVzdF9leGlzdGluZ19maWxlKHNlbGYsIHBhaXIpOgogICAgICAgIHB5LCBycyA9IHBhaXIKICAgICAgICBfc2VlZChweSwgcnMsIFsiYSJdKQogICAgICAgIGFzc2VydCBweS5maWxlX3BhdGguZXhpc3RzKCkgYW5kIHJzLmZpbGVfcGF0aC5leGlzdHMoKQogICAgICAgIHB5LmNsZWFyKCkKICAgICAgICBycy5jbGVhcigpCiAgICAgICAgYXNzZXJ0IG5vdCBweS5maWxlX3BhdGguZXhpc3RzKCkKICAgICAgICBhc3NlcnQgbm90IHJzLmZpbGVfcGF0aC5leGlzdHMoKQoKICAgIGRlZiB0ZXN0X21pc3NpbmdfZmlsZV9ub19lcnJvcihzZWxmLCBwYWlyKToKICAgICAgICBweSwgcnMgPSBwYWlyCiAgICAgICAgaWYgcHkuZmlsZV9wYXRoLmV4aXN0cygpOgogICAgICAgICAgICBweS5maWxlX3BhdGgudW5saW5rKCkKICAgICAgICBpZiBycy5maWxlX3BhdGguZXhpc3RzKCk6CiAgICAgICAgICAgIHJzLmZpbGVfcGF0aC51bmxpbmsoKQogICAgICAgICMg5Lik6L656YO95bqU6Z2Z6buY5oiQ5YqfCiAgICAgICAgcHkuY2xlYXIoKQogICAgICAgIHJzLmNsZWFyKCkKCgojIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQojIOmaj+acuuWMluWvueaLjSAoZnV6eikKIyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KY2xhc3MgVGVzdFJhbmRvbWl6ZWRQYXJpdHk6CiAgICBAcHl0ZXN0Lm1hcmsucGFyYW1ldHJpemUoInNlZWQiLCBsaXN0KHJhbmdlKDIwKSkpCiAgICBkZWYgdGVzdF9yYW5kb21fd29ya2xvYWQoc2VsZiwgdG1wX3BhdGgsIHNlZWQpOgogICAgICAgIGltcG9ydCByYW5kb20KCiAgICAgICAgcm5nID0gcmFuZG9tLlJhbmRvbShzZWVkKQogICAgICAgIHB5X3NlbGYgPSBQeVJlZih0bXBfcGF0aCAvIGYicHlfc197c2VlZH0udHh0IikKICAgICAgICByc19zZWxmID0gUnVzdEltcGwodG1wX3BhdGggLyBmInJzX3Nfe3NlZWR9LnR4dCIpCiAgICAgICAgcHlfb3RoZXIgPSBQeVJlZih0bXBfcGF0aCAvIGYicHlfb197c2VlZH0udHh0IikKICAgICAgICByc19vdGhlciA9IFJ1c3RJbXBsKHRtcF9wYXRoIC8gZiJyc19vX3tzZWVkfS50eHQiKQoKICAgICAgICBkZWYgZ2VuX3BhdGgoKToKICAgICAgICAgICAgZGVwdGggPSBybmcucmFuZGludCgxLCA0KQogICAgICAgICAgICBwYXJ0cyA9IFtdCiAgICAgICAgICAgIGZvciBfIGluIHJhbmdlKGRlcHRoKToKICAgICAgICAgICAgICAgIGxlbmd0aCA9IHJuZy5yYW5kaW50KDEsIDgpCiAgICAgICAgICAgICAgICBwYXJ0cy5hcHBlbmQoIiIuam9pbihybmcuY2hvaWNlKCJhYmNkZWbnlLXlvbHliqjmvKsgXyIpIGZvciBfIGluIHJhbmdlKGxlbmd0aCkpKQogICAgICAgICAgICByZXR1cm4gIi8iLmpvaW4ocGFydHMpICsgcm5nLmNob2ljZShbIi5ta3YiLCAiLm1wNCIsICIuZmxhYyIsICIiXSkKCiAgICAgICAgc2VsZl9kYXRhID0gW2dlbl9wYXRoKCkgZm9yIF8gaW4gcmFuZ2Uocm5nLnJhbmRpbnQoMCwgMjAwKSldCiAgICAgICAgb3RoZXJfZGF0YSA9IFtnZW5fcGF0aCgpIGZvciBfIGluIHJhbmdlKHJuZy5yYW5kaW50KDAsIDIwMCkpXQogICAgICAgICMg5pWF5oSP5re35YWlIHNlbGYg5Lit55qE5p+Q5Lqb5p2h55uu77yM5aKe5Yqg5Lqk6ZuGCiAgICAgICAgaWYgc2VsZl9kYXRhOgogICAgICAgICAgICBmb3IgXyBpbiByYW5nZShtaW4oMjAsIGxlbihzZWxmX2RhdGEpKSk6CiAgICAgICAgICAgICAgICBvdGhlcl9kYXRhLmFwcGVuZChybmcuY2hvaWNlKHNlbGZfZGF0YSkpCgogICAgICAgIF9zZWVkKHB5X3NlbGYsIHJzX3NlbGYsIHNlbGZfZGF0YSkKICAgICAgICBfc2VlZChweV9vdGhlciwgcnNfb3RoZXIsIG90aGVyX2RhdGEpCgogICAgICAgIF9hc3NlcnRfZmlsZXNfZXF1YWwocHlfc2VsZiwgcnNfc2VsZikKICAgICAgICBfYXNzZXJ0X2ZpbGVzX2VxdWFsKHB5X290aGVyLCByc19vdGhlcikKCiAgICAgICAgYXNzZXJ0IHB5X3NlbGYuY291bnQoKSA9PSByc19zZWxmLmNvdW50KCkKICAgICAgICBhc3NlcnQgcHlfb3RoZXIuY291bnQoKSA9PSByc19vdGhlci5jb3VudCgpCgogICAgICAgIGFzc2VydCBsaXN0KHB5X3NlbGYuY29tcGFyZV90cmVlcyhweV9vdGhlcikpID09IGxpc3QoCiAgICAgICAgICAgIHJzX3NlbGYuY29tcGFyZV90cmVlcyhyc19vdGhlcikKICAgICAgICApCiAgICAgICAgYXNzZXJ0IGxpc3QocHlfc2VsZi5jb21wYXJlX3RyZWVzX2xpbmVzKHB5X290aGVyKSkgPT0gbGlzdCgKICAgICAgICAgICAgcnNfc2VsZi5jb21wYXJlX3RyZWVzX2xpbmVzKHJzX290aGVyKQogICAgICAgICkKCiAgICAgICAgIyDmir3lh6DkuKrooYzlj7fkuqTlj4npqozor4EKICAgICAgICBuID0gcHlfc2VsZi5jb3VudCgpCiAgICAgICAgZm9yIGxuIGluICgwLCAxLCBuIC8vIDIgaWYgbiBlbHNlIDEsIG4sIG4gKyAxLCAtMyk6CiAgICAgICAgICAgIGFzc2VydCBweV9zZWxmLmdldF9wYXRoX2J5X2xpbmVfbnVtYmVyKGxuKSA9PSByc19zZWxmLmdldF9wYXRoX2J5X2xpbmVfbnVtYmVyKGxuKQo=
+"""
+txt_tree_storage Rust 模块 与 原 Python 实现 的行为一致性测试
+
+运行方式（在本目录或 crate 根目录）：
+    maturin develop
+    pytest tests/test_parity.py -v
+
+参考实现 (PyRef) 完整复刻 plugins.v2/p115strmhelper/utils/tree.py 中
+TxtFileStorage 在重构前的行为，避免依赖 app.core / app.helper
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Generator, Iterable, List, Union
+
+import pytest
+
+import txt_tree_storage as rust_mod
+
+
+# ---------------------------------------------------------------------------
+# 参考实现：原 Python TxtFileStorage（不含 ABC 和 Redis 依赖）
+# ---------------------------------------------------------------------------
+class PyRef:
+    def __init__(self, file_path: Union[str, Path]):
+        self.file_path = Path(file_path)
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+
+    def add_paths(self, paths: Iterable[str], append: bool = False):
+        mode = "a" if append else "w"
+        buffer_size = 1048576
+        with open(self.file_path, mode, encoding="utf-8", buffering=buffer_size) as f:
+            f.writelines(f"{path}\n" for path in paths)
+
+    def compare_trees(self, other: "PyRef") -> Generator[str, None, None]:
+        try:
+            with open(other.file_path, "r", encoding="utf-8") as f2:
+                tree2_set = set(line.strip() for line in f2)
+        except FileNotFoundError:
+            tree2_set = set()
+        with open(self.file_path, "r", encoding="utf-8") as f1:
+            for line in f1:
+                fp = line.strip()
+                if fp not in tree2_set:
+                    yield fp
+
+    def compare_trees_lines(self, other: "PyRef") -> Generator[int, None, None]:
+        try:
+            with open(other.file_path, "r", encoding="utf-8") as f2:
+                tree2_set = set(line.strip() for line in f2)
+        except FileNotFoundError:
+            tree2_set = set()
+        with open(self.file_path, "r", encoding="utf-8") as f1:
+            for line_num, line in enumerate(f1, start=1):
+                fp = line.strip()
+                if fp not in tree2_set:
+                    yield line_num
+
+    def get_path_by_line_number(self, line_number: int) -> Union[str, None]:
+        if line_number <= 0:
+            return None
+        try:
+            with open(self.file_path, "r", encoding="utf-8") as f:
+                for i, line in enumerate(f, 1):
+                    if i == line_number:
+                        return line.strip()
+        except FileNotFoundError:
+            return None
+        return None
+
+    def count(self) -> int:
+        cnt = 0
+        try:
+            with open(self.file_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    if line.strip():
+                        cnt += 1
+        except FileNotFoundError:
+            return 0
+        return cnt
+
+    def clear(self):
+        if self.file_path.exists():
+            self.file_path.unlink()
+
+
+# ---------------------------------------------------------------------------
+# Rust 适配器：把 rust_mod 的函数包装成与 PyRef 同样的接口
+# ---------------------------------------------------------------------------
+class RustImpl:
+    def __init__(self, file_path: Union[str, Path]):
+        self.file_path = Path(file_path)
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+
+    def add_paths(self, paths: Iterable[str], append: bool = False):
+        rust_mod.add_paths(
+            self.file_path,
+            (p if isinstance(p, str) else str(p) for p in paths),
+            append,
+        )
+
+    def compare_trees(self, other: "RustImpl"):
+        return rust_mod.compare_trees(self.file_path, other.file_path)
+
+    def compare_trees_lines(self, other: "RustImpl"):
+        return rust_mod.compare_trees_lines(self.file_path, other.file_path)
+
+    def get_path_by_line_number(self, line_number: int):
+        return rust_mod.get_path_by_line_number(self.file_path, line_number)
+
+    def count(self) -> int:
+        return int(rust_mod.count(self.file_path))
+
+    def clear(self):
+        rust_mod.clear(self.file_path)
+
+
+# ---------------------------------------------------------------------------
+# 测试夹具
+# ---------------------------------------------------------------------------
+@pytest.fixture
+def pair(tmp_path: Path):
+    """返回 (PyRef, RustImpl) 两个指向不同文件的 self 实例。"""
+    return PyRef(tmp_path / "py_self.txt"), RustImpl(tmp_path / "rs_self.txt")
+
+
+@pytest.fixture
+def pair_other(tmp_path: Path):
+    """返回 (PyRef, RustImpl) 两个指向不同文件的 other 实例。"""
+    return PyRef(tmp_path / "py_other.txt"), RustImpl(tmp_path / "rs_other.txt")
+
+
+def _seed(py: PyRef, rs: RustImpl, lines: List[str], append: bool = False):
+    py.add_paths(lines, append=append)
+    rs.add_paths(lines, append=append)
+
+
+def _assert_files_equal(py: PyRef, rs: RustImpl):
+    assert py.file_path.read_bytes() == rs.file_path.read_bytes()
+
+
+# ---------------------------------------------------------------------------
+# add_paths
+# ---------------------------------------------------------------------------
+class TestAddPaths:
+    def test_basic_write(self, pair):
+        py, rs = pair
+        data = ["a/b.mkv", "a/c.mp4", "d/e.mkv"]
+        _seed(py, rs, data)
+        _assert_files_equal(py, rs)
+        assert py.count() == rs.count() == 3
+
+    def test_overwrite_default(self, pair):
+        py, rs = pair
+        _seed(py, rs, ["x", "y"])
+        _seed(py, rs, ["only"])  # 默认 append=False，应当覆盖
+        _assert_files_equal(py, rs)
+        assert py.count() == rs.count() == 1
+
+    def test_append_mode(self, pair):
+        py, rs = pair
+        _seed(py, rs, ["a", "b"])
+        _seed(py, rs, ["c", "d"], append=True)
+        _assert_files_equal(py, rs)
+        assert py.count() == rs.count() == 4
+
+    def test_empty_iter(self, pair):
+        py, rs = pair
+        _seed(py, rs, [])
+        _assert_files_equal(py, rs)
+        assert py.count() == rs.count() == 0
+
+    def test_unicode_paths(self, pair):
+        py, rs = pair
+        data = ["电影/阿凡达 (2009).mkv", "动漫/进击的巨人/S01E01.mp4", "音乐/🎵.flac"]
+        _seed(py, rs, data)
+        _assert_files_equal(py, rs)
+
+    def test_paths_with_spaces(self, pair):
+        py, rs = pair
+        data = ["a b/c d.mkv", "  leading.mkv", "trailing  .mkv"]
+        _seed(py, rs, data)
+        _assert_files_equal(py, rs)
+
+    def test_very_long_path(self, pair):
+        py, rs = pair
+        long_seg = "x" * 500
+        data = [f"{long_seg}/{long_seg}.mkv" for _ in range(50)]
+        _seed(py, rs, data)
+        _assert_files_equal(py, rs)
+        assert py.count() == rs.count() == 50
+
+    def test_large_volume(self, pair):
+        py, rs = pair
+        data = [f"dir{i // 100}/file_{i}.mkv" for i in range(10_000)]
+        _seed(py, rs, data)
+        _assert_files_equal(py, rs)
+        assert py.count() == rs.count() == 10_000
+
+    def test_append_to_nonexistent(self, pair):
+        py, rs = pair
+        # 文件原本不存在，append 模式应该创建
+        _seed(py, rs, ["a", "b"], append=True)
+        _assert_files_equal(py, rs)
+
+
+# ---------------------------------------------------------------------------
+# compare_trees / compare_trees_lines
+# ---------------------------------------------------------------------------
+class TestCompareTrees:
+    def test_basic_diff(self, pair, pair_other):
+        py, rs = pair
+        py_o, rs_o = pair_other
+        _seed(py, rs, ["a", "b", "c", "d"])
+        _seed(py_o, rs_o, ["b", "d"])
+        assert list(py.compare_trees(py_o)) == list(rs.compare_trees(rs_o))
+        assert list(py.compare_trees_lines(py_o)) == list(rs.compare_trees_lines(rs_o))
+
+    def test_identical(self, pair, pair_other):
+        py, rs = pair
+        py_o, rs_o = pair_other
+        data = ["a", "b", "c"]
+        _seed(py, rs, data)
+        _seed(py_o, rs_o, data)
+        assert list(py.compare_trees(py_o)) == list(rs.compare_trees(rs_o)) == []
+        assert list(py.compare_trees_lines(py_o)) == list(rs.compare_trees_lines(rs_o)) == []
+
+    def test_fully_disjoint(self, pair, pair_other):
+        py, rs = pair
+        py_o, rs_o = pair_other
+        _seed(py, rs, ["a", "b", "c"])
+        _seed(py_o, rs_o, ["x", "y", "z"])
+        assert list(py.compare_trees(py_o)) == list(rs.compare_trees(rs_o)) == ["a", "b", "c"]
+        assert list(py.compare_trees_lines(py_o)) == list(rs.compare_trees_lines(rs_o)) == [1, 2, 3]
+
+    def test_other_missing_file(self, pair, pair_other):
+        """other 文件不存在时应等价于空集（self 全部为 diff）。"""
+        py, rs = pair
+        py_o, rs_o = pair_other
+        _seed(py, rs, ["a", "b"])
+        # 不写入 other —— PyRef.add_paths 不调用就不会创建文件
+        # 但 fixture 已经 mkdir，所以确保文件不存在
+        if py_o.file_path.exists():
+            py_o.file_path.unlink()
+        if rs_o.file_path.exists():
+            rs_o.file_path.unlink()
+        assert list(py.compare_trees(py_o)) == list(rs.compare_trees(rs_o)) == ["a", "b"]
+        assert list(py.compare_trees_lines(py_o)) == list(rs.compare_trees_lines(rs_o)) == [1, 2]
+
+    def test_self_missing_file_raises(self, pair, pair_other):
+        """self 文件不存在时两边都应抛 FileNotFoundError（迭代时间点可能不同）。"""
+        py, rs = pair
+        py_o, rs_o = pair_other
+        _seed(py_o, rs_o, ["a"])
+        if py.file_path.exists():
+            py.file_path.unlink()
+        if rs.file_path.exists():
+            rs.file_path.unlink()
+
+        with pytest.raises(FileNotFoundError):
+            list(py.compare_trees(py_o))
+        with pytest.raises(FileNotFoundError):
+            list(rs.compare_trees(rs_o))
+        with pytest.raises(FileNotFoundError):
+            list(py.compare_trees_lines(py_o))
+        with pytest.raises(FileNotFoundError):
+            list(rs.compare_trees_lines(rs_o))
+
+    def test_duplicates_in_self(self, pair, pair_other):
+        py, rs = pair
+        py_o, rs_o = pair_other
+        _seed(py, rs, ["a", "a", "b", "a", "c"])
+        _seed(py_o, rs_o, ["b"])
+        assert list(py.compare_trees(py_o)) == list(rs.compare_trees(rs_o))
+        assert list(py.compare_trees_lines(py_o)) == list(rs.compare_trees_lines(rs_o))
+
+    def test_unicode_diff(self, pair, pair_other):
+        py, rs = pair
+        py_o, rs_o = pair_other
+        _seed(py, rs, ["电影/A.mkv", "动漫/B.mp4", "音乐/🎵.flac"])
+        _seed(py_o, rs_o, ["动漫/B.mp4"])
+        assert list(py.compare_trees(py_o)) == list(rs.compare_trees(rs_o))
+        assert list(py.compare_trees_lines(py_o)) == list(rs.compare_trees_lines(rs_o))
+
+    def test_large_diff(self, pair, pair_other):
+        py, rs = pair
+        py_o, rs_o = pair_other
+        self_data = [f"f_{i}" for i in range(5000)]
+        other_data = [f"f_{i}" for i in range(0, 5000, 2)]  # 偶数保留
+        _seed(py, rs, self_data)
+        _seed(py_o, rs_o, other_data)
+        assert list(py.compare_trees(py_o)) == list(rs.compare_trees(rs_o))
+        assert list(py.compare_trees_lines(py_o)) == list(rs.compare_trees_lines(rs_o))
+
+    def test_iterator_protocol(self, pair, pair_other):
+        """Rust 返回的对象是 self-iterator，单次消费（与 Python generator 一致）。"""
+        py, rs = pair
+        py_o, rs_o = pair_other
+        _seed(py, rs, ["a", "b"])
+        _seed(py_o, rs_o, [])
+        it = rs.compare_trees(rs_o)
+        assert iter(it) is it  # __iter__ 返回自身
+        assert list(it) == ["a", "b"]
+        # 二次消费应为空
+        assert list(it) == []
+
+        it2 = rs.compare_trees_lines(rs_o)
+        assert iter(it2) is it2
+        assert list(it2) == [1, 2]
+        assert list(it2) == []
+
+
+# ---------------------------------------------------------------------------
+# get_path_by_line_number
+# ---------------------------------------------------------------------------
+class TestGetPathByLineNumber:
+    def test_valid_lines(self, pair):
+        py, rs = pair
+        data = ["first", "second", "third"]
+        _seed(py, rs, data)
+        for n in (1, 2, 3):
+            assert py.get_path_by_line_number(n) == rs.get_path_by_line_number(n)
+
+    def test_zero_and_negative(self, pair):
+        py, rs = pair
+        _seed(py, rs, ["a"])
+        for n in (0, -1, -100):
+            assert py.get_path_by_line_number(n) == rs.get_path_by_line_number(n) is None
+
+    def test_out_of_range(self, pair):
+        py, rs = pair
+        _seed(py, rs, ["a", "b"])
+        for n in (3, 10, 100000):
+            assert py.get_path_by_line_number(n) == rs.get_path_by_line_number(n) is None
+
+    def test_missing_file(self, pair):
+        py, rs = pair
+        if py.file_path.exists():
+            py.file_path.unlink()
+        if rs.file_path.exists():
+            rs.file_path.unlink()
+        assert py.get_path_by_line_number(1) == rs.get_path_by_line_number(1) is None
+
+    def test_empty_file(self, pair):
+        py, rs = pair
+        _seed(py, rs, [])
+        assert py.get_path_by_line_number(1) == rs.get_path_by_line_number(1) is None
+
+    def test_unicode_line(self, pair):
+        py, rs = pair
+        _seed(py, rs, ["普通", "电影/阿凡达.mkv", "🎬"])
+        for n in (1, 2, 3):
+            assert py.get_path_by_line_number(n) == rs.get_path_by_line_number(n)
+
+
+# ---------------------------------------------------------------------------
+# count
+# ---------------------------------------------------------------------------
+class TestCount:
+    def test_normal(self, pair):
+        py, rs = pair
+        _seed(py, rs, ["a", "b", "c"])
+        assert py.count() == rs.count() == 3
+
+    def test_empty_file(self, pair):
+        py, rs = pair
+        _seed(py, rs, [])
+        assert py.count() == rs.count() == 0
+
+    def test_missing_file(self, pair):
+        py, rs = pair
+        if py.file_path.exists():
+            py.file_path.unlink()
+        if rs.file_path.exists():
+            rs.file_path.unlink()
+        assert py.count() == rs.count() == 0
+
+    def test_skips_blank_lines(self, tmp_path):
+        """count 跳过空白行——直接构造文件以包含空行。"""
+        py_path = tmp_path / "py.txt"
+        rs_path = tmp_path / "rs.txt"
+        content = "a\n\nb\n   \nc\n\n"
+        py_path.write_text(content, encoding="utf-8")
+        rs_path.write_text(content, encoding="utf-8")
+        py = PyRef(py_path)
+        rs = RustImpl(rs_path)
+        assert py.count() == rs.count() == 3
+
+
+# ---------------------------------------------------------------------------
+# clear
+# ---------------------------------------------------------------------------
+class TestClear:
+    def test_existing_file(self, pair):
+        py, rs = pair
+        _seed(py, rs, ["a"])
+        assert py.file_path.exists() and rs.file_path.exists()
+        py.clear()
+        rs.clear()
+        assert not py.file_path.exists()
+        assert not rs.file_path.exists()
+
+    def test_missing_file_no_error(self, pair):
+        py, rs = pair
+        if py.file_path.exists():
+            py.file_path.unlink()
+        if rs.file_path.exists():
+            rs.file_path.unlink()
+        # 两边都应静默成功
+        py.clear()
+        rs.clear()
+
+
+# ---------------------------------------------------------------------------
+# 随机化对拍 (fuzz)
+# ---------------------------------------------------------------------------
+class TestRandomizedParity:
+    @pytest.mark.parametrize("seed", list(range(20)))
+    def test_random_workload(self, tmp_path, seed):
+        import random
+
+        rng = random.Random(seed)
+        py_self = PyRef(tmp_path / f"py_s_{seed}.txt")
+        rs_self = RustImpl(tmp_path / f"rs_s_{seed}.txt")
+        py_other = PyRef(tmp_path / f"py_o_{seed}.txt")
+        rs_other = RustImpl(tmp_path / f"rs_o_{seed}.txt")
+
+        def gen_path():
+            depth = rng.randint(1, 4)
+            parts = []
+            for _ in range(depth):
+                length = rng.randint(1, 8)
+                parts.append("".join(rng.choice("abcdef电影动漫 _") for _ in range(length)))
+            return "/".join(parts) + rng.choice([".mkv", ".mp4", ".flac", ""])
+
+        self_data = [gen_path() for _ in range(rng.randint(0, 200))]
+        other_data = [gen_path() for _ in range(rng.randint(0, 200))]
+        # 故意混入 self 中的某些条目，增加交集
+        if self_data:
+            for _ in range(min(20, len(self_data))):
+                other_data.append(rng.choice(self_data))
+
+        _seed(py_self, rs_self, self_data)
+        _seed(py_other, rs_other, other_data)
+
+        _assert_files_equal(py_self, rs_self)
+        _assert_files_equal(py_other, rs_other)
+
+        assert py_self.count() == rs_self.count()
+        assert py_other.count() == rs_other.count()
+
+        assert list(py_self.compare_trees(py_other)) == list(
+            rs_self.compare_trees(rs_other)
+        )
+        assert list(py_self.compare_trees_lines(py_other)) == list(
+            rs_self.compare_trees_lines(rs_other)
+        )
+
+        # 抽几个行号交叉验证
+        n = py_self.count()
+        for ln in (0, 1, n // 2 if n else 1, n, n + 1, -3):
+            assert py_self.get_path_by_line_number(ln) == rs_self.get_path_by_line_number(ln)

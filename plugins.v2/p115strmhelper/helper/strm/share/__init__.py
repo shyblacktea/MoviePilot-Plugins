@@ -1,1 +1,69 @@
-IiIiCuWIhuS6qyBTVFJNIOeUn+aIkOaooeWdlwoK5pys5qih5Z2X5o+Q5L6b5Z+65LqO5YiG5Lqr6ZO+5o6l55qEIFNUUk0g5paH5Lu255Sf5oiQ5Yqf6IO977yM5a2Y5Zyo5pWw5o2u5pyN5Yqh5Zmo5YWx5Lqr5py65Yi2CgrmlbDmja7mlLbpm4bkuI7lhbHkuqvmnLrliLYKLS0tLS0tLS0tLS0tLS0tLS0tCuacrOaooeWdl+WcqOi/kOihjOWIhuS6q+WQjOatpeWKn+iDveaXtu+8jOS8muiHquWKqOWQr+eUqOaVsOaNruacjeWKoeWZqOWFseS6q+acuuWItuOAguatpOacuuWItueahOiuvuiuoeebrueahOWSjOi/kOS9nOaWueW8j+WmguS4i++8mgoKMS4g5pWw5o2u5pS26ZuG6IyD5Zu0CiAgIC0g5LuF5pS26ZuG5YiG5Lqr6ZO+5o6l5Lit55qE5paH5Lu25Z+65pys5L+h5oGv77yI5paH5Lu25ZCN44CB6Lev5b6E44CB5aSn5bCP44CBSUQg562J77yJCiAgIC0g5LiN5pS26ZuG5Lu75L2V5Liq5Lq66ZqQ56eB5L+h5oGv44CB5paH5Lu25YaF5a655oiW6K6/6Zeu5Yet6K+BCiAgIC0g5pWw5o2u5Lul5Yy/5ZCN5YyW44CB5Yqg5a+G5Y6L57yp55qE5pa55byP5a2Y5YKo5ZKM5Lyg6L6TCgoyLiDmlbDmja7mlLbpm4bnmoTlkIjnkIbmgKcKICAgLSDpmY3kvY7po47mjqfpo47pmanvvJrpgJrov4flhbHkuqvlt7Lnn6XlronlhajnmoTliIbkuqvmlbDmja7vvIzluK7liqnop4Tpgb/lubPlj7Dpo47mjqfmnLrliLYKICAgLSDmj5DljYfnlJ/miJDmlYjnjofvvJrlpI3nlKjlt7LlpITnkIbnmoTmlbDmja7vvIzlh4/lsJHph43lpI3nmoQgQVBJIOiwg+eUqOWSjOe9kee7nOivt+axggogICAtIOS8mOWMlueUqOaIt+S9k+mqjO+8muWKoOW/qyBTVFJNIOaWh+S7tueUn+aIkOmAn+W6pu+8jOWHj+WwkeetieW+heaXtumXtAogICAtIOaVsOaNruacgOWwj+WMluWOn+WIme+8muS7heaUtumbhueUn+aIkCBTVFJNIOaWh+S7tuaJgOW/hemcgOeahOacgOWwkeaVsOaNrgoKMy4g5pWw5o2u5L2/55So5pa55byPCiAgIC0g5pWw5o2u5LuF55So5LqOIFNUUk0g5paH5Lu255Sf5oiQ5rWB56iLCiAgIC0g5pWw5o2u5a2Y5YKo5Zyo5Yqg5a+G55qE5pyN5Yqh5Zmo546v5aKD5LitCiAgIC0g5pWw5o2u5Y+v6YCa6L+H5YiG5Lqr56CB5ZKM5o+Q5Y+W56CB6L+b6KGM6K6/6Zeu77yM56Gu5L+d5pWw5o2u5YWz6IGU5oCnCgrnlKjmiLflkIzmhI/ljp/liJkKLS0tLS0tLS0tLS0K5L2/55So5pys5qih5Z2X55qE5YiG5Lqr5ZCM5q2l5Yqf6IO95Y2z6KGo56S65oKo5ZCM5oSP5Lul5LiL5p2h5qy+77yaCgoxLiDpu5jorqTlkIzmhI/ljp/liJkKICAgLSDlkK/nlKjliIbkuqvlkIzmraXlip/og73ljbPop4bkuLrmgqjlt7LpmIXor7vjgIHnkIbop6PlubblkIzmhI/mnKzmlbDmja7mlLbpm4bkuI7lhbHkuqvmnLrliLYKICAgLSDmgqjlj6/ku6XpgJrov4fnpoHnlKjliIbkuqvlkIzmraXlip/og73mnaXlgZzmraLmlbDmja7mlLbpm4blkozlhbHkuqsKCjIuIOaVsOaNruaOp+WItuadgwogICAtIOaCqOaLpeacieWvueWIhuS6q+aVsOaNrueahOWujOWFqOaOp+WItuadgwogICAtIOaCqOWPr+S7pemaj+aXtuWBnOatouS9v+eUqOacrOWKn+iDve+8jOW3suS4iuS8oOeahOaVsOaNruWwhuagueaNruacjeWKoeWZqOetlueVpei/m+ihjOWkhOeQhgoKMy4g6ZqQ56eB5L+d5oqk5om/6K+6CiAgIC0g5oiR5Lus5om/6K+65LuF5pS26ZuG55Sf5oiQIFNUUk0g5paH5Lu25omA5b+F6ZyA55qE5pWw5o2uCiAgIC0g5LiN5Lya5pS26ZuG44CB5a2Y5YKo5oiW5Lyg6L6T5Lu75L2V5Liq5Lq65pWP5oSf5L+h5oGvCiAgIC0g5pWw5o2u5Lul5Yqg5a+G5pa55byP5Lyg6L6T5ZKM5a2Y5YKoCgo0LiDlhY3otKPlo7DmmI4KICAgLSDmlbDmja7lhbHkuqvkuLrlj6/pgInlip/og73vvIzkvYbliIbkuqvlkIzmraXlip/og73nmoTlrozmlbTkvZPpqozpnIDopoHmraTlip/og73mlK/mjIEKICAgLSDlpoLmgqjkuI3lkIzmhI/mlbDmja7lhbHkuqvmnLrliLbvvIzor7fli7/kvb/nlKjliIbkuqvlkIzmraXlip/og70KCuazqOaEj+S6i+mhuQotLS0tLS0tLQotIOacrOWKn+iDvemcgOimgee9kee7nOi/nuaOpeS7peiuv+mXruaVsOaNruacjeWKoeWZqAotIOmmluasoei/kOihjOaXtuS8muWwneivleS7juacjeWKoeWZqOiOt+WPluaVsOaNru+8jOWmguS4jeWtmOWcqOWImeiHquWKqOaUtumbhuW5tuS4iuS8oAotIOaVsOaNruS4iuS8oOS7heWcqOaIkOWKn+WkhOeQhuaJgOacieaWh+S7tuS4lOaXoOW8guW4uOaXtuaJp+ihjAoiIiIKCmZyb20gLmNsZWFuZXIgaW1wb3J0ICgKICAgIHNoYXJlX3N0cm1fY2xlYW5lciwKICAgIHNoYXJlX3N0cm1fY2xlYW51cF9zdW1tYXJ5X3N0b3JlLAogICAgc2hhcmVfc3RybV9taXNzaW5nX21lZGlhX3N0b3JlLAogICAgc2hhcmVfc3RybV9wZW5kaW5nX3F1ZXVlLAopCmZyb20gLmNyZWF0ZSBpbXBvcnQgU2hhcmVTdHJtSGVscGVyLCBTaGFyZUludGVyYWN0aXZlR2VuU3RybVF1ZXVlCgpfX2FsbF9fID0gWwogICAgIlNoYXJlSW50ZXJhY3RpdmVHZW5TdHJtUXVldWUiLAogICAgIlNoYXJlU3RybUhlbHBlciIsCiAgICAic2hhcmVfc3RybV9jbGVhbmVyIiwKICAgICJzaGFyZV9zdHJtX2NsZWFudXBfc3VtbWFyeV9zdG9yZSIsCiAgICAic2hhcmVfc3RybV9taXNzaW5nX21lZGlhX3N0b3JlIiwKICAgICJzaGFyZV9zdHJtX3BlbmRpbmdfcXVldWUiLApdCg==
+"""
+分享 STRM 生成模块
+
+本模块提供基于分享链接的 STRM 文件生成功能，存在数据服务器共享机制
+
+数据收集与共享机制
+------------------
+本模块在运行分享同步功能时，会自动启用数据服务器共享机制。此机制的设计目的和运作方式如下：
+
+1. 数据收集范围
+   - 仅收集分享链接中的文件基本信息（文件名、路径、大小、ID 等）
+   - 不收集任何个人隐私信息、文件内容或访问凭证
+   - 数据以匿名化、加密压缩的方式存储和传输
+
+2. 数据收集的合理性
+   - 降低风控风险：通过共享已知安全的分享数据，帮助规避平台风控机制
+   - 提升生成效率：复用已处理的数据，减少重复的 API 调用和网络请求
+   - 优化用户体验：加快 STRM 文件生成速度，减少等待时间
+   - 数据最小化原则：仅收集生成 STRM 文件所必需的最少数据
+
+3. 数据使用方式
+   - 数据仅用于 STRM 文件生成流程
+   - 数据存储在加密的服务器环境中
+   - 数据可通过分享码和提取码进行访问，确保数据关联性
+
+用户同意原则
+-----------
+使用本模块的分享同步功能即表示您同意以下条款：
+
+1. 默认同意原则
+   - 启用分享同步功能即视为您已阅读、理解并同意本数据收集与共享机制
+   - 您可以通过禁用分享同步功能来停止数据收集和共享
+
+2. 数据控制权
+   - 您拥有对分享数据的完全控制权
+   - 您可以随时停止使用本功能，已上传的数据将根据服务器策略进行处理
+
+3. 隐私保护承诺
+   - 我们承诺仅收集生成 STRM 文件所必需的数据
+   - 不会收集、存储或传输任何个人敏感信息
+   - 数据以加密方式传输和存储
+
+4. 免责声明
+   - 数据共享为可选功能，但分享同步功能的完整体验需要此功能支持
+   - 如您不同意数据共享机制，请勿使用分享同步功能
+
+注意事项
+--------
+- 本功能需要网络连接以访问数据服务器
+- 首次运行时会尝试从服务器获取数据，如不存在则自动收集并上传
+- 数据上传仅在成功处理所有文件且无异常时执行
+"""
+
+from .cleaner import (
+    share_strm_cleaner,
+    share_strm_cleanup_summary_store,
+    share_strm_missing_media_store,
+    share_strm_pending_queue,
+)
+from .create import ShareStrmHelper, ShareInteractiveGenStrmQueue
+
+__all__ = [
+    "ShareInteractiveGenStrmQueue",
+    "ShareStrmHelper",
+    "share_strm_cleaner",
+    "share_strm_cleanup_summary_store",
+    "share_strm_missing_media_store",
+    "share_strm_pending_queue",
+]

@@ -1,1 +1,137 @@
-ZnJvbSBkYXRldGltZSBpbXBvcnQgZGF0ZSwgZGF0ZXRpbWUsIHRpbWVkZWx0YQpmcm9tIHJhbmRvbSBpbXBvcnQgdW5pZm9ybQpmcm9tIHJlIGltcG9ydCBmdWxsbWF0Y2ggYXMgcmVfZnVsbG1hdGNoCmZyb20gdHlwaW5nIGltcG9ydCBPcHRpb25hbCwgVHVwbGUKCmZyb20gcHl0eiBpbXBvcnQgdGltZXpvbmUgYXMgcHl0el90aW1lem9uZQoKZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXIKZnJvbSBhcHAuY29yZS5jb25maWcgaW1wb3J0IHNldHRpbmdzCgpmcm9tIC4uLmNvcmUuY29uZmlnIGltcG9ydCBjb25maWdlcgoKCl9LRVlfTkVYVF9SVU4gPSAicDExNV9jaGVja2luX25leHRfcnVuX3RzIgpfS0VZX0xBU1RfRE9ORSA9ICJwMTE1X2NoZWNraW5fbGFzdF9kb25lX2RhdGUiCgoKZGVmIF90eigpOgogICAgcmV0dXJuIHB5dHpfdGltZXpvbmUoc2V0dGluZ3MuVFopCgoKZGVmIF9wYXJzZV93aW5kb3dfZm9yX2RhdGUoZDogZGF0ZSwgdHopIC0+IFR1cGxlW2RhdGV0aW1lLCBkYXRldGltZV06CiAgICAiIiIKICAgIOWwhumFjee9rueahCBISDpNTS1ISDpNTSDovazkuLrlvZPml6XmnKzlnLDml7bljLrotbfmraLml7bpl7QKICAgICIiIgogICAgcyA9IChjb25maWdlci5wMTE1X2NoZWNraW5fdGltZV9yYW5nZSBvciAiMDY6MDAtMDk6MDAiKS5zdHJpcCgpCiAgICBtID0gcmVfZnVsbG1hdGNoKAogICAgICAgIHIiKFswMV1cZHwyWzAtM10pOihbMC01XVxkKS0oWzAxXVxkfDJbMC0zXSk6KFswLTVdXGQpIiwKICAgICAgICBzLAogICAgKQogICAgaWYgbm90IG06CiAgICAgICAgaDEsIG0xLCBoMiwgbTIgPSA2LCAwLCA5LCAwCiAgICBlbHNlOgogICAgICAgIGgxLCBtMSwgaDIsIG0yID0gKAogICAgICAgICAgICBpbnQobS5ncm91cCgxKSksCiAgICAgICAgICAgIGludChtLmdyb3VwKDIpKSwKICAgICAgICAgICAgaW50KG0uZ3JvdXAoMykpLAogICAgICAgICAgICBpbnQobS5ncm91cCg0KSksCiAgICAgICAgKQogICAgc3RhcnQgPSB0ei5sb2NhbGl6ZShkYXRldGltZShkLnllYXIsIGQubW9udGgsIGQuZGF5LCBoMSwgbTEsIDApKQogICAgZW5kID0gdHoubG9jYWxpemUoZGF0ZXRpbWUoZC55ZWFyLCBkLm1vbnRoLCBkLmRheSwgaDIsIG0yLCAwKSkKICAgIHJldHVybiBzdGFydCwgZW5kCgoKZGVmIF9yYW5kb21fZXBvY2hfZm9yX2RhdGUoZDogZGF0ZSwgdHopIC0+IGZsb2F0OgogICAgIiIiCiAgICDlnKjmjIflrprml6XmnJ/nmoTnqpflj6PlhoXlnYfljIDpmo/mnLrkuIDkuKrml7bliLsKICAgICIiIgogICAgd3MsIHdlID0gX3BhcnNlX3dpbmRvd19mb3JfZGF0ZShkLCB0eikKICAgIHJldHVybiB1bmlmb3JtKHdzLnRpbWVzdGFtcCgpLCB3ZS50aW1lc3RhbXAoKSkKCgpkZWYgX3BpY2tfbmV4dF9ydW5fZXBvY2gobm93OiBkYXRldGltZSwgdHopIC0+IGZsb2F0OgogICAgIiIiCiAgICDmoLnmja7lvZPliY3ml7bliLvvvIzlnKjjgIzlvZPml6XmiJbmrKHml6XjgI3nqpflj6PlhoXpmo/mnLrkuIvkuIDmrKHmiafooYzml7bpl7QKICAgICIiIgogICAgdG9kYXkgPSBub3cuZGF0ZSgpCiAgICB3cywgd2UgPSBfcGFyc2Vfd2luZG93X2Zvcl9kYXRlKHRvZGF5LCB0eikKICAgIHRvbW9ycm93ID0gdG9kYXkgKyB0aW1lZGVsdGEoZGF5cz0xKQogICAgd3NuLCB3ZW4gPSBfcGFyc2Vfd2luZG93X2Zvcl9kYXRlKHRvbW9ycm93LCB0eikKCiAgICBpZiBub3cgPCB3czoKICAgICAgICByZXR1cm4gdW5pZm9ybSh3cy50aW1lc3RhbXAoKSwgd2UudGltZXN0YW1wKCkpCiAgICBpZiBub3cgPCB3ZToKICAgICAgICByZXR1cm4gdW5pZm9ybShtYXgobm93LnRpbWVzdGFtcCgpLCB3cy50aW1lc3RhbXAoKSksIHdlLnRpbWVzdGFtcCgpKQogICAgcmV0dXJuIHVuaWZvcm0od3NuLnRpbWVzdGFtcCgpLCB3ZW4udGltZXN0YW1wKCkpCgoKZGVmIF9zaG91bGRfc2NoZWR1bGUoKSAtPiBib29sOgogICAgaWYgbm90IGNvbmZpZ2VyLmVuYWJsZWQ6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBpZiBub3QgY29uZmlnZXIucDExNV9jaGVja2luX2VuYWJsZWQ6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICByZXR1cm4gVHJ1ZQoKCmRlZiBwMTE1X2NoZWNraW5fc2NoZWR1bGVyX3RpY2soY2xpZW50KSAtPiBOb25lOgogICAgIiIiCiAgICDnlLEgY3Jvbu+8iOWmguavjyA1IOWIhumSn++8ieiwg+eUqO+8mue7tOaKpCBuZXh0X3J1biDlubblnKjliLDmnJ/ml7bmiafooYznrb7liLAKCiAgICA6cGFyYW0gY2xpZW50OiBQMTE1Q2xpZW50IOWunuS+iwogICAgIiIiCiAgICBpZiBub3QgX3Nob3VsZF9zY2hlZHVsZSgpOgogICAgICAgIHJldHVybgoKICAgIHR6ID0gX3R6KCkKICAgIG5vdyA9IGRhdGV0aW1lLm5vdyh0ej10eikKICAgIHRvZGF5X3N0ciA9IG5vdy5zdHJmdGltZSgiJVktJW0tJWQiKQoKICAgIGxhc3RfZG9uZSA9IGNvbmZpZ2VyLmdldF9wbHVnaW5fZGF0YShfS0VZX0xBU1RfRE9ORSkKICAgIGlmIGlzaW5zdGFuY2UobGFzdF9kb25lLCBzdHIpOgogICAgICAgIGxhc3RfZG9uZSA9IGxhc3RfZG9uZS5zdHJpcCgpCiAgICBlbHNlOgogICAgICAgIGxhc3RfZG9uZSA9IE5vbmUKCiAgICByYXdfbmV4dCA9IGNvbmZpZ2VyLmdldF9wbHVnaW5fZGF0YShfS0VZX05FWFRfUlVOKQogICAgbmV4dF90czogT3B0aW9uYWxbZmxvYXRdCiAgICB0cnk6CiAgICAgICAgaWYgcmF3X25leHQgaXMgTm9uZToKICAgICAgICAgICAgbmV4dF90cyA9IE5vbmUKICAgICAgICBlbGlmIGlzaW5zdGFuY2UocmF3X25leHQsIChpbnQsIGZsb2F0KSk6CiAgICAgICAgICAgIG5leHRfdHMgPSBmbG9hdChyYXdfbmV4dCkKICAgICAgICBlbHNlOgogICAgICAgICAgICBuZXh0X3RzID0gZmxvYXQoc3RyKHJhd19uZXh0KS5zdHJpcCgpKQogICAgZXhjZXB0IChUeXBlRXJyb3IsIFZhbHVlRXJyb3IpOgogICAgICAgIG5leHRfdHMgPSBOb25lCgogICAgaWYgbGFzdF9kb25lID09IHRvZGF5X3N0cjoKICAgICAgICBpZiBuZXh0X3RzIGlzIG5vdCBOb25lOgogICAgICAgICAgICBuciA9IGRhdGV0aW1lLmZyb210aW1lc3RhbXAobmV4dF90cywgdHo9dHopCiAgICAgICAgICAgIGlmIG5yLmRhdGUoKSA+IG5vdy5kYXRlKCk6CiAgICAgICAgICAgICAgICByZXR1cm4KICAgICAgICB0b21vcnJvd19kID0gKG5vdyArIHRpbWVkZWx0YShkYXlzPTEpKS5kYXRlKCkKICAgICAgICBjb25maWdlci5zYXZlX3BsdWdpbl9kYXRhKF9LRVlfTkVYVF9SVU4sIF9yYW5kb21fZXBvY2hfZm9yX2RhdGUodG9tb3Jyb3dfZCwgdHopKQogICAgICAgIHJldHVybgoKICAgIGlmIG5leHRfdHMgaXMgTm9uZToKICAgICAgICBueHQgPSBfcGlja19uZXh0X3J1bl9lcG9jaChub3csIHR6KQogICAgICAgIGNvbmZpZ2VyLnNhdmVfcGx1Z2luX2RhdGEoX0tFWV9ORVhUX1JVTiwgbnh0KQogICAgICAgIGxvZ2dlci5kZWJ1Zygi44CQMTE1IOetvuWIsOOAkeW3suWuieaOkuS4i+asoeaJp+ihjOaXtumXtOaIsyAlcyIsIG54dCkKICAgICAgICBuZXh0X3RzID0gbnh0CgogICAgaWYgbm93LnRpbWVzdGFtcCgpIDwgbmV4dF90czoKICAgICAgICByZXR1cm4KCiAgICBmcm9tIC5qb2IgaW1wb3J0IHJ1bl9wMTE1X2NoZWNraW5fb25jZQoKICAgIG9rLCBfZGV0YWlsID0gcnVuX3AxMTVfY2hlY2tpbl9vbmNlKGNsaWVudD1jbGllbnQsIG1hbnVhbD1GYWxzZSwgc2VuZF9ub3RpZnk9VHJ1ZSkKICAgIGlmIG9rOgogICAgICAgIGNvbmZpZ2VyLnNhdmVfcGx1Z2luX2RhdGEoX0tFWV9MQVNUX0RPTkUsIHRvZGF5X3N0cikKICAgICAgICB0b21vcnJvd19kID0gKG5vdyArIHRpbWVkZWx0YShkYXlzPTEpKS5kYXRlKCkKICAgICAgICBjb25maWdlci5zYXZlX3BsdWdpbl9kYXRhKAogICAgICAgICAgICBfS0VZX05FWFRfUlVOLAogICAgICAgICAgICBfcmFuZG9tX2Vwb2NoX2Zvcl9kYXRlKHRvbW9ycm93X2QsIHR6KSwKICAgICAgICApCiAgICBlbHNlOgogICAgICAgIGNvbmZpZ2VyLnNhdmVfcGx1Z2luX2RhdGEoX0tFWV9ORVhUX1JVTiwgTm9uZSkK
+from datetime import date, datetime, timedelta
+from random import uniform
+from re import fullmatch as re_fullmatch
+from typing import Optional, Tuple
+
+from pytz import timezone as pytz_timezone
+
+from app.log import logger
+from app.core.config import settings
+
+from ...core.config import configer
+
+
+_KEY_NEXT_RUN = "p115_checkin_next_run_ts"
+_KEY_LAST_DONE = "p115_checkin_last_done_date"
+
+
+def _tz():
+    return pytz_timezone(settings.TZ)
+
+
+def _parse_window_for_date(d: date, tz) -> Tuple[datetime, datetime]:
+    """
+    将配置的 HH:MM-HH:MM 转为当日本地时区起止时间
+    """
+    s = (configer.p115_checkin_time_range or "06:00-09:00").strip()
+    m = re_fullmatch(
+        r"([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)",
+        s,
+    )
+    if not m:
+        h1, m1, h2, m2 = 6, 0, 9, 0
+    else:
+        h1, m1, h2, m2 = (
+            int(m.group(1)),
+            int(m.group(2)),
+            int(m.group(3)),
+            int(m.group(4)),
+        )
+    start = tz.localize(datetime(d.year, d.month, d.day, h1, m1, 0))
+    end = tz.localize(datetime(d.year, d.month, d.day, h2, m2, 0))
+    return start, end
+
+
+def _random_epoch_for_date(d: date, tz) -> float:
+    """
+    在指定日期的窗口内均匀随机一个时刻
+    """
+    ws, we = _parse_window_for_date(d, tz)
+    return uniform(ws.timestamp(), we.timestamp())
+
+
+def _pick_next_run_epoch(now: datetime, tz) -> float:
+    """
+    根据当前时刻，在「当日或次日」窗口内随机下一次执行时间
+    """
+    today = now.date()
+    ws, we = _parse_window_for_date(today, tz)
+    tomorrow = today + timedelta(days=1)
+    wsn, wen = _parse_window_for_date(tomorrow, tz)
+
+    if now < ws:
+        return uniform(ws.timestamp(), we.timestamp())
+    if now < we:
+        return uniform(max(now.timestamp(), ws.timestamp()), we.timestamp())
+    return uniform(wsn.timestamp(), wen.timestamp())
+
+
+def _should_schedule() -> bool:
+    if not configer.enabled:
+        return False
+    if not configer.p115_checkin_enabled:
+        return False
+    return True
+
+
+def p115_checkin_scheduler_tick(client) -> None:
+    """
+    由 cron（如每 5 分钟）调用：维护 next_run 并在到期时执行签到
+
+    :param client: P115Client 实例
+    """
+    if not _should_schedule():
+        return
+
+    tz = _tz()
+    now = datetime.now(tz=tz)
+    today_str = now.strftime("%Y-%m-%d")
+
+    last_done = configer.get_plugin_data(_KEY_LAST_DONE)
+    if isinstance(last_done, str):
+        last_done = last_done.strip()
+    else:
+        last_done = None
+
+    raw_next = configer.get_plugin_data(_KEY_NEXT_RUN)
+    next_ts: Optional[float]
+    try:
+        if raw_next is None:
+            next_ts = None
+        elif isinstance(raw_next, (int, float)):
+            next_ts = float(raw_next)
+        else:
+            next_ts = float(str(raw_next).strip())
+    except (TypeError, ValueError):
+        next_ts = None
+
+    if last_done == today_str:
+        if next_ts is not None:
+            nr = datetime.fromtimestamp(next_ts, tz=tz)
+            if nr.date() > now.date():
+                return
+        tomorrow_d = (now + timedelta(days=1)).date()
+        configer.save_plugin_data(_KEY_NEXT_RUN, _random_epoch_for_date(tomorrow_d, tz))
+        return
+
+    if next_ts is None:
+        nxt = _pick_next_run_epoch(now, tz)
+        configer.save_plugin_data(_KEY_NEXT_RUN, nxt)
+        logger.debug("【115 签到】已安排下次执行时间戳 %s", nxt)
+        next_ts = nxt
+
+    if now.timestamp() < next_ts:
+        return
+
+    from .job import run_p115_checkin_once
+
+    ok, _detail = run_p115_checkin_once(client=client, manual=False, send_notify=True)
+    if ok:
+        configer.save_plugin_data(_KEY_LAST_DONE, today_str)
+        tomorrow_d = (now + timedelta(days=1)).date()
+        configer.save_plugin_data(
+            _KEY_NEXT_RUN,
+            _random_epoch_for_date(tomorrow_d, tz),
+        )
+    else:
+        configer.save_plugin_data(_KEY_NEXT_RUN, None)

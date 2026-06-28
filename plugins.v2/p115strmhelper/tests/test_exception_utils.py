@@ -1,1 +1,89 @@
-IiIiCk5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlciDmtYvor5XmqKHlnZcKCuWMheWQq+W8guW4uOagvOW8j+WMluW3peWFt+aWueazleeahOWNleWFg+a1i+ivlQoiIiIKCmZyb20gdW5pdHRlc3QgaW1wb3J0IFRlc3RDYXNlCgpmcm9tIHV0aWxzLmV4Y2VwdGlvbiBpbXBvcnQgTm90aWZ5RXhjZXB0aW9uRm9ybWF0dGVyCgoKY2xhc3MgTW9ja0hUVFBFcnJvcihFeGNlcHRpb24pOgogICAgIiIi5qih5oufIEhUVFAg5byC5bi4IiIiCgogICAgZGVmIF9faW5pdF9fKHNlbGYsIGNvZGU9Tm9uZSwgcmVhc29uPU5vbmUsIG1lc3NhZ2U9Tm9uZSk6CiAgICAgICAgc2VsZi5jb2RlID0gY29kZQogICAgICAgIHNlbGYucmVhc29uID0gcmVhc29uCiAgICAgICAgc2VsZi5tZXNzYWdlID0gbWVzc2FnZQogICAgICAgIHN1cGVyKCkuX19pbml0X18obWVzc2FnZSBvciByZWFzb24gb3Igc3RyKGNvZGUpKQoKCmNsYXNzIFRlc3RGb3JtYXRFeGNlcHRpb25Gb3JOb3RpZnkoVGVzdENhc2UpOgogICAgIiIi5rWL6K+VIE5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlci5mb3JtYXRfZXhjZXB0aW9uX2Zvcl9ub3RpZnkg5pa55rOVIiIiCgogICAgZGVmIHRlc3RfYmFzaWNfZXhjZXB0aW9uKHNlbGYpOgogICAgICAgICIiIua1i+ivleWfuuacrOW8guW4uCIiIgogICAgICAgIGV4YyA9IFZhbHVlRXJyb3IoInRlc3QgZXJyb3IiKQogICAgICAgIHJlc3VsdCA9IE5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlci5mb3JtYXRfZXhjZXB0aW9uX2Zvcl9ub3RpZnkoZXhjKQogICAgICAgIHNlbGYuYXNzZXJ0SW4oInRlc3QgZXJyb3IiLCByZXN1bHQpCgogICAgZGVmIHRlc3RfZW1wdHlfZXhjZXB0aW9uKHNlbGYpOgogICAgICAgICIiIua1i+ivleepuuW8guW4uCIiIgogICAgICAgIGV4YyA9IFZhbHVlRXJyb3IoKQogICAgICAgIHJlc3VsdCA9IE5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlci5mb3JtYXRfZXhjZXB0aW9uX2Zvcl9ub3RpZnkoZXhjKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocmVzdWx0LCAiVmFsdWVFcnJvciIpCgogICAgZGVmIHRlc3RfaHR0cF9lcnJvcl93aXRoX2FsbF9maWVsZHMoc2VsZik6CiAgICAgICAgIiIi5rWL6K+VIEhUVFAg5byC5bi477yI5a6M5pW05a2X5q6177yJIiIiCiAgICAgICAgZXhjID0gTW9ja0hUVFBFcnJvcihjb2RlPTQwNCwgcmVhc29uPSJOb3QgRm91bmQiLCBtZXNzYWdlPSJSZXNvdXJjZSBtaXNzaW5nIikKICAgICAgICByZXN1bHQgPSBOb3RpZnlFeGNlcHRpb25Gb3JtYXR0ZXIuZm9ybWF0X2V4Y2VwdGlvbl9mb3Jfbm90aWZ5KGV4YykKICAgICAgICBzZWxmLmFzc2VydEluKCI0MDQiLCByZXN1bHQpCiAgICAgICAgc2VsZi5hc3NlcnRJbigiTm90IEZvdW5kIiwgcmVzdWx0KQogICAgICAgIHNlbGYuYXNzZXJ0SW4oIlJlc291cmNlIG1pc3NpbmciLCByZXN1bHQpCgogICAgZGVmIHRlc3RfaHR0cF9lcnJvcl9jb2RlX29ubHkoc2VsZik6CiAgICAgICAgIiIi5rWL6K+VIEhUVFAg5byC5bi477yI5LuF54q25oCB56CB77yJIiIiCiAgICAgICAgZXhjID0gTW9ja0hUVFBFcnJvcihjb2RlPTUwMCkKICAgICAgICByZXN1bHQgPSBOb3RpZnlFeGNlcHRpb25Gb3JtYXR0ZXIuZm9ybWF0X2V4Y2VwdGlvbl9mb3Jfbm90aWZ5KGV4YykKICAgICAgICBzZWxmLmFzc2VydEluKCI1MDAiLCByZXN1bHQpCgogICAgZGVmIHRlc3RfaHR0cF9lcnJvcl9yZWFzb25fb25seShzZWxmKToKICAgICAgICAiIiLmtYvor5UgSFRUUCDlvILluLjvvIjku4Xljp/lm6DvvIkiIiIKICAgICAgICBleGMgPSBNb2NrSFRUUEVycm9yKHJlYXNvbj0iQmFkIFJlcXVlc3QiKQogICAgICAgIHJlc3VsdCA9IE5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlci5mb3JtYXRfZXhjZXB0aW9uX2Zvcl9ub3RpZnkoZXhjKQogICAgICAgIHNlbGYuYXNzZXJ0SW4oIkJhZCBSZXF1ZXN0IiwgcmVzdWx0KQoKICAgIGRlZiB0ZXN0X2h0dHBfZXJyb3JfbWVzc2FnZV9vbmx5KHNlbGYpOgogICAgICAgICIiIua1i+ivlSBIVFRQIOW8guW4uO+8iOS7hea2iOaBr++8iSIiIgogICAgICAgIGV4YyA9IE1vY2tIVFRQRXJyb3IobWVzc2FnZT0iU29tZXRoaW5nIHdlbnQgd3JvbmciKQogICAgICAgIHJlc3VsdCA9IE5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlci5mb3JtYXRfZXhjZXB0aW9uX2Zvcl9ub3RpZnkoZXhjKQogICAgICAgIHNlbGYuYXNzZXJ0SW4oIlNvbWV0aGluZyB3ZW50IHdyb25nIiwgcmVzdWx0KQoKICAgIGRlZiB0ZXN0X21heF9sZW5ndGhfdHJ1bmNhdGlvbihzZWxmKToKICAgICAgICAiIiLmtYvor5XmnIDlpKfplb/luqbmiKrmlq0iIiIKICAgICAgICBsb25nX21lc3NhZ2UgPSAiYSIgKiA1MDAKICAgICAgICBleGMgPSBWYWx1ZUVycm9yKGxvbmdfbWVzc2FnZSkKICAgICAgICByZXN1bHQgPSBOb3RpZnlFeGNlcHRpb25Gb3JtYXR0ZXIuZm9ybWF0X2V4Y2VwdGlvbl9mb3Jfbm90aWZ5KGV4YywgbWF4X2xlbmd0aD0xMDApCiAgICAgICAgc2VsZi5hc3NlcnRMZXNzRXF1YWwobGVuKHJlc3VsdCksIDEwMCkKCiAgICBkZWYgdGVzdF9zdHJpbmdfcGFyc2luZ19jb2RlX3JlYXNvbl9tZXNzYWdlKHNlbGYpOgogICAgICAgICIiIua1i+ivleWtl+espuS4suino+aekCBjb2RlL3JlYXNvbi9tZXNzYWdlIiIiCiAgICAgICAgZXhjID0gRXhjZXB0aW9uKCJjb2RlPTQwMSByZWFzb249J1VuYXV0aG9yaXplZCcgbWVzc2FnZT0nVG9rZW4gZXhwaXJlZCciKQogICAgICAgIHJlc3VsdCA9IE5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlci5mb3JtYXRfZXhjZXB0aW9uX2Zvcl9ub3RpZnkoZXhjKQogICAgICAgIHNlbGYuYXNzZXJ0SW4oIjQwMSIsIHJlc3VsdCkKICAgICAgICBzZWxmLmFzc2VydEluKCJVbmF1dGhvcml6ZWQiLCByZXN1bHQpCiAgICAgICAgc2VsZi5hc3NlcnRJbigiVG9rZW4gZXhwaXJlZCIsIHJlc3VsdCkKCiAgICBkZWYgdGVzdF9tdWx0aWxpbmVfZXhjZXB0aW9uKHNlbGYpOgogICAgICAgICIiIua1i+ivleWkmuihjOW8guW4uOa2iOaBryIiIgogICAgICAgIGV4YyA9IEV4Y2VwdGlvbigiRmlyc3QgbGluZVxuU2Vjb25kIGxpbmVcblRoaXJkIGxpbmUiKQogICAgICAgIHJlc3VsdCA9IE5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlci5mb3JtYXRfZXhjZXB0aW9uX2Zvcl9ub3RpZnkoZXhjKQogICAgICAgICMg5bqU5o+Q5Y+W5pyJ5pWI6KGMCiAgICAgICAgc2VsZi5hc3NlcnRJc0luc3RhbmNlKHJlc3VsdCwgc3RyKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShsZW4ocmVzdWx0KSA+IDApCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIGZyb20gdW5pdHRlc3QgaW1wb3J0IG1haW4KICAgIG1haW4odmVyYm9zaXR5PTIpCg==
+"""
+NotifyExceptionFormatter 测试模块
+
+包含异常格式化工具方法的单元测试
+"""
+
+from unittest import TestCase
+
+from utils.exception import NotifyExceptionFormatter
+
+
+class MockHTTPError(Exception):
+    """模拟 HTTP 异常"""
+
+    def __init__(self, code=None, reason=None, message=None):
+        self.code = code
+        self.reason = reason
+        self.message = message
+        super().__init__(message or reason or str(code))
+
+
+class TestFormatExceptionForNotify(TestCase):
+    """测试 NotifyExceptionFormatter.format_exception_for_notify 方法"""
+
+    def test_basic_exception(self):
+        """测试基本异常"""
+        exc = ValueError("test error")
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc)
+        self.assertIn("test error", result)
+
+    def test_empty_exception(self):
+        """测试空异常"""
+        exc = ValueError()
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc)
+        self.assertEqual(result, "ValueError")
+
+    def test_http_error_with_all_fields(self):
+        """测试 HTTP 异常（完整字段）"""
+        exc = MockHTTPError(code=404, reason="Not Found", message="Resource missing")
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc)
+        self.assertIn("404", result)
+        self.assertIn("Not Found", result)
+        self.assertIn("Resource missing", result)
+
+    def test_http_error_code_only(self):
+        """测试 HTTP 异常（仅状态码）"""
+        exc = MockHTTPError(code=500)
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc)
+        self.assertIn("500", result)
+
+    def test_http_error_reason_only(self):
+        """测试 HTTP 异常（仅原因）"""
+        exc = MockHTTPError(reason="Bad Request")
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc)
+        self.assertIn("Bad Request", result)
+
+    def test_http_error_message_only(self):
+        """测试 HTTP 异常（仅消息）"""
+        exc = MockHTTPError(message="Something went wrong")
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc)
+        self.assertIn("Something went wrong", result)
+
+    def test_max_length_truncation(self):
+        """测试最大长度截断"""
+        long_message = "a" * 500
+        exc = ValueError(long_message)
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc, max_length=100)
+        self.assertLessEqual(len(result), 100)
+
+    def test_string_parsing_code_reason_message(self):
+        """测试字符串解析 code/reason/message"""
+        exc = Exception("code=401 reason='Unauthorized' message='Token expired'")
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc)
+        self.assertIn("401", result)
+        self.assertIn("Unauthorized", result)
+        self.assertIn("Token expired", result)
+
+    def test_multiline_exception(self):
+        """测试多行异常消息"""
+        exc = Exception("First line\nSecond line\nThird line")
+        result = NotifyExceptionFormatter.format_exception_for_notify(exc)
+        # 应提取有效行
+        self.assertIsInstance(result, str)
+        self.assertTrue(len(result) > 0)
+
+
+if __name__ == "__main__":
+    from unittest import main
+    main(verbosity=2)

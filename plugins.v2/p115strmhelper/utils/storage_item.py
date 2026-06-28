@@ -1,1 +1,225 @@
-ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gdHlwaW5nIGltcG9ydCBPcHRpb25hbAoKZnJvbSBhcHAuY2hhaW4uc3RvcmFnZSBpbXBvcnQgU3RvcmFnZUNoYWluCmZyb20gYXBwLmxvZyBpbXBvcnQgbG9nZ2VyCmZyb20gYXBwLnNjaGVtYXMgaW1wb3J0IEZpbGVJdGVtCgoKZGVmIGZpbmRfc3ViZGlyZWN0b3J5X2J5X25hbWUoCiAgICBjaGFpbjogU3RvcmFnZUNoYWluLAogICAgcGFyZW50OiBGaWxlSXRlbSwKICAgIG5hbWU6IHN0ciwKKSAtPiBPcHRpb25hbFtGaWxlSXRlbV06CiAgICAiIiIKICAgIOWcqOW3suWumuS9jeeahOeItuebruW9leS4i+WIl+S4vuWtkOmhue+8jOaMieWQjeensOWMuemFjeesrOS4gOS4quebruW9leexu+Wei+mhuQoKICAgIDpwYXJhbSBjaGFpbiAoU3RvcmFnZUNoYWluKTog5YKo5a2Y6ZO+5a6e5L6LCiAgICA6cGFyYW0gcGFyZW50IChGaWxlSXRlbSk6IOeItuebruW9lSBGaWxlSXRlbQogICAgOnBhcmFtIG5hbWUgKHN0cik6IOWtkOebruW9leWQjeensO+8iOS4jiBGaWxlSXRlbS5uYW1lIOS4gOiHtOavlOi+g++8iQoKICAgIDpyZXR1cm4gRmlsZUl0ZW06IOWMuemFjeeahOebruW9lSBGaWxlSXRlbe+8m+aXoOWMuemFjeaIluWIl+S4vue7k+aenOS4uuepuuaXtui/lOWbniBOb25lCgogICAgOnJhaXNlcyBFeGNlcHRpb246IOmAj+S8oCBgYGxpc3RfZmlsZXNgYCDnmoTlvILluLjvvIznlLHosIPnlKjmlrnorrDlvZXml6Xlv5cKICAgICIiIgogICAgZW50cmllcyA9IGNoYWluLmxpc3RfZmlsZXMocGFyZW50KSBvciBbXQogICAgZm9yIGVudHJ5IGluIGVudHJpZXM6CiAgICAgICAgaWYgZW50cnkudHlwZSA9PSAiZGlyIiBhbmQgZW50cnkubmFtZSA9PSBuYW1lOgogICAgICAgICAgICByZXR1cm4gZW50cnkKICAgIHJldHVybiBOb25lCgoKZGVmIGZpbmRfZmlsZV9ieV9uYW1lKAogICAgY2hhaW46IFN0b3JhZ2VDaGFpbiwKICAgIHBhcmVudDogRmlsZUl0ZW0sCiAgICBuYW1lOiBzdHIsCikgLT4gT3B0aW9uYWxbRmlsZUl0ZW1dOgogICAgIiIiCiAgICDlnKjlt7LlrprkvY3nmoTniLbnm67lvZXkuIvliJfkuL7lrZDpobnvvIzmjInlkI3np7DljLnphY3nrKzkuIDkuKrmlofku7bnsbvlnovpobkKCiAgICA6cGFyYW0gY2hhaW4gKFN0b3JhZ2VDaGFpbik6IOWCqOWtmOmTvuWunuS+iwogICAgOnBhcmFtIHBhcmVudCAoRmlsZUl0ZW0pOiDniLbnm67lvZUgRmlsZUl0ZW0KICAgIDpwYXJhbSBuYW1lIChzdHIpOiDmlofku7blkI3vvIjkuI4gRmlsZUl0ZW0ubmFtZSDkuIDoh7Tmr5TovoPvvIkKCiAgICA6cmV0dXJuIEZpbGVJdGVtOiDljLnphY3nmoTmlofku7YgRmlsZUl0ZW3vvJvml6DljLnphY3miJbliJfkuL7nu5PmnpzkuLrnqbrml7bov5Tlm54gTm9uZQoKICAgIDpyYWlzZXMgRXhjZXB0aW9uOiDpgI/kvKAgYGBsaXN0X2ZpbGVzYGAg55qE5byC5bi477yM55Sx6LCD55So5pa56K6w5b2V5pel5b+XCiAgICAiIiIKICAgIGVudHJpZXMgPSBjaGFpbi5saXN0X2ZpbGVzKHBhcmVudCkgb3IgW10KICAgIGZvciBlbnRyeSBpbiBlbnRyaWVzOgogICAgICAgIGlmIGVudHJ5LnR5cGUgPT0gImZpbGUiIGFuZCBlbnRyeS5uYW1lID09IG5hbWU6CiAgICAgICAgICAgIHJldHVybiBlbnRyeQogICAgcmV0dXJuIE5vbmUKCgpkZWYgcmVzb2x2ZV9kaXJlY3RvcnlfdmlhX3BhcmVudF9saXN0KAogICAgY2hhaW46IFN0b3JhZ2VDaGFpbiwKICAgIHN0b3JhZ2U6IHN0ciwKICAgIHRhcmdldF9kaXI6IFBhdGgsCiAgICAqLAogICAgbG9nX2xhYmVsOiBzdHIgPSAi44CQ572R55uY5pW055CG44CRIiwKKSAtPiBPcHRpb25hbFtGaWxlSXRlbV06CiAgICAiIiIKICAgIOS4jee7j+ebruagh+i3r+W+hOWFqOmHjyBgYGdldF9maWxlX2l0ZW1gYO+8jOS7heino+aekOWFtueItuebruW9leWQjuWcqOWtkOmhueS4reaMieWQjeWMuemFjeebruagh+aWh+S7tuWkuQoKICAgIDpwYXJhbSBjaGFpbiAoU3RvcmFnZUNoYWluKTog5YKo5a2Y6ZO+5a6e5L6LCiAgICA6cGFyYW0gc3RvcmFnZSAoc3RyKTog5YKo5a2Y5ZCN56ew77yI5aaCIENsb3VkRHJpdmUg5YKo5a2Y5ZCN77yJCiAgICA6cGFyYW0gdGFyZ2V0X2RpciAoUGF0aCk6IOebruagh+ebruW9lei3r+W+hO+8iOS8muWFiOinhOiMg+S4uuebruW9lSBwb3NpeO+8iQogICAgOnBhcmFtIGxvZ19sYWJlbCAoc3RyKTog5pel5b+X5YmN57yACgogICAgOnJldHVybiBGaWxlSXRlbTog55uu5qCH55uu5b2VIEZpbGVJdGVt77yb5peg5rOV6Kej5p6Q5oiW55uu5qCH5Li65YKo5a2Y5qC5IGBgL2BgIOaXtui/lOWbniBOb25lCiAgICAiIiIKICAgIHBvc2l4ID0gdGFyZ2V0X2Rpci5hc19wb3NpeCgpLnJzdHJpcCgiLyIpIG9yICIvIgogICAgaWYgcG9zaXggPT0gIi8iOgogICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgIiVzIOWCqOWtmOOAjCVz44CN55uu5qCH55uu5b2V5LiN6IO95Li65YKo5a2Y5qC56Lev5b6EOiAlcyIsCiAgICAgICAgICAgIGxvZ19sYWJlbCwKICAgICAgICAgICAgc3RvcmFnZSwKICAgICAgICAgICAgdGFyZ2V0X2RpciwKICAgICAgICApCiAgICAgICAgcmV0dXJuIE5vbmUKCiAgICBwYXJlbnRfcGF0aCA9IFBhdGgocG9zaXgpLnBhcmVudAogICAgY2hpbGRfbmFtZSA9IFBhdGgocG9zaXgpLm5hbWUKICAgIGlmIG5vdCBjaGlsZF9uYW1lOgogICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgIiVzIOWCqOWtmOOAjCVz44CN55uu5qCH6Lev5b6E5peg5pWI77yI5peg5rOV5b6X5Yiw5a2Q55uu5b2V5ZCN77yJOiAlcyIsCiAgICAgICAgICAgIGxvZ19sYWJlbCwKICAgICAgICAgICAgc3RvcmFnZSwKICAgICAgICAgICAgdGFyZ2V0X2RpciwKICAgICAgICApCiAgICAgICAgcmV0dXJuIE5vbmUKCiAgICBwYXJlbnRfcG9zaXggPSBwYXJlbnRfcGF0aC5hc19wb3NpeCgpLnJzdHJpcCgiLyIpIG9yICIvIgogICAgaWYgcGFyZW50X3Bvc2l4ID09ICIvIjoKICAgICAgICBwYXJlbnRfaXRlbTogRmlsZUl0ZW0gPSBGaWxlSXRlbShzdG9yYWdlPXN0b3JhZ2UsIHBhdGg9Ii8iKQogICAgZWxzZToKICAgICAgICBwYXJlbnRfaXRlbSA9IGNoYWluLmdldF9maWxlX2l0ZW0oc3RvcmFnZT1zdG9yYWdlLCBwYXRoPXBhcmVudF9wYXRoKQogICAgICAgIGlmIG5vdCBwYXJlbnRfaXRlbToKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoCiAgICAgICAgICAgICAgICAiJXMg5YKo5a2Y44CMJXPjgI3ml6Dms5Xnm7TmjqXop6PmnpDniLbnm67lvZXvvIzlsJ3or5Xlm57pgIDpgY3ljobop6PmnpA6ICVzIiwKICAgICAgICAgICAgICAgIGxvZ19sYWJlbCwKICAgICAgICAgICAgICAgIHN0b3JhZ2UsCiAgICAgICAgICAgICAgICBwYXJlbnRfcGF0aCwKICAgICAgICAgICAgKQogICAgICAgICAgICBwYXJlbnRfaXRlbSA9IHJlc29sdmVfZGlyZWN0b3J5X3ZpYV9wYXJlbnRfbGlzdCgKICAgICAgICAgICAgICAgIGNoYWluLAogICAgICAgICAgICAgICAgc3RvcmFnZSwKICAgICAgICAgICAgICAgIHBhcmVudF9wYXRoLAogICAgICAgICAgICAgICAgbG9nX2xhYmVsPWxvZ19sYWJlbCwKICAgICAgICAgICAgKQogICAgICAgICAgICBpZiBub3QgcGFyZW50X2l0ZW06CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoCiAgICAgICAgICAgICAgICAgICAgIiVzIOWCqOWtmOOAjCVz44CN54i255uu5b2V5Zue6YCA6YGN5Y6G5aSx6LSl77yM6Lez6L+H5paH5Lu25aS56YGN5Y6GOiAlcyIsCiAgICAgICAgICAgICAgICAgICAgbG9nX2xhYmVsLAogICAgICAgICAgICAgICAgICAgIHN0b3JhZ2UsCiAgICAgICAgICAgICAgICAgICAgcGFyZW50X3BhdGgsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICByZXR1cm4gTm9uZQoKICAgIHRyeToKICAgICAgICBjaGlsZCA9IGZpbmRfc3ViZGlyZWN0b3J5X2J5X25hbWUoY2hhaW4sIHBhcmVudF9pdGVtLCBjaGlsZF9uYW1lKQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgIiVzIGxpc3RfZmlsZXMg5aSx6LSlOiAlcyAlcyIsCiAgICAgICAgICAgIGxvZ19sYWJlbCwKICAgICAgICAgICAgcGFyZW50X2l0ZW0ucGF0aCwKICAgICAgICAgICAgZSwKICAgICAgICAgICAgZXhjX2luZm89VHJ1ZSwKICAgICAgICApCiAgICAgICAgcmV0dXJuIE5vbmUKCiAgICBpZiBjaGlsZCBpcyBOb25lOgogICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgIiVzIOWCqOWtmOOAjCVz44CN5Zyo5LiK57qn55uu5b2V5Lit5pyq5om+5Yiw5a2Q55uu5b2VOiBuYW1lPSVzIHBhcmVudD0lc++8iOebruaghyAlc++8iSIsCiAgICAgICAgICAgIGxvZ19sYWJlbCwKICAgICAgICAgICAgc3RvcmFnZSwKICAgICAgICAgICAgY2hpbGRfbmFtZSwKICAgICAgICAgICAgcGFyZW50X2l0ZW0ucGF0aCwKICAgICAgICAgICAgcG9zaXgsCiAgICAgICAgKQogICAgICAgIHJldHVybiBOb25lCgogICAgcmV0dXJuIGNoaWxkCgoKZGVmIHJlc29sdmVfZmlsZV92aWFfcGFyZW50X2xpc3QoCiAgICBjaGFpbjogU3RvcmFnZUNoYWluLAogICAgc3RvcmFnZTogc3RyLAogICAgdGFyZ2V0X2ZpbGU6IFBhdGgsCiAgICAqLAogICAgbG9nX2xhYmVsOiBzdHIgPSAi44CQ572R55uY5pW055CG44CRIiwKKSAtPiBPcHRpb25hbFtGaWxlSXRlbV06CiAgICAiIiIKICAgIOS4jee7j+ebruagh+aWh+S7tuWFqOmHjyBgYGdldF9maWxlX2l0ZW1gYO+8jOS7heino+aekOWFtueItuebruW9leWQjuWcqOWtkOmhueS4reaMieWQjeWMuemFjeebruagh+aWh+S7tgoKICAgIDpwYXJhbSBjaGFpbiAoU3RvcmFnZUNoYWluKTog5YKo5a2Y6ZO+5a6e5L6LCiAgICA6cGFyYW0gc3RvcmFnZSAoc3RyKTog5YKo5a2Y5ZCN56ew77yI5aaCIENsb3VkRHJpdmUg5YKo5a2Y5ZCN77yJCiAgICA6cGFyYW0gdGFyZ2V0X2ZpbGUgKFBhdGgpOiDnm67moIfmlofku7bot6/lvoTvvIjkvJrlhYjop4TojIMgcG9zaXjvvIzljrvmjonmnKvlsL4gYGAvYGDvvIkKICAgIDpwYXJhbSBsb2dfbGFiZWwgKHN0cik6IOaXpeW/l+WJjee8gAoKICAgIDpyZXR1cm4gRmlsZUl0ZW06IOebruagh+aWh+S7tiBGaWxlSXRlbe+8m+aXoOazleino+aekOaXtui/lOWbniBOb25lCiAgICAiIiIKICAgIHBvc2l4ID0gdGFyZ2V0X2ZpbGUuYXNfcG9zaXgoKS5yc3RyaXAoIi8iKQogICAgY2hpbGRfbmFtZSA9IFBhdGgocG9zaXgpLm5hbWUKICAgIGlmIG5vdCBwb3NpeCBvciBwb3NpeCA9PSAiLyIgb3Igbm90IGNoaWxkX25hbWU6CiAgICAgICAgbG9nZ2VyLmVycm9yKAogICAgICAgICAgICAiJXMg5YKo5a2Y44CMJXPjgI3nm67moIfmlofku7bot6/lvoTml6DmlYjvvIjml6Dms5XlvpfliLDmlofku7blkI3vvIk6ICVzIiwKICAgICAgICAgICAgbG9nX2xhYmVsLAogICAgICAgICAgICBzdG9yYWdlLAogICAgICAgICAgICB0YXJnZXRfZmlsZSwKICAgICAgICApCiAgICAgICAgcmV0dXJuIE5vbmUKCiAgICBwYXJlbnRfcGF0aCA9IFBhdGgocG9zaXgpLnBhcmVudAogICAgcGFyZW50X3Bvc2l4ID0gcGFyZW50X3BhdGguYXNfcG9zaXgoKS5yc3RyaXAoIi8iKSBvciAiLyIKICAgIGlmIHBhcmVudF9wb3NpeCA9PSAiLyI6CiAgICAgICAgcGFyZW50X2l0ZW06IEZpbGVJdGVtID0gRmlsZUl0ZW0oc3RvcmFnZT1zdG9yYWdlLCBwYXRoPSIvIikKICAgIGVsc2U6CiAgICAgICAgcGFyZW50X2l0ZW0gPSBjaGFpbi5nZXRfZmlsZV9pdGVtKHN0b3JhZ2U9c3RvcmFnZSwgcGF0aD1wYXJlbnRfcGF0aCkKICAgICAgICBpZiBub3QgcGFyZW50X2l0ZW06CiAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKAogICAgICAgICAgICAgICAgIiVzIOWCqOWtmOOAjCVz44CN5peg5rOV55u05o6l6Kej5p6Q54i255uu5b2V77yM5bCd6K+V5Zue6YCA6YGN5Y6G6Kej5p6QOiAlcyIsCiAgICAgICAgICAgICAgICBsb2dfbGFiZWwsCiAgICAgICAgICAgICAgICBzdG9yYWdlLAogICAgICAgICAgICAgICAgcGFyZW50X3BhdGgsCiAgICAgICAgICAgICkKICAgICAgICAgICAgcGFyZW50X2l0ZW0gPSByZXNvbHZlX2RpcmVjdG9yeV92aWFfcGFyZW50X2xpc3QoCiAgICAgICAgICAgICAgICBjaGFpbiwKICAgICAgICAgICAgICAgIHN0b3JhZ2UsCiAgICAgICAgICAgICAgICBwYXJlbnRfcGF0aCwKICAgICAgICAgICAgICAgIGxvZ19sYWJlbD1sb2dfbGFiZWwsCiAgICAgICAgICAgICkKICAgICAgICAgICAgaWYgbm90IHBhcmVudF9pdGVtOgogICAgICAgICAgICAgICAgbG9nZ2VyLmVycm9yKAogICAgICAgICAgICAgICAgICAgICIlcyDlgqjlrZjjgIwlc+OAjeeItuebruW9leWbnumAgOmBjeWOhuWksei0pe+8jOi3s+i/h+WNleaWh+S7tuaVtOeQhjogJXMiLAogICAgICAgICAgICAgICAgICAgIGxvZ19sYWJlbCwKICAgICAgICAgICAgICAgICAgICBzdG9yYWdlLAogICAgICAgICAgICAgICAgICAgIHBhcmVudF9wYXRoLAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgcmV0dXJuIE5vbmUKCiAgICB0cnk6CiAgICAgICAgY2hpbGQgPSBmaW5kX2ZpbGVfYnlfbmFtZShjaGFpbiwgcGFyZW50X2l0ZW0sIGNoaWxkX25hbWUpCiAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgbG9nZ2VyLmVycm9yKAogICAgICAgICAgICAiJXMgbGlzdF9maWxlcyDlpLHotKU6ICVzICVzIiwKICAgICAgICAgICAgbG9nX2xhYmVsLAogICAgICAgICAgICBwYXJlbnRfaXRlbS5wYXRoLAogICAgICAgICAgICBlLAogICAgICAgICAgICBleGNfaW5mbz1UcnVlLAogICAgICAgICkKICAgICAgICByZXR1cm4gTm9uZQoKICAgIGlmIGNoaWxkIGlzIE5vbmU6CiAgICAgICAgbG9nZ2VyLmVycm9yKAogICAgICAgICAgICAiJXMg5YKo5a2Y44CMJXPjgI3lnKjkuIrnuqfnm67lvZXkuK3mnKrmib7liLDlrZDmlofku7Y6IG5hbWU9JXMgcGFyZW50PSVz77yI55uu5qCHICVz77yJIiwKICAgICAgICAgICAgbG9nX2xhYmVsLAogICAgICAgICAgICBzdG9yYWdlLAogICAgICAgICAgICBjaGlsZF9uYW1lLAogICAgICAgICAgICBwYXJlbnRfaXRlbS5wYXRoLAogICAgICAgICAgICBwb3NpeCwKICAgICAgICApCiAgICAgICAgcmV0dXJuIE5vbmUKCiAgICByZXR1cm4gY2hpbGQK
+from pathlib import Path
+from typing import Optional
+
+from app.chain.storage import StorageChain
+from app.log import logger
+from app.schemas import FileItem
+
+
+def find_subdirectory_by_name(
+    chain: StorageChain,
+    parent: FileItem,
+    name: str,
+) -> Optional[FileItem]:
+    """
+    在已定位的父目录下列举子项，按名称匹配第一个目录类型项
+
+    :param chain (StorageChain): 储存链实例
+    :param parent (FileItem): 父目录 FileItem
+    :param name (str): 子目录名称（与 FileItem.name 一致比较）
+
+    :return FileItem: 匹配的目录 FileItem；无匹配或列举结果为空时返回 None
+
+    :raises Exception: 透传 ``list_files`` 的异常，由调用方记录日志
+    """
+    entries = chain.list_files(parent) or []
+    for entry in entries:
+        if entry.type == "dir" and entry.name == name:
+            return entry
+    return None
+
+
+def find_file_by_name(
+    chain: StorageChain,
+    parent: FileItem,
+    name: str,
+) -> Optional[FileItem]:
+    """
+    在已定位的父目录下列举子项，按名称匹配第一个文件类型项
+
+    :param chain (StorageChain): 储存链实例
+    :param parent (FileItem): 父目录 FileItem
+    :param name (str): 文件名（与 FileItem.name 一致比较）
+
+    :return FileItem: 匹配的文件 FileItem；无匹配或列举结果为空时返回 None
+
+    :raises Exception: 透传 ``list_files`` 的异常，由调用方记录日志
+    """
+    entries = chain.list_files(parent) or []
+    for entry in entries:
+        if entry.type == "file" and entry.name == name:
+            return entry
+    return None
+
+
+def resolve_directory_via_parent_list(
+    chain: StorageChain,
+    storage: str,
+    target_dir: Path,
+    *,
+    log_label: str = "【网盘整理】",
+) -> Optional[FileItem]:
+    """
+    不经目标路径全量 ``get_file_item``，仅解析其父目录后在子项中按名匹配目标文件夹
+
+    :param chain (StorageChain): 储存链实例
+    :param storage (str): 储存名称（如 CloudDrive 储存名）
+    :param target_dir (Path): 目标目录路径（会先规范为目录 posix）
+    :param log_label (str): 日志前缀
+
+    :return FileItem: 目标目录 FileItem；无法解析或目标为储存根 ``/`` 时返回 None
+    """
+    posix = target_dir.as_posix().rstrip("/") or "/"
+    if posix == "/":
+        logger.error(
+            "%s 储存「%s」目标目录不能为储存根路径: %s",
+            log_label,
+            storage,
+            target_dir,
+        )
+        return None
+
+    parent_path = Path(posix).parent
+    child_name = Path(posix).name
+    if not child_name:
+        logger.error(
+            "%s 储存「%s」目标路径无效（无法得到子目录名）: %s",
+            log_label,
+            storage,
+            target_dir,
+        )
+        return None
+
+    parent_posix = parent_path.as_posix().rstrip("/") or "/"
+    if parent_posix == "/":
+        parent_item: FileItem = FileItem(storage=storage, path="/")
+    else:
+        parent_item = chain.get_file_item(storage=storage, path=parent_path)
+        if not parent_item:
+            logger.warning(
+                "%s 储存「%s」无法直接解析父目录，尝试回退遍历解析: %s",
+                log_label,
+                storage,
+                parent_path,
+            )
+            parent_item = resolve_directory_via_parent_list(
+                chain,
+                storage,
+                parent_path,
+                log_label=log_label,
+            )
+            if not parent_item:
+                logger.error(
+                    "%s 储存「%s」父目录回退遍历失败，跳过文件夹遍历: %s",
+                    log_label,
+                    storage,
+                    parent_path,
+                )
+                return None
+
+    try:
+        child = find_subdirectory_by_name(chain, parent_item, child_name)
+    except Exception as e:
+        logger.error(
+            "%s list_files 失败: %s %s",
+            log_label,
+            parent_item.path,
+            e,
+            exc_info=True,
+        )
+        return None
+
+    if child is None:
+        logger.error(
+            "%s 储存「%s」在上级目录中未找到子目录: name=%s parent=%s（目标 %s）",
+            log_label,
+            storage,
+            child_name,
+            parent_item.path,
+            posix,
+        )
+        return None
+
+    return child
+
+
+def resolve_file_via_parent_list(
+    chain: StorageChain,
+    storage: str,
+    target_file: Path,
+    *,
+    log_label: str = "【网盘整理】",
+) -> Optional[FileItem]:
+    """
+    不经目标文件全量 ``get_file_item``，仅解析其父目录后在子项中按名匹配目标文件
+
+    :param chain (StorageChain): 储存链实例
+    :param storage (str): 储存名称（如 CloudDrive 储存名）
+    :param target_file (Path): 目标文件路径（会先规范 posix，去掉末尾 ``/``）
+    :param log_label (str): 日志前缀
+
+    :return FileItem: 目标文件 FileItem；无法解析时返回 None
+    """
+    posix = target_file.as_posix().rstrip("/")
+    child_name = Path(posix).name
+    if not posix or posix == "/" or not child_name:
+        logger.error(
+            "%s 储存「%s」目标文件路径无效（无法得到文件名）: %s",
+            log_label,
+            storage,
+            target_file,
+        )
+        return None
+
+    parent_path = Path(posix).parent
+    parent_posix = parent_path.as_posix().rstrip("/") or "/"
+    if parent_posix == "/":
+        parent_item: FileItem = FileItem(storage=storage, path="/")
+    else:
+        parent_item = chain.get_file_item(storage=storage, path=parent_path)
+        if not parent_item:
+            logger.warning(
+                "%s 储存「%s」无法直接解析父目录，尝试回退遍历解析: %s",
+                log_label,
+                storage,
+                parent_path,
+            )
+            parent_item = resolve_directory_via_parent_list(
+                chain,
+                storage,
+                parent_path,
+                log_label=log_label,
+            )
+            if not parent_item:
+                logger.error(
+                    "%s 储存「%s」父目录回退遍历失败，跳过单文件整理: %s",
+                    log_label,
+                    storage,
+                    parent_path,
+                )
+                return None
+
+    try:
+        child = find_file_by_name(chain, parent_item, child_name)
+    except Exception as e:
+        logger.error(
+            "%s list_files 失败: %s %s",
+            log_label,
+            parent_item.path,
+            e,
+            exc_info=True,
+        )
+        return None
+
+    if child is None:
+        logger.error(
+            "%s 储存「%s」在上级目录中未找到子文件: name=%s parent=%s（目标 %s）",
+            log_label,
+            storage,
+            child_name,
+            parent_item.path,
+            posix,
+        )
+        return None
+
+    return child

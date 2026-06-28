@@ -1,1 +1,58 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IFNldCwgTGlzdCwgRGljdAoKZnJvbSBzcWxhbGNoZW15IGltcG9ydCBDb2x1bW4sIEludGVnZXIsIFN0cmluZywgVGV4dCwgc2VsZWN0CmZyb20gc3FsYWxjaGVteS5vcm0gaW1wb3J0IFNlc3Npb24KZnJvbSBzcWxhbGNoZW15LmRpYWxlY3RzLnNxbGl0ZSBpbXBvcnQgaW5zZXJ0IGFzIHNxbGl0ZV9pbnNlcnQKCmZyb20gLi4uZGJfbWFuYWdlciBpbXBvcnQgUDExNVN0cm1IZWxwZXJCYXNlLCBkYl9xdWVyeSwgZGJfdXBkYXRlCgoKY2xhc3MgT3BlbkZvbGRlcihQMTE1U3RybUhlbHBlckJhc2UpOgogICAgIiIiCiAgICBPcGVuIOaWh+S7tuWkueexuwogICAgIiIiCgogICAgX190YWJsZW5hbWVfXyA9ICJvcGVuX2ZvbGRlcnMiCgogICAgaWQgPSBDb2x1bW4oSW50ZWdlciwgcHJpbWFyeV9rZXk9VHJ1ZSkKICAgIHBhcmVudF9pZCA9IENvbHVtbihJbnRlZ2VyLCBudWxsYWJsZT1GYWxzZSkKICAgIG5hbWUgPSBDb2x1bW4oU3RyaW5nKDI1NSksIGRlZmF1bHQ9IiIpCiAgICBwYXRoID0gQ29sdW1uKFRleHQsIHVuaXF1ZT1UcnVlKQoKICAgIEBzdGF0aWNtZXRob2QKICAgIEBkYl9xdWVyeQogICAgZGVmIGdldF9hbGxfaWQoZGI6IFNlc3Npb24pIC0+IFNldFtpbnRdOgogICAgICAgICIiIgogICAgICAgIOiOt+WPluaJgOaciSBJRAoKICAgICAgICA6cGFyYW0gZGIgKFNlc3Npb24pOiDmlbDmja7lupPkvJror50KCiAgICAgICAgOnJldHVybiBTZXQ6IElEIOmbhuWQiAogICAgICAgICIiIgogICAgICAgIHN0bXQgPSBzZWxlY3QoT3BlbkZvbGRlci5pZCkKICAgICAgICByZXR1cm4gc2V0KGRiLnNjYWxhcnMoc3RtdCkuYWxsKCkpCgogICAgQHN0YXRpY21ldGhvZAogICAgQGRiX3VwZGF0ZQogICAgZGVmIHVwc2VydF9iYXRjaF9ieV9saXN0KGRiOiBTZXNzaW9uLCBiYXRjaDogTGlzdFtEaWN0XSk6CiAgICAgICAgIiIiCiAgICAgICAg6YCa6L+H5YiX6KGo5om56YeP5YaZ5YWl5oiW5pu05paw5pWw5o2uCgogICAgICAgIDpwYXJhbSBkYiAoU2Vzc2lvbik6IOaVsOaNruW6k+S8muivnQogICAgICAgIDpwYXJhbSBiYXRjaCAoTGlzdCk6IOW+heWGmeWFpeeahOaVsOaNruWIl+ihqAogICAgICAgICIiIgogICAgICAgIHN0bXQgPSBzcWxpdGVfaW5zZXJ0KE9wZW5Gb2xkZXIpLnByZWZpeF93aXRoKCJPUiBSRVBMQUNFIikKICAgICAgICBkYi5leGVjdXRlKHN0bXQsIGJhdGNoKQoKICAgIEBzdGF0aWNtZXRob2QKICAgIEBkYl9xdWVyeQogICAgZGVmIGdldF9ieV9pZChkYjogU2Vzc2lvbiwgZm9sZGVyX2lkOiBpbnQpOgogICAgICAgICIiIgogICAgICAgIOmAmui/h0lE6I635Y+WCgogICAgICAgIDpwYXJhbSBkYiAoU2Vzc2lvbik6IOaVsOaNruW6k+S8muivnQogICAgICAgIDpwYXJhbSBmb2xkZXJfaWQgKGludCk6IOaWh+S7tuWkuSBJRAoKICAgICAgICA6cmV0dXJuIE9wZW5Gb2xkZXI6IOWMuemFjeeahOaWh+S7tuWkueaooeWei+WunuS+i++8jOacquaJvuWIsOi/lOWbniBOb25lCiAgICAgICAgIiIiCiAgICAgICAgcmV0dXJuIGRiLnNjYWxhcnMoc2VsZWN0KE9wZW5Gb2xkZXIpLndoZXJlKE9wZW5Gb2xkZXIuaWQgPT0gZm9sZGVyX2lkKSkuZmlyc3QoKQo=
+from typing import Set, List, Dict
+
+from sqlalchemy import Column, Integer, String, Text, select
+from sqlalchemy.orm import Session
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+
+from ...db_manager import P115StrmHelperBase, db_query, db_update
+
+
+class OpenFolder(P115StrmHelperBase):
+    """
+    Open 文件夹类
+    """
+
+    __tablename__ = "open_folders"
+
+    id = Column(Integer, primary_key=True)
+    parent_id = Column(Integer, nullable=False)
+    name = Column(String(255), default="")
+    path = Column(Text, unique=True)
+
+    @staticmethod
+    @db_query
+    def get_all_id(db: Session) -> Set[int]:
+        """
+        获取所有 ID
+
+        :param db (Session): 数据库会话
+
+        :return Set: ID 集合
+        """
+        stmt = select(OpenFolder.id)
+        return set(db.scalars(stmt).all())
+
+    @staticmethod
+    @db_update
+    def upsert_batch_by_list(db: Session, batch: List[Dict]):
+        """
+        通过列表批量写入或更新数据
+
+        :param db (Session): 数据库会话
+        :param batch (List): 待写入的数据列表
+        """
+        stmt = sqlite_insert(OpenFolder).prefix_with("OR REPLACE")
+        db.execute(stmt, batch)
+
+    @staticmethod
+    @db_query
+    def get_by_id(db: Session, folder_id: int):
+        """
+        通过ID获取
+
+        :param db (Session): 数据库会话
+        :param folder_id (int): 文件夹 ID
+
+        :return OpenFolder: 匹配的文件夹模型实例，未找到返回 None
+        """
+        return db.scalars(select(OpenFolder).where(OpenFolder.id == folder_id)).first()

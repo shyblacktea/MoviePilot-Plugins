@@ -1,1 +1,103 @@
-IiIiClRpbWVVdGlscyDmtYvor5XmqKHlnZcKCuWMheWQq+aXtumXtOagvOW8j+WMluW3peWFt+aWueazleeahOWNleWFg+a1i+ivlQoiIiIKCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lCmZyb20gdGltZSBpbXBvcnQgdGltZQpmcm9tIHVuaXR0ZXN0IGltcG9ydCBUZXN0Q2FzZQoKZnJvbSB1dGlscy50aW1lIGltcG9ydCBUaW1lVXRpbHMKCgpjbGFzcyBUZXN0VGltZXN0YW1wMklzb2Zvcm1hdChUZXN0Q2FzZSk6CiAgICAiIiLmtYvor5UgVGltZVV0aWxzLnRpbWVzdGFtcDJpc29mb3JtYXQg5pa55rOVIiIiCgogICAgZGVmIHRlc3Rfbm9uZV9yZXR1cm5zX2N1cnJlbnRfdGltZShzZWxmKToKICAgICAgICAiIiLmtYvor5UgTm9uZSDov5Tlm57lvZPliY3ml7bpl7QiIiIKICAgICAgICByZXN1bHQgPSBUaW1lVXRpbHMudGltZXN0YW1wMmlzb2Zvcm1hdChOb25lKQogICAgICAgICMg6aqM6K+B5piv5pyJ5pWI55qEIElTTyDmoLzlvI8KICAgICAgICBzZWxmLmFzc2VydElzSW5zdGFuY2UocmVzdWx0LCBzdHIpCiAgICAgICAgc2VsZi5hc3NlcnRJbigiVCIsIHJlc3VsdCkKICAgICAgICAjIOmqjOivgeWMheWQq+aXtuWMuuS/oeaBrwogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZSgiKyIgaW4gcmVzdWx0IG9yICItIiBpbiByZXN1bHQgb3IgcmVzdWx0LmVuZHN3aXRoKCJaIikpCgogICAgZGVmIHRlc3RfZmxvYXRfdGltZXN0YW1wKHNlbGYpOgogICAgICAgICIiIua1i+ivlSBmbG9hdCDml7bpl7TmiLMiIiIKICAgICAgICB0cyA9IDE2MDk0NTkyMDAuMCAgIyAyMDIxLTAxLTAxIDAwOjAwOjAwIFVUQwogICAgICAgIHJlc3VsdCA9IFRpbWVVdGlscy50aW1lc3RhbXAyaXNvZm9ybWF0KHRzKQogICAgICAgIHNlbGYuYXNzZXJ0SW4oIjIwMjEiLCByZXN1bHQpCiAgICAgICAgc2VsZi5hc3NlcnRJbigiVCIsIHJlc3VsdCkKCiAgICBkZWYgdGVzdF9kYXRldGltZV9vYmplY3Qoc2VsZik6CiAgICAgICAgIiIi5rWL6K+VIGRhdGV0aW1lIOWvueixoSIiIgogICAgICAgIGR0ID0gZGF0ZXRpbWUoMjAyMywgNiwgMTUsIDEwLCAzMCwgMCkKICAgICAgICByZXN1bHQgPSBUaW1lVXRpbHMudGltZXN0YW1wMmlzb2Zvcm1hdChkdCkKICAgICAgICBzZWxmLmFzc2VydEluKCIyMDIzLTA2LTE1IiwgcmVzdWx0KQogICAgICAgIHNlbGYuYXNzZXJ0SW4oIjEwOjMwOjAwIiwgcmVzdWx0KQoKICAgIGRlZiB0ZXN0X2Vhcmx5X3RpbWVzdGFtcChzZWxmKToKICAgICAgICAiIiLmtYvor5XovoPml6nml7bpl7TmiLPvvIhXaW5kb3dzIOS4jeaUr+aMgSAxOTcwLTAxLTAxIOeahOaXtuWMuui9rOaNou+8iSIiIgogICAgICAgICMgV2luZG93cyDnmoQgbG9jYWx0aW1lIOacgOWwj+aUr+aMgee6piAxOTcwLTAxLTAy77yM5L2/55So5pu05pma55qE5pe26Ze05oizCiAgICAgICAgdHMgPSA4NjQwMC4wICAjIDE5NzAtMDEtMDIgMDA6MDA6MDAgVVRD77yIV2luZG93cyDlhbzlrrnvvIkKICAgICAgICByZXN1bHQgPSBUaW1lVXRpbHMudGltZXN0YW1wMmlzb2Zvcm1hdCh0cykKICAgICAgICBzZWxmLmFzc2VydElzSW5zdGFuY2UocmVzdWx0LCBzdHIpCiAgICAgICAgc2VsZi5hc3NlcnRJbigiVCIsIHJlc3VsdCkKCgpjbGFzcyBUZXN0VGltZXN0YW1wMkdtdGZvcm1hdChUZXN0Q2FzZSk6CiAgICAiIiLmtYvor5UgVGltZVV0aWxzLnRpbWVzdGFtcDJnbXRmb3JtYXQg5pa55rOVIiIiCgogICAgZGVmIHRlc3Rfbm9uZV9yZXR1cm5zX2N1cnJlbnRfdGltZShzZWxmKToKICAgICAgICAiIiLmtYvor5UgTm9uZSDov5Tlm57lvZPliY0gR01UIOaXtumXtCIiIgogICAgICAgIHJlc3VsdCA9IFRpbWVVdGlscy50aW1lc3RhbXAyZ210Zm9ybWF0KE5vbmUpCiAgICAgICAgIyBHTVQg5qC85byP5bqU5YyF5ZCrIEdNVAogICAgICAgIHNlbGYuYXNzZXJ0SW4oIkdNVCIsIHJlc3VsdCkKCiAgICBkZWYgdGVzdF9mbG9hdF90aW1lc3RhbXAoc2VsZik6CiAgICAgICAgIiIi5rWL6K+VIGZsb2F0IOaXtumXtOaIsyIiIgogICAgICAgIHRzID0gMTYwOTQ1OTIwMC4wCiAgICAgICAgcmVzdWx0ID0gVGltZVV0aWxzLnRpbWVzdGFtcDJnbXRmb3JtYXQodHMpCiAgICAgICAgc2VsZi5hc3NlcnRJbigiR01UIiwgcmVzdWx0KQogICAgICAgICMg5qC85byP57G75Ly8OiBGcmksIDAxIEphbiAyMDIxIDAwOjAwOjAwIEdNVAogICAgICAgIHNlbGYuYXNzZXJ0SXNJbnN0YW5jZShyZXN1bHQsIHN0cikKCiAgICBkZWYgdGVzdF9kYXRldGltZV9vYmplY3Qoc2VsZik6CiAgICAgICAgIiIi5rWL6K+VIGRhdGV0aW1lIOWvueixoSIiIgogICAgICAgIGR0ID0gZGF0ZXRpbWUoMjAyMywgNiwgMTUsIDEwLCAzMCwgMCkKICAgICAgICByZXN1bHQgPSBUaW1lVXRpbHMudGltZXN0YW1wMmdtdGZvcm1hdChkdCkKICAgICAgICBzZWxmLmFzc2VydEluKCJHTVQiLCByZXN1bHQpCiAgICAgICAgc2VsZi5hc3NlcnRJc0luc3RhbmNlKHJlc3VsdCwgc3RyKQoKICAgIGRlZiB0ZXN0X2Vhcmx5X3RpbWVzdGFtcChzZWxmKToKICAgICAgICAiIiLmtYvor5XovoPml6nml7bpl7TmiLPvvIhXaW5kb3dzIOS4jeaUr+aMgSAxOTcwLTAxLTAxIOeahOaXtuWMuui9rOaNou+8iSIiIgogICAgICAgICMgV2luZG93cyDnmoQgbG9jYWx0aW1lIOacgOWwj+aUr+aMgee6piAxOTcwLTAxLTAy77yM5L2/55So5pu05pma55qE5pe26Ze05oizCiAgICAgICAgdHMgPSA4NjQwMC4wICAjIDE5NzAtMDEtMDIgMDA6MDA6MDAgVVRD77yIV2luZG93cyDlhbzlrrnvvIkKICAgICAgICByZXN1bHQgPSBUaW1lVXRpbHMudGltZXN0YW1wMmdtdGZvcm1hdCh0cykKICAgICAgICBzZWxmLmFzc2VydEluKCJHTVQiLCByZXN1bHQpCiAgICAgICAgc2VsZi5hc3NlcnRJc0luc3RhbmNlKHJlc3VsdCwgc3RyKQoKCmNsYXNzIFRlc3RUaW1lVXRpbHNJbnRlZ3JhdGlvbihUZXN0Q2FzZSk6CiAgICAiIiLpm4bmiJDmtYvor5XvvJrpqozor4HkuKTkuKrmlrnms5XnmoTkuIDoh7TmgKciIiIKCiAgICBkZWYgdGVzdF9zYW1lX2lucHV0X3NhbWVfdGltZShzZWxmKToKICAgICAgICAiIiLmtYvor5Xnm7jlkIzovpPlhaXooajnpLrlkIzkuIDml7bpl7QiIiIKICAgICAgICB0cyA9IHRpbWUoKQogICAgICAgIGlzb19yZXN1bHQgPSBUaW1lVXRpbHMudGltZXN0YW1wMmlzb2Zvcm1hdCh0cykKICAgICAgICBnbXRfcmVzdWx0ID0gVGltZVV0aWxzLnRpbWVzdGFtcDJnbXRmb3JtYXQodHMpCgogICAgICAgICMg5Lik6ICF6YO95bqU5oiQ5Yqf6L+U5Zue5a2X56ym5LiyCiAgICAgICAgc2VsZi5hc3NlcnRJc0luc3RhbmNlKGlzb19yZXN1bHQsIHN0cikKICAgICAgICBzZWxmLmFzc2VydElzSW5zdGFuY2UoZ210X3Jlc3VsdCwgc3RyKQoKICAgICAgICAjIOS4pOiAhemDveW6lOmdnuepugogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShsZW4oaXNvX3Jlc3VsdCkgPiAwKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShsZW4oZ210X3Jlc3VsdCkgPiAwKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBmcm9tIHVuaXR0ZXN0IGltcG9ydCBtYWluCgogICAgbWFpbih2ZXJib3NpdHk9MikK
+"""
+TimeUtils 测试模块
+
+包含时间格式化工具方法的单元测试
+"""
+
+from datetime import datetime
+from time import time
+from unittest import TestCase
+
+from utils.time import TimeUtils
+
+
+class TestTimestamp2Isoformat(TestCase):
+    """测试 TimeUtils.timestamp2isoformat 方法"""
+
+    def test_none_returns_current_time(self):
+        """测试 None 返回当前时间"""
+        result = TimeUtils.timestamp2isoformat(None)
+        # 验证是有效的 ISO 格式
+        self.assertIsInstance(result, str)
+        self.assertIn("T", result)
+        # 验证包含时区信息
+        self.assertTrue("+" in result or "-" in result or result.endswith("Z"))
+
+    def test_float_timestamp(self):
+        """测试 float 时间戳"""
+        ts = 1609459200.0  # 2021-01-01 00:00:00 UTC
+        result = TimeUtils.timestamp2isoformat(ts)
+        self.assertIn("2021", result)
+        self.assertIn("T", result)
+
+    def test_datetime_object(self):
+        """测试 datetime 对象"""
+        dt = datetime(2023, 6, 15, 10, 30, 0)
+        result = TimeUtils.timestamp2isoformat(dt)
+        self.assertIn("2023-06-15", result)
+        self.assertIn("10:30:00", result)
+
+    def test_early_timestamp(self):
+        """测试较早时间戳（Windows 不支持 1970-01-01 的时区转换）"""
+        # Windows 的 localtime 最小支持约 1970-01-02，使用更晚的时间戳
+        ts = 86400.0  # 1970-01-02 00:00:00 UTC（Windows 兼容）
+        result = TimeUtils.timestamp2isoformat(ts)
+        self.assertIsInstance(result, str)
+        self.assertIn("T", result)
+
+
+class TestTimestamp2Gmtformat(TestCase):
+    """测试 TimeUtils.timestamp2gmtformat 方法"""
+
+    def test_none_returns_current_time(self):
+        """测试 None 返回当前 GMT 时间"""
+        result = TimeUtils.timestamp2gmtformat(None)
+        # GMT 格式应包含 GMT
+        self.assertIn("GMT", result)
+
+    def test_float_timestamp(self):
+        """测试 float 时间戳"""
+        ts = 1609459200.0
+        result = TimeUtils.timestamp2gmtformat(ts)
+        self.assertIn("GMT", result)
+        # 格式类似: Fri, 01 Jan 2021 00:00:00 GMT
+        self.assertIsInstance(result, str)
+
+    def test_datetime_object(self):
+        """测试 datetime 对象"""
+        dt = datetime(2023, 6, 15, 10, 30, 0)
+        result = TimeUtils.timestamp2gmtformat(dt)
+        self.assertIn("GMT", result)
+        self.assertIsInstance(result, str)
+
+    def test_early_timestamp(self):
+        """测试较早时间戳（Windows 不支持 1970-01-01 的时区转换）"""
+        # Windows 的 localtime 最小支持约 1970-01-02，使用更晚的时间戳
+        ts = 86400.0  # 1970-01-02 00:00:00 UTC（Windows 兼容）
+        result = TimeUtils.timestamp2gmtformat(ts)
+        self.assertIn("GMT", result)
+        self.assertIsInstance(result, str)
+
+
+class TestTimeUtilsIntegration(TestCase):
+    """集成测试：验证两个方法的一致性"""
+
+    def test_same_input_same_time(self):
+        """测试相同输入表示同一时间"""
+        ts = time()
+        iso_result = TimeUtils.timestamp2isoformat(ts)
+        gmt_result = TimeUtils.timestamp2gmtformat(ts)
+
+        # 两者都应成功返回字符串
+        self.assertIsInstance(iso_result, str)
+        self.assertIsInstance(gmt_result, str)
+
+        # 两者都应非空
+        self.assertTrue(len(iso_result) > 0)
+        self.assertTrue(len(gmt_result) > 0)
+
+
+if __name__ == "__main__":
+    from unittest import main
+
+    main(verbosity=2)

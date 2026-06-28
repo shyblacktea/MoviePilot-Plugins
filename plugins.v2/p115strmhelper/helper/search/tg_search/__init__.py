@@ -1,1 +1,310 @@
-aW1wb3J0IHJlCmltcG9ydCB1bmljb2RlZGF0YQpmcm9tIHR5cGluZyBpbXBvcnQgTGlzdCwgT3B0aW9uYWwKCmltcG9ydCBodHRweApmcm9tIGJzNCBpbXBvcnQgQmVhdXRpZnVsU291cAoKZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXIKCmZyb20gLi4uLmhlbHBlci5zaGFyZS5zaGFyZV9saW5rcyBpbXBvcnQgKAogICAgYnVpbGRfc2hhcmVfcGFnZV9jbGllbnQsCiAgICBleHRyYWN0X2Nsb3VkX2xpbmtzX2Zyb21fdGV4dCwKKQpmcm9tIC4uLi5zY2hlbWFzLnRnX3NlYXJjaCBpbXBvcnQgUmVzb3VyY2VJdGVtCmZyb20gLi4uLnV0aWxzLnNlbnRyeSBpbXBvcnQgc2VudHJ5X21hbmFnZXIKZnJvbSAuLi4udXRpbHMudXJsIGltcG9ydCBVcmxVdGlscwoKCkBzZW50cnlfbWFuYWdlci5jYXB0dXJlX2FsbF9jbGFzc19leGNlcHRpb25zCmNsYXNzIFRnU2VhcmNoZXI6CiAgICAiIiIKICAgIFRlbGVncmVhbSDmkJzntKLlmagKCiAgICDmqKHlnZfmgJ3ot6/lj4LogIPvvJoKICAgICAgLSBodHRwczovL2dpdGh1Yi5jb20vSmllV1NPRlQvTWVkaWFIZWxwL2Jsb2IvbWFpbi9iYWNrZW5kL3V0aWxzL3RnX3Jlc291cmNlX3Nkay5weQogICAgICAgIC0gTElDRU5TRTogaHR0cHM6Ly9naXRodWIuY29tL0ppZVdTT0ZUL01lZGlhSGVscC9ibG9iL21haW4vTElDRU5TRQogICAgICAtIGh0dHBzOi8vZ2l0aHViLmNvbS9DcDAyMDQvcXVhcmstYXV0by1zYXZlL2Jsb2IvbWFpbi9hcHAvc2RrL2Nsb3Vkc2F2ZXIucHkKICAgICAgICAtIExJQ0VOU0U6IGh0dHBzOi8vZ2l0aHViLmNvbS9DcDAyMDQvcXVhcmstYXV0by1zYXZlL2Jsb2IvbWFpbi9MSUNFTlNFCiAgICAiIiIKCiAgICBfUFVOQ1RfR0FQX1JFID0gcmUuY29tcGlsZShyIltcc1x1MzAwMDrvvJrCt+KAoi4s77yM44CCIe+8gT/vvJ/vvIjvvInjgJDjgJFcW1xdL++8j1xc77y8LV0rIikKCiAgICBkZWYgX19pbml0X18oc2VsZik6CiAgICAgICAgc2VsZi5zZXNzaW9uID0gYnVpbGRfc2hhcmVfcGFnZV9jbGllbnQoKQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBfbm9ybWFsaXplX2Zvcl9tYXRjaCh0ZXh0OiBzdHIpIC0+IHN0cjoKICAgICAgICAiIiIKICAgICAgICDnu5/kuIDnqbrnmb3jgIFORktDIOS4juW4uOingeWFqOinkuagh+eCue+8jOS+v+S6juWBmuOAjOWFs+mUruivjeaYr+WQpuWHuueOsOWcqOagh+mimOS4reOAjeeahOWIpOaWrQogICAgICAgICIiIgogICAgICAgIGlmIG5vdCB0ZXh0OgogICAgICAgICAgICByZXR1cm4gIiIKICAgICAgICB0ID0gdW5pY29kZWRhdGEubm9ybWFsaXplKCJORktDIiwgdGV4dCkKICAgICAgICBmb3Igb2xkLCBuZXcgaW4gKAogICAgICAgICAgICAoIu+8miIsICI6IiksCiAgICAgICAgICAgICgi77yMIiwgIiwiKSwKICAgICAgICAgICAgKCLvvIgiLCAiKCIpLAogICAgICAgICAgICAoIu+8iSIsICIpIiksCiAgICAgICAgICAgICgi44CQIiwgIlsiKSwKICAgICAgICAgICAgKCLjgJEiLCAiXSIpLAogICAgICAgICAgICAoIu+8gSIsICIhIiksCiAgICAgICAgICAgICgi77yfIiwgIj8iKSwKICAgICAgICAgICAgKCLigJMiLCAiLSIpLAogICAgICAgICAgICAoIuKAlCIsICItIiksCiAgICAgICAgICAgICgi4oCmIiwgIi4uLiIpLAogICAgICAgICk6CiAgICAgICAgICAgIHQgPSB0LnJlcGxhY2Uob2xkLCBuZXcpCiAgICAgICAgdCA9IHJlLnN1YihyIltcc1x1MzAwMF0rIiwgIiAiLCB0KS5zdHJpcCgpCiAgICAgICAgcmV0dXJuIHQuY2FzZWZvbGQoKQoKICAgIEBjbGFzc21ldGhvZAogICAgZGVmIF9jb21wYWN0X2Zvcl9tYXRjaChjbHMsIHRleHQ6IHN0cikgLT4gc3RyOgogICAgICAgICIiIgogICAgICAgIOWcqOinhOiMg+WMluWfuuehgOS4iuWOu+aOieagh+eCueS4juepuueZve+8jOS9v+OAjOWkjeS7h+iAheiBlOebnzPvvJrml6DpmZDmiJjkuonjgI3kuI7jgIzlpI3ku4fogIXogZTnm58zOiDml6DpmZDmiJjkuonjgI3lj6/mr5QKICAgICAgICAiIiIKICAgICAgICBiYXNlID0gY2xzLl9ub3JtYWxpemVfZm9yX21hdGNoKHRleHQpCiAgICAgICAgcmV0dXJuIGNscy5fUFVOQ1RfR0FQX1JFLnN1YigiIiwgYmFzZSkKCiAgICBAY2xhc3NtZXRob2QKICAgIGRlZiBfdGl0bGVfbWF0Y2hlc19zZWFyY2hfa2V5KGNscywga2V5OiBzdHIsIHRpdGxlOiBzdHIpIC0+IGJvb2w6CiAgICAgICAgIiIiCiAgICAgICAg5Yik5pat5qCH6aKY5piv5ZCm5YyF5ZCr5pCc57Si5YWz6ZSu6K+N77ya5YWI5Y6f5Liy5a2Q5Liy77yM5YaN6KeE6IyD5YyW5a2Q5Liy77yM5YaN57Sn5YeR5a2Q5Liy77yI55+t5YWz6ZSu6K+N5LiN55So57Sn5YeR6Lev5b6E5Lul5YWN6K+v5Lyk77yJCiAgICAgICAgIiIiCiAgICAgICAgaWYgbm90IGtleToKICAgICAgICAgICAgcmV0dXJuIFRydWUKICAgICAgICB0ID0gdGl0bGUgb3IgIiIKICAgICAgICBpZiBrZXkgaW4gdDoKICAgICAgICAgICAgcmV0dXJuIFRydWUKICAgICAgICBuayA9IGNscy5fbm9ybWFsaXplX2Zvcl9tYXRjaChrZXkpCiAgICAgICAgbnQgPSBjbHMuX25vcm1hbGl6ZV9mb3JfbWF0Y2godCkKICAgICAgICBpZiBuayBhbmQgbmsgaW4gbnQ6CiAgICAgICAgICAgIHJldHVybiBUcnVlCiAgICAgICAgY2sgPSBjbHMuX2NvbXBhY3RfZm9yX21hdGNoKGtleSkKICAgICAgICBjdCA9IGNscy5fY29tcGFjdF9mb3JfbWF0Y2godCkKICAgICAgICBpZiBsZW4oY2spIDwgMjoKICAgICAgICAgICAgcmV0dXJuIEZhbHNlCiAgICAgICAgcmV0dXJuIGNrIGluIGN0CgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIF9maW5kX3RlbGVncmFfbGlua19mcm9tX2J1dHRvbihtZXNzYWdlX2VsZW1lbnQpIC0+IE9wdGlvbmFsW3N0cl06CiAgICAgICAgIiIiCiAgICAgICAg5LuO5raI5oGv55qE5oyJ6ZKu5Lit5p+l5om+IHRlbGVncmEucGgg6ZO+5o6lCiAgICAgICAgIiIiCiAgICAgICAgdHJ5OgogICAgICAgICAgICBidXR0b24gPSBtZXNzYWdlX2VsZW1lbnQuc2VsZWN0X29uZSgKICAgICAgICAgICAgICAgICIudGdtZV93aWRnZXRfbWVzc2FnZV9pbmxpbmVfYnV0dG9uLnVybF9idXR0b24iCiAgICAgICAgICAgICkKICAgICAgICAgICAgaWYgYnV0dG9uOgogICAgICAgICAgICAgICAgaHJlZiA9IGJ1dHRvbi5nZXQoImhyZWYiKQogICAgICAgICAgICAgICAgaWYgaHJlZiBhbmQgInRlbGVncmEucGgiIGluIGhyZWY6CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIGhyZWYKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZyhmIuOAkFRHU2VhcmNo44CR5p+l5om+5oyJ6ZKu6ZO+5o6l5pe25Ye66ZSZOiB7c3RyKGUpfSIpCiAgICAgICAgcmV0dXJuIE5vbmUKCiAgICBkZWYgX2V4dHJhY3RfbGlua3NfZnJvbV90ZWxlZ3JhKHNlbGYsIHRlbGVncmFfdXJsOiBzdHIpIC0+IHR1cGxlW0xpc3Rbc3RyXSwgc3RyXToKICAgICAgICAiIiIKICAgICAgICDku44gdGVsZWdyYS5waCDpobXpnaLkuK3mj5Dlj5YxMTXliIbkuqvlnLDlnYAKICAgICAgICAiIiIKICAgICAgICB0cnk6CiAgICAgICAgICAgIHJlc3BvbnNlID0gc2VsZi5zZXNzaW9uLmdldCh0ZWxlZ3JhX3VybCwgdGltZW91dD0zMCkKICAgICAgICAgICAgcmVzcG9uc2UucmFpc2VfZm9yX3N0YXR1cygpCiAgICAgICAgICAgIGh0bWwgPSByZXNwb25zZS50ZXh0CgogICAgICAgICAgICBjbG91ZF9saW5rcywgY2xvdWRfdHlwZSA9IGV4dHJhY3RfY2xvdWRfbGlua3NfZnJvbV90ZXh0KGh0bWwpCgogICAgICAgICAgICBpZiBjbG91ZF9saW5rczoKICAgICAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZygKICAgICAgICAgICAgICAgICAgICBmIuOAkFRHU2VhcmNo44CR5LuOIHRlbGVncmEucGgg6aG16Z2i5o+Q5Y+W5YiwIHtsZW4oY2xvdWRfbGlua3MpfSDkuKrkupHnm5jpk77mjqUiCiAgICAgICAgICAgICAgICApCgogICAgICAgICAgICByZXR1cm4gY2xvdWRfbGlua3MsIGNsb3VkX3R5cGUKICAgICAgICBleGNlcHQgaHR0cHguUmVxdWVzdEVycm9yIGFzIGU6CiAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKAogICAgICAgICAgICAgICAgZiLjgJBUR1NlYXJjaOOAkeiuv+mXriB0ZWxlZ3JhLnBoIOmTvuaOpeWksei0pToge3RlbGVncmFfdXJsfSwg6ZSZ6K+vOiB7ZX0iCiAgICAgICAgICAgICkKICAgICAgICAgICAgcmV0dXJuIFtdLCAiIgogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoCiAgICAgICAgICAgICAgICBmIuOAkFRHU2VhcmNo44CR6Kej5p6QIHRlbGVncmEucGgg6aG16Z2i5pe25Ye66ZSZOiB7dGVsZWdyYV91cmx9LCDplJnor686IHtlfSIKICAgICAgICAgICAgKQogICAgICAgICAgICByZXR1cm4gW10sICIiCgogICAgZGVmIGdldF9jaGFubmVsKAogICAgICAgIHNlbGYsIHVybDogc3RyLCBjaGFubmVsX2lkOiBzdHIsIGNoYW5uZWxfbmFtZTogc3RyCiAgICApIC0+IExpc3RbUmVzb3VyY2VJdGVtXToKICAgICAgICAiIiIKICAgICAgICDmkJzntKLljZXkuKrpopHpgZPotYTmupAKICAgICAgICAiIiIKICAgICAgICB0cnk6CiAgICAgICAgICAgIHJlc3BvbnNlID0gc2VsZi5zZXNzaW9uLmdldCh1cmwsIHRpbWVvdXQ9NjApCiAgICAgICAgICAgIHJlc3BvbnNlLnJhaXNlX2Zvcl9zdGF0dXMoKQogICAgICAgICAgICBodG1sID0gcmVzcG9uc2UudGV4dAogICAgICAgIGV4Y2VwdCBodHRweC5SZXF1ZXN0RXJyb3IgYXMgZToKICAgICAgICAgICAgbG9nZ2VyLndhcm4oZiLjgJBUR1NlYXJjaOOAkeivt+axguWksei0pToge3VybH0sIOmUmeivrzoge2V9IikKICAgICAgICAgICAgcmV0dXJuIFtdCgogICAgICAgIHNvdXAgPSBCZWF1dGlmdWxTb3VwKGh0bWwsICJodG1sLnBhcnNlciIpCiAgICAgICAgaXRlbXM6IExpc3RbUmVzb3VyY2VJdGVtXSA9IFtdCgogICAgICAgIGZvciBtZXNzYWdlIGluIHNvdXAuc2VsZWN0KCIudGdtZV93aWRnZXRfbWVzc2FnZV93cmFwIik6CiAgICAgICAgICAgIG1lc3NhZ2VfZWxlbWVudCA9IG1lc3NhZ2Uuc2VsZWN0X29uZSgiLnRnbWVfd2lkZ2V0X21lc3NhZ2UiKQogICAgICAgICAgICBtZXNzYWdlX2lkID0gKAogICAgICAgICAgICAgICAgbWVzc2FnZV9lbGVtZW50LmdldCgiZGF0YS1wb3N0IiwgIiIpLnNwbGl0KCIvIilbMV0KICAgICAgICAgICAgICAgIGlmIG1lc3NhZ2VfZWxlbWVudAogICAgICAgICAgICAgICAgZWxzZSBOb25lCiAgICAgICAgICAgICkKCiAgICAgICAgICAgIHRleHRfZWxlbWVudCA9IG1lc3NhZ2Uuc2VsZWN0X29uZSgiLmpzLW1lc3NhZ2VfdGV4dCIpCiAgICAgICAgICAgIHRpdGxlID0gIiIKICAgICAgICAgICAgY29udGVudCA9ICIiCiAgICAgICAgICAgIGlmIG5vdCB0ZXh0X2VsZW1lbnQ6CiAgICAgICAgICAgICAgICBjb250aW51ZQoKICAgICAgICAgICAgaHRtbF9jb250ZW50ID0gc3RyKHRleHRfZWxlbWVudCkKICAgICAgICAgICAgdGl0bGVfbWF0Y2ggPSByZS5zcGxpdCgiPGJyLio/PiIsIGh0bWxfY29udGVudCwgMSkKICAgICAgICAgICAgdGl0bGUgPSBCZWF1dGlmdWxTb3VwKHRpdGxlX21hdGNoWzBdLCAiaHRtbC5wYXJzZXIiKS5nZXRfdGV4dCgKICAgICAgICAgICAgICAgICIgIiwgc3RyaXA9VHJ1ZQogICAgICAgICAgICApCgogICAgICAgICAgICBpZiBsZW4odGl0bGVfbWF0Y2gpID4gMToKICAgICAgICAgICAgICAgIGNvbnRlbnRfaHRtbCA9IHRpdGxlX21hdGNoWzFdCiAgICAgICAgICAgICAgICBjb250ZW50ID0gQmVhdXRpZnVsU291cChjb250ZW50X2h0bWwsICJodG1sLnBhcnNlciIpLmdldF90ZXh0KAogICAgICAgICAgICAgICAgICAgICJcbiIsIHN0cmlwPVRydWUKICAgICAgICAgICAgICAgICkKCiAgICAgICAgICAgIHRpbWVfZWxlbWVudCA9IG1lc3NhZ2Uuc2VsZWN0X29uZSgidGltZSIpCiAgICAgICAgICAgIHB1Yl9kYXRlID0gc3RyKHRpbWVfZWxlbWVudC5nZXQoImRhdGV0aW1lIikpIGlmIHRpbWVfZWxlbWVudCBlbHNlIE5vbmUKCiAgICAgICAgICAgIHBob3RvX3dyYXAgPSBtZXNzYWdlLnNlbGVjdF9vbmUoIi50Z21lX3dpZGdldF9tZXNzYWdlX3Bob3RvX3dyYXAiKQogICAgICAgICAgICBpbWFnZSA9IE5vbmUKICAgICAgICAgICAgaWYgcGhvdG9fd3JhcCBhbmQgKHN0eWxlIDo9IHBob3RvX3dyYXAuZ2V0KCJzdHlsZSIpKToKICAgICAgICAgICAgICAgIGlmIGltYWdlX21hdGNoIDo9IHJlLnNlYXJjaChyInVybFwoJyguKz8pJ1wpIiwgc3R5bGUpOgogICAgICAgICAgICAgICAgICAgIGltYWdlID0gaW1hZ2VfbWF0Y2guZ3JvdXAoMSkKCiAgICAgICAgICAgIHRhZ3M6IExpc3Rbc3RyXSA9IFtdCiAgICAgICAgICAgIGZvdW5kX2hyZWZzOiBMaXN0W3N0cl0gPSBbXQogICAgICAgICAgICBmb3IgYSBpbiB0ZXh0X2VsZW1lbnQuc2VsZWN0KCJhIik6CiAgICAgICAgICAgICAgICBocmVmID0gYS5nZXQoImhyZWYiKQogICAgICAgICAgICAgICAgdGV4dCA9IGEuZ2V0X3RleHQoc3RyaXA9VHJ1ZSkKCiAgICAgICAgICAgICAgICBpZiBocmVmOgogICAgICAgICAgICAgICAgICAgIGZvdW5kX2hyZWZzLmFwcGVuZChocmVmKQoKICAgICAgICAgICAgICAgIGlmIHRleHQgYW5kIHRleHQuc3RhcnRzd2l0aCgiIyIpOgogICAgICAgICAgICAgICAgICAgIGNsZWFuX3RhZyA9IHRleHQubHN0cmlwKCIjIikKICAgICAgICAgICAgICAgICAgICBpZiBjbGVhbl90YWc6CiAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MuYXBwZW5kKGNsZWFuX3RhZykKCiAgICAgICAgICAgIGFsbF9saW5rc190ZXh0ID0gIiAiLmpvaW4oZm91bmRfaHJlZnMpCiAgICAgICAgICAgIGNsb3VkX2xpbmtzLCBjbG91ZF90eXBlID0gZXh0cmFjdF9jbG91ZF9saW5rc19mcm9tX3RleHQoYWxsX2xpbmtzX3RleHQpCgogICAgICAgICAgICBpZiBub3QgY2xvdWRfbGlua3M6CiAgICAgICAgICAgICAgICB0ZWxlZ3JhX2xpbmsgPSBzZWxmLl9maW5kX3RlbGVncmFfbGlua19mcm9tX2J1dHRvbihtZXNzYWdlKQogICAgICAgICAgICAgICAgaWYgdGVsZWdyYV9saW5rOgogICAgICAgICAgICAgICAgICAgIGNsb3VkX2xpbmtzLCBjbG91ZF90eXBlID0gc2VsZi5fZXh0cmFjdF9saW5rc19mcm9tX3RlbGVncmEoCiAgICAgICAgICAgICAgICAgICAgICAgIHRlbGVncmFfbGluawogICAgICAgICAgICAgICAgICAgICkKCiAgICAgICAgICAgIGlmIG5vdCBjbG91ZF9saW5rczoKICAgICAgICAgICAgICAgIGNvbnRpbnVlCgogICAgICAgICAgICBpdGVtOiBSZXNvdXJjZUl0ZW0gPSB7CiAgICAgICAgICAgICAgICAibWVzc2FnZV9pZCI6IG1lc3NhZ2VfaWQsCiAgICAgICAgICAgICAgICAidGl0bGUiOiB0aXRsZSwKICAgICAgICAgICAgICAgICJwdWJfZGF0ZSI6IHB1Yl9kYXRlLAogICAgICAgICAgICAgICAgImNvbnRlbnQiOiBjb250ZW50LAogICAgICAgICAgICAgICAgImltYWdlIjogaW1hZ2UsCiAgICAgICAgICAgICAgICAiY2xvdWRfbGlua3MiOiBjbG91ZF9saW5rcywKICAgICAgICAgICAgICAgICJ0YWdzIjogdGFncywKICAgICAgICAgICAgICAgICJjbG91ZF90eXBlIjogY2xvdWRfdHlwZSwKICAgICAgICAgICAgICAgICJjaGFubmVsX2lkIjogY2hhbm5lbF9pZCwKICAgICAgICAgICAgICAgICJjaGFubmVsX25hbWUiOiBjaGFubmVsX25hbWUsCiAgICAgICAgICAgIH0KICAgICAgICAgICAgaXRlbXMuYXBwZW5kKGl0ZW0pCgogICAgICAgIHJldHVybiBpdGVtcwoKICAgIGRlZiBzZWFyY2goc2VsZiwga2V5OiBzdHIsIGNoYW5uZWxzOiBMaXN0KSAtPiBMaXN0W2RpY3RdOgogICAgICAgICIiIgogICAgICAgIOaQnOe0oui1hOa6kAogICAgICAgICIiIgogICAgICAgIHJlc3VsdHM6IExpc3RbUmVzb3VyY2VJdGVtXSA9IFtdCiAgICAgICAgZm9yIGl0ZW0gaW4gY2hhbm5lbHM6CiAgICAgICAgICAgIGNoYW5uZWxfaWQgPSBpdGVtLmdldCgiaWQiKQogICAgICAgICAgICBuYW1lX3JhdyA9IGl0ZW0uZ2V0KCJuYW1lIikKICAgICAgICAgICAgaWYgbm90IGNoYW5uZWxfaWQ6CiAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICBpZiBub3Qgc3RyKG5hbWVfcmF3IG9yICIiKS5zdHJpcCgpOgogICAgICAgICAgICAgICAgY29udGludWUKICAgICAgICAgICAgY2hhbm5lbF9uYW1lID0gc3RyKG5hbWVfcmF3KS5zdHJpcCgpCiAgICAgICAgICAgIHVybCA9IFVybFV0aWxzLmVuY29kZV91cmxfZnVsbHkoZiJodHRwczovL3QubWUvcy97Y2hhbm5lbF9pZH0/cT17a2V5fSIpCiAgICAgICAgICAgIHJlc3VsdHMuZXh0ZW5kKAogICAgICAgICAgICAgICAgWwogICAgICAgICAgICAgICAgICAgIGkKICAgICAgICAgICAgICAgICAgICBmb3IgaSBpbiBzZWxmLmdldF9jaGFubmVsKHVybCwgY2hhbm5lbF9pZCwgY2hhbm5lbF9uYW1lKQogICAgICAgICAgICAgICAgICAgIGlmIHNlbGYuX3RpdGxlX21hdGNoZXNfc2VhcmNoX2tleShrZXksIGkuZ2V0KCJ0aXRsZSIsICIiKSkKICAgICAgICAgICAgICAgIF0KICAgICAgICAgICAgKQoKICAgICAgICBzZWVuX2xpbmtzID0gc2V0KCkKICAgICAgICBjbGVhbl9yZXN1bHRzID0gW10KCiAgICAgICAgcGF0dGVybl90aXRsZSA9IHIiKOWQjeensHzmoIfpopgpXHMqW++8mjpdXHMqKC4qKSIKICAgICAgICBwYXR0ZXJuX2NvbnRlbnQgPSByIijmj4/ov7B8566A5LuLKVxzKlvvvJo6XVxzKiguKikiCgogICAgICAgIGZvciBpdGVtIGluIHJlc3VsdHM6CiAgICAgICAgICAgIGlmIG5vdCBpdGVtLmdldCgiY2xvdWRfbGlua3MiKToKICAgICAgICAgICAgICAgIGNvbnRpbnVlCgogICAgICAgICAgICBtYWluX2xpbmsgPSBOb25lCiAgICAgICAgICAgIGZvciBsaW5rIGluIGl0ZW1bImNsb3VkX2xpbmtzIl06CiAgICAgICAgICAgICAgICBpZiAiMTE1IiBpbiBsaW5rOgogICAgICAgICAgICAgICAgICAgIG1haW5fbGluayA9IGxpbmsKICAgICAgICAgICAgaWYgbm90IG1haW5fbGluazoKICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgIGlmIG1haW5fbGluayBpbiBzZWVuX2xpbmtzOgogICAgICAgICAgICAgICAgY29udGludWUKCiAgICAgICAgICAgIHNlZW5fbGlua3MuYWRkKG1haW5fbGluaykKCiAgICAgICAgICAgIHRpdGxlID0gaXRlbS5nZXQoInRpdGxlIiwgIiIpCiAgICAgICAgICAgIGlmIG1hdGNoIDo9IHJlLnNlYXJjaChwYXR0ZXJuX3RpdGxlLCB0aXRsZSwgcmUuRE9UQUxMKToKICAgICAgICAgICAgICAgIHRpdGxlID0gbWF0Y2guZ3JvdXAoMikKICAgICAgICAgICAgdGl0bGUgPSB0aXRsZS5yZXBsYWNlKCImYW1wOyIsICImIikuc3RyaXAoKQoKICAgICAgICAgICAgY29udGVudCA9IGl0ZW0uZ2V0KCJjb250ZW50IiwgIiIpCiAgICAgICAgICAgIGlmICJcbiIgaW4gY29udGVudDoKICAgICAgICAgICAgICAgIGNvbnRlbnRfbGluZXMgPSBbXQogICAgICAgICAgICAgICAgaW5fZGVzY3JpcHRpb24gPSBGYWxzZQogICAgICAgICAgICAgICAgZm9yIGxpbmUgaW4gY29udGVudC5zcGxpdCgiXG4iKToKICAgICAgICAgICAgICAgICAgICBpZiByZS5tYXRjaChwYXR0ZXJuX2NvbnRlbnQsIGxpbmUpOgogICAgICAgICAgICAgICAgICAgICAgICBpbl9kZXNjcmlwdGlvbiA9IFRydWUKICAgICAgICAgICAgICAgICAgICAgICAgY29udGVudF9saW5lcy5hcHBlbmQoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZS5zdWIocGF0dGVybl9jb250ZW50LCByIlwyIiwgbGluZSkuc3RyaXAoKQogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgICAgICAgICAgaWYgcmUubWF0Y2gociIo6ZO+5o6lfOagh+etvilccypb77yaOl0iLCBsaW5lKToKICAgICAgICAgICAgICAgICAgICAgICAgaW5fZGVzY3JpcHRpb24gPSBGYWxzZQoKICAgICAgICAgICAgICAgICAgICBpZiBpbl9kZXNjcmlwdGlvbjoKICAgICAgICAgICAgICAgICAgICAgICAgY29udGVudF9saW5lcy5hcHBlbmQobGluZS5zdHJpcCgpKQoKICAgICAgICAgICAgICAgIGlmIGNvbnRlbnRfbGluZXM6CiAgICAgICAgICAgICAgICAgICAgY29udGVudCA9ICJcbiIuam9pbihjb250ZW50X2xpbmVzKQoKICAgICAgICAgICAgY2xlYW5fcmVzdWx0cy5hcHBlbmQoCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgInNoYXJldXJsIjogbWFpbl9saW5rLAogICAgICAgICAgICAgICAgICAgICJ0YXNrbmFtZSI6IHRpdGxlLAogICAgICAgICAgICAgICAgICAgICJjb250ZW50IjogY29udGVudC5zdHJpcCgpLAogICAgICAgICAgICAgICAgICAgICJ0YWdzIjogaXRlbS5nZXQoInRhZ3MiLCBbXSksCiAgICAgICAgICAgICAgICAgICAgImNoYW5uZWxfaWQiOiBpdGVtLmdldCgiY2hhbm5lbF9pZCIsICIiKSwKICAgICAgICAgICAgICAgICAgICAiY2hhbm5lbF9uYW1lIjogaXRlbVsiY2hhbm5lbF9uYW1lIl0sCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICkKCiAgICAgICAgbG9nZ2VyLmRlYnVnKGYi44CQVEdTZWFyY2jjgJF7a2V5fSDmkJzntKLliLDotYTmupAge2xlbihjbGVhbl9yZXN1bHRzKX0g5p2hIikKCiAgICAgICAgcmV0dXJuIGNsZWFuX3Jlc3VsdHMK
+import re
+import unicodedata
+from typing import List, Optional
+
+import httpx
+from bs4 import BeautifulSoup
+
+from app.log import logger
+
+from ....helper.share.share_links import (
+    build_share_page_client,
+    extract_cloud_links_from_text,
+)
+from ....schemas.tg_search import ResourceItem
+from ....utils.sentry import sentry_manager
+from ....utils.url import UrlUtils
+
+
+@sentry_manager.capture_all_class_exceptions
+class TgSearcher:
+    """
+    Telegream 搜索器
+
+    模块思路参考：
+      - https://github.com/JieWSOFT/MediaHelp/blob/main/backend/utils/tg_resource_sdk.py
+        - LICENSE: https://github.com/JieWSOFT/MediaHelp/blob/main/LICENSE
+      - https://github.com/Cp0204/quark-auto-save/blob/main/app/sdk/cloudsaver.py
+        - LICENSE: https://github.com/Cp0204/quark-auto-save/blob/main/LICENSE
+    """
+
+    _PUNCT_GAP_RE = re.compile(r"[\s\u3000:：·•.,，。!！?？（）【】\[\]/／\\＼-]+")
+
+    def __init__(self):
+        self.session = build_share_page_client()
+
+    @staticmethod
+    def _normalize_for_match(text: str) -> str:
+        """
+        统一空白、NFKC 与常见全角标点，便于做「关键词是否出现在标题中」的判断
+        """
+        if not text:
+            return ""
+        t = unicodedata.normalize("NFKC", text)
+        for old, new in (
+            ("：", ":"),
+            ("，", ","),
+            ("（", "("),
+            ("）", ")"),
+            ("【", "["),
+            ("】", "]"),
+            ("！", "!"),
+            ("？", "?"),
+            ("–", "-"),
+            ("—", "-"),
+            ("…", "..."),
+        ):
+            t = t.replace(old, new)
+        t = re.sub(r"[\s\u3000]+", " ", t).strip()
+        return t.casefold()
+
+    @classmethod
+    def _compact_for_match(cls, text: str) -> str:
+        """
+        在规范化基础上去掉标点与空白，使「复仇者联盟3：无限战争」与「复仇者联盟3: 无限战争」可比
+        """
+        base = cls._normalize_for_match(text)
+        return cls._PUNCT_GAP_RE.sub("", base)
+
+    @classmethod
+    def _title_matches_search_key(cls, key: str, title: str) -> bool:
+        """
+        判断标题是否包含搜索关键词：先原串子串，再规范化子串，再紧凑子串（短关键词不用紧凑路径以免误伤）
+        """
+        if not key:
+            return True
+        t = title or ""
+        if key in t:
+            return True
+        nk = cls._normalize_for_match(key)
+        nt = cls._normalize_for_match(t)
+        if nk and nk in nt:
+            return True
+        ck = cls._compact_for_match(key)
+        ct = cls._compact_for_match(t)
+        if len(ck) < 2:
+            return False
+        return ck in ct
+
+    @staticmethod
+    def _find_telegra_link_from_button(message_element) -> Optional[str]:
+        """
+        从消息的按钮中查找 telegra.ph 链接
+        """
+        try:
+            button = message_element.select_one(
+                ".tgme_widget_message_inline_button.url_button"
+            )
+            if button:
+                href = button.get("href")
+                if href and "telegra.ph" in href:
+                    return href
+        except Exception as e:
+            logger.debug(f"【TGSearch】查找按钮链接时出错: {str(e)}")
+        return None
+
+    def _extract_links_from_telegra(self, telegra_url: str) -> tuple[List[str], str]:
+        """
+        从 telegra.ph 页面中提取115分享地址
+        """
+        try:
+            response = self.session.get(telegra_url, timeout=30)
+            response.raise_for_status()
+            html = response.text
+
+            cloud_links, cloud_type = extract_cloud_links_from_text(html)
+
+            if cloud_links:
+                logger.debug(
+                    f"【TGSearch】从 telegra.ph 页面提取到 {len(cloud_links)} 个云盘链接"
+                )
+
+            return cloud_links, cloud_type
+        except httpx.RequestError as e:
+            logger.warning(
+                f"【TGSearch】访问 telegra.ph 链接失败: {telegra_url}, 错误: {e}"
+            )
+            return [], ""
+        except Exception as e:
+            logger.warning(
+                f"【TGSearch】解析 telegra.ph 页面时出错: {telegra_url}, 错误: {e}"
+            )
+            return [], ""
+
+    def get_channel(
+        self, url: str, channel_id: str, channel_name: str
+    ) -> List[ResourceItem]:
+        """
+        搜索单个频道资源
+        """
+        try:
+            response = self.session.get(url, timeout=60)
+            response.raise_for_status()
+            html = response.text
+        except httpx.RequestError as e:
+            logger.warn(f"【TGSearch】请求失败: {url}, 错误: {e}")
+            return []
+
+        soup = BeautifulSoup(html, "html.parser")
+        items: List[ResourceItem] = []
+
+        for message in soup.select(".tgme_widget_message_wrap"):
+            message_element = message.select_one(".tgme_widget_message")
+            message_id = (
+                message_element.get("data-post", "").split("/")[1]
+                if message_element
+                else None
+            )
+
+            text_element = message.select_one(".js-message_text")
+            title = ""
+            content = ""
+            if not text_element:
+                continue
+
+            html_content = str(text_element)
+            title_match = re.split("<br.*?>", html_content, 1)
+            title = BeautifulSoup(title_match[0], "html.parser").get_text(
+                " ", strip=True
+            )
+
+            if len(title_match) > 1:
+                content_html = title_match[1]
+                content = BeautifulSoup(content_html, "html.parser").get_text(
+                    "\n", strip=True
+                )
+
+            time_element = message.select_one("time")
+            pub_date = str(time_element.get("datetime")) if time_element else None
+
+            photo_wrap = message.select_one(".tgme_widget_message_photo_wrap")
+            image = None
+            if photo_wrap and (style := photo_wrap.get("style")):
+                if image_match := re.search(r"url\('(.+?)'\)", style):
+                    image = image_match.group(1)
+
+            tags: List[str] = []
+            found_hrefs: List[str] = []
+            for a in text_element.select("a"):
+                href = a.get("href")
+                text = a.get_text(strip=True)
+
+                if href:
+                    found_hrefs.append(href)
+
+                if text and text.startswith("#"):
+                    clean_tag = text.lstrip("#")
+                    if clean_tag:
+                        tags.append(clean_tag)
+
+            all_links_text = " ".join(found_hrefs)
+            cloud_links, cloud_type = extract_cloud_links_from_text(all_links_text)
+
+            if not cloud_links:
+                telegra_link = self._find_telegra_link_from_button(message)
+                if telegra_link:
+                    cloud_links, cloud_type = self._extract_links_from_telegra(
+                        telegra_link
+                    )
+
+            if not cloud_links:
+                continue
+
+            item: ResourceItem = {
+                "message_id": message_id,
+                "title": title,
+                "pub_date": pub_date,
+                "content": content,
+                "image": image,
+                "cloud_links": cloud_links,
+                "tags": tags,
+                "cloud_type": cloud_type,
+                "channel_id": channel_id,
+                "channel_name": channel_name,
+            }
+            items.append(item)
+
+        return items
+
+    def search(self, key: str, channels: List) -> List[dict]:
+        """
+        搜索资源
+        """
+        results: List[ResourceItem] = []
+        for item in channels:
+            channel_id = item.get("id")
+            name_raw = item.get("name")
+            if not channel_id:
+                continue
+            if not str(name_raw or "").strip():
+                continue
+            channel_name = str(name_raw).strip()
+            url = UrlUtils.encode_url_fully(f"https://t.me/s/{channel_id}?q={key}")
+            results.extend(
+                [
+                    i
+                    for i in self.get_channel(url, channel_id, channel_name)
+                    if self._title_matches_search_key(key, i.get("title", ""))
+                ]
+            )
+
+        seen_links = set()
+        clean_results = []
+
+        pattern_title = r"(名称|标题)\s*[：:]\s*(.*)"
+        pattern_content = r"(描述|简介)\s*[：:]\s*(.*)"
+
+        for item in results:
+            if not item.get("cloud_links"):
+                continue
+
+            main_link = None
+            for link in item["cloud_links"]:
+                if "115" in link:
+                    main_link = link
+            if not main_link:
+                continue
+            if main_link in seen_links:
+                continue
+
+            seen_links.add(main_link)
+
+            title = item.get("title", "")
+            if match := re.search(pattern_title, title, re.DOTALL):
+                title = match.group(2)
+            title = title.replace("&amp;", "&").strip()
+
+            content = item.get("content", "")
+            if "\n" in content:
+                content_lines = []
+                in_description = False
+                for line in content.split("\n"):
+                    if re.match(pattern_content, line):
+                        in_description = True
+                        content_lines.append(
+                            re.sub(pattern_content, r"\2", line).strip()
+                        )
+                        continue
+                    if re.match(r"(链接|标签)\s*[：:]", line):
+                        in_description = False
+
+                    if in_description:
+                        content_lines.append(line.strip())
+
+                if content_lines:
+                    content = "\n".join(content_lines)
+
+            clean_results.append(
+                {
+                    "shareurl": main_link,
+                    "taskname": title,
+                    "content": content.strip(),
+                    "tags": item.get("tags", []),
+                    "channel_id": item.get("channel_id", ""),
+                    "channel_name": item["channel_name"],
+                }
+            )
+
+        logger.debug(f"【TGSearch】{key} 搜索到资源 {len(clean_results)} 条")
+
+        return clean_results

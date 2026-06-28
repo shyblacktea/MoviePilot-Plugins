@@ -1,1 +1,15 @@
-ZnJvbSBkYXRhY2xhc3NlcyBpbXBvcnQgZGF0YWNsYXNzCmZyb20gdHlwaW5nIGltcG9ydCBPcHRpb25hbAoKCkBkYXRhY2xhc3MKY2xhc3MgVXBsb2FkUmVzdWx0OgogICAgIiIiCiAgICDkuIrkvKDnu5PmnpzmlbDmja7nsbsKICAgICIiIgoKICAgIHN1Y2Nlc3M6IGJvb2wKICAgIHRhcmdldF9uYW1lOiBzdHIKICAgIGZpbGVfc2l6ZTogaW50CiAgICBlbGFwc2VkX3RpbWU6IE9wdGlvbmFsW2Zsb2F0XSA9IE5vbmUKICAgIGVycm9yX21zZzogT3B0aW9uYWxbc3RyXSA9IE5vbmUK
+from dataclasses import dataclass
+from typing import Optional
+
+
+@dataclass
+class UploadResult:
+    """
+    上传结果数据类
+    """
+
+    success: bool
+    target_name: str
+    file_size: int
+    elapsed_time: Optional[float] = None
+    error_msg: Optional[str] = None

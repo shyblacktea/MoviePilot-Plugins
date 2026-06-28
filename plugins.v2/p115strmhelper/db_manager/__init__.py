@@ -1,1 +1,498 @@
-ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gdGltZSBpbXBvcnQgc2xlZXAKZnJvbSB0eXBpbmcgaW1wb3J0IEFueSwgR2VuZXJhdG9yLCBMaXN0LCBPcHRpb25hbCwgU2VsZiwgVHVwbGUKZnJvbSBzcWxpdGUzIGltcG9ydCBPcGVyYXRpb25hbEVycm9yIGFzIFNxbE9wZXJhdGlvbmFsRXJyb3IsIFNRTElURV9CVVNZCgpmcm9tIHNxbGFsY2hlbXkgaW1wb3J0ICgKICAgIGNyZWF0ZV9lbmdpbmUsCiAgICBhbmRfLAogICAgaW5zcGVjdCwKICAgIGV2ZW50LAogICAgTnVsbFBvb2wsCiAgICBRdWV1ZVBvb2wsCiAgICB0ZXh0LAogICAgRW5naW5lLAopCmZyb20gc3FsYWxjaGVteS5vcm0gaW1wb3J0ICgKICAgIGRlY2xhcmVkX2F0dHIsCiAgICBzZXNzaW9ubWFrZXIsCiAgICBzY29wZWRfc2Vzc2lvbiwKICAgIERlY2xhcmF0aXZlQmFzZSwKICAgIFNlc3Npb24sCikKZnJvbSBzcWxhbGNoZW15LmV4YyBpbXBvcnQgT3BlcmF0aW9uYWxFcnJvcgoKZnJvbSAuLmNvcmUuY29uZmlnIGltcG9ydCBjb25maWdlcgpmcm9tIGFwcC5jb3JlLmNvbmZpZyBpbXBvcnQgc2V0dGluZ3MKZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXIKCgpjbGFzcyBfREJNYW5hZ2VyOgogICAgIiIiCiAgICDmlbDmja7lupPnrqHnkIblmagKICAgICIiIgoKICAgICMg5pWw5o2u5bqT5byV5pOOCiAgICBFbmdpbmU6IE9wdGlvbmFsW0VuZ2luZV0gPSBOb25lCiAgICAjIOS8muivneW3peWOggogICAgU2Vzc2lvbkZhY3Rvcnk6IE9wdGlvbmFsW3Nlc3Npb25tYWtlcl0gPSBOb25lCiAgICAjIOWkmue6v+eoi+WFqOWxgOS9v+eUqOeahOaVsOaNruW6k+S8muivnQogICAgU2NvcGVkU2Vzc2lvbjogT3B0aW9uYWxbc2NvcGVkX3Nlc3Npb25dID0gTm9uZQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBfc2V0dXBfc3FsaXRlX3ByYWdtYXMoZGJhcGlfY29ubmVjdGlvbiwgX2Nvbm5lY3Rpb25fcmVjb3JkKToKICAgICAgICAiIiIKICAgICAgICDkuovku7bnm5HlkKzlmajvvIzlnKjmr4/kuKrmlrDov57mjqXkuIrmiafooYwKCiAgICAgICAgOnBhcmFtIGRiYXBpX2Nvbm5lY3Rpb24gKEFueSk6IOW6leWxguaVsOaNruW6k+i/nuaOpeWvueixoQogICAgICAgIDpwYXJhbSBfY29ubmVjdGlvbl9yZWNvcmQgKEFueSk6IFNRTEFsY2hlbXkg5YaF6YOo55So5p2l6K6w5b2V6L+Z5Liq6L+e5o6l5L+h5oGv55qE5a+56LGhCiAgICAgICAgIiIiCiAgICAgICAgY3Vyc29yID0gZGJhcGlfY29ubmVjdGlvbi5jdXJzb3IoKQogICAgICAgIHRyeToKICAgICAgICAgICAgIyDmoLnmja7phY3nva7lhrPlrprml6Xlv5fmqKHlvI/vvIzmmoLml7bmoLnmja4gbXAg55qE5qih5byP5p2l56Gu5a6aCiAgICAgICAgICAgIGpvdXJuYWxfbW9kZSA9ICJXQUwiIGlmIGNvbmZpZ2VyLmdldF9jb25maWcoIkRCX1dBTF9FTkFCTEUiKSBlbHNlICJERUxFVEUiCiAgICAgICAgICAgIGN1cnNvci5leGVjdXRlKGYiUFJBR01BIGpvdXJuYWxfbW9kZT17am91cm5hbF9tb2RlfTsiKQoKICAgICAgICAgICAgIyDlpoLmnpzlkK/nlKggV0FM77yM5b+F6aG76K6+572u5LiA5Liq5ZCI55CG55qE5b+Z56KM6LaF5pe25pe26Ze05Lul5aSE55CG6ZSB56ue5LqJCiAgICAgICAgICAgIGlmIGNvbmZpZ2VyLmdldF9jb25maWcoIkRCX1dBTF9FTkFCTEUiKToKICAgICAgICAgICAgICAgICMg5bCG6LaF5pe25pe26Ze077yI56eS77yJ6L2s5o2i5Li65q+r56eSCiAgICAgICAgICAgICAgICBidXN5X3RpbWVvdXRfbXMgPSBpbnQoc2V0dGluZ3MuREJfVElNRU9VVCAqIDEwMDApCiAgICAgICAgICAgICAgICBjdXJzb3IuZXhlY3V0ZShmIlBSQUdNQSBidXN5X3RpbWVvdXQgPSB7YnVzeV90aW1lb3V0X21zfTsiKQoKICAgICAgICAgICAgIyDorr7nva7lhbbku5bmgKfog73kvJjljJblj4LmlbAKICAgICAgICAgICAgY3Vyc29yLmV4ZWN1dGUoIlBSQUdNQSBzeW5jaHJvbm91cyA9IE5PUk1BTDsiKQogICAgICAgICAgICBjdXJzb3IuZXhlY3V0ZSgiUFJBR01BIGNhY2hlX3NpemUgPSAtMTAwMDAwOyIpCiAgICAgICAgICAgIGN1cnNvci5leGVjdXRlKCJQUkFHTUEgdGVtcF9zdG9yZSA9IE1FTU9SWTsiKQogICAgICAgICAgICAjIOiuvue9ruWQiOeQhueahOmUgeWumuaooeW8j++8jOmBv+WFjeeLrOWNoOmUgeWumgogICAgICAgICAgICBjdXJzb3IuZXhlY3V0ZSgiUFJBR01BIGxvY2tpbmdfbW9kZSA9IE5PUk1BTDsiKQogICAgICAgIGZpbmFsbHk6CiAgICAgICAgICAgIGN1cnNvci5jbG9zZSgpCgogICAgZGVmIGluaXRfZGF0YWJhc2Uoc2VsZiwgZGJfcGF0aDogUGF0aCk6CiAgICAgICAgIiIiCiAgICAgICAg5Yid5aeL5YyW5pWw5o2u5bqT5byV5pOOCgogICAgICAgIDpwYXJhbSBkYl9wYXRoIChQYXRoKTog5pWw5o2u5bqT6Lev5b6ECiAgICAgICAgIiIiCiAgICAgICAgIyDmlbDmja7lupPlt7Lnu4/lkK/liqgKICAgICAgICBpZiBzZWxmLmlzX2luaXRpYWxpemVkKCk6CiAgICAgICAgICAgIHJldHVybgogICAgICAgICMg5aWX55SoIG1wIOeahCB0aW1lb3V0CiAgICAgICAgY29ubmVjdF9hcmdzID0geyJ0aW1lb3V0Ijogc2V0dGluZ3MuREJfVElNRU9VVH0KICAgICAgICAjIOWcqOWkmue6v+eoi+eOr+Wig+S4reS9v+eUqCBXQUwg5qih5byP77yM5b+F6aG756aB55So57q/56iL5qOA5p+lCiAgICAgICAgaWYgY29uZmlnZXIuZ2V0X2NvbmZpZygiREJfV0FMX0VOQUJMRSIpOgogICAgICAgICAgICBjb25uZWN0X2FyZ3NbImNoZWNrX3NhbWVfdGhyZWFkIl0gPSBGYWxzZQoKICAgICAgICAjIOagueaNrumFjee9rumAieaLqei/nuaOpeaxoOexu+WeiwogICAgICAgIHBvb2xfY2xhc3MgPSBOdWxsUG9vbCBpZiBzZXR0aW5ncy5EQl9QT09MX1RZUEUgPT0gIk51bGxQb29sIiBlbHNlIFF1ZXVlUG9vbAoKICAgICAgICAjIOe7hOijhSBjcmVhdGVfZW5naW5lIOeahOaJgOacieWPguaVsAogICAgICAgIGRiX2t3YXJncyA9IHsKICAgICAgICAgICAgInVybCI6IGYic3FsaXRlOi8vL3tkYl9wYXRofSIsCiAgICAgICAgICAgICJwb29sX3ByZV9waW5nIjogc2V0dGluZ3MuREJfUE9PTF9QUkVfUElORywKICAgICAgICAgICAgImVjaG8iOiBzZXR0aW5ncy5EQl9FQ0hPLAogICAgICAgICAgICAicG9vbF9yZWN5Y2xlIjogc2V0dGluZ3MuREJfUE9PTF9SRUNZQ0xFLAogICAgICAgICAgICAiY29ubmVjdF9hcmdzIjogY29ubmVjdF9hcmdzLAogICAgICAgIH0KCiAgICAgICAgIyDlpoLmnpzkvb/nlKggUXVldWVQb29s77yM5YiZ5re75Yqg5YW254m55a6a5Y+C5pWwCiAgICAgICAgaWYgcG9vbF9jbGFzcyA9PSBRdWV1ZVBvb2w6CiAgICAgICAgICAgIGRiX2t3YXJncy51cGRhdGUoCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgInBvb2xfc2l6ZSI6IGdldGF0dHIoc2V0dGluZ3MsICJEQl9TUUxJVEVfUE9PTF9TSVpFIiwgMzApLAogICAgICAgICAgICAgICAgICAgICJwb29sX3RpbWVvdXQiOiBzZXR0aW5ncy5EQl9QT09MX1RJTUVPVVQsCiAgICAgICAgICAgICAgICAgICAgIm1heF9vdmVyZmxvdyI6IGdldGF0dHIoc2V0dGluZ3MsICJEQl9TUUxJVEVfTUFYX09WRVJGTE9XIiwgNTApLAogICAgICAgICAgICAgICAgfQogICAgICAgICAgICApCgogICAgICAgIHNlbGYuRW5naW5lID0gY3JlYXRlX2VuZ2luZSgqKmRiX2t3YXJncykKCiAgICAgICAgIyDnu5Hlrprkuovku7bnm5HlkKzlmajvvIznoa7kv50gUFJBR01BIOWvueaJgOaciei/nuaOpeeUn+aViO+8iOWkmue6v+eoi+i/nuaOpeeUqOeahO+8iQogICAgICAgIGV2ZW50Lmxpc3RlbigKICAgICAgICAgICAgdGFyZ2V0PXNlbGYuRW5naW5lLCBpZGVudGlmaWVyPSJjb25uZWN0IiwgZm49c2VsZi5fc2V0dXBfc3FsaXRlX3ByYWdtYXMKICAgICAgICApCgogICAgICAgICMg5Yib5bu65Lya6K+d5bel5Y6C5ZKM57q/56iL5a6J5YWo55qEIFNjb3BlZFNlc3Npb24KICAgICAgICBzZWxmLlNlc3Npb25GYWN0b3J5ID0gc2Vzc2lvbm1ha2VyKGJpbmQ9c2VsZi5FbmdpbmUpCiAgICAgICAgc2VsZi5TY29wZWRTZXNzaW9uID0gc2NvcGVkX3Nlc3Npb24oc2VsZi5TZXNzaW9uRmFjdG9yeSkKCiAgICAgICAgbG9nZ2VyLmluZm8oIuaVsOaNruW6k+WIneWni+WMluaIkOWKnyIpCiAgICAgICAgd2l0aCBzZWxmLkVuZ2luZS5jb25uZWN0KCkgYXMgY29ubjoKICAgICAgICAgICAgbW9kZSA9IGNvbm4uZXhlY3V0ZSh0ZXh0KCJQUkFHTUEgam91cm5hbF9tb2RlOyIpKS5zY2FsYXIoKQogICAgICAgICAgICBsb2dnZXIuZGVidWcoZiLlvZPliY3ml6Xlv5fmqKHlvI/orr7nva7kuLo6IHttb2RlLnVwcGVyKCl9IikKCiAgICBkZWYgcGVyZm9ybV9jaGVja3BvaW50KHNlbGYsIG1vZGU6IHN0ciA9ICJQQVNTSVZFIik6CiAgICAgICAgIiIiCiAgICAgICAg5omn6KGMIFNRTGl0ZSDnmoQgY2hlY2twb2ludCDmk43kvZwKCiAgICAgICAg5ZyoIFdBTCDmqKHlvI/kuIvvvIzlsIbmlbDmja7ku44gLXdhbCDmlofku7blhpnlm57kuLvmlbDmja7lupPmlofku7bvvJvlhbPpl63liY3kvJrooqvosIPnlKjkuIDmrKHvvJvlj6/ku6XkuIrlrprml7bku7vliqHvvIzlrprmnJ/miafooYzlhpnlhaXvvIzpmLLmraIgd2FsIOaWh+S7tuenr+WingoKICAgICAgICA6cGFyYW0gbW9kZSAoc3RyKTogY2hlY2twb2ludCDmqKHlvI8gKFBBU1NJVkUsIEZVTEwsIFJFU1RBUlQsIFRSVU5DQVRFKQogICAgICAgICIiIgogICAgICAgICMKICAgICAgICBpZiBub3Qgc2VsZi5FbmdpbmUgb3Igbm90IGNvbmZpZ2VyLmdldF9jb25maWcoIkRCX1dBTF9FTkFCTEUiKToKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoIkNoZWNrcG9pbnQg5pON5L2c5LuF5Zyo5pWw5o2u5bqT5Yid5aeL5YyW5ZCO5LiU5ZCv55SoIFdBTCDmqKHlvI/ml7blj6/nlKgiKQogICAgICAgICAgICByZXR1cm4KCiAgICAgICAgdmFsaWRfbW9kZXMgPSB7IlBBU1NJVkUiLCAiRlVMTCIsICJSRVNUQVJUIiwgIlRSVU5DQVRFIn0KICAgICAgICBpZiBtb2RlLnVwcGVyKCkgbm90IGluIHZhbGlkX21vZGVzOgogICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKAogICAgICAgICAgICAgICAgZiLml6DmlYjnmoQgY2hlY2twb2ludCDmqKHlvI8gJ3ttb2RlfSfjgILlv4XpobvmmK8ge3ZhbGlkX21vZGVzfSDkuK3nmoTkuIDkuKoiCiAgICAgICAgICAgICkKCiAgICAgICAgdHJ5OgogICAgICAgICAgICB3aXRoIHNlbGYuRW5naW5lLmNvbm5lY3QoKSBhcyBjb25uOgogICAgICAgICAgICAgICAgIyDlv4XpobvlnKjkuIDkuKrkuovliqHkuK3miafooYwgY2hlY2twb2ludCDmiY3og73nlJ/mlYgKICAgICAgICAgICAgICAgIHdpdGggY29ubi5iZWdpbigpOgogICAgICAgICAgICAgICAgICAgIGNvbm4uZXhlY3V0ZSh0ZXh0KGYiUFJBR01BIHdhbF9jaGVja3BvaW50KHttb2RlLnVwcGVyKCl9KTsiKSkKICAgICAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZyhmIldBTCBjaGVja3BvaW50IOaTjeS9nO+8iOaooeW8jzoge21vZGUudXBwZXIoKX3vvInlt7LmiJDlip/miafooYwiKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi5omn6KGMIFdBTCBjaGVja3BvaW50IOaTjeS9nOacn+mXtOWPkeeUn+mUmeivrzoge2V9IiwgZXhjX2luZm89VHJ1ZSkKCiAgICBkZWYgY2xvc2VfZGF0YWJhc2Uoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAg5YWz6Zet5omA5pyJ5pWw5o2u5bqT6L+e5o6l5bm25riF55CG6LWE5rqQCiAgICAgICAgIiIiCiAgICAgICAgIyDmo4Dmn6XmmK/lkKbpnIDopoHlubblj6/ku6XmiafooYwgY2hlY2twb2ludAogICAgICAgIGlmIHNlbGYuRW5naW5lIGFuZCBjb25maWdlci5nZXRfY29uZmlnKCJEQl9XQUxfRU5BQkxFIik6CiAgICAgICAgICAgIGxvZ2dlci5pbmZvKCLmraPlnKjmiafooYzmlbDmja7lupPlhbPpl63liY3nmoTmnIDnu4ggY2hlY2twb2ludC4uLiIpCiAgICAgICAgICAgICMg5L2/55SoIFRSVU5DQVRFIOaooeW8j+S7peiOt+W+l+acgOW5suWHgOeahOWFs+mXreeKtuaAgQogICAgICAgICAgICBzZWxmLnBlcmZvcm1fY2hlY2twb2ludChtb2RlPSJUUlVOQ0FURSIpCgogICAgICAgIGlmIHNlbGYuRW5naW5lOgogICAgICAgICAgICBzZWxmLkVuZ2luZS5kaXNwb3NlKCkKICAgICAgICBzZWxmLkVuZ2luZSA9IE5vbmUKICAgICAgICBzZWxmLlNlc3Npb25GYWN0b3J5ID0gTm9uZQogICAgICAgIHNlbGYuU2NvcGVkU2Vzc2lvbiA9IE5vbmUKCiAgICBkZWYgaXNfaW5pdGlhbGl6ZWQoc2VsZikgLT4gYm9vbDoKICAgICAgICAiIiIKICAgICAgICDliKTmlq3mlbDmja7lupPmmK/lkKbliJ3lp4vljJblubbov57mjqXjgIHliJvlu7rkvJror53lt6XljoIKCiAgICAgICAgOnJldHVybiBib29sOiDlt7LliJ3lp4vljJbov5Tlm54gVHJ1Ze+8jOWQpuWImei/lOWbniBGYWxzZQogICAgICAgICIiIgogICAgICAgIGlmICgKICAgICAgICAgICAgc2VsZi5FbmdpbmUgaXMgTm9uZQogICAgICAgICAgICBvciBzZWxmLlNlc3Npb25GYWN0b3J5IGlzIE5vbmUKICAgICAgICAgICAgb3Igc2VsZi5TY29wZWRTZXNzaW9uIGlzIE5vbmUKICAgICAgICApOgogICAgICAgICAgICByZXR1cm4gRmFsc2UKICAgICAgICByZXR1cm4gVHJ1ZQoKCmRlZiBnZXRfZGIoKSAtPiBHZW5lcmF0b3I6CiAgICAiIiIKICAgIOiOt+WPluaVsOaNruW6k+S8muivne+8jOeUqOS6jldFQuivt+axggoKICAgIDpyZXR1cm4gR2VuZXJhdG9yOiDmlbDmja7lupPkvJror53nlJ/miJDlmagKICAgICIiIgogICAgZGIgPSBOb25lCiAgICB0cnk6CiAgICAgICAgZGIgPSBjdF9kYl9tYW5hZ2VyLlNlc3Npb25GYWN0b3J5KCkKICAgICAgICB5aWVsZCBkYgogICAgZmluYWxseToKICAgICAgICBpZiBkYjoKICAgICAgICAgICAgZGIuY2xvc2UoKQoKCmRlZiBnZXRfYXJnc19kYihhcmdzOiB0dXBsZSwga3dhcmdzOiBkaWN0KSAtPiBPcHRpb25hbFtTZXNzaW9uXToKICAgICIiIgogICAg5LuO5Y+C5pWw5Lit6I635Y+W5pWw5o2u5bqTU2Vzc2lvbuWvueixoQoKICAgIDpwYXJhbSBhcmdzIChUdXBsZSk6IOS9jee9ruWPguaVsOWFg+e7hAogICAgOnBhcmFtIGt3YXJncyAoRGljdCk6IOWFs+mUruWtl+WPguaVsOWtl+WFuAoKICAgIDpyZXR1cm4gU2Vzc2lvbjog5pWw5o2u5bqT5Lya6K+d5a+56LGh77yM5pyq5om+5Yiw6L+U5ZueIE5vbmUKICAgICIiIgogICAgZGIgPSBOb25lCiAgICBpZiBhcmdzOgogICAgICAgIGZvciBhcmcgaW4gYXJnczoKICAgICAgICAgICAgaWYgaXNpbnN0YW5jZShhcmcsIFNlc3Npb24pOgogICAgICAgICAgICAgICAgZGIgPSBhcmcKICAgICAgICAgICAgICAgIGJyZWFrCiAgICBpZiBrd2FyZ3M6CiAgICAgICAgZm9yIF8sIHZhbHVlIGluIGt3YXJncy5pdGVtcygpOgogICAgICAgICAgICBpZiBpc2luc3RhbmNlKHZhbHVlLCBTZXNzaW9uKToKICAgICAgICAgICAgICAgIGRiID0gdmFsdWUKICAgICAgICAgICAgICAgIGJyZWFrCiAgICByZXR1cm4gZGIKCgpkZWYgdXBkYXRlX2FyZ3NfZGIoYXJnczogdHVwbGUsIGt3YXJnczogZGljdCwgZGI6IFNlc3Npb24pIC0+IFR1cGxlW3R1cGxlLCBkaWN0XToKICAgICIiIgogICAg5pu05paw5Y+C5pWw5Lit55qE5pWw5o2u5bqTU2Vzc2lvbuWvueixoQoKICAgIOWFs+mUruWtl+S8oOWPguaXtuabtOaWsGRi55qE5YC877yM5ZCm5YiZ5pu05paw56ysMeaIluesrDLkuKrlj4LmlbAKCiAgICA6cGFyYW0gYXJncyAoVHVwbGUpOiDkvY3nva7lj4LmlbDlhYPnu4QKICAgIDpwYXJhbSBrd2FyZ3MgKERpY3QpOiDlhbPplK7lrZflj4LmlbDlrZflhbgKICAgIDpwYXJhbSBkYiAoU2Vzc2lvbik6IOaVsOaNruW6k+S8muivneWvueixoQoKICAgIDpyZXR1cm4gVHVwbGU6IOabtOaWsOWQjueahCAoYXJncywga3dhcmdzKQogICAgIiIiCiAgICBpZiBrd2FyZ3MgYW5kICJkYiIgaW4ga3dhcmdzOgogICAgICAgIGt3YXJnc1siZGIiXSA9IGRiCiAgICBlbGlmIGFyZ3M6CiAgICAgICAgaWYgYXJnc1swXSBpcyBOb25lOgogICAgICAgICAgICBhcmdzID0gKGRiLCAqYXJnc1sxOl0pCiAgICAgICAgZWxzZToKICAgICAgICAgICAgYXJncyA9IChhcmdzWzBdLCBkYiwgKmFyZ3NbMjpdKQogICAgcmV0dXJuIGFyZ3MsIGt3YXJncwoKCmRlZiBpbml0X2RhdGFiYXNlKCkgLT4gYm9vbDoKICAgICIiIgogICAg5Yid5aeL5YyW5pWw5o2u5bqT5pON5L2cCgogICAgOnJldHVybiBib29sOiDliJ3lp4vljJbmiJDlip/ov5Tlm54gVHJ1ZQoKICAgIDpyYWlzZXMgUnVudGltZUVycm9yOiDmlbDmja7lupPkvJror53lt6XljoLliJ3lp4vljJblpLHotKXml7bmipvlh7oKICAgICIiIgogICAgIyDoh6rliqjliJ3lp4vljJbmlbDmja7lupPnrqHnkIblmagKICAgIGlmIG5vdCBjdF9kYl9tYW5hZ2VyLmlzX2luaXRpYWxpemVkKCk6CiAgICAgICAgbG9nZ2VyLmluZm8oIuaVsOaNruW6k+euoeeQhuWZqOacquWIneWni+WMlu+8jOato+WcqOiHquWKqOWIneWni+WMli4uLiIpCgogICAgICAgICMg5bu26L+f5a+85YWl6YG/5YWN5b6q546v5a+85YWlCiAgICAgICAgZnJvbSAuaW5pdCBpbXBvcnQgaW5pdF9kYiwgbWlncmF0aW9uX2RiLCBpbml0X21pZ3JhdGlvbl9zY3JpcHRzCgogICAgICAgICMg5Yid5aeL5YyW5pWw5o2u5bqTCiAgICAgICAgY3RfZGJfbWFuYWdlci5pbml0X2RhdGFiYXNlKGRiX3BhdGg9Y29uZmlnZXIuUExVR0lOX0RCX1BBVEgpCgogICAgICAgICMg5Yid5aeL5YyW5pWw5o2u5bqT6KGoCiAgICAgICAgaW5pdF9kYihlbmdpbmU9Y3RfZGJfbWFuYWdlci5FbmdpbmUpCgogICAgICAgICMg6L+Q6KGM6L+B56e76ISa5pysCiAgICAgICAgaWYgaW5pdF9taWdyYXRpb25fc2NyaXB0cygpOgogICAgICAgICAgICBtaWdyYXRpb25fZGIoCiAgICAgICAgICAgICAgICBkYl9wYXRoPWNvbmZpZ2VyLlBMVUdJTl9EQl9QQVRILAogICAgICAgICAgICAgICAgc2NyaXB0X2xvY2F0aW9uPWNvbmZpZ2VyLlBMVUdJTl9EQVRBQkFTRV9TQ1JJUFRfTE9DQVRJT04sCiAgICAgICAgICAgICAgICB2ZXJzaW9uX2xvY2F0aW9ucz1jb25maWdlci5QTFVHSU5fREFUQUJBU0VfVkVSU0lPTl9MT0NBVElPTlMsCiAgICAgICAgICAgICkKCiAgICAjIOajgOafpSBTY29wZWRTZXNzaW9uIOaYr+WQpuWPr+eUqAogICAgaWYgY3RfZGJfbWFuYWdlci5TY29wZWRTZXNzaW9uIGlzIE5vbmU6CiAgICAgICAgbG9nZ2VyLmVycm9yKCLmlbDmja7lupPkvJror53lt6XljoLliJ3lp4vljJblpLHotKUiKQogICAgICAgIHJhaXNlIFJ1bnRpbWVFcnJvcigi5pWw5o2u5bqT5Lya6K+d5bel5Y6C5Yid5aeL5YyW5aSx6LSlIikKCiAgICByZXR1cm4gVHJ1ZQoKCmRlZiBkYl91cGRhdGUoZnVuYyk6CiAgICAiIiIKICAgIOaVsOaNruW6k+abtOaWsOexu+aTjeS9nOijhemlsOWZqO+8jOesrOS4gOS4quWPguaVsOW/hemhu+aYr+aVsOaNruW6k+S8muivneaIluWtmOWcqGRi5Y+C5pWwCiAgICAiIiIKCiAgICBkZWYgd3JhcHBlcigqYXJncywgKiprd2FyZ3MpOgogICAgICAgICIiIgogICAgICAgIOiHquWKqOiOt+WPluaVsOaNruW6k+S8muivneOAgeaJp+ihjOabtOaWsOaTjeS9nOW5tuWkhOeQhumHjeivlemAu+i+kQoKICAgICAgICA6cGFyYW0gYXJnczog5Y6f5aeL5L2N572u5Y+C5pWwCiAgICAgICAgOnBhcmFtIGt3YXJnczog5Y6f5aeL5YWz6ZSu5a2X5Y+C5pWwCgogICAgICAgIDpyZXR1cm46IOiiq+ijhemlsOWHveaVsOeahOi/lOWbnuWAvAoKICAgICAgICA6cmFpc2VzIE9wZXJhdGlvbmFsRXJyb3I6IOmHjeivleiAl+WwveWQjuS7jeaXoOazleiOt+WPluaVsOaNruW6k+mUgeaXtuaKm+WHugogICAgICAgICIiIgogICAgICAgICMg5piv5ZCm5YWz6Zet5pWw5o2u5bqT5Lya6K+dCiAgICAgICAgX2Nsb3NlX2RiID0gRmFsc2UKICAgICAgICBkYiA9IGdldF9hcmdzX2RiKGFyZ3MsIGt3YXJncykKICAgICAgICBpZiBub3QgZGI6CiAgICAgICAgICAgIGluaXRfZGF0YWJhc2UoKQogICAgICAgICAgICAjIOWmguaenOayoeacieiOt+WPluWIsOaVsOaNruW6k+S8muivne+8jOWIm+W7uuS4gOS4qgogICAgICAgICAgICBkYiA9IGN0X2RiX21hbmFnZXIuU2NvcGVkU2Vzc2lvbigpCiAgICAgICAgICAgICMg5qCH6K6w6ZyA6KaB5YWz6Zet5pWw5o2u5bqT5Lya6K+dCiAgICAgICAgICAgIF9jbG9zZV9kYiA9IFRydWUKICAgICAgICAgICAgIyDmm7TmlrDlj4LmlbDkuK3nmoTmlbDmja7lupPkvJror50KICAgICAgICAgICAgYXJncywga3dhcmdzID0gdXBkYXRlX2FyZ3NfZGIoYXJncywga3dhcmdzLCBkYikKCiAgICAgICAgbWF4X3JldHJpZXMgPSAzCiAgICAgICAgcmV0cnlfZGVsYXkgPSAwLjEKICAgICAgICBsYXN0X2VyciA9IE5vbmUKCiAgICAgICAgdHJ5OgogICAgICAgICAgICBmb3IgYXR0ZW1wdCBpbiByYW5nZShtYXhfcmV0cmllcyk6CiAgICAgICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICAgICAgIyDmiafooYzlh73mlbAKICAgICAgICAgICAgICAgICAgICByZXN1bHQgPSBmdW5jKCphcmdzLCAqKmt3YXJncykKICAgICAgICAgICAgICAgICAgICAjIOaPkOS6pOS6i+WKoQogICAgICAgICAgICAgICAgICAgIGRiLmNvbW1pdCgpCiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJlc3VsdAogICAgICAgICAgICAgICAgZXhjZXB0IE9wZXJhdGlvbmFsRXJyb3IgYXMgZXJyOgogICAgICAgICAgICAgICAgICAgICMg5Zue5rua5LqL5YqhCiAgICAgICAgICAgICAgICAgICAgZGIucm9sbGJhY2soKQogICAgICAgICAgICAgICAgICAgIGxhc3RfZXJyID0gZXJyCiAgICAgICAgICAgICAgICAgICAgaWYgbm90ICgKICAgICAgICAgICAgICAgICAgICAgICAgaXNpbnN0YW5jZShlcnIub3JpZywgU3FsT3BlcmF0aW9uYWxFcnJvcikKICAgICAgICAgICAgICAgICAgICAgICAgYW5kIGVyci5vcmlnLnNxbGl0ZV9lcnJvcmNvZGUgPT0gU1FMSVRFX0JVU1kKICAgICAgICAgICAgICAgICAgICApOgogICAgICAgICAgICAgICAgICAgICAgICByYWlzZSBlcnIKCiAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoCiAgICAgICAgICAgICAgICAgICAgICAgIGYi5pWw5o2u5bqT6ZSB5a6a77yM56ysIHthdHRlbXB0ICsgMX0g5qyh6YeN6K+V77yM562J5b6FIHtyZXRyeV9kZWxheX1zLi4uIgogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBzbGVlcChyZXRyeV9kZWxheSkKICAgICAgICAgICAgICAgICAgICByZXRyeV9kZWxheSAqPSAyCiAgICAgICAgICAgIGlmIGxhc3RfZXJyOgogICAgICAgICAgICAgICAgcmFpc2UgbGFzdF9lcnIKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGVycjoKICAgICAgICAgICAgaWYgbm90IGlzaW5zdGFuY2UoZXJyLCBPcGVyYXRpb25hbEVycm9yKToKICAgICAgICAgICAgICAgIGRiLnJvbGxiYWNrKCkKICAgICAgICAgICAgcmFpc2UgZXJyCiAgICAgICAgZmluYWxseToKICAgICAgICAgICAgIyDlhbPpl63mlbDmja7lupPkvJror50KICAgICAgICAgICAgaWYgX2Nsb3NlX2RiOgogICAgICAgICAgICAgICAgZGIuY2xvc2UoKQoKICAgIHJldHVybiB3cmFwcGVyCgoKZGVmIGRiX3F1ZXJ5KGZ1bmMpOgogICAgIiIiCiAgICDmlbDmja7lupPmn6Xor6Lmk43kvZzoo4XppbDlmajvvIznrKzkuIDkuKrlj4LmlbDlv4XpobvmmK/mlbDmja7lupPkvJror53miJblrZjlnKhkYuWPguaVsAogICAg5rOo5oSP77yaZGIucXVlcnnliJfooajmlbDmja7ml7bvvIzpnIDopoHovazmjaLkuLpsaXN06L+U5ZueCiAgICAiIiIKCiAgICBkZWYgd3JhcHBlcigqYXJncywgKiprd2FyZ3MpOgogICAgICAgICIiIgogICAgICAgIOiHquWKqOiOt+WPluaVsOaNruW6k+S8muivneOAgeaJp+ihjOafpeivouaTjeS9nOW5tueuoeeQhuS8muivneeUn+WRveWRqOacnwoKICAgICAgICA6cGFyYW0gYXJnczog5Y6f5aeL5L2N572u5Y+C5pWwCiAgICAgICAgOnBhcmFtIGt3YXJnczog5Y6f5aeL5YWz6ZSu5a2X5Y+C5pWwCgogICAgICAgIDpyZXR1cm46IOiiq+ijhemlsOWHveaVsOeahOi/lOWbnuWAvAogICAgICAgICIiIgogICAgICAgICMg5piv5ZCm5YWz6Zet5pWw5o2u5bqT5Lya6K+dCiAgICAgICAgX2Nsb3NlX2RiID0gRmFsc2UKICAgICAgICAjIOS7juWPguaVsOS4reiOt+WPluaVsOaNruW6k+S8muivnQogICAgICAgIGRiID0gZ2V0X2FyZ3NfZGIoYXJncywga3dhcmdzKQogICAgICAgIGlmIG5vdCBkYjoKICAgICAgICAgICAgaW5pdF9kYXRhYmFzZSgpCiAgICAgICAgICAgICMg5aaC5p6c5rKh5pyJ6I635Y+W5Yiw5pWw5o2u5bqT5Lya6K+d77yM5Yib5bu65LiA5LiqCiAgICAgICAgICAgIGRiID0gY3RfZGJfbWFuYWdlci5TY29wZWRTZXNzaW9uKCkKICAgICAgICAgICAgIyDmoIforrDpnIDopoHlhbPpl63mlbDmja7lupPkvJror50KICAgICAgICAgICAgX2Nsb3NlX2RiID0gVHJ1ZQogICAgICAgICAgICAjIOabtOaWsOWPguaVsOS4reeahOaVsOaNruW6k+S8muivnQogICAgICAgICAgICBhcmdzLCBrd2FyZ3MgPSB1cGRhdGVfYXJnc19kYihhcmdzLCBrd2FyZ3MsIGRiKQogICAgICAgIHRyeToKICAgICAgICAgICAgIyDmiafooYzlh73mlbAKICAgICAgICAgICAgcmVzdWx0ID0gZnVuYygqYXJncywgKiprd2FyZ3MpCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlcnI6CiAgICAgICAgICAgIHJhaXNlIGVycgogICAgICAgIGZpbmFsbHk6CiAgICAgICAgICAgICMg5YWz6Zet5pWw5o2u5bqT5Lya6K+dCiAgICAgICAgICAgIGlmIF9jbG9zZV9kYjoKICAgICAgICAgICAgICAgIGRiLmNsb3NlKCkKICAgICAgICByZXR1cm4gcmVzdWx0CgogICAgcmV0dXJuIHdyYXBwZXIKCgpjbGFzcyBQMTE1U3RybUhlbHBlckJhc2UoRGVjbGFyYXRpdmVCYXNlKToKICAgICIiIgogICAgUDExNVN0cm1IZWxwZXIg5pWw5o2u5bqT5qih5Z6L5Z+657G777yM5o+Q5L6b6YCa55So55qEIENSVUQg5pON5L2c5pa55rOVCiAgICAiIiIKCiAgICBpZDogQW55CiAgICBfX25hbWVfXzogc3RyCgogICAgQGRiX3VwZGF0ZQogICAgZGVmIGNyZWF0ZShzZWxmLCBkYjogU2Vzc2lvbik6CiAgICAgICAgIiIiCiAgICAgICAg5Yib5bu65paw6K6w5b2V5bm25re75Yqg5Yiw5pWw5o2u5bqTCgogICAgICAgIDpwYXJhbSBkYiAoU2Vzc2lvbik6IOaVsOaNruW6k+S8muivnQogICAgICAgICIiIgogICAgICAgIGRiLmFkZChzZWxmKQoKICAgIEBjbGFzc21ldGhvZAogICAgQGRiX3F1ZXJ5CiAgICBkZWYgZ2V0KGNscywgZGI6IFNlc3Npb24sIHJpZDogaW50KSAtPiBTZWxmOgogICAgICAgICIiIgogICAgICAgIOagueaNruS4u+mUriBJRCDmn6Xor6LljZXmnaHorrDlvZUKCiAgICAgICAgOnBhcmFtIGRiIChTZXNzaW9uKTog5pWw5o2u5bqT5Lya6K+dCiAgICAgICAgOnBhcmFtIHJpZCAoaW50KTog6K6w5b2VIElECgogICAgICAgIDpyZXR1cm4gU2VsZjog5Yy56YWN55qE5qih5Z6L5a6e5L6L77yM5pyq5om+5Yiw5pe26L+U5ZueIE5vbmUKICAgICAgICAiIiIKICAgICAgICByZXR1cm4gZGIucXVlcnkoY2xzKS5maWx0ZXIoYW5kXyhjbHMuaWQgPT0gcmlkKSkuZmlyc3QoKQoKICAgIEBkYl91cGRhdGUKICAgIGRlZiB1cGRhdGUoc2VsZiwgZGI6IFNlc3Npb24sIHBheWxvYWQ6IGRpY3QpOgogICAgICAgICIiIgogICAgICAgIOabtOaWsOW9k+WJjeiusOW9leeahOmDqOWIhuWtl+autQoKICAgICAgICA6cGFyYW0gZGIgKFNlc3Npb24pOiDmlbDmja7lupPkvJror50KICAgICAgICA6cGFyYW0gcGF5bG9hZCAoRGljdCk6IOimgeabtOaWsOeahOWtl+auteWtl+WFuO+8jOWAvOS4uiBOb25lIOeahOmUruS8muiiq+i/h+a7pAogICAgICAgICIiIgogICAgICAgIHBheWxvYWQgPSB7azogdiBmb3IgaywgdiBpbiBwYXlsb2FkLml0ZW1zKCkgaWYgdiBpcyBub3QgTm9uZX0KICAgICAgICBmb3Iga2V5LCB2YWx1ZSBpbiBwYXlsb2FkLml0ZW1zKCk6CiAgICAgICAgICAgIHNldGF0dHIoc2VsZiwga2V5LCB2YWx1ZSkKICAgICAgICBpZiBpbnNwZWN0KHNlbGYpLmRldGFjaGVkOgogICAgICAgICAgICBkYi5hZGQoc2VsZikKCiAgICBAY2xhc3NtZXRob2QKICAgIEBkYl91cGRhdGUKICAgIGRlZiBkZWxldGUoY2xzLCBkYjogU2Vzc2lvbiwgcmlkKToKICAgICAgICAiIiIKICAgICAgICDmoLnmja7kuLvplK4gSUQg5Yig6Zmk6K6w5b2VCgogICAgICAgIDpwYXJhbSBkYiAoU2Vzc2lvbik6IOaVsOaNruW6k+S8muivnQogICAgICAgIDpwYXJhbSByaWQgKGludCk6IOiusOW9lSBJRAogICAgICAgICIiIgogICAgICAgIGRiLnF1ZXJ5KGNscykuZmlsdGVyKGFuZF8oY2xzLmlkID09IHJpZCkpLmRlbGV0ZSgpCgogICAgQGNsYXNzbWV0aG9kCiAgICBAZGJfdXBkYXRlCiAgICBkZWYgdHJ1bmNhdGUoY2xzLCBkYjogU2Vzc2lvbik6CiAgICAgICAgIiIiCiAgICAgICAg5riF56m65b2T5YmN5qih5Z6L5a+55bqU55qE5pWw5o2u5bqT6KGo5omA5pyJ6K6w5b2VCgogICAgICAgIDpwYXJhbSBkYiAoU2Vzc2lvbik6IOaVsOaNruW6k+S8muivnQogICAgICAgICIiIgogICAgICAgIGRiLnF1ZXJ5KGNscykuZGVsZXRlKCkKCiAgICBAY2xhc3NtZXRob2QKICAgIEBkYl9xdWVyeQogICAgZGVmIGxpc3QoY2xzLCBkYjogU2Vzc2lvbikgLT4gTGlzdFtTZWxmXToKICAgICAgICAiIiIKICAgICAgICDmn6Xor6LlvZPliY3mqKHlnovnmoTmiYDmnInorrDlvZUKCiAgICAgICAgOnBhcmFtIGRiIChTZXNzaW9uKTog5pWw5o2u5bqT5Lya6K+dCgogICAgICAgIDpyZXR1cm4gTGlzdDog5omA5pyJ6K6w5b2V5YiX6KGoCiAgICAgICAgIiIiCiAgICAgICAgcmVzdWx0ID0gZGIucXVlcnkoY2xzKS5hbGwoKQogICAgICAgIHJldHVybiBsaXN0KHJlc3VsdCkKCiAgICBkZWYgdG9fZGljdChzZWxmKToKICAgICAgICAiIiIKICAgICAgICDlsIbmqKHlnovlrp7kvovnmoTmiYDmnInmlbDmja7lupPliJfovazmjaLkuLrlrZflhbgKCiAgICAgICAgOnJldHVybiBEaWN0OiDliJflkI3liLDliJflgLznmoTlrZflhbjmmKDlsIQKICAgICAgICAiIiIKICAgICAgICByZXR1cm4ge2MubmFtZTogZ2V0YXR0cihzZWxmLCBjLm5hbWUsIE5vbmUpIGZvciBjIGluIHNlbGYuX190YWJsZV9fLmNvbHVtbnN9ICAjIG5vcWEKCiAgICBAZGVjbGFyZWRfYXR0cgogICAgZGVmIF9fdGFibGVuYW1lX18oc2VsZikgLT4gc3RyOgogICAgICAgIHJldHVybiBzZWxmLl9fbmFtZV9fLmxvd2VyKCkKCgpjbGFzcyBEYk9wZXI6CiAgICAiIiIKICAgIOaVsOaNruW6k+aTjeS9nOWfuuexuwogICAgIiIiCgogICAgX2RiOiBTZXNzaW9uID0gTm9uZQoKICAgIGRlZiBfX2luaXRfXyhzZWxmLCBkYjogU2Vzc2lvbiA9IE5vbmUpOgogICAgICAgICIiIgogICAgICAgIOWIneWni+WMluaVsOaNruW6k+aTjeS9nOWfuuexuwoKICAgICAgICA6cGFyYW0gZGIgKFNlc3Npb24pOiDmlbDmja7lupPkvJror53vvIzlj6/pgIkKICAgICAgICAiIiIKICAgICAgICBzZWxmLl9kYiA9IGRiCgoKIyDlhajlsYDmlbDmja7lupPkvJror50KY3RfZGJfbWFuYWdlciA9IF9EQk1hbmFnZXIoKQo=
+from pathlib import Path
+from time import sleep
+from typing import Any, Generator, List, Optional, Self, Tuple
+from sqlite3 import OperationalError as SqlOperationalError, SQLITE_BUSY
+
+from sqlalchemy import (
+    create_engine,
+    and_,
+    inspect,
+    event,
+    NullPool,
+    QueuePool,
+    text,
+    Engine,
+)
+from sqlalchemy.orm import (
+    declared_attr,
+    sessionmaker,
+    scoped_session,
+    DeclarativeBase,
+    Session,
+)
+from sqlalchemy.exc import OperationalError
+
+from ..core.config import configer
+from app.core.config import settings
+from app.log import logger
+
+
+class _DBManager:
+    """
+    数据库管理器
+    """
+
+    # 数据库引擎
+    Engine: Optional[Engine] = None
+    # 会话工厂
+    SessionFactory: Optional[sessionmaker] = None
+    # 多线程全局使用的数据库会话
+    ScopedSession: Optional[scoped_session] = None
+
+    @staticmethod
+    def _setup_sqlite_pragmas(dbapi_connection, _connection_record):
+        """
+        事件监听器，在每个新连接上执行
+
+        :param dbapi_connection (Any): 底层数据库连接对象
+        :param _connection_record (Any): SQLAlchemy 内部用来记录这个连接信息的对象
+        """
+        cursor = dbapi_connection.cursor()
+        try:
+            # 根据配置决定日志模式，暂时根据 mp 的模式来确定
+            journal_mode = "WAL" if configer.get_config("DB_WAL_ENABLE") else "DELETE"
+            cursor.execute(f"PRAGMA journal_mode={journal_mode};")
+
+            # 如果启用 WAL，必须设置一个合理的忙碌超时时间以处理锁竞争
+            if configer.get_config("DB_WAL_ENABLE"):
+                # 将超时时间（秒）转换为毫秒
+                busy_timeout_ms = int(settings.DB_TIMEOUT * 1000)
+                cursor.execute(f"PRAGMA busy_timeout = {busy_timeout_ms};")
+
+            # 设置其他性能优化参数
+            cursor.execute("PRAGMA synchronous = NORMAL;")
+            cursor.execute("PRAGMA cache_size = -100000;")
+            cursor.execute("PRAGMA temp_store = MEMORY;")
+            # 设置合理的锁定模式，避免独占锁定
+            cursor.execute("PRAGMA locking_mode = NORMAL;")
+        finally:
+            cursor.close()
+
+    def init_database(self, db_path: Path):
+        """
+        初始化数据库引擎
+
+        :param db_path (Path): 数据库路径
+        """
+        # 数据库已经启动
+        if self.is_initialized():
+            return
+        # 套用 mp 的 timeout
+        connect_args = {"timeout": settings.DB_TIMEOUT}
+        # 在多线程环境中使用 WAL 模式，必须禁用线程检查
+        if configer.get_config("DB_WAL_ENABLE"):
+            connect_args["check_same_thread"] = False
+
+        # 根据配置选择连接池类型
+        pool_class = NullPool if settings.DB_POOL_TYPE == "NullPool" else QueuePool
+
+        # 组装 create_engine 的所有参数
+        db_kwargs = {
+            "url": f"sqlite:///{db_path}",
+            "pool_pre_ping": settings.DB_POOL_PRE_PING,
+            "echo": settings.DB_ECHO,
+            "pool_recycle": settings.DB_POOL_RECYCLE,
+            "connect_args": connect_args,
+        }
+
+        # 如果使用 QueuePool，则添加其特定参数
+        if pool_class == QueuePool:
+            db_kwargs.update(
+                {
+                    "pool_size": getattr(settings, "DB_SQLITE_POOL_SIZE", 30),
+                    "pool_timeout": settings.DB_POOL_TIMEOUT,
+                    "max_overflow": getattr(settings, "DB_SQLITE_MAX_OVERFLOW", 50),
+                }
+            )
+
+        self.Engine = create_engine(**db_kwargs)
+
+        # 绑定事件监听器，确保 PRAGMA 对所有连接生效（多线程连接用的）
+        event.listen(
+            target=self.Engine, identifier="connect", fn=self._setup_sqlite_pragmas
+        )
+
+        # 创建会话工厂和线程安全的 ScopedSession
+        self.SessionFactory = sessionmaker(bind=self.Engine)
+        self.ScopedSession = scoped_session(self.SessionFactory)
+
+        logger.info("数据库初始化成功")
+        with self.Engine.connect() as conn:
+            mode = conn.execute(text("PRAGMA journal_mode;")).scalar()
+            logger.debug(f"当前日志模式设置为: {mode.upper()}")
+
+    def perform_checkpoint(self, mode: str = "PASSIVE"):
+        """
+        执行 SQLite 的 checkpoint 操作
+
+        在 WAL 模式下，将数据从 -wal 文件写回主数据库文件；关闭前会被调用一次；可以上定时任务，定期执行写入，防止 wal 文件积增
+
+        :param mode (str): checkpoint 模式 (PASSIVE, FULL, RESTART, TRUNCATE)
+        """
+        #
+        if not self.Engine or not configer.get_config("DB_WAL_ENABLE"):
+            logger.warning("Checkpoint 操作仅在数据库初始化后且启用 WAL 模式时可用")
+            return
+
+        valid_modes = {"PASSIVE", "FULL", "RESTART", "TRUNCATE"}
+        if mode.upper() not in valid_modes:
+            raise ValueError(
+                f"无效的 checkpoint 模式 '{mode}'。必须是 {valid_modes} 中的一个"
+            )
+
+        try:
+            with self.Engine.connect() as conn:
+                # 必须在一个事务中执行 checkpoint 才能生效
+                with conn.begin():
+                    conn.execute(text(f"PRAGMA wal_checkpoint({mode.upper()});"))
+                logger.debug(f"WAL checkpoint 操作（模式: {mode.upper()}）已成功执行")
+        except Exception as e:
+            logger.error(f"执行 WAL checkpoint 操作期间发生错误: {e}", exc_info=True)
+
+    def close_database(self):
+        """
+        关闭所有数据库连接并清理资源
+        """
+        # 检查是否需要并可以执行 checkpoint
+        if self.Engine and configer.get_config("DB_WAL_ENABLE"):
+            logger.info("正在执行数据库关闭前的最终 checkpoint...")
+            # 使用 TRUNCATE 模式以获得最干净的关闭状态
+            self.perform_checkpoint(mode="TRUNCATE")
+
+        if self.Engine:
+            self.Engine.dispose()
+        self.Engine = None
+        self.SessionFactory = None
+        self.ScopedSession = None
+
+    def is_initialized(self) -> bool:
+        """
+        判断数据库是否初始化并连接、创建会话工厂
+
+        :return bool: 已初始化返回 True，否则返回 False
+        """
+        if (
+            self.Engine is None
+            or self.SessionFactory is None
+            or self.ScopedSession is None
+        ):
+            return False
+        return True
+
+
+def get_db() -> Generator:
+    """
+    获取数据库会话，用于WEB请求
+
+    :return Generator: 数据库会话生成器
+    """
+    db = None
+    try:
+        db = ct_db_manager.SessionFactory()
+        yield db
+    finally:
+        if db:
+            db.close()
+
+
+def get_args_db(args: tuple, kwargs: dict) -> Optional[Session]:
+    """
+    从参数中获取数据库Session对象
+
+    :param args (Tuple): 位置参数元组
+    :param kwargs (Dict): 关键字参数字典
+
+    :return Session: 数据库会话对象，未找到返回 None
+    """
+    db = None
+    if args:
+        for arg in args:
+            if isinstance(arg, Session):
+                db = arg
+                break
+    if kwargs:
+        for _, value in kwargs.items():
+            if isinstance(value, Session):
+                db = value
+                break
+    return db
+
+
+def update_args_db(args: tuple, kwargs: dict, db: Session) -> Tuple[tuple, dict]:
+    """
+    更新参数中的数据库Session对象
+
+    关键字传参时更新db的值，否则更新第1或第2个参数
+
+    :param args (Tuple): 位置参数元组
+    :param kwargs (Dict): 关键字参数字典
+    :param db (Session): 数据库会话对象
+
+    :return Tuple: 更新后的 (args, kwargs)
+    """
+    if kwargs and "db" in kwargs:
+        kwargs["db"] = db
+    elif args:
+        if args[0] is None:
+            args = (db, *args[1:])
+        else:
+            args = (args[0], db, *args[2:])
+    return args, kwargs
+
+
+def init_database() -> bool:
+    """
+    初始化数据库操作
+
+    :return bool: 初始化成功返回 True
+
+    :raises RuntimeError: 数据库会话工厂初始化失败时抛出
+    """
+    # 自动初始化数据库管理器
+    if not ct_db_manager.is_initialized():
+        logger.info("数据库管理器未初始化，正在自动初始化...")
+
+        # 延迟导入避免循环导入
+        from .init import init_db, migration_db, init_migration_scripts
+
+        # 初始化数据库
+        ct_db_manager.init_database(db_path=configer.PLUGIN_DB_PATH)
+
+        # 初始化数据库表
+        init_db(engine=ct_db_manager.Engine)
+
+        # 运行迁移脚本
+        if init_migration_scripts():
+            migration_db(
+                db_path=configer.PLUGIN_DB_PATH,
+                script_location=configer.PLUGIN_DATABASE_SCRIPT_LOCATION,
+                version_locations=configer.PLUGIN_DATABASE_VERSION_LOCATIONS,
+            )
+
+    # 检查 ScopedSession 是否可用
+    if ct_db_manager.ScopedSession is None:
+        logger.error("数据库会话工厂初始化失败")
+        raise RuntimeError("数据库会话工厂初始化失败")
+
+    return True
+
+
+def db_update(func):
+    """
+    数据库更新类操作装饰器，第一个参数必须是数据库会话或存在db参数
+    """
+
+    def wrapper(*args, **kwargs):
+        """
+        自动获取数据库会话、执行更新操作并处理重试逻辑
+
+        :param args: 原始位置参数
+        :param kwargs: 原始关键字参数
+
+        :return: 被装饰函数的返回值
+
+        :raises OperationalError: 重试耗尽后仍无法获取数据库锁时抛出
+        """
+        # 是否关闭数据库会话
+        _close_db = False
+        db = get_args_db(args, kwargs)
+        if not db:
+            init_database()
+            # 如果没有获取到数据库会话，创建一个
+            db = ct_db_manager.ScopedSession()
+            # 标记需要关闭数据库会话
+            _close_db = True
+            # 更新参数中的数据库会话
+            args, kwargs = update_args_db(args, kwargs, db)
+
+        max_retries = 3
+        retry_delay = 0.1
+        last_err = None
+
+        try:
+            for attempt in range(max_retries):
+                try:
+                    # 执行函数
+                    result = func(*args, **kwargs)
+                    # 提交事务
+                    db.commit()
+                    return result
+                except OperationalError as err:
+                    # 回滚事务
+                    db.rollback()
+                    last_err = err
+                    if not (
+                        isinstance(err.orig, SqlOperationalError)
+                        and err.orig.sqlite_errorcode == SQLITE_BUSY
+                    ):
+                        raise err
+
+                    logger.warning(
+                        f"数据库锁定，第 {attempt + 1} 次重试，等待 {retry_delay}s..."
+                    )
+                    sleep(retry_delay)
+                    retry_delay *= 2
+            if last_err:
+                raise last_err
+        except Exception as err:
+            if not isinstance(err, OperationalError):
+                db.rollback()
+            raise err
+        finally:
+            # 关闭数据库会话
+            if _close_db:
+                db.close()
+
+    return wrapper
+
+
+def db_query(func):
+    """
+    数据库查询操作装饰器，第一个参数必须是数据库会话或存在db参数
+    注意：db.query列表数据时，需要转换为list返回
+    """
+
+    def wrapper(*args, **kwargs):
+        """
+        自动获取数据库会话、执行查询操作并管理会话生命周期
+
+        :param args: 原始位置参数
+        :param kwargs: 原始关键字参数
+
+        :return: 被装饰函数的返回值
+        """
+        # 是否关闭数据库会话
+        _close_db = False
+        # 从参数中获取数据库会话
+        db = get_args_db(args, kwargs)
+        if not db:
+            init_database()
+            # 如果没有获取到数据库会话，创建一个
+            db = ct_db_manager.ScopedSession()
+            # 标记需要关闭数据库会话
+            _close_db = True
+            # 更新参数中的数据库会话
+            args, kwargs = update_args_db(args, kwargs, db)
+        try:
+            # 执行函数
+            result = func(*args, **kwargs)
+        except Exception as err:
+            raise err
+        finally:
+            # 关闭数据库会话
+            if _close_db:
+                db.close()
+        return result
+
+    return wrapper
+
+
+class P115StrmHelperBase(DeclarativeBase):
+    """
+    P115StrmHelper 数据库模型基类，提供通用的 CRUD 操作方法
+    """
+
+    id: Any
+    __name__: str
+
+    @db_update
+    def create(self, db: Session):
+        """
+        创建新记录并添加到数据库
+
+        :param db (Session): 数据库会话
+        """
+        db.add(self)
+
+    @classmethod
+    @db_query
+    def get(cls, db: Session, rid: int) -> Self:
+        """
+        根据主键 ID 查询单条记录
+
+        :param db (Session): 数据库会话
+        :param rid (int): 记录 ID
+
+        :return Self: 匹配的模型实例，未找到时返回 None
+        """
+        return db.query(cls).filter(and_(cls.id == rid)).first()
+
+    @db_update
+    def update(self, db: Session, payload: dict):
+        """
+        更新当前记录的部分字段
+
+        :param db (Session): 数据库会话
+        :param payload (Dict): 要更新的字段字典，值为 None 的键会被过滤
+        """
+        payload = {k: v for k, v in payload.items() if v is not None}
+        for key, value in payload.items():
+            setattr(self, key, value)
+        if inspect(self).detached:
+            db.add(self)
+
+    @classmethod
+    @db_update
+    def delete(cls, db: Session, rid):
+        """
+        根据主键 ID 删除记录
+
+        :param db (Session): 数据库会话
+        :param rid (int): 记录 ID
+        """
+        db.query(cls).filter(and_(cls.id == rid)).delete()
+
+    @classmethod
+    @db_update
+    def truncate(cls, db: Session):
+        """
+        清空当前模型对应的数据库表所有记录
+
+        :param db (Session): 数据库会话
+        """
+        db.query(cls).delete()
+
+    @classmethod
+    @db_query
+    def list(cls, db: Session) -> List[Self]:
+        """
+        查询当前模型的所有记录
+
+        :param db (Session): 数据库会话
+
+        :return List: 所有记录列表
+        """
+        result = db.query(cls).all()
+        return list(result)
+
+    def to_dict(self):
+        """
+        将模型实例的所有数据库列转换为字典
+
+        :return Dict: 列名到列值的字典映射
+        """
+        return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}  # noqa
+
+    @declared_attr
+    def __tablename__(self) -> str:
+        return self.__name__.lower()
+
+
+class DbOper:
+    """
+    数据库操作基类
+    """
+
+    _db: Session = None
+
+    def __init__(self, db: Session = None):
+        """
+        初始化数据库操作基类
+
+        :param db (Session): 数据库会话，可选
+        """
+        self._db = db
+
+
+# 全局数据库会话
+ct_db_manager = _DBManager()

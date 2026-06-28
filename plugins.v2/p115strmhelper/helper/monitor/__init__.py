@@ -1,1 +1,245 @@
-ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gY29sbGVjdGlvbnMgaW1wb3J0IGRlZmF1bHRkaWN0CmZyb20gcmUgaW1wb3J0IHNlYXJjaCBhcyByZV9zZWFyY2gsIElHTk9SRUNBU0UKZnJvbSBzaHV0aWwgaW1wb3J0IHJtdHJlZQpmcm9tIHRocmVhZGluZyBpbXBvcnQgTG9jawpmcm9tIHRyYWNlYmFjayBpbXBvcnQgZm9ybWF0X2V4Ywpmcm9tIHR5cGluZyBpbXBvcnQgT3B0aW9uYWwKZnJvbSB0aW1lIGltcG9ydCBzbGVlcAoKZnJvbSBwMTE1Y2xpZW50IGltcG9ydCBQMTE1Q2xpZW50CmZyb20gcDExNWNsaWVudC50b29sIGltcG9ydCBnZXRfYXR0ciwgZ2V0X2lkX3RvX3BhdGgKCmZyb20gYXBwLmNoYWluLnN0b3JhZ2UgaW1wb3J0IFN0b3JhZ2VDaGFpbgpmcm9tIGFwcC5sb2cgaW1wb3J0IGxvZ2dlcgpmcm9tIGFwcC51dGlscy5zeXN0ZW0gaW1wb3J0IFN5c3RlbVV0aWxzCmZyb20gYXBwLnNjaGVtYXMgaW1wb3J0IEZpbGVJdGVtCgpmcm9tIC4uLmNvcmUuY29uZmlnIGltcG9ydCBjb25maWdlcgpmcm9tIC4uLmhlbHBlci5zdHJtIGltcG9ydCBNb25pdG9yU3RybUhlbHBlcgpmcm9tIC4uLnV0aWxzLnNlbnRyeSBpbXBvcnQgc2VudHJ5X21hbmFnZXIKCgpkaXJlY3RvcnlfdXBsb2FkX2RpY3QgPSBkZWZhdWx0ZGljdChMb2NrKQoKCkBzZW50cnlfbWFuYWdlci5jYXB0dXJlX3BsdWdpbl9leGNlcHRpb25zCmRlZiBwcm9jZXNzX2ZpbGVfY2hhbmdlKGNsaWVudDogUDExNUNsaWVudCwgZmlsZV9wYXRoOiBzdHIsIG1vbl9wYXRoOiBzdHIpIC0+IE5vbmU6CiAgICAiIiIKICAgIOWkhOeQhiB3YXRjaGZpbGVzIOS6p+eUn+eahOaWh+S7tuWPmOabtAoKICAgIDpwYXJhbSBjbGllbnQgKFAxMTVDbGllbnQpOiAxMTUg5a6i5oi356uvCiAgICA6cGFyYW0gZmlsZV9wYXRoIChzdHIpOiDkuovku7bmlofku7bot6/lvoQKICAgIDpwYXJhbSBtb25fcGF0aCAoc3RyKTog55uR5o6n55uu5b2VCiAgICAiIiIKICAgIHAgPSBQYXRoKGZpbGVfcGF0aCkKICAgIGlmIHAuZXhpc3RzKCkgYW5kIHAuaXNfZGlyKCk6CiAgICAgICAgcmV0dXJuCiAgICBsb2dnZXIuZGVidWcoZiLjgJDnm67lvZXkuIrkvKDjgJHmlofku7Yg5Yib5bu6OiB7ZmlsZV9wYXRofSIpCiAgICBoYW5kbGVfZmlsZShjbGllbnQsIGZpbGVfcGF0aCwgbW9uX3BhdGgpCgoKQHNlbnRyeV9tYW5hZ2VyLmNhcHR1cmVfcGx1Z2luX2V4Y2VwdGlvbnMKZGVmIGhhbmRsZV9maWxlKGNsaWVudDogUDExNUNsaWVudCwgZXZlbnRfcGF0aDogc3RyLCBtb25fcGF0aDogc3RyKToKICAgICIiIgogICAg5ZCM5q2l5LiA5Liq5paH5Lu2CgogICAgOnBhcmFtIGNsaWVudCAoUDExNUNsaWVudCk6IDExNSDlrqLmiLfnq68KICAgIDpwYXJhbSBldmVudF9wYXRoIChzdHIpOiDkuovku7bmlofku7bot6/lvoQKICAgIDpwYXJhbSBtb25fcGF0aCAoc3RyKTog55uR5o6n55uu5b2VCiAgICAiIiIKICAgIGZpbGVfcGF0aCA9IFBhdGgoZXZlbnRfcGF0aCkKICAgIHN0b3JhZ2VfY2hhaW4gPSBTdG9yYWdlQ2hhaW4oKQogICAgdHJ5OgogICAgICAgIGlmIG5vdCBmaWxlX3BhdGguZXhpc3RzKCk6CiAgICAgICAgICAgIHJldHVybgogICAgICAgICMg5YWo56iL5Yqg6ZSBCiAgICAgICAgd2l0aCBkaXJlY3RvcnlfdXBsb2FkX2RpY3Rbc3RyKGZpbGVfcGF0aC5hYnNvbHV0ZSgpKV06CiAgICAgICAgICAgICMg5Zue5pS256uZ6ZqQ6JeP5paH5Lu25LiN5aSE55CGCiAgICAgICAgICAgIGlmICgKICAgICAgICAgICAgICAgIGV2ZW50X3BhdGguZmluZCgiL0BSZWN5Y2xlLyIpICE9IC0xCiAgICAgICAgICAgICAgICBvciBldmVudF9wYXRoLmZpbmQoIi8jcmVjeWNsZS8iKSAhPSAtMQogICAgICAgICAgICAgICAgb3IgZXZlbnRfcGF0aC5maW5kKCIvLiIpICE9IC0xCiAgICAgICAgICAgICAgICBvciBldmVudF9wYXRoLmZpbmQoIi9AZWFEaXIiKSAhPSAtMQogICAgICAgICAgICApOgogICAgICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKGYi44CQ55uu5b2V5LiK5Lyg44CRe2V2ZW50X3BhdGh9IOaYr+WbnuaUtuermeaIlumakOiXj+eahOaWh+S7tiIpCiAgICAgICAgICAgICAgICByZXR1cm4KCiAgICAgICAgICAgICMg6JOd5YWJ55uu5b2V5LiN5aSE55CGCiAgICAgICAgICAgIGlmIHJlX3NlYXJjaChyIkJETVZbL1xcXVNUUkVBTSIsIGV2ZW50X3BhdGgsIElHTk9SRUNBU0UpOgogICAgICAgICAgICAgICAgcmV0dXJuCgogICAgICAgICAgICAjIOWFiOWIpOaWreaWh+S7tuaYr+WQpuWtmOWcqAogICAgICAgICAgICBmaWxlX2l0ZW0gPSBzdG9yYWdlX2NoYWluLmdldF9maWxlX2l0ZW0oc3RvcmFnZT0ibG9jYWwiLCBwYXRoPWZpbGVfcGF0aCkKICAgICAgICAgICAgaWYgbm90IGZpbGVfaXRlbToKICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuKGYi44CQ55uu5b2V5LiK5Lyg44CRe2V2ZW50X3BhdGh9IOacquaJvuWIsOWvueW6lOeahOaWh+S7tiIpCiAgICAgICAgICAgICAgICByZXR1cm4KCiAgICAgICAgICAgIGRlbGV0ZSA9IEZhbHNlCiAgICAgICAgICAgIGRlc3RfcmVtb3RlID0gIiIKICAgICAgICAgICAgZGVzdF9sb2NhbCA9ICIiCiAgICAgICAgICAgIGRlc3Rfc3RybSA9ICIiCiAgICAgICAgICAgIGZvciBpdGVtIGluIGNvbmZpZ2VyLmdldF9jb25maWcoImRpcmVjdG9yeV91cGxvYWRfcGF0aCIpOgogICAgICAgICAgICAgICAgaWYgbm90IGl0ZW06CiAgICAgICAgICAgICAgICAgICAgY29udGludWUKICAgICAgICAgICAgICAgIGlmIG1vbl9wYXRoID09IGl0ZW0uZ2V0KCJzcmMiLCAiIik6CiAgICAgICAgICAgICAgICAgICAgZGVsZXRlID0gaXRlbS5nZXQoImRlbGV0ZSIsIEZhbHNlKQogICAgICAgICAgICAgICAgICAgIGRlc3RfcmVtb3RlID0gaXRlbS5nZXQoImRlc3RfcmVtb3RlIiwgIiIpCiAgICAgICAgICAgICAgICAgICAgZGVzdF9sb2NhbCA9IGl0ZW0uZ2V0KCJkZXN0X2xvY2FsIiwgIiIpCiAgICAgICAgICAgICAgICAgICAgZGVzdF9zdHJtID0gaXRlbS5nZXQoImRlc3Rfc3RybSIsICIiKSBvciAiIgogICAgICAgICAgICAgICAgICAgIGJyZWFrCgogICAgICAgICAgICBpZiBmaWxlX3BhdGguc3VmZml4Lmxvd2VyKCkgaW4gWwogICAgICAgICAgICAgICAgZiIue2V4dC5zdHJpcCgpfSIKICAgICAgICAgICAgICAgIGZvciBleHQgaW4gY29uZmlnZXIuZ2V0X2NvbmZpZygiZGlyZWN0b3J5X3VwbG9hZF91cGxvYWRleHQiKQogICAgICAgICAgICAgICAgLnJlcGxhY2UoIu+8jCIsICIsIikKICAgICAgICAgICAgICAgIC5zcGxpdCgiLCIpCiAgICAgICAgICAgIF06CiAgICAgICAgICAgICAgICAjIOWkhOeQhuS4iuS8oAogICAgICAgICAgICAgICAgaWYgbm90IGRlc3RfcmVtb3RlOgogICAgICAgICAgICAgICAgICAgIGxvZ2dlci5lcnJvcihmIuOAkOebruW9leS4iuS8oOOAkXtmaWxlX3BhdGh9IOacquaJvuWIsOWvueW6lOeahOS4iuS8oOe9keebmOebruW9lSIpCiAgICAgICAgICAgICAgICAgICAgcmV0dXJuCgogICAgICAgICAgICAgICAgcmVsID0gUGF0aChmaWxlX3BhdGgpLnJlbGF0aXZlX3RvKG1vbl9wYXRoKQogICAgICAgICAgICAgICAgaWYgY29uZmlnZXIuZGlyZWN0b3J5X3VwbG9hZF9jbG91ZGRyaXZlMl9jb25maWcuZW5hYmxlZDoKICAgICAgICAgICAgICAgICAgICB1cGxvYWRfc3RvcmFnZSA9ICJDbG91ZERyaXZl5YKo5a2YIgogICAgICAgICAgICAgICAgICAgIHRhcmdldF9maWxlX3BhdGggPSAoCiAgICAgICAgICAgICAgICAgICAgICAgIFBhdGgoY29uZmlnZXIuZGlyZWN0b3J5X3VwbG9hZF9jbG91ZGRyaXZlMl9jb25maWcucHJlZml4KQogICAgICAgICAgICAgICAgICAgICAgICAvIGRlc3RfcmVtb3RlLnN0cmlwKCIvIikKICAgICAgICAgICAgICAgICAgICAgICAgLyByZWwKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgICAgIHVwbG9hZF9zdG9yYWdlID0gY29uZmlnZXIuc3RvcmFnZV9tb2R1bGUKICAgICAgICAgICAgICAgICAgICB0YXJnZXRfZmlsZV9wYXRoID0gUGF0aChkZXN0X3JlbW90ZSkgLyByZWwKCiAgICAgICAgICAgICAgICAjIOe9keebmOebruW9leWIm+W7uua1geeoiwogICAgICAgICAgICAgICAgZGVmIF9fZmluZF9kaXIoX2ZpbGVpdGVtOiBGaWxlSXRlbSwgX25hbWU6IHN0cikgLT4gT3B0aW9uYWxbRmlsZUl0ZW1dOgogICAgICAgICAgICAgICAgICAgICIiIgogICAgICAgICAgICAgICAgICAgIOafpeaJvuS4i+e6p+ebruW9leS4reWMuemFjeWQjeensOeahOebruW9lQogICAgICAgICAgICAgICAgICAgICIiIgogICAgICAgICAgICAgICAgICAgIGZvciBzdWJfZm9sZGVyIGluIHN0b3JhZ2VfY2hhaW4ubGlzdF9maWxlcyhfZmlsZWl0ZW0pOgogICAgICAgICAgICAgICAgICAgICAgICBpZiBzdWJfZm9sZGVyLnR5cGUgIT0gImRpciI6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICAgICAgICAgICAgICBpZiBzdWJfZm9sZGVyLm5hbWUgPT0gX25hbWU6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gc3ViX2ZvbGRlcgogICAgICAgICAgICAgICAgICAgIHJldHVybiBOb25lCgogICAgICAgICAgICAgICAgdGFyZ2V0X2ZpbGVpdGVtID0gc3RvcmFnZV9jaGFpbi5nZXRfZmlsZV9pdGVtKAogICAgICAgICAgICAgICAgICAgIHN0b3JhZ2U9dXBsb2FkX3N0b3JhZ2UsIHBhdGg9dGFyZ2V0X2ZpbGVfcGF0aC5wYXJlbnQKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIGlmIG5vdCB0YXJnZXRfZmlsZWl0ZW06CiAgICAgICAgICAgICAgICAgICAgIyDpgJDnuqfmn6Xmib7lkozliJvlu7rnm67lvZUKICAgICAgICAgICAgICAgICAgICB0YXJnZXRfZmlsZWl0ZW0gPSBGaWxlSXRlbShzdG9yYWdlPXVwbG9hZF9zdG9yYWdlLCBwYXRoPSIvIikKICAgICAgICAgICAgICAgICAgICBmb3IgcGFydCBpbiB0YXJnZXRfZmlsZV9wYXRoLnBhcmVudC5wYXJ0c1sxOl06CiAgICAgICAgICAgICAgICAgICAgICAgIGRpcl9maWxlID0gX19maW5kX2Rpcih0YXJnZXRfZmlsZWl0ZW0sIHBhcnQpCiAgICAgICAgICAgICAgICAgICAgICAgIGlmIGRpcl9maWxlOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0X2ZpbGVpdGVtID0gZGlyX2ZpbGUKICAgICAgICAgICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRpcl9maWxlID0gc3RvcmFnZV9jaGFpbi5jcmVhdGVfZm9sZGVyKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRhcmdldF9maWxlaXRlbSwgcGFydAogICAgICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgbm90IGRpcl9maWxlOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZiLjgJDnm67lvZXkuIrkvKDjgJHliJvlu7rnm67lvZUge3RhcmdldF9maWxlaXRlbS5wYXRofXtwYXJ0fSDlpLHotKXvvIEiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0X2ZpbGVpdGVtID0gZGlyX2ZpbGUKCiAgICAgICAgICAgICAgICAjIOS4iuS8oOa1geeoiwogICAgICAgICAgICAgICAgc3RvcmFnZV9jaGFpbi51cGxvYWRfZmlsZSh0YXJnZXRfZmlsZWl0ZW0sIGZpbGVfcGF0aCwgZmlsZV9wYXRoLm5hbWUpCiAgICAgICAgICAgICAgICB1cGxvYWRlZF9maWxlX2l0ZW0gPSBOb25lCiAgICAgICAgICAgICAgICBmb3IgYXR0ZW1wdCBpbiByYW5nZSgzKToKICAgICAgICAgICAgICAgICAgICBzbGVlcCg1ICogKDIqKmF0dGVtcHQpKQogICAgICAgICAgICAgICAgICAgIHVwbG9hZGVkX2ZpbGVfaXRlbSA9IHN0b3JhZ2VfY2hhaW4uZ2V0X2ZpbGVfaXRlbSgKICAgICAgICAgICAgICAgICAgICAgICAgc3RvcmFnZT11cGxvYWRfc3RvcmFnZSwgcGF0aD10YXJnZXRfZmlsZV9wYXRoCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIGlmIHVwbG9hZGVkX2ZpbGVfaXRlbToKICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWsKICAgICAgICAgICAgICAgIGlmIG5vdCB1cGxvYWRlZF9maWxlX2l0ZW0gYW5kIHVwbG9hZF9zdG9yYWdlICE9ICJDbG91ZERyaXZl5YKo5a2YIjoKICAgICAgICAgICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICAgICAgICAgIGZpZCA9IGdldF9pZF90b19wYXRoKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xpZW50LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0X2ZpbGVfcGF0aC5hc19wb3NpeCgpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgKipjb25maWdlci5nZXRfaW9zX3VhX2FwcChhcHA9RmFsc2UpLAogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIGF0dHIgPSBnZXRfYXR0cigKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsaWVudCwgZmlkLCAqKmNvbmZpZ2VyLmdldF9pb3NfdWFfYXBwKGFwcD1GYWxzZSkKICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgICAgICB1cGxvYWRlZF9maWxlX2l0ZW0gPSBGaWxlSXRlbSgKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0b3JhZ2U9dXBsb2FkX3N0b3JhZ2UsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWxlaWQ9c3RyKGF0dHJbImlkIl0pLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgcGF0aD10YXJnZXRfZmlsZV9wYXRoLmFzX3Bvc2l4KCksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlPSJmaWxlIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIG5hbWU9YXR0clsibmFtZSJdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgYmFzZW5hbWU9UGF0aChhdHRyWyJuYW1lIl0pLnN0ZW0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHRlbnNpb249UGF0aChhdHRyWyJuYW1lIl0pLnN1ZmZpeFsxOl0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIFBhdGgoYXR0clsibmFtZSJdKS5zdWZmaXgKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVsc2UgTm9uZSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpY2tjb2RlPWF0dHJbInBpY2tjb2RlIl0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplPWF0dHJbInNpemUiXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1vZGlmeV90aW1lPWF0dHJbIm10aW1lIl0sCiAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uOgogICAgICAgICAgICAgICAgICAgICAgICBwYXNzCiAgICAgICAgICAgICAgICBpZiB1cGxvYWRlZF9maWxlX2l0ZW06CiAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmluZm8oCiAgICAgICAgICAgICAgICAgICAgICAgIGYi44CQ55uu5b2V5LiK5Lyg44CRe2ZpbGVfcGF0aH0g5LiK5Lyg5Yiw572R55uYIHt0YXJnZXRfZmlsZV9wYXRofSDmiJDlip8gIgogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBpZiBkZXN0X3N0cm06CiAgICAgICAgICAgICAgICAgICAgICAgIGlmIHVwbG9hZF9zdG9yYWdlID09ICJDbG91ZERyaXZl5YKo5a2YIjoKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNldGF0dHIoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdXBsb2FkZWRfZmlsZV9pdGVtLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJwaWNrY29kZSIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xpZW50LnRvX3BpY2tjb2RlKGludCh1cGxvYWRlZF9maWxlX2l0ZW0uZmlsZWlkKSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIE1vbml0b3JTdHJtSGVscGVyLmdlbmVyYXRlX3N0cm1fYWZ0ZXJfdXBsb2FkKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgdXBsb2FkZWRfZmlsZV9pdGVtPXVwbG9hZGVkX2ZpbGVfaXRlbSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRlc3Rfc3RybT1kZXN0X3N0cm0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBtb25fcGF0aD1tb25fcGF0aCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxvY2FsX2ZpbGVfcGF0aD1maWxlX3BhdGgsCiAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi44CQ55uu5b2V5LiK5Lyg44CRe2ZpbGVfcGF0aH0g5LiK5Lyg572R55uY5aSx6LSlIikKICAgICAgICAgICAgICAgICAgICByZXR1cm4KCiAgICAgICAgICAgIGVsaWYgZmlsZV9wYXRoLnN1ZmZpeC5sb3dlcigpIGluIFsKICAgICAgICAgICAgICAgIGYiLntleHQuc3RyaXAoKX0iCiAgICAgICAgICAgICAgICBmb3IgZXh0IGluIGNvbmZpZ2VyLmdldF9jb25maWcoImRpcmVjdG9yeV91cGxvYWRfY29weWV4dCIpCiAgICAgICAgICAgICAgICAucmVwbGFjZSgi77yMIiwgIiwiKQogICAgICAgICAgICAgICAgLnNwbGl0KCIsIikKICAgICAgICAgICAgXToKICAgICAgICAgICAgICAgICMg5aSE55CG6Z2e5LiK5Lyg5paH5Lu2CiAgICAgICAgICAgICAgICBpZiBkZXN0X2xvY2FsOgogICAgICAgICAgICAgICAgICAgIHRhcmdldF9maWxlX3BhdGggPSBQYXRoKGRlc3RfbG9jYWwpIC8gUGF0aChmaWxlX3BhdGgpLnJlbGF0aXZlX3RvKAogICAgICAgICAgICAgICAgICAgICAgICBtb25fcGF0aAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICAjIOWIm+W7uuacrOWcsOebruW9lQogICAgICAgICAgICAgICAgICAgIHRhcmdldF9maWxlX3BhdGgucGFyZW50Lm1rZGlyKHBhcmVudHM9VHJ1ZSwgZXhpc3Rfb2s9VHJ1ZSkKICAgICAgICAgICAgICAgICAgICAjIOWkjeWItuaWh+S7tgogICAgICAgICAgICAgICAgICAgIHN0YXR1cywgbXNnID0gU3lzdGVtVXRpbHMuY29weShmaWxlX3BhdGgsIHRhcmdldF9maWxlX3BhdGgpCiAgICAgICAgICAgICAgICAgICAgaWYgc3RhdHVzID09IDA6CiAgICAgICAgICAgICAgICAgICAgICAgIGxvZ2dlci5pbmZvKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgZiLjgJDnm67lvZXkuIrkvKDjgJF7ZmlsZV9wYXRofSDlpI3liLbliLAge3RhcmdldF9maWxlX3BhdGh9IOaIkOWKnyAiCiAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJDnm67lvZXkuIrkvKDjgJF7ZmlsZV9wYXRofSDlpI3liLblpLHotKU6IHttc2d9IikKICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICAjIOacquWMuemFjeWQjue8gOeahOaWh+S7tuebtOaOpei3s+i/hwogICAgICAgICAgICAgICAgcmV0dXJuCgogICAgICAgICAgICAjIOWkhOeQhua6kOaWh+S7tuaYr+WQpuWIoOmZpAogICAgICAgICAgICBpZiBkZWxldGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkOebruW9leS4iuS8oOOAkeWIoOmZpOa6kOaWh+S7tu+8mntmaWxlX3BhdGh9IikKICAgICAgICAgICAgICAgIGZpbGVfcGF0aC51bmxpbmsobWlzc2luZ19vaz1UcnVlKQogICAgICAgICAgICAgICAgZm9yIGZpbGVfZGlyIGluIGZpbGVfcGF0aC5wYXJlbnRzOgogICAgICAgICAgICAgICAgICAgIGlmIGxlbihzdHIoZmlsZV9kaXIpKSA8PSBsZW4oc3RyKFBhdGgobW9uX3BhdGgpKSk6CiAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrCiAgICAgICAgICAgICAgICAgICAgZmlsZXMgPSBTeXN0ZW1VdGlscy5saXN0X2ZpbGVzKGZpbGVfZGlyKQogICAgICAgICAgICAgICAgICAgIGlmIG5vdCBmaWxlczoKICAgICAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLndhcm4oZiLjgJDnm67lvZXkuIrkvKDjgJHliKDpmaTnqbrnm67lvZXvvJp7ZmlsZV9kaXJ9IikKICAgICAgICAgICAgICAgICAgICAgICAgcm10cmVlKGZpbGVfZGlyLCBpZ25vcmVfZXJyb3JzPVRydWUpCgogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIGxvZ2dlci5lcnJvcihmIuOAkOebruW9leS4iuS8oOOAkeebruW9leebkeaOp+WPkeeUn+mUmeivr++8mntzdHIoZSl9IC0ge2Zvcm1hdF9leGMoKX0iKQogICAgICAgIHJldHVybgo=
+from pathlib import Path
+from collections import defaultdict
+from re import search as re_search, IGNORECASE
+from shutil import rmtree
+from threading import Lock
+from traceback import format_exc
+from typing import Optional
+from time import sleep
+
+from p115client import P115Client
+from p115client.tool import get_attr, get_id_to_path
+
+from app.chain.storage import StorageChain
+from app.log import logger
+from app.utils.system import SystemUtils
+from app.schemas import FileItem
+
+from ...core.config import configer
+from ...helper.strm import MonitorStrmHelper
+from ...utils.sentry import sentry_manager
+
+
+directory_upload_dict = defaultdict(Lock)
+
+
+@sentry_manager.capture_plugin_exceptions
+def process_file_change(client: P115Client, file_path: str, mon_path: str) -> None:
+    """
+    处理 watchfiles 产生的文件变更
+
+    :param client (P115Client): 115 客户端
+    :param file_path (str): 事件文件路径
+    :param mon_path (str): 监控目录
+    """
+    p = Path(file_path)
+    if p.exists() and p.is_dir():
+        return
+    logger.debug(f"【目录上传】文件 创建: {file_path}")
+    handle_file(client, file_path, mon_path)
+
+
+@sentry_manager.capture_plugin_exceptions
+def handle_file(client: P115Client, event_path: str, mon_path: str):
+    """
+    同步一个文件
+
+    :param client (P115Client): 115 客户端
+    :param event_path (str): 事件文件路径
+    :param mon_path (str): 监控目录
+    """
+    file_path = Path(event_path)
+    storage_chain = StorageChain()
+    try:
+        if not file_path.exists():
+            return
+        # 全程加锁
+        with directory_upload_dict[str(file_path.absolute())]:
+            # 回收站隐藏文件不处理
+            if (
+                event_path.find("/@Recycle/") != -1
+                or event_path.find("/#recycle/") != -1
+                or event_path.find("/.") != -1
+                or event_path.find("/@eaDir") != -1
+            ):
+                logger.debug(f"【目录上传】{event_path} 是回收站或隐藏的文件")
+                return
+
+            # 蓝光目录不处理
+            if re_search(r"BDMV[/\\]STREAM", event_path, IGNORECASE):
+                return
+
+            # 先判断文件是否存在
+            file_item = storage_chain.get_file_item(storage="local", path=file_path)
+            if not file_item:
+                logger.warn(f"【目录上传】{event_path} 未找到对应的文件")
+                return
+
+            delete = False
+            dest_remote = ""
+            dest_local = ""
+            dest_strm = ""
+            for item in configer.get_config("directory_upload_path"):
+                if not item:
+                    continue
+                if mon_path == item.get("src", ""):
+                    delete = item.get("delete", False)
+                    dest_remote = item.get("dest_remote", "")
+                    dest_local = item.get("dest_local", "")
+                    dest_strm = item.get("dest_strm", "") or ""
+                    break
+
+            if file_path.suffix.lower() in [
+                f".{ext.strip()}"
+                for ext in configer.get_config("directory_upload_uploadext")
+                .replace("，", ",")
+                .split(",")
+            ]:
+                # 处理上传
+                if not dest_remote:
+                    logger.error(f"【目录上传】{file_path} 未找到对应的上传网盘目录")
+                    return
+
+                rel = Path(file_path).relative_to(mon_path)
+                if configer.directory_upload_clouddrive2_config.enabled:
+                    upload_storage = "CloudDrive储存"
+                    target_file_path = (
+                        Path(configer.directory_upload_clouddrive2_config.prefix)
+                        / dest_remote.strip("/")
+                        / rel
+                    )
+                else:
+                    upload_storage = configer.storage_module
+                    target_file_path = Path(dest_remote) / rel
+
+                # 网盘目录创建流程
+                def __find_dir(_fileitem: FileItem, _name: str) -> Optional[FileItem]:
+                    """
+                    查找下级目录中匹配名称的目录
+                    """
+                    for sub_folder in storage_chain.list_files(_fileitem):
+                        if sub_folder.type != "dir":
+                            continue
+                        if sub_folder.name == _name:
+                            return sub_folder
+                    return None
+
+                target_fileitem = storage_chain.get_file_item(
+                    storage=upload_storage, path=target_file_path.parent
+                )
+                if not target_fileitem:
+                    # 逐级查找和创建目录
+                    target_fileitem = FileItem(storage=upload_storage, path="/")
+                    for part in target_file_path.parent.parts[1:]:
+                        dir_file = __find_dir(target_fileitem, part)
+                        if dir_file:
+                            target_fileitem = dir_file
+                        else:
+                            dir_file = storage_chain.create_folder(
+                                target_fileitem, part
+                            )
+                            if not dir_file:
+                                logger.error(
+                                    f"【目录上传】创建目录 {target_fileitem.path}{part} 失败！"
+                                )
+                                return
+                            target_fileitem = dir_file
+
+                # 上传流程
+                storage_chain.upload_file(target_fileitem, file_path, file_path.name)
+                uploaded_file_item = None
+                for attempt in range(3):
+                    sleep(5 * (2**attempt))
+                    uploaded_file_item = storage_chain.get_file_item(
+                        storage=upload_storage, path=target_file_path
+                    )
+                    if uploaded_file_item:
+                        break
+                if not uploaded_file_item and upload_storage != "CloudDrive储存":
+                    try:
+                        fid = get_id_to_path(
+                            client,
+                            target_file_path.as_posix(),
+                            **configer.get_ios_ua_app(app=False),
+                        )
+                        attr = get_attr(
+                            client, fid, **configer.get_ios_ua_app(app=False)
+                        )
+                        uploaded_file_item = FileItem(
+                            storage=upload_storage,
+                            fileid=str(attr["id"]),
+                            path=target_file_path.as_posix(),
+                            type="file",
+                            name=attr["name"],
+                            basename=Path(attr["name"]).stem,
+                            extension=Path(attr["name"]).suffix[1:]
+                            if Path(attr["name"]).suffix
+                            else None,
+                            pickcode=attr["pickcode"],
+                            size=attr["size"],
+                            modify_time=attr["mtime"],
+                        )
+                    except Exception:
+                        pass
+                if uploaded_file_item:
+                    logger.info(
+                        f"【目录上传】{file_path} 上传到网盘 {target_file_path} 成功 "
+                    )
+                    if dest_strm:
+                        if upload_storage == "CloudDrive储存":
+                            setattr(
+                                uploaded_file_item,
+                                "pickcode",
+                                client.to_pickcode(int(uploaded_file_item.fileid)),
+                            )
+                        MonitorStrmHelper.generate_strm_after_upload(
+                            uploaded_file_item=uploaded_file_item,
+                            dest_strm=dest_strm,
+                            mon_path=mon_path,
+                            local_file_path=file_path,
+                        )
+                else:
+                    logger.error(f"【目录上传】{file_path} 上传网盘失败")
+                    return
+
+            elif file_path.suffix.lower() in [
+                f".{ext.strip()}"
+                for ext in configer.get_config("directory_upload_copyext")
+                .replace("，", ",")
+                .split(",")
+            ]:
+                # 处理非上传文件
+                if dest_local:
+                    target_file_path = Path(dest_local) / Path(file_path).relative_to(
+                        mon_path
+                    )
+                    # 创建本地目录
+                    target_file_path.parent.mkdir(parents=True, exist_ok=True)
+                    # 复制文件
+                    status, msg = SystemUtils.copy(file_path, target_file_path)
+                    if status == 0:
+                        logger.info(
+                            f"【目录上传】{file_path} 复制到 {target_file_path} 成功 "
+                        )
+                    else:
+                        logger.error(f"【目录上传】{file_path} 复制失败: {msg}")
+                        return
+            else:
+                # 未匹配后缀的文件直接跳过
+                return
+
+            # 处理源文件是否删除
+            if delete:
+                logger.info(f"【目录上传】删除源文件：{file_path}")
+                file_path.unlink(missing_ok=True)
+                for file_dir in file_path.parents:
+                    if len(str(file_dir)) <= len(str(Path(mon_path))):
+                        break
+                    files = SystemUtils.list_files(file_dir)
+                    if not files:
+                        logger.warn(f"【目录上传】删除空目录：{file_dir}")
+                        rmtree(file_dir, ignore_errors=True)
+
+    except Exception as e:
+        logger.error(f"【目录上传】目录监控发生错误：{str(e)} - {format_exc()}")
+        return

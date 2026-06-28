@@ -1,1 +1,197 @@
-dXNlIGNyYXRlOjp0eXBlczo6KjsKdXNlIGFob19jb3Jhc2ljazo6e0Fob0NvcmFzaWNrLCBBaG9Db3Jhc2lja0J1aWxkZXIsIEJ1aWxkRXJyb3J9Owp1c2UgcmF5b246OnByZWx1ZGU6Oio7CnVzZSBzdGQ6OnBhdGg6OlBhdGg7CgpwdWIgc3RydWN0IFByb2Nlc3NvciB7CiAgICBjb25maWc6IENvbmZpZywKICAgIHN0cm1fYmxhY2tsaXN0X2F1dG9tYXRvbjogQWhvQ29yYXNpY2ssCiAgICBtZWRpYWluZm9fd2hpdGVsaXN0X2F1dG9tYXRvbjogQWhvQ29yYXNpY2ssCiAgICBtZWRpYWluZm9fYmxhY2tsaXN0X2F1dG9tYXRvbjogQWhvQ29yYXNpY2ssCn0KCmltcGwgUHJvY2Vzc29yIHsKICAgIHB1YiBmbiBuZXcoY29uZmlnOiBDb25maWcpIC0+IFJlc3VsdDxTZWxmLCBCdWlsZEVycm9yPiB7CiAgICAgICAgbGV0IHN0cm1fYmxhY2tsaXN0X2F1dG9tYXRvbiA9IEFob0NvcmFzaWNrQnVpbGRlcjo6bmV3KCkKICAgICAgICAgICAgLmFzY2lpX2Nhc2VfaW5zZW5zaXRpdmUodHJ1ZSkKICAgICAgICAgICAgLmJ1aWxkKCZjb25maWcuc3RybV9nZW5lcmF0ZV9ibGFja2xpc3QpPzsKCiAgICAgICAgbGV0IG1lZGlhaW5mb193aGl0ZWxpc3RfYXV0b21hdG9uID0gQWhvQ29yYXNpY2tCdWlsZGVyOjpuZXcoKQogICAgICAgICAgICAuYXNjaWlfY2FzZV9pbnNlbnNpdGl2ZSh0cnVlKQogICAgICAgICAgICAuYnVpbGQoJmNvbmZpZy5tZWRpYWluZm9fZG93bmxvYWRfd2hpdGVsaXN0KT87CgogICAgICAgIGxldCBtZWRpYWluZm9fYmxhY2tsaXN0X2F1dG9tYXRvbiA9IEFob0NvcmFzaWNrQnVpbGRlcjo6bmV3KCkKICAgICAgICAgICAgLmFzY2lpX2Nhc2VfaW5zZW5zaXRpdmUodHJ1ZSkKICAgICAgICAgICAgLmJ1aWxkKCZjb25maWcubWVkaWFpbmZvX2Rvd25sb2FkX2JsYWNrbGlzdCk/OwoKICAgICAgICBPayhTZWxmIHsKICAgICAgICAgICAgY29uZmlnLAogICAgICAgICAgICBzdHJtX2JsYWNrbGlzdF9hdXRvbWF0b24sCiAgICAgICAgICAgIG1lZGlhaW5mb193aGl0ZWxpc3RfYXV0b21hdG9uLAogICAgICAgICAgICBtZWRpYWluZm9fYmxhY2tsaXN0X2F1dG9tYXRvbiwKICAgICAgICB9KQogICAgfQoKICAgIHB1YiBmbiBwcm9jZXNzX2JhdGNoX3J1c3QoJnNlbGYsIGJhdGNoOiBWZWM8RmlsZUlucHV0PikgLT4gUGFja2VkUmVzdWx0IHsKICAgICAgICBiYXRjaAogICAgICAgICAgICAucGFyX2l0ZXIoKQogICAgICAgICAgICAubWFwKHxpdGVtfCBzZWxmLnByb2Nlc3NfaXRlbShpdGVtKSkKICAgICAgICAgICAgLmZvbGQoUGFja2VkUmVzdWx0OjpkZWZhdWx0LCB8bXV0IGFjYywgcmVzdWx0fCB7CiAgICAgICAgICAgICAgICBhY2MuYWRkKHJlc3VsdCk7CiAgICAgICAgICAgICAgICBhY2MKICAgICAgICAgICAgfSkKICAgICAgICAgICAgLnJlZHVjZShQYWNrZWRSZXN1bHQ6OmRlZmF1bHQsIHxtdXQgZmluYWxfYWNjLCBsb2NhbF9hY2N8IHsKICAgICAgICAgICAgICAgIGZpbmFsX2FjYy5tZXJnZShsb2NhbF9hY2MpOwogICAgICAgICAgICAgICAgZmluYWxfYWNjCiAgICAgICAgICAgIH0pCiAgICB9CgogICAgcHViIGZuIHByb2Nlc3NfaXRlbSgmc2VsZiwgaXRlbTogJkZpbGVJbnB1dCkgLT4gUHJvY2Vzc2luZ1Jlc3VsdCB7CiAgICAgICAgLy8g5Yik5pat5piv5ZCm5Li66Z2e5rOV6Lev5b6ECiAgICAgICAgaWYgaXRlbS5pc19kaXIgewogICAgICAgICAgICByZXR1cm4gUHJvY2Vzc2luZ1Jlc3VsdDo6U2tpcChTa2lwSW5mbyB7CiAgICAgICAgICAgICAgICBwYXRoX2luX3BhbjogaXRlbS5wYXRoLmNsb25lKCksCiAgICAgICAgICAgICAgICByZWFzb246IGZvcm1hdCEoInt9IOi3r+W+hOS4uuaWh+S7tuWkue+8jOi3s+i/h+WkhOeQhiIsIGl0ZW0ucGF0aCkuaW50bygpLAogICAgICAgICAgICB9KTsKICAgICAgICB9CiAgICAgICAgaWYgIWl0ZW0ucGF0aC5zdGFydHNfd2l0aCgmc2VsZi5jb25maWcucGFuX21lZGlhX2RpcikgewogICAgICAgICAgICByZXR1cm4gUHJvY2Vzc2luZ1Jlc3VsdDo6U2tpcChTa2lwSW5mbyB7CiAgICAgICAgICAgICAgICBwYXRoX2luX3BhbjogaXRlbS5wYXRoLmNsb25lKCksCiAgICAgICAgICAgICAgICByZWFzb246IGZvcm1hdCEoInt9IOi3r+W+hOWcqOe9keebmOWqkuS9k+W6k+ebruW9leWklu+8jOi3s+i/h+WkhOeQhiIsIGl0ZW0ucGF0aCkuaW50bygpLAogICAgICAgICAgICB9KTsKICAgICAgICB9CgogICAgICAgIC8vIOWHhuWkh+WQjue7reWIpOaWreWPmOmHjwogICAgICAgIGxldCBmaWxlX3BhdGggPSBQYXRoOjpuZXcoJml0ZW0ubmFtZSk7CiAgICAgICAgbGV0IGZpbGVfc3VmZml4X3dpdGhfZG90ID0gZmlsZV9wYXRoCiAgICAgICAgICAgIC5leHRlbnNpb24oKQogICAgICAgICAgICAuYW5kX3RoZW4ofHN8IHMudG9fc3RyKCkpCiAgICAgICAgICAgIC5tYXAofHN8IGZvcm1hdCEoIi57fSIsIHMudG9fbG93ZXJjYXNlKCkpKQogICAgICAgICAgICAudW53cmFwX29yX2RlZmF1bHQoKTsKCiAgICAgICAgLy8g5Yik5pat5piv5ZCm5Li65b6F5pW055CG55uu5b2V5LiL6Z2i55qE5paH5Lu2CiAgICAgICAgaWYgc2VsZi5jb25maWcucGFuX3RyYW5zZmVyX2VuYWJsZWQKICAgICAgICAgICAgJiYgc2VsZgogICAgICAgICAgICAgICAgLmNvbmZpZwogICAgICAgICAgICAgICAgLnBhbl90cmFuc2Zlcl9wYXRocwogICAgICAgICAgICAgICAgLml0ZXIoKQogICAgICAgICAgICAgICAgLmFueSh8cHwgIXAuaXNfZW1wdHkoKSAmJiBpdGVtLnBhdGguc3RhcnRzX3dpdGgocCkpCiAgICAgICAgewogICAgICAgICAgICByZXR1cm4gUHJvY2Vzc2luZ1Jlc3VsdDo6U2tpcChTa2lwSW5mbyB7CiAgICAgICAgICAgICAgICBwYXRoX2luX3BhbjogaXRlbS5wYXRoLmNsb25lKCksCiAgICAgICAgICAgICAgICByZWFzb246IGZvcm1hdCEoInt9IOi3r+W+hOWcqOW+heaVtOeQhuebruW9leS4i++8jOi3s+i/h+WkhOeQhiIsIGl0ZW0ucGF0aCkuaW50bygpLAogICAgICAgICAgICB9KTsKICAgICAgICB9CgogICAgICAgIC8vIOWkhOeQhuWqkuS9k+S/oeaBr+aWh+S7tuS4i+i9vQogICAgICAgIGlmIHNlbGYuY29uZmlnLmF1dG9fZG93bmxvYWRfbWVkaWFpbmZvCiAgICAgICAgICAgICYmIHNlbGYKICAgICAgICAgICAgICAgIC5jb25maWcKICAgICAgICAgICAgICAgIC5kb3dubG9hZF9tZWRpYWV4dF9zZXQKICAgICAgICAgICAgICAgIC5jb250YWlucygmZmlsZV9zdWZmaXhfd2l0aF9kb3QpCiAgICAgICAgewogICAgICAgICAgICAvLyDliKTmlq3mmK/lkKblnKjnmb3lkI3ljZXlhoUKICAgICAgICAgICAgaWYgIXNlbGYuY29uZmlnLm1lZGlhaW5mb19kb3dubG9hZF93aGl0ZWxpc3QuaXNfZW1wdHkoKQogICAgICAgICAgICAgICAgJiYgc2VsZgogICAgICAgICAgICAgICAgICAgIC5tZWRpYWluZm9fd2hpdGVsaXN0X2F1dG9tYXRvbgogICAgICAgICAgICAgICAgICAgIC5maW5kKCZpdGVtLm5hbWUpCiAgICAgICAgICAgICAgICAgICAgLmlzX25vbmUoKQogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICByZXR1cm4gUHJvY2Vzc2luZ1Jlc3VsdDo6U2tpcChTa2lwSW5mbyB7CiAgICAgICAgICAgICAgICAgICAgcGF0aF9pbl9wYW46IGl0ZW0ucGF0aC5jbG9uZSgpLAogICAgICAgICAgICAgICAgICAgIHJlYXNvbjogZm9ybWF0ISgKICAgICAgICAgICAgICAgICAgICAgICAgInt9IOaWh+S7tuWQjeacquWMuemFjeWIsOWqkuS9k+S/oeaBr+aWh+S7tueZveWQjeWNleWFs+mUruivje+8jOi3s+i/h+WkhOeQhiIsCiAgICAgICAgICAgICAgICAgICAgICAgIGl0ZW0ubmFtZQogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICAuaW50bygpLAogICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgLy8g5Yik5pat5piv5ZCm5Zyo6buR5ZCN5Y2V5YaFCiAgICAgICAgICAgIGlmICFzZWxmLmNvbmZpZy5tZWRpYWluZm9fZG93bmxvYWRfYmxhY2tsaXN0LmlzX2VtcHR5KCkgewogICAgICAgICAgICAgICAgaWYgbGV0IFNvbWUoZm91bmQpID0gc2VsZi5tZWRpYWluZm9fYmxhY2tsaXN0X2F1dG9tYXRvbi5maW5kKCZpdGVtLm5hbWUpIHsKICAgICAgICAgICAgICAgICAgICBsZXQga2V5d29yZCA9ICZzZWxmLmNvbmZpZy5tZWRpYWluZm9fZG93bmxvYWRfYmxhY2tsaXN0W2ZvdW5kLnBhdHRlcm4oKV07CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIFByb2Nlc3NpbmdSZXN1bHQ6OlNraXAoU2tpcEluZm8gewogICAgICAgICAgICAgICAgICAgICAgICBwYXRoX2luX3BhbjogaXRlbS5wYXRoLmNsb25lKCksCiAgICAgICAgICAgICAgICAgICAgICAgIHJlYXNvbjogZm9ybWF0ISgKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ7fSDljLnphY3liLDlqpLkvZPkv6Hmga/mlofku7bpu5HlkI3ljZXlhbPplK7or406IHt9IiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGl0ZW0ubmFtZSwga2V5d29yZAogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIC5pbnRvKCksCiAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHJldHVybiBtYXRjaCAoJml0ZW0ucGlja2NvZGUsICZpdGVtLnNoYTEpIHsKICAgICAgICAgICAgICAgIChTb21lKHBjKSwgU29tZShzaGEpKSA9PiBQcm9jZXNzaW5nUmVzdWx0OjpEb3dubG9hZChEb3dubG9hZEluZm8gewogICAgICAgICAgICAgICAgICAgIHBpY2tjb2RlOiBwYy5jbG9uZSgpLAogICAgICAgICAgICAgICAgICAgIHNoYTE6IHNoYS5jbG9uZSgpLAogICAgICAgICAgICAgICAgICAgIHBhdGhfaW5fcGFuOiBpdGVtLnBhdGguY2xvbmUoKSwKICAgICAgICAgICAgICAgIH0pLAogICAgICAgICAgICAgICAgKE5vbmUsIF8pID0+IFByb2Nlc3NpbmdSZXN1bHQ6OkZhaWwoRmFpbEluZm8gewogICAgICAgICAgICAgICAgICAgIHBhdGhfaW5fcGFuOiBpdGVtLnBhdGguY2xvbmUoKSwKICAgICAgICAgICAgICAgICAgICByZWFzb246IGZvcm1hdCEoInt9IOe8uuWksSBwaWNrX2NvZGUg5pWw5o2uIiwgaXRlbS5wYXRoKS5pbnRvKCksCiAgICAgICAgICAgICAgICB9KSwKICAgICAgICAgICAgICAgIChfLCBOb25lKSA9PiBQcm9jZXNzaW5nUmVzdWx0OjpGYWlsKEZhaWxJbmZvIHsKICAgICAgICAgICAgICAgICAgICBwYXRoX2luX3BhbjogaXRlbS5wYXRoLmNsb25lKCksCiAgICAgICAgICAgICAgICAgICAgcmVhc29uOiBmb3JtYXQhKCJ7fSDnvLrlpLEgc2hhMSDmlbDmja4iLCBpdGVtLnBhdGgpLmludG8oKSwKICAgICAgICAgICAgICAgIH0pLAogICAgICAgICAgICB9OwogICAgICAgIH0KCiAgICAgICAgLy8g5Yy56YWN5aqS5L2T5ZCO57yACiAgICAgICAgaWYgIXNlbGYuY29uZmlnLnJtdF9tZWRpYWV4dF9zZXQuY29udGFpbnMoJmZpbGVfc3VmZml4X3dpdGhfZG90KSB7CiAgICAgICAgICAgIHJldHVybiBQcm9jZXNzaW5nUmVzdWx0OjpTa2lwKFNraXBJbmZvIHsKICAgICAgICAgICAgICAgIHBhdGhfaW5fcGFuOiBpdGVtLnBhdGguY2xvbmUoKSwKICAgICAgICAgICAgICAgIHJlYXNvbjogZm9ybWF0ISgKICAgICAgICAgICAgICAgICAgICAie30g5pyq5Yy56YWN5Yiw5aqS5L2T5paH5Lu25ZCO57yA5ZKM5aqS5L2T5L+h5oGv5paH5Lu25ZCO57yA77yM6Lez6L+H5aSE55CGIiwKICAgICAgICAgICAgICAgICAgICBpdGVtLnBhdGgKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIC5pbnRvKCksCiAgICAgICAgICAgIH0pOwogICAgICAgIH0KCiAgICAgICAgLy8g5Yy56YWN6buR5ZCN5Y2VCiAgICAgICAgaWYgIXNlbGYuY29uZmlnLnN0cm1fZ2VuZXJhdGVfYmxhY2tsaXN0LmlzX2VtcHR5KCkgewogICAgICAgICAgICBpZiBsZXQgU29tZShmb3VuZCkgPSBzZWxmLnN0cm1fYmxhY2tsaXN0X2F1dG9tYXRvbi5maW5kKCZpdGVtLm5hbWUpIHsKICAgICAgICAgICAgICAgIGxldCBrZXl3b3JkID0gJnNlbGYuY29uZmlnLnN0cm1fZ2VuZXJhdGVfYmxhY2tsaXN0W2ZvdW5kLnBhdHRlcm4oKV07CiAgICAgICAgICAgICAgICByZXR1cm4gUHJvY2Vzc2luZ1Jlc3VsdDo6U2tpcChTa2lwSW5mbyB7CiAgICAgICAgICAgICAgICAgICAgcGF0aF9pbl9wYW46IGl0ZW0ucGF0aC5jbG9uZSgpLAogICAgICAgICAgICAgICAgICAgIHJlYXNvbjogZm9ybWF0ISgie30g5Yy56YWN5YiwIFNUUk0g55Sf5oiQ6buR5ZCN5Y2V5YWz6ZSu6K+NOiB7fSIsIGl0ZW0ubmFtZSwga2V5d29yZCkKICAgICAgICAgICAgICAgICAgICAgICAgLmludG8oKSwKICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICAvLyDljLnphY3mlofku7blpKflsI8KICAgICAgICBpZiBsZXQgU29tZShzaXplKSA9IGl0ZW0uc2l6ZSB7CiAgICAgICAgICAgIGlmIHNlbGYuY29uZmlnLmZ1bGxfc3luY19taW5fZmlsZV9zaXplID4gMCAmJiBzaXplIDwgc2VsZi5jb25maWcuZnVsbF9zeW5jX21pbl9maWxlX3NpemUKICAgICAgICAgICAgewogICAgICAgICAgICAgICAgcmV0dXJuIFByb2Nlc3NpbmdSZXN1bHQ6OlNraXAoU2tpcEluZm8gewogICAgICAgICAgICAgICAgICAgIHBhdGhfaW5fcGFuOiBpdGVtLnBhdGguY2xvbmUoKSwKICAgICAgICAgICAgICAgICAgICByZWFzb246IGZvcm1hdCEoIuaWh+S7tuWwj+S6juacgOS9jumZkOW6pjoge30iLCBpdGVtLnBhdGgpLmludG8oKSwKICAgICAgICAgICAgICAgIH0pOwogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICAvLyBwaWNrX2NvZGUg5qOA5p+lCiAgICAgICAgbGV0IFNvbWUocGMpID0gJml0ZW0ucGlja2NvZGUgZWxzZSB7CiAgICAgICAgICAgIHJldHVybiBQcm9jZXNzaW5nUmVzdWx0OjpGYWlsKEZhaWxJbmZvIHsKICAgICAgICAgICAgICAgIHBhdGhfaW5fcGFuOiBpdGVtLnBhdGguY2xvbmUoKSwKICAgICAgICAgICAgICAgIHJlYXNvbjogZm9ybWF0ISgie30g57y65aSxIHBpY2tfY29kZSDlgLwiLCBpdGVtLnBhdGgpLmludG8oKSwKICAgICAgICAgICAgfSk7CiAgICAgICAgfTsKCiAgICAgICAgaWYgcGMubGVuKCkgPT0gMTcgJiYgcGMuY2hhcnMoKS5hbGwoY2hhcjo6aXNfYWxwaGFudW1lcmljKSB7CiAgICAgICAgICAgIFByb2Nlc3NpbmdSZXN1bHQ6OlN0cm0oU3RybUluZm8gewogICAgICAgICAgICAgICAgcGlja2NvZGU6IHBjLmNsb25lKCksCiAgICAgICAgICAgICAgICBvcmlnaW5hbF9maWxlX25hbWU6IGl0ZW0ubmFtZS5jbG9uZSgpLAogICAgICAgICAgICAgICAgcGF0aF9pbl9wYW46IGl0ZW0ucGF0aC5jbG9uZSgpLAogICAgICAgICAgICB9KQogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgIFByb2Nlc3NpbmdSZXN1bHQ6OkZhaWwoRmFpbEluZm8gewogICAgICAgICAgICAgICAgcGF0aF9pbl9wYW46IGl0ZW0ucGF0aC5jbG9uZSgpLAogICAgICAgICAgICAgICAgcmVhc29uOiBmb3JtYXQhKCJ7fSDplJnor6/nmoQgcGlja19jb2RlIOagvOW8jzoge30iLCBpdGVtLnBhdGgsIHBjKS5pbnRvKCksCiAgICAgICAgICAgIH0pCiAgICAgICAgfQogICAgfQp9Cg==
+use crate::types::*;
+use aho_corasick::{AhoCorasick, AhoCorasickBuilder, BuildError};
+use rayon::prelude::*;
+use std::path::Path;
+
+pub struct Processor {
+    config: Config,
+    strm_blacklist_automaton: AhoCorasick,
+    mediainfo_whitelist_automaton: AhoCorasick,
+    mediainfo_blacklist_automaton: AhoCorasick,
+}
+
+impl Processor {
+    pub fn new(config: Config) -> Result<Self, BuildError> {
+        let strm_blacklist_automaton = AhoCorasickBuilder::new()
+            .ascii_case_insensitive(true)
+            .build(&config.strm_generate_blacklist)?;
+
+        let mediainfo_whitelist_automaton = AhoCorasickBuilder::new()
+            .ascii_case_insensitive(true)
+            .build(&config.mediainfo_download_whitelist)?;
+
+        let mediainfo_blacklist_automaton = AhoCorasickBuilder::new()
+            .ascii_case_insensitive(true)
+            .build(&config.mediainfo_download_blacklist)?;
+
+        Ok(Self {
+            config,
+            strm_blacklist_automaton,
+            mediainfo_whitelist_automaton,
+            mediainfo_blacklist_automaton,
+        })
+    }
+
+    pub fn process_batch_rust(&self, batch: Vec<FileInput>) -> PackedResult {
+        batch
+            .par_iter()
+            .map(|item| self.process_item(item))
+            .fold(PackedResult::default, |mut acc, result| {
+                acc.add(result);
+                acc
+            })
+            .reduce(PackedResult::default, |mut final_acc, local_acc| {
+                final_acc.merge(local_acc);
+                final_acc
+            })
+    }
+
+    pub fn process_item(&self, item: &FileInput) -> ProcessingResult {
+        // 判断是否为非法路径
+        if item.is_dir {
+            return ProcessingResult::Skip(SkipInfo {
+                path_in_pan: item.path.clone(),
+                reason: format!("{} 路径为文件夹，跳过处理", item.path).into(),
+            });
+        }
+        if !item.path.starts_with(&self.config.pan_media_dir) {
+            return ProcessingResult::Skip(SkipInfo {
+                path_in_pan: item.path.clone(),
+                reason: format!("{} 路径在网盘媒体库目录外，跳过处理", item.path).into(),
+            });
+        }
+
+        // 准备后续判断变量
+        let file_path = Path::new(&item.name);
+        let file_suffix_with_dot = file_path
+            .extension()
+            .and_then(|s| s.to_str())
+            .map(|s| format!(".{}", s.to_lowercase()))
+            .unwrap_or_default();
+
+        // 判断是否为待整理目录下面的文件
+        if self.config.pan_transfer_enabled
+            && self
+                .config
+                .pan_transfer_paths
+                .iter()
+                .any(|p| !p.is_empty() && item.path.starts_with(p))
+        {
+            return ProcessingResult::Skip(SkipInfo {
+                path_in_pan: item.path.clone(),
+                reason: format!("{} 路径在待整理目录下，跳过处理", item.path).into(),
+            });
+        }
+
+        // 处理媒体信息文件下载
+        if self.config.auto_download_mediainfo
+            && self
+                .config
+                .download_mediaext_set
+                .contains(&file_suffix_with_dot)
+        {
+            // 判断是否在白名单内
+            if !self.config.mediainfo_download_whitelist.is_empty()
+                && self
+                    .mediainfo_whitelist_automaton
+                    .find(&item.name)
+                    .is_none()
+            {
+                return ProcessingResult::Skip(SkipInfo {
+                    path_in_pan: item.path.clone(),
+                    reason: format!(
+                        "{} 文件名未匹配到媒体信息文件白名单关键词，跳过处理",
+                        item.name
+                    )
+                    .into(),
+                });
+            }
+            // 判断是否在黑名单内
+            if !self.config.mediainfo_download_blacklist.is_empty() {
+                if let Some(found) = self.mediainfo_blacklist_automaton.find(&item.name) {
+                    let keyword = &self.config.mediainfo_download_blacklist[found.pattern()];
+                    return ProcessingResult::Skip(SkipInfo {
+                        path_in_pan: item.path.clone(),
+                        reason: format!(
+                            "{} 匹配到媒体信息文件黑名单关键词: {}",
+                            item.name, keyword
+                        )
+                        .into(),
+                    });
+                }
+            }
+
+            return match (&item.pickcode, &item.sha1) {
+                (Some(pc), Some(sha)) => ProcessingResult::Download(DownloadInfo {
+                    pickcode: pc.clone(),
+                    sha1: sha.clone(),
+                    path_in_pan: item.path.clone(),
+                }),
+                (None, _) => ProcessingResult::Fail(FailInfo {
+                    path_in_pan: item.path.clone(),
+                    reason: format!("{} 缺失 pick_code 数据", item.path).into(),
+                }),
+                (_, None) => ProcessingResult::Fail(FailInfo {
+                    path_in_pan: item.path.clone(),
+                    reason: format!("{} 缺失 sha1 数据", item.path).into(),
+                }),
+            };
+        }
+
+        // 匹配媒体后缀
+        if !self.config.rmt_mediaext_set.contains(&file_suffix_with_dot) {
+            return ProcessingResult::Skip(SkipInfo {
+                path_in_pan: item.path.clone(),
+                reason: format!(
+                    "{} 未匹配到媒体文件后缀和媒体信息文件后缀，跳过处理",
+                    item.path
+                )
+                .into(),
+            });
+        }
+
+        // 匹配黑名单
+        if !self.config.strm_generate_blacklist.is_empty() {
+            if let Some(found) = self.strm_blacklist_automaton.find(&item.name) {
+                let keyword = &self.config.strm_generate_blacklist[found.pattern()];
+                return ProcessingResult::Skip(SkipInfo {
+                    path_in_pan: item.path.clone(),
+                    reason: format!("{} 匹配到 STRM 生成黑名单关键词: {}", item.name, keyword)
+                        .into(),
+                });
+            }
+        }
+
+        // 匹配文件大小
+        if let Some(size) = item.size {
+            if self.config.full_sync_min_file_size > 0 && size < self.config.full_sync_min_file_size
+            {
+                return ProcessingResult::Skip(SkipInfo {
+                    path_in_pan: item.path.clone(),
+                    reason: format!("文件小于最低限度: {}", item.path).into(),
+                });
+            }
+        }
+
+        // pick_code 检查
+        let Some(pc) = &item.pickcode else {
+            return ProcessingResult::Fail(FailInfo {
+                path_in_pan: item.path.clone(),
+                reason: format!("{} 缺失 pick_code 值", item.path).into(),
+            });
+        };
+
+        if pc.len() == 17 && pc.chars().all(char::is_alphanumeric) {
+            ProcessingResult::Strm(StrmInfo {
+                pickcode: pc.clone(),
+                original_file_name: item.name.clone(),
+                path_in_pan: item.path.clone(),
+            })
+        } else {
+            ProcessingResult::Fail(FailInfo {
+                path_in_pan: item.path.clone(),
+                reason: format!("{} 错误的 pick_code 格式: {}", item.path, pc).into(),
+            })
+        }
+    }
+}

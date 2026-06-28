@@ -1,1 +1,7 @@
-IiIiCk1DUCAoTW9kZWwgQ29udGV4dCBQcm90b2NvbCkg5pyN5Yqh56uvCiIiIgoKZnJvbSAubWFuYWdlciBpbXBvcnQgTUNQTWFuYWdlcgoKX19hbGxfXyA9IFsiTUNQTWFuYWdlciJdCg==
+"""
+MCP (Model Context Protocol) 服务端
+"""
+
+from .manager import MCPManager
+
+__all__ = ["MCPManager"]

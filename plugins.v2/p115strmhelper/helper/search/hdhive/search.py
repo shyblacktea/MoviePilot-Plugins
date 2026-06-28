@@ -1,1 +1,105 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IEFueSwgRGljdCwgTGlzdCwgT3B0aW9uYWwKCmZyb20gYXBwLmxvZyBpbXBvcnQgbG9nZ2VyCmZyb20gYXBwLnNjaGVtYXMudHlwZXMgaW1wb3J0IE1lZGlhVHlwZQoKZnJvbSAuLi4uY29yZS5jb25maWcgaW1wb3J0IGNvbmZpZ2VyCmZyb20gLi4uaGRoaXZlLmJyb3dzZXIgaW1wb3J0IEhESGl2ZUVycm9yLCBnZXRfaGRoaXZlX2Jyb3dzZXJfY2xpZW50CmZyb20gLmRpc3BsYXkgaW1wb3J0IHN0cmlwX2hkaGl2ZV90aXRsZV9wb2ludHNfcHJlZml4CgoKZGVmIF9tZWRpYV90eXBlX3RvX2hkaGl2ZSh2YWx1ZTogQW55KSAtPiBPcHRpb25hbFtzdHJdOgogICAgIiIiCiAgICDlsIbkuqTkupIgcmVzb3VyY2VfZGljdCDnmoQgdHlwZSDovazkuLogSERIaXZlIOa1j+iniOWZqOaQnOe0oueUqOeahCBtb3ZpZSAvIHR2CiAgICAiIiIKICAgIGlmIHZhbHVlIGlzIE5vbmU6CiAgICAgICAgcmV0dXJuIE5vbmUKICAgIGlmIGlzaW5zdGFuY2UodmFsdWUsIE1lZGlhVHlwZSk6CiAgICAgICAgaWYgdmFsdWUgPT0gTWVkaWFUeXBlLk1PVklFOgogICAgICAgICAgICByZXR1cm4gIm1vdmllIgogICAgICAgIGlmIHZhbHVlID09IE1lZGlhVHlwZS5UVjoKICAgICAgICAgICAgcmV0dXJuICJ0diIKICAgICAgICByZXR1cm4gTm9uZQogICAgcyA9IHN0cih2YWx1ZSkuc3RyaXAoKQogICAgaWYgcyBpbiAoTWVkaWFUeXBlLk1PVklFLnZhbHVlLCAi55S15b2xIik6CiAgICAgICAgcmV0dXJuICJtb3ZpZSIKICAgIGlmIHMgaW4gKE1lZGlhVHlwZS5UVi52YWx1ZSwgIueUteinhuWJpyIpOgogICAgICAgIHJldHVybiAidHYiCiAgICBsb3cgPSBzLmxvd2VyKCkKICAgIGlmIGxvdyA9PSAibW92aWUiOgogICAgICAgIHJldHVybiAibW92aWUiCiAgICBpZiBsb3cgPT0gInR2IjoKICAgICAgICByZXR1cm4gInR2IgogICAgcmV0dXJuIE5vbmUKCgpkZWYgZmV0Y2hfcmVzb3VyY2VzX2ltcGwoCiAgICByZXNvdXJjZV9kaWN0OiBEaWN0W3N0ciwgQW55XSwgc291cmNlX3RhZzogc3RyCikgLT4gTGlzdFtEaWN0W3N0ciwgQW55XV06CiAgICAiIiIKICAgIOmAmui/h+a1j+iniOWZqOiHquWKqOWMluaLieWPliBIREhpdmUgMTE1572R55uY6LWE5rqQ5YiX6KGo77yM5pig5bCE5Li65LiOIFRHIOWQiOW5tuWFvOWuueeahOWtl+WFuOWIl+ihqAogICAgIiIiCiAgICBpZiBub3QgY29uZmlnZXIuaGRoaXZlX3NlYXJjaF9lbmFibGVkOgogICAgICAgIHJldHVybiBbXQoKICAgIG10ID0gX21lZGlhX3R5cGVfdG9faGRoaXZlKHJlc291cmNlX2RpY3QuZ2V0KCJ0eXBlIikpCiAgICB0bWRiX2lkID0gcmVzb3VyY2VfZGljdC5nZXQoInRtZGJfaWQiKQogICAgaWYgbm90IG10IG9yIHRtZGJfaWQgaXMgTm9uZToKICAgICAgICBsb2dnZXIuZGVidWcoIuOAkEhESGl2ZeOAkei3s+i/h++8muaXoOacieaViCBtZWRpYV90eXBlIOaIliB0bWRiX2lkOiAlcyIsIHJlc291cmNlX2RpY3QpCiAgICAgICAgcmV0dXJuIFtdCgogICAgY2xpZW50ID0gZ2V0X2hkaGl2ZV9icm93c2VyX2NsaWVudCgpCiAgICBpZiBjbGllbnQgaXMgTm9uZToKICAgICAgICBsb2dnZXIuZGVidWcoIuOAkEhESGl2ZeOAkea1j+iniOWZqOWuouaIt+err+acquWwsee7qu+8iOaXoOaMgeS5heWMliBDb29raWUg5LiU5pyq6YWN572u6LSm5Y+35a+G56CB77yJIikKICAgICAgICByZXR1cm4gW10KCiAgICB0cnk6CiAgICAgICAgaXRlbXMgPSBjbGllbnQuZ2V0X3Jlc291cmNlcyhtdCwgdG1kYl9pZCkKICAgIGV4Y2VwdCBIREhpdmVFcnJvciBhcyBlOgogICAgICAgIGxvZ2dlci53YXJuaW5nKCLjgJBIREhpdmXjgJFnZXRfcmVzb3VyY2VzIOWksei0pTogJXMiLCBlKQogICAgICAgIHJldHVybiBbXQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIGxvZ2dlci53YXJuaW5nKCLjgJBIREhpdmXjgJFnZXRfcmVzb3VyY2VzIOW8guW4uDogJXMiLCBlLCBleGNfaW5mbz1UcnVlKQogICAgICAgIHJldHVybiBbXQoKICAgIG91dDogTGlzdFtEaWN0W3N0ciwgQW55XV0gPSBbXQogICAgZm9yIHJvdyBpbiBpdGVtczoKICAgICAgICBpZiBub3QgaXNpbnN0YW5jZShyb3csIGRpY3QpOgogICAgICAgICAgICBjb250aW51ZQogICAgICAgIGhyZWYgPSAocm93LmdldCgiaHJlZiIpIG9yICIiKS5zdHJpcCgpCiAgICAgICAgc2x1ZyA9IGhyZWYucnNwbGl0KCIvIiwgMSlbLTFdIGlmIGhyZWYgZWxzZSAiIgogICAgICAgIGlmIG5vdCBzbHVnOgogICAgICAgICAgICBjb250aW51ZQogICAgICAgIHRpdGxlID0gKAogICAgICAgICAgICBzdHJpcF9oZGhpdmVfdGl0bGVfcG9pbnRzX3ByZWZpeCgocm93LmdldCgidGl0bGUiKSBvciAiIikuc3RyaXAoKSkKICAgICAgICAgICAgb3IgIuacquWRveWQjSIKICAgICAgICApCiAgICAgICAgaXNfb2ZmaWNpYWwgPSAi5a6Y57uEIiBpbiAocm93LmdldCgidGFncyIpIG9yIFtdKQogICAgICAgIHJhdzogRGljdFtzdHIsIEFueV0gPSB7CiAgICAgICAgICAgICJ1bmxvY2tfcG9pbnRzIjogcm93LmdldCgidW5sb2NrX3BvaW50cyIpLAogICAgICAgICAgICAic2hhcmVfc2l6ZSI6IHJvdy5nZXQoInNpemUiLCAiIiksCiAgICAgICAgICAgICJ2aWRlb19yZXNvbHV0aW9uIjogW3Jvd1sicmVzb2x1dGlvbiJdXSBpZiByb3cuZ2V0KCJyZXNvbHV0aW9uIikgZWxzZSBbXSwKICAgICAgICAgICAgInNvdXJjZSI6IFtdLAogICAgICAgICAgICAic3VidGl0bGVfbGFuZ3VhZ2UiOiBbXSwKICAgICAgICAgICAgInN1YnRpdGxlX3R5cGUiOiBbXSwKICAgICAgICAgICAgImlzX29mZmljaWFsIjogaXNfb2ZmaWNpYWwsCiAgICAgICAgICAgICJ1c2VyIjogcm93LmdldCgidXNlciIsICIiKSwKICAgICAgICAgICAgInBvc3RlZF9hdCI6IHJvdy5nZXQoInBvc3RlZF9hdCIsICIiKSwKICAgICAgICAgICAgInB3X3RhZ3MiOiByb3cuZ2V0KCJ0YWdzIiwgW10pLAogICAgICAgICAgICAiaHJlZiI6IGhyZWYsCiAgICAgICAgfQogICAgICAgIG91dC5hcHBlbmQoCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICJzaGFyZXVybCI6ICIiLAogICAgICAgICAgICAgICAgInRhc2tuYW1lIjogdGl0bGUsCiAgICAgICAgICAgICAgICAiY29udGVudCI6ICIiLAogICAgICAgICAgICAgICAgInRhZ3MiOiBbXSwKICAgICAgICAgICAgICAgICJjaGFubmVsX2lkIjogIiIsCiAgICAgICAgICAgICAgICAiY2hhbm5lbF9uYW1lIjogIkhESGl2ZSIsCiAgICAgICAgICAgICAgICAic291cmNlIjogc291cmNlX3RhZywKICAgICAgICAgICAgICAgICJoZGhpdmVfc2x1ZyI6IHNsdWcsCiAgICAgICAgICAgICAgICAiaGRoaXZlX21lZGlhX3VybCI6ICIiLAogICAgICAgICAgICAgICAgImhkaGl2ZV9yYXciOiByYXcsCiAgICAgICAgICAgIH0KICAgICAgICApCiAgICByZXR1cm4gb3V0Cg==
+from typing import Any, Dict, List, Optional
+
+from app.log import logger
+from app.schemas.types import MediaType
+
+from ....core.config import configer
+from ...hdhive.browser import HDHiveError, get_hdhive_browser_client
+from .display import strip_hdhive_title_points_prefix
+
+
+def _media_type_to_hdhive(value: Any) -> Optional[str]:
+    """
+    将交互 resource_dict 的 type 转为 HDHive 浏览器搜索用的 movie / tv
+    """
+    if value is None:
+        return None
+    if isinstance(value, MediaType):
+        if value == MediaType.MOVIE:
+            return "movie"
+        if value == MediaType.TV:
+            return "tv"
+        return None
+    s = str(value).strip()
+    if s in (MediaType.MOVIE.value, "电影"):
+        return "movie"
+    if s in (MediaType.TV.value, "电视剧"):
+        return "tv"
+    low = s.lower()
+    if low == "movie":
+        return "movie"
+    if low == "tv":
+        return "tv"
+    return None
+
+
+def fetch_resources_impl(
+    resource_dict: Dict[str, Any], source_tag: str
+) -> List[Dict[str, Any]]:
+    """
+    通过浏览器自动化拉取 HDHive 115网盘资源列表，映射为与 TG 合并兼容的字典列表
+    """
+    if not configer.hdhive_search_enabled:
+        return []
+
+    mt = _media_type_to_hdhive(resource_dict.get("type"))
+    tmdb_id = resource_dict.get("tmdb_id")
+    if not mt or tmdb_id is None:
+        logger.debug("【HDHive】跳过：无有效 media_type 或 tmdb_id: %s", resource_dict)
+        return []
+
+    client = get_hdhive_browser_client()
+    if client is None:
+        logger.debug("【HDHive】浏览器客户端未就绪（无持久化 Cookie 且未配置账号密码）")
+        return []
+
+    try:
+        items = client.get_resources(mt, tmdb_id)
+    except HDHiveError as e:
+        logger.warning("【HDHive】get_resources 失败: %s", e)
+        return []
+    except Exception as e:
+        logger.warning("【HDHive】get_resources 异常: %s", e, exc_info=True)
+        return []
+
+    out: List[Dict[str, Any]] = []
+    for row in items:
+        if not isinstance(row, dict):
+            continue
+        href = (row.get("href") or "").strip()
+        slug = href.rsplit("/", 1)[-1] if href else ""
+        if not slug:
+            continue
+        title = (
+            strip_hdhive_title_points_prefix((row.get("title") or "").strip())
+            or "未命名"
+        )
+        is_official = "官组" in (row.get("tags") or [])
+        raw: Dict[str, Any] = {
+            "unlock_points": row.get("unlock_points"),
+            "share_size": row.get("size", ""),
+            "video_resolution": [row["resolution"]] if row.get("resolution") else [],
+            "source": [],
+            "subtitle_language": [],
+            "subtitle_type": [],
+            "is_official": is_official,
+            "user": row.get("user", ""),
+            "posted_at": row.get("posted_at", ""),
+            "pw_tags": row.get("tags", []),
+            "href": href,
+        }
+        out.append(
+            {
+                "shareurl": "",
+                "taskname": title,
+                "content": "",
+                "tags": [],
+                "channel_id": "",
+                "channel_name": "HDHive",
+                "source": source_tag,
+                "hdhive_slug": slug,
+                "hdhive_media_url": "",
+                "hdhive_raw": raw,
+            }
+        )
+    return out

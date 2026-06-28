@@ -1,1 +1,130 @@
-IiIiCkRpcmVjdG9yeVRyZWUgLyBSZWRpc1N0b3JhZ2UgLyBUeHRGaWxlU3RvcmFnZSDmtYvor5XmqKHlnZcKIiIiCgppbXBvcnQgc3lzCmZyb20gdHlwZXMgaW1wb3J0IE1vZHVsZVR5cGUKCiMg5rOo5YWlIHZlcnNpb24gbW9ja++8jOmBv+WFjSBDSSDkuK3mj5Lku7bnm67lvZXnmoQgdmVyc2lvbi5weSDooqvkvJjlhYjliqDovb0KX3ZlcnNpb25fbW9kID0gTW9kdWxlVHlwZSgidmVyc2lvbiIpCl92ZXJzaW9uX21vZC5BUFBfVkVSU0lPTiA9ICJ0ZXN0IgpfdmVyc2lvbl9tb2QuRlJPTlRFTkRfVkVSU0lPTiA9ICJ0ZXN0IgpzeXMubW9kdWxlc1sidmVyc2lvbiJdID0gX3ZlcnNpb25fbW9kCgpmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKZnJvbSB0ZW1wZmlsZSBpbXBvcnQgVGVtcG9yYXJ5RGlyZWN0b3J5CmZyb20gdW5pdHRlc3QgaW1wb3J0IFRlc3RDYXNlCmZyb20gdW5pdHRlc3QubW9jayBpbXBvcnQgTWFnaWNNb2NrLCBwYXRjaAoKZnJvbSB1dGlscy50cmVlIGltcG9ydCBEaXJlY3RvcnlUcmVlLCBSZWRpc1N0b3JhZ2UsIFR4dEZpbGVTdG9yYWdlCgoKY2xhc3MgVGVzdERpcmVjdG9yeVRyZWVCYWNrZW5kU3dpdGNoKFRlc3RDYXNlKToKICAgICIiIua1i+ivlSBEaXJlY3RvcnlUcmVlIOWQjuerr+WIh+aNouS4juWIneWni+WMliIiIgoKICAgIEBwYXRjaCgidXRpbHMudHJlZS5zZXR0aW5ncyIpCiAgICBkZWYgdGVzdF9mb3JjZV9iYWNrZW5kX3R4dF9vdmVycmlkZXNfcmVkaXNfc2V0dGluZyhzZWxmLCBtb2NrX3NldHRpbmdzKToKICAgICAgICAiIiJmb3JjZV9iYWNrZW5kPSd0eHQnIOW6lOW8uuWItuS9v+eUqCBUeHRGaWxlU3RvcmFnZe+8jOW/veeVpSBzZXR0aW5ncyIiIgogICAgICAgIG1vY2tfc2V0dGluZ3MuQ0FDSEVfQkFDS0VORF9UWVBFID0gInJlZGlzIgoKICAgICAgICB3aXRoIFRlbXBvcmFyeURpcmVjdG9yeSgpIGFzIHRtcGRpcjoKICAgICAgICAgICAgdHJlZSA9IERpcmVjdG9yeVRyZWUoUGF0aCh0bXBkaXIpIC8gInRlc3QudHh0IiwgZm9yY2VfYmFja2VuZD0idHh0IikKICAgICAgICAgICAgc2VsZi5hc3NlcnRJc0luc3RhbmNlKHRyZWUuX3N0b3JhZ2UsIFR4dEZpbGVTdG9yYWdlKQoKICAgIEBwYXRjaCgidXRpbHMudHJlZS5zZXR0aW5ncyIpCiAgICBkZWYgdGVzdF9mb3JjZV9iYWNrZW5kX3JlZGlzX292ZXJyaWRlc190eHRfc2V0dGluZyhzZWxmLCBtb2NrX3NldHRpbmdzKToKICAgICAgICAiIiJmb3JjZV9iYWNrZW5kPSdyZWRpcycg5bqU5by65Yi25L2/55SoIFJlZGlzU3RvcmFnZe+8jOW/veeVpSBzZXR0aW5ncyIiIgogICAgICAgIG1vY2tfc2V0dGluZ3MuQ0FDSEVfQkFDS0VORF9UWVBFID0gInR4dCIKCiAgICAgICAgd2l0aCBUZW1wb3JhcnlEaXJlY3RvcnkoKSBhcyB0bXBkaXI6CiAgICAgICAgICAgIHRyZWUgPSBEaXJlY3RvcnlUcmVlKFBhdGgodG1wZGlyKSAvICJ0ZXN0LnR4dCIsIGZvcmNlX2JhY2tlbmQ9InJlZGlzIikKICAgICAgICAgICAgc2VsZi5hc3NlcnRJc0luc3RhbmNlKHRyZWUuX3N0b3JhZ2UsIFJlZGlzU3RvcmFnZSkKCiAgICBAcGF0Y2goInV0aWxzLnRyZWUuc2V0dGluZ3MiKQogICAgZGVmIHRlc3Rfc3dpdGNoX3N0b3JhZ2VfcmVkaXNfdG9fdHh0KHNlbGYsIG1vY2tfc2V0dGluZ3MpOgogICAgICAgICIiIuS7jiBSZWRpcyDliIfmjaLliLAgVFhUIOW6lOa4heepuuaXp+aVsOaNruW5tuWIm+W7uuaWsOeahCBUeHRGaWxlU3RvcmFnZSIiIgogICAgICAgIG1vY2tfc2V0dGluZ3MuQ0FDSEVfQkFDS0VORF9UWVBFID0gInJlZGlzIgoKICAgICAgICB3aXRoIFRlbXBvcmFyeURpcmVjdG9yeSgpIGFzIHRtcGRpcjoKICAgICAgICAgICAgdHJlZSA9IERpcmVjdG9yeVRyZWUoUGF0aCh0bXBkaXIpIC8gInRlc3QudHh0IiwgZm9yY2VfYmFja2VuZD0icmVkaXMiKQogICAgICAgICAgICB0cmVlLnN3aXRjaF9zdG9yYWdlKCJ0eHQiKQogICAgICAgICAgICBzZWxmLmFzc2VydElzSW5zdGFuY2UodHJlZS5fc3RvcmFnZSwgVHh0RmlsZVN0b3JhZ2UpCgogICAgQHBhdGNoKCJ1dGlscy50cmVlLnNldHRpbmdzIikKICAgIGRlZiB0ZXN0X3N3aXRjaF9zdG9yYWdlX3R4dF90b19yZWRpcyhzZWxmLCBtb2NrX3NldHRpbmdzKToKICAgICAgICAiIiLku44gVFhUIOWIh+aNouWIsCBSZWRpcyDlupTmuIXnqbrml6fmlbDmja7lubbliJvlu7rmlrDnmoQgUmVkaXNTdG9yYWdlIiIiCiAgICAgICAgbW9ja19zZXR0aW5ncy5DQUNIRV9CQUNLRU5EX1RZUEUgPSAidHh0IgoKICAgICAgICB3aXRoIFRlbXBvcmFyeURpcmVjdG9yeSgpIGFzIHRtcGRpcjoKICAgICAgICAgICAgdHJlZSA9IERpcmVjdG9yeVRyZWUoUGF0aCh0bXBkaXIpIC8gInRlc3QudHh0IiwgZm9yY2VfYmFja2VuZD0idHh0IikKICAgICAgICAgICAgdHJlZS5zd2l0Y2hfc3RvcmFnZSgicmVkaXMiKQogICAgICAgICAgICBzZWxmLmFzc2VydElzSW5zdGFuY2UodHJlZS5fc3RvcmFnZSwgUmVkaXNTdG9yYWdlKQoKICAgIEBwYXRjaCgidXRpbHMudHJlZS5zZXR0aW5ncyIpCiAgICBkZWYgdGVzdF9zd2l0Y2hfc3RvcmFnZV9ub19vcF93aGVuX3NhbWUoc2VsZiwgbW9ja19zZXR0aW5ncyk6CiAgICAgICAgIiIi5YiH5o2i55uu5qCH5LiO5b2T5YmN5ZCO56uv55u45ZCM5pe277yM5LiN5bqU5omn6KGM5Lu75L2V5pON5L2cIiIiCiAgICAgICAgbW9ja19zZXR0aW5ncy5DQUNIRV9CQUNLRU5EX1RZUEUgPSAicmVkaXMiCgogICAgICAgIHdpdGggVGVtcG9yYXJ5RGlyZWN0b3J5KCkgYXMgdG1wZGlyOgogICAgICAgICAgICB0cmVlID0gRGlyZWN0b3J5VHJlZShQYXRoKHRtcGRpcikgLyAidGVzdC50eHQiLCBmb3JjZV9iYWNrZW5kPSJyZWRpcyIpCiAgICAgICAgICAgIG9yaWdpbmFsX3N0b3JhZ2UgPSB0cmVlLl9zdG9yYWdlCiAgICAgICAgICAgIHRyZWUuc3dpdGNoX3N0b3JhZ2UoInJlZGlzIikKICAgICAgICAgICAgc2VsZi5hc3NlcnRJcyh0cmVlLl9zdG9yYWdlLCBvcmlnaW5hbF9zdG9yYWdlKQoKCmNsYXNzIFRlc3RSZWRpc1N0b3JhZ2VBZGRQYXRocyhUZXN0Q2FzZSk6CiAgICAiIiLmtYvor5UgUmVkaXNTdG9yYWdlLmFkZF9wYXRocyDnmoQgT09NIOaNleiOt+S4jiBUVEwiIiIKCiAgICBAcGF0Y2goInV0aWxzLnRyZWUuUmVkaXNIZWxwZXIiKQogICAgZGVmIHRlc3Rfb29tX3JhaXNlc19tZW1vcnlfZXJyb3Ioc2VsZiwgbW9ja19yZWRpc19oZWxwZXIpOgogICAgICAgICIiIlJlZGlzIE9PTSDml7blupTmipvlh7ogTWVtb3J5RXJyb3LvvIzlubbljIXlkKvphY3nva7mj5DnpLoiIiIKICAgICAgICBtb2NrX2NsaWVudCA9IE1hZ2ljTW9jaygpCiAgICAgICAgbW9ja19waXBlID0gTWFnaWNNb2NrKCkKICAgICAgICBtb2NrX2NsaWVudC5waXBlbGluZS5yZXR1cm5fdmFsdWUgPSBtb2NrX3BpcGUKICAgICAgICBtb2NrX3BpcGUuZXhlY3V0ZS5zaWRlX2VmZmVjdCA9IEV4Y2VwdGlvbigKICAgICAgICAgICAgIk9PTSBjb21tYW5kIG5vdCBhbGxvd2VkIHdoZW4gdXNlZCBtZW1vcnkgPiAnbWF4bWVtb3J5JyIKICAgICAgICApCiAgICAgICAgbW9ja19yZWRpc19oZWxwZXIucmV0dXJuX3ZhbHVlLmNsaWVudCA9IG1vY2tfY2xpZW50CgogICAgICAgIHN0b3JhZ2UgPSBSZWRpc1N0b3JhZ2UoInRlc3RfdHJlZSIpCiAgICAgICAgd2l0aCBzZWxmLmFzc2VydFJhaXNlcyhNZW1vcnlFcnJvcikgYXMgY3R4OgogICAgICAgICAgICBzdG9yYWdlLmFkZF9wYXRocyhbIi9hL2IvYy5ta3YiXSkKCiAgICAgICAgc2VsZi5hc3NlcnRJbigibWF4bWVtb3J5Iiwgc3RyKGN0eC5leGNlcHRpb24pKQogICAgICAgIHNlbGYuYXNzZXJ0SW4oInRlc3RfdHJlZSIsIHN0cihjdHguZXhjZXB0aW9uKSkKCiAgICBAcGF0Y2goInV0aWxzLnRyZWUuUmVkaXNIZWxwZXIiKQogICAgZGVmIHRlc3Rfc3VjY2Vzc19zZXRzX3R0bChzZWxmLCBtb2NrX3JlZGlzX2hlbHBlcik6CiAgICAgICAgIiIi5oiQ5Yqf5YaZ5YWl5ZCO5bqU6LCD55SoIGV4cGlyZSDorr7nva4gVFRMIiIiCiAgICAgICAgbW9ja19jbGllbnQgPSBNYWdpY01vY2soKQogICAgICAgIG1vY2tfcGlwZSA9IE1hZ2ljTW9jaygpCiAgICAgICAgbW9ja19jbGllbnQucGlwZWxpbmUucmV0dXJuX3ZhbHVlID0gbW9ja19waXBlCiAgICAgICAgbW9ja19yZWRpc19oZWxwZXIucmV0dXJuX3ZhbHVlLmNsaWVudCA9IG1vY2tfY2xpZW50CgogICAgICAgIHN0b3JhZ2UgPSBSZWRpc1N0b3JhZ2UoInRlc3RfdHJlZSIpCiAgICAgICAgc3RvcmFnZS5hZGRfcGF0aHMoWyIvYS9iL2MubWt2Il0pCgogICAgICAgIG1vY2tfcGlwZS5leHBpcmUuYXNzZXJ0X2FueV9jYWxsKCJkaXJ0cmVlOnNldDp0ZXN0X3RyZWUiLCA2MDQ4MDApCiAgICAgICAgbW9ja19waXBlLmV4cGlyZS5hc3NlcnRfYW55X2NhbGwoImRpcnRyZWU6bGlzdDp0ZXN0X3RyZWUiLCA2MDQ4MDApCiAgICAgICAgbW9ja19waXBlLmV4ZWN1dGUuYXNzZXJ0X2NhbGxlZF9vbmNlKCkKCiAgICBAcGF0Y2goInV0aWxzLnRyZWUuUmVkaXNIZWxwZXIiKQogICAgZGVmIHRlc3RfdW5rbm93bl9lcnJvcl9ub3Rfd3JhcHBlZChzZWxmLCBtb2NrX3JlZGlzX2hlbHBlcik6CiAgICAgICAgIiIi6Z2eIE9PTSDplJnor6/lupTljp/moLfmipvlh7rvvIzkuI3ljIXoo4XkuLogTWVtb3J5RXJyb3IiIiIKICAgICAgICBtb2NrX2NsaWVudCA9IE1hZ2ljTW9jaygpCiAgICAgICAgbW9ja19waXBlID0gTWFnaWNNb2NrKCkKICAgICAgICBtb2NrX2NsaWVudC5waXBlbGluZS5yZXR1cm5fdmFsdWUgPSBtb2NrX3BpcGUKICAgICAgICBtb2NrX3BpcGUuZXhlY3V0ZS5zaWRlX2VmZmVjdCA9IEV4Y2VwdGlvbigicmFuZG9tIGNvbm5lY3Rpb24gZXJyb3IiKQogICAgICAgIG1vY2tfcmVkaXNfaGVscGVyLnJldHVybl92YWx1ZS5jbGllbnQgPSBtb2NrX2NsaWVudAoKICAgICAgICBzdG9yYWdlID0gUmVkaXNTdG9yYWdlKCJ0ZXN0X3RyZWUiKQogICAgICAgIHdpdGggc2VsZi5hc3NlcnRSYWlzZXMoRXhjZXB0aW9uKSBhcyBjdHg6CiAgICAgICAgICAgIHN0b3JhZ2UuYWRkX3BhdGhzKFsiL2EvYi9jLm1rdiJdKQoKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHN0cihjdHguZXhjZXB0aW9uKSwgInJhbmRvbSBjb25uZWN0aW9uIGVycm9yIikKCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgZnJvbSB1bml0dGVzdCBpbXBvcnQgbWFpbgoKICAgIG1haW4odmVyYm9zaXR5PTIpCg==
+"""
+DirectoryTree / RedisStorage / TxtFileStorage 测试模块
+"""
+
+import sys
+from types import ModuleType
+
+# 注入 version mock，避免 CI 中插件目录的 version.py 被优先加载
+_version_mod = ModuleType("version")
+_version_mod.APP_VERSION = "test"
+_version_mod.FRONTEND_VERSION = "test"
+sys.modules["version"] = _version_mod
+
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest import TestCase
+from unittest.mock import MagicMock, patch
+
+from utils.tree import DirectoryTree, RedisStorage, TxtFileStorage
+
+
+class TestDirectoryTreeBackendSwitch(TestCase):
+    """测试 DirectoryTree 后端切换与初始化"""
+
+    @patch("utils.tree.settings")
+    def test_force_backend_txt_overrides_redis_setting(self, mock_settings):
+        """force_backend='txt' 应强制使用 TxtFileStorage，忽略 settings"""
+        mock_settings.CACHE_BACKEND_TYPE = "redis"
+
+        with TemporaryDirectory() as tmpdir:
+            tree = DirectoryTree(Path(tmpdir) / "test.txt", force_backend="txt")
+            self.assertIsInstance(tree._storage, TxtFileStorage)
+
+    @patch("utils.tree.settings")
+    def test_force_backend_redis_overrides_txt_setting(self, mock_settings):
+        """force_backend='redis' 应强制使用 RedisStorage，忽略 settings"""
+        mock_settings.CACHE_BACKEND_TYPE = "txt"
+
+        with TemporaryDirectory() as tmpdir:
+            tree = DirectoryTree(Path(tmpdir) / "test.txt", force_backend="redis")
+            self.assertIsInstance(tree._storage, RedisStorage)
+
+    @patch("utils.tree.settings")
+    def test_switch_storage_redis_to_txt(self, mock_settings):
+        """从 Redis 切换到 TXT 应清空旧数据并创建新的 TxtFileStorage"""
+        mock_settings.CACHE_BACKEND_TYPE = "redis"
+
+        with TemporaryDirectory() as tmpdir:
+            tree = DirectoryTree(Path(tmpdir) / "test.txt", force_backend="redis")
+            tree.switch_storage("txt")
+            self.assertIsInstance(tree._storage, TxtFileStorage)
+
+    @patch("utils.tree.settings")
+    def test_switch_storage_txt_to_redis(self, mock_settings):
+        """从 TXT 切换到 Redis 应清空旧数据并创建新的 RedisStorage"""
+        mock_settings.CACHE_BACKEND_TYPE = "txt"
+
+        with TemporaryDirectory() as tmpdir:
+            tree = DirectoryTree(Path(tmpdir) / "test.txt", force_backend="txt")
+            tree.switch_storage("redis")
+            self.assertIsInstance(tree._storage, RedisStorage)
+
+    @patch("utils.tree.settings")
+    def test_switch_storage_no_op_when_same(self, mock_settings):
+        """切换目标与当前后端相同时，不应执行任何操作"""
+        mock_settings.CACHE_BACKEND_TYPE = "redis"
+
+        with TemporaryDirectory() as tmpdir:
+            tree = DirectoryTree(Path(tmpdir) / "test.txt", force_backend="redis")
+            original_storage = tree._storage
+            tree.switch_storage("redis")
+            self.assertIs(tree._storage, original_storage)
+
+
+class TestRedisStorageAddPaths(TestCase):
+    """测试 RedisStorage.add_paths 的 OOM 捕获与 TTL"""
+
+    @patch("utils.tree.RedisHelper")
+    def test_oom_raises_memory_error(self, mock_redis_helper):
+        """Redis OOM 时应抛出 MemoryError，并包含配置提示"""
+        mock_client = MagicMock()
+        mock_pipe = MagicMock()
+        mock_client.pipeline.return_value = mock_pipe
+        mock_pipe.execute.side_effect = Exception(
+            "OOM command not allowed when used memory > 'maxmemory'"
+        )
+        mock_redis_helper.return_value.client = mock_client
+
+        storage = RedisStorage("test_tree")
+        with self.assertRaises(MemoryError) as ctx:
+            storage.add_paths(["/a/b/c.mkv"])
+
+        self.assertIn("maxmemory", str(ctx.exception))
+        self.assertIn("test_tree", str(ctx.exception))
+
+    @patch("utils.tree.RedisHelper")
+    def test_success_sets_ttl(self, mock_redis_helper):
+        """成功写入后应调用 expire 设置 TTL"""
+        mock_client = MagicMock()
+        mock_pipe = MagicMock()
+        mock_client.pipeline.return_value = mock_pipe
+        mock_redis_helper.return_value.client = mock_client
+
+        storage = RedisStorage("test_tree")
+        storage.add_paths(["/a/b/c.mkv"])
+
+        mock_pipe.expire.assert_any_call("dirtree:set:test_tree", 604800)
+        mock_pipe.expire.assert_any_call("dirtree:list:test_tree", 604800)
+        mock_pipe.execute.assert_called_once()
+
+    @patch("utils.tree.RedisHelper")
+    def test_unknown_error_not_wrapped(self, mock_redis_helper):
+        """非 OOM 错误应原样抛出，不包装为 MemoryError"""
+        mock_client = MagicMock()
+        mock_pipe = MagicMock()
+        mock_client.pipeline.return_value = mock_pipe
+        mock_pipe.execute.side_effect = Exception("random connection error")
+        mock_redis_helper.return_value.client = mock_client
+
+        storage = RedisStorage("test_tree")
+        with self.assertRaises(Exception) as ctx:
+            storage.add_paths(["/a/b/c.mkv"])
+
+        self.assertEqual(str(ctx.exception), "random connection error")
+
+
+if __name__ == "__main__":
+    from unittest import main
+
+    main(verbosity=2)

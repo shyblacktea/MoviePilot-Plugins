@@ -1,1 +1,697 @@
-X19hbGxfXyA9IFsKICAgICJTdHJtVXJsVGVtcGxhdGVSZXNvbHZlciIsCiAgICAiU3RybUZpbGVuYW1lVGVtcGxhdGVSZXNvbHZlciIsCiAgICAiU3RybVVybEdldHRlciIsCiAgICAiU3RybUdlbmVyYXRlciIsCl0KCgpmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKZnJvbSB0eXBpbmcgaW1wb3J0IE9wdGlvbmFsLCBEaWN0LCBBbnksIFVuaW9uCmZyb20gdXJsbGliLnBhcnNlIGltcG9ydCBxdW90ZQoKZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXIKCmZyb20gYWhvY29yYXNpY2sgaW1wb3J0IEF1dG9tYXRvbgpmcm9tIHAxMTVwaWNrY29kZSBpbXBvcnQgdG9faWQKZnJvbSBqaW5qYTIgaW1wb3J0IFRlbXBsYXRlLCBFbnZpcm9ubWVudCwgc2VsZWN0X2F1dG9lc2NhcGUKZnJvbSBqaW5qYTIuZXhjZXB0aW9ucyBpbXBvcnQgVGVtcGxhdGVFcnJvcgoKZnJvbSAuLmNvcmUuY29uZmlnIGltcG9ydCBjb25maWdlcgpmcm9tIC4uc2NoZW1hcy5zaXplIGltcG9ydCBDb21wYXJlTWluU2l6ZQoKCmNsYXNzIFN0cm1VcmxUZW1wbGF0ZVJlc29sdmVyOgogICAgIiIiCiAgICDln7rkuo4gSmluamEyIOeahCBTVFJNIFVSTCDmqKHmnb/op6PmnpDlmagKICAgICIiIgoKICAgIGRlZiBfX2luaXRfXygKICAgICAgICBzZWxmLAogICAgICAgIGJhc2VfdGVtcGxhdGU6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIGN1c3RvbV9ydWxlczogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgYXV0b19lc2NhcGU6IGJvb2wgPSBGYWxzZSwKICAgICk6CiAgICAgICAgIiIiCiAgICAgICAg5Yid5aeL5YyW5qih5p2/6Kej5p6Q5ZmoCgogICAgICAgIDpwYXJhbSBiYXNlX3RlbXBsYXRlIChzdHIpOiDln7rnoYAgSmluamEyIOaooeadv+Wtl+espuS4sgogICAgICAgIDpwYXJhbSBjdXN0b21fcnVsZXMgKHN0cik6IOaJqeWxleWQjeeJueWumuaooeadv+inhOWIme+8jOagvOW8j++8mmV4dDEsZXh0MiA9PiB0ZW1wbGF0ZQogICAgICAgIDpwYXJhbSBhdXRvX2VzY2FwZSAoYm9vbCk6IOaYr+WQpuiHquWKqOi9rOS5iQogICAgICAgICIiIgogICAgICAgIHNlbGYuZW52ID0gRW52aXJvbm1lbnQoCiAgICAgICAgICAgIGF1dG9lc2NhcGU9c2VsZWN0X2F1dG9lc2NhcGUoWyJodG1sIiwgInhtbCJdKSBpZiBhdXRvX2VzY2FwZSBlbHNlIEZhbHNlLAogICAgICAgICAgICB0cmltX2Jsb2Nrcz1UcnVlLAogICAgICAgICAgICBsc3RyaXBfYmxvY2tzPVRydWUsCiAgICAgICAgKQoKICAgICAgICBzZWxmLl9yZWdpc3Rlcl9maWx0ZXJzKCkKCiAgICAgICAgc2VsZi5iYXNlX3RlbXBsYXRlID0gTm9uZQogICAgICAgIGlmIGJhc2VfdGVtcGxhdGU6CiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHNlbGYuYmFzZV90ZW1wbGF0ZSA9IHNlbGYuZW52LmZyb21fc3RyaW5nKGJhc2VfdGVtcGxhdGUpCiAgICAgICAgICAgIGV4Y2VwdCBUZW1wbGF0ZUVycm9yIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIFVSTCDmqKHmnb/jgJHln7rnoYDmqKHmnb/op6PmnpDlpLHotKU6IHtlfSIpCiAgICAgICAgICAgICAgICByYWlzZQoKICAgICAgICBzZWxmLmV4dGVuc2lvbl90ZW1wbGF0ZXM6IERpY3Rbc3RyLCBUZW1wbGF0ZV0gPSB7fQogICAgICAgIGlmIGN1c3RvbV9ydWxlczoKICAgICAgICAgICAgc2VsZi5fcGFyc2VfY3VzdG9tX3J1bGVzKGN1c3RvbV9ydWxlcykKCiAgICBkZWYgX3JlZ2lzdGVyX2ZpbHRlcnMoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAg5rOo5YaM6Ieq5a6a5LmJ6L+H5ruk5ZmoCiAgICAgICAgIiIiCgogICAgICAgIGRlZiB1cmxlbmNvZGVfZmlsdGVyKHZhbHVlOiBzdHIpIC0+IHN0cjoKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIFVSTCDnvJbnoIHov4fmu6TlmagKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIGlmIG5vdCB2YWx1ZToKICAgICAgICAgICAgICAgIHJldHVybiAiIgogICAgICAgICAgICByZXR1cm4gcXVvdGUoc3RyKHZhbHVlKSwgc2FmZT0iIikKCiAgICAgICAgZGVmIHBhdGhfZW5jb2RlX2ZpbHRlcih2YWx1ZTogc3RyKSAtPiBzdHI6CiAgICAgICAgICAgICIiIgogICAgICAgICAgICDot6/lvoTnvJbnoIHov4fmu6TlmajvvIjkv53nlZnmlpzmnaDvvIkKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIGlmIG5vdCB2YWx1ZToKICAgICAgICAgICAgICAgIHJldHVybiAiIgogICAgICAgICAgICByZXR1cm4gcXVvdGUoc3RyKHZhbHVlKSwgc2FmZT0iLyIpCgogICAgICAgIGRlZiB1cHBlcl9maWx0ZXIodmFsdWU6IHN0cikgLT4gc3RyOgogICAgICAgICAgICAiIiIKICAgICAgICAgICAg6L2s5aSn5YaZCiAgICAgICAgICAgICIiIgogICAgICAgICAgICByZXR1cm4gc3RyKHZhbHVlKS51cHBlcigpIGlmIHZhbHVlIGVsc2UgIiIKCiAgICAgICAgZGVmIGxvd2VyX2ZpbHRlcih2YWx1ZTogc3RyKSAtPiBzdHI6CiAgICAgICAgICAgICIiIgogICAgICAgICAgICDovazlsI/lhpkKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIHJldHVybiBzdHIodmFsdWUpLmxvd2VyKCkgaWYgdmFsdWUgZWxzZSAiIgoKICAgICAgICBzZWxmLmVudi5maWx0ZXJzWyJ1cmxlbmNvZGUiXSA9IHVybGVuY29kZV9maWx0ZXIKICAgICAgICBzZWxmLmVudi5maWx0ZXJzWyJwYXRoX2VuY29kZSJdID0gcGF0aF9lbmNvZGVfZmlsdGVyCiAgICAgICAgc2VsZi5lbnYuZmlsdGVyc1sidXBwZXIiXSA9IHVwcGVyX2ZpbHRlcgogICAgICAgIHNlbGYuZW52LmZpbHRlcnNbImxvd2VyIl0gPSBsb3dlcl9maWx0ZXIKCiAgICBkZWYgX3BhcnNlX2N1c3RvbV9ydWxlcyhzZWxmLCBjb25maWdfc3RyOiBzdHIpOgogICAgICAgICIiIgogICAgICAgIOino+aekOaJqeWxleWQjeeJueWumuaooeadv+inhOWImQoKICAgICAgICA6cGFyYW0gY29uZmlnX3N0ciAoc3RyKTog6KeE5YiZ5a2X56ym5Liy77yM5qC85byP77yaZXh0MSxleHQyID0+IHRlbXBsYXRl77yI5q+P6KGM5LiA5Liq77yJCiAgICAgICAgIiIiCiAgICAgICAgZm9yIHJ1bGUgaW4gY29uZmlnX3N0ci5zdHJpcCgpLnNwbGl0KCJcbiIpOgogICAgICAgICAgICBydWxlID0gcnVsZS5zdHJpcCgpCiAgICAgICAgICAgIGlmIG5vdCBydWxlIG9yICI9PiIgbm90IGluIHJ1bGU6CiAgICAgICAgICAgICAgICBjb250aW51ZQoKICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgZXh0ZW5zaW9uc19wYXJ0LCB0ZW1wbGF0ZV9zdHIgPSBydWxlLnNwbGl0KCI9PiIsIDEpCiAgICAgICAgICAgICAgICBleHRlbnNpb25zID0gW2V4dC5zdHJpcCgpLmxvd2VyKCkgZm9yIGV4dCBpbiBleHRlbnNpb25zX3BhcnQuc3BsaXQoIiwiKV0KICAgICAgICAgICAgICAgIHRlbXBsYXRlX3N0ciA9IHRlbXBsYXRlX3N0ci5zdHJpcCgpCgogICAgICAgICAgICAgICAgaWYgbm90IHRlbXBsYXRlX3N0cjoKICAgICAgICAgICAgICAgICAgICBsb2dnZXIud2FybmluZyhmIuOAkFNUUk0gVVJMIOaooeadv+OAkeinhOWImeaooeadv+S4uuepuu+8jOi3s+i/hzoge3J1bGV9IikKICAgICAgICAgICAgICAgICAgICBjb250aW51ZQoKICAgICAgICAgICAgICAgICMg6Kej5p6Q5qih5p2/CiAgICAgICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICAgICAgdGVtcGxhdGUgPSBzZWxmLmVudi5mcm9tX3N0cmluZyh0ZW1wbGF0ZV9zdHIpCiAgICAgICAgICAgICAgICBleGNlcHQgVGVtcGxhdGVFcnJvciBhcyBlOgogICAgICAgICAgICAgICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgICAgICAgICAgICAgZiLjgJBTVFJNIFVSTCDmqKHmnb/jgJHmianlsZXlkI3mqKHmnb/op6PmnpDlpLHotKU6IHtydWxlfSwg6ZSZ6K+vOiB7ZX0iCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlCgogICAgICAgICAgICAgICAgIyDkuLrmr4/kuKrmianlsZXlkI3ms6jlhozmqKHmnb8KICAgICAgICAgICAgICAgIGZvciBleHQgaW4gZXh0ZW5zaW9uczoKICAgICAgICAgICAgICAgICAgICBpZiBub3QgZXh0OgogICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICAgICAgICAgIGlmIG5vdCBleHQuc3RhcnRzd2l0aCgiLiIpOgogICAgICAgICAgICAgICAgICAgICAgICBleHQgPSAiLiIgKyBleHQKICAgICAgICAgICAgICAgICAgICBzZWxmLmV4dGVuc2lvbl90ZW1wbGF0ZXNbZXh0XSA9IHRlbXBsYXRlCiAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKAogICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFNUUk0gVVJMIOaooeadv+OAkeazqOWGjOaJqeWxleWQjeaooeadvzoge2V4dH0gPT4ge3RlbXBsYXRlX3N0cls6NTBdfS4uLiIKICAgICAgICAgICAgICAgICAgICApCgogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIFVSTCDmqKHmnb/jgJHop6PmnpDop4TliJnlpLHotKU6IHtydWxlfSwg6ZSZ6K+vOiB7ZX0iKQogICAgICAgICAgICAgICAgY29udGludWUKCiAgICBkZWYgZ2V0X3RlbXBsYXRlX2Zvcl9maWxlKHNlbGYsIGZpbGVfbmFtZTogc3RyKSAtPiBPcHRpb25hbFtUZW1wbGF0ZV06CiAgICAgICAgIiIiCiAgICAgICAg5qC55o2u5paH5Lu25ZCN6I635Y+W5a+55bqU55qE5qih5p2/CgogICAgICAgIDpwYXJhbSBmaWxlX25hbWUgKHN0cik6IOaWh+S7tuWQjQoKICAgICAgICA6cmV0dXJuIFRlbXBsYXRlOiDljLnphY3nmoTmqKHmnb/vvIzlpoLmnpzmsqHmnInljLnphY3liJnov5Tlm57ln7rnoYDmqKHmnb/vvIzlpoLmnpzpg73msqHmnInliJnov5Tlm54gTm9uZQogICAgICAgICIiIgogICAgICAgIGV4dGVuc2lvbiA9IFBhdGgoZmlsZV9uYW1lKS5zdWZmaXgubG93ZXIoKQoKICAgICAgICBpZiBleHRlbnNpb24gaW4gc2VsZi5leHRlbnNpb25fdGVtcGxhdGVzOgogICAgICAgICAgICByZXR1cm4gc2VsZi5leHRlbnNpb25fdGVtcGxhdGVzW2V4dGVuc2lvbl0KCiAgICAgICAgcmV0dXJuIHNlbGYuYmFzZV90ZW1wbGF0ZQoKICAgIGRlZiByZW5kZXIoCiAgICAgICAgc2VsZiwKICAgICAgICBmaWxlX25hbWU6IHN0ciwKICAgICAgICBiYXNlX3VybDogc3RyLAogICAgICAgIHBpY2tjb2RlOiBPcHRpb25hbFtzdHJdID0gTm9uZSwKICAgICAgICBzaGFyZV9jb2RlOiBPcHRpb25hbFtzdHJdID0gTm9uZSwKICAgICAgICByZWNlaXZlX2NvZGU6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIGZpbGVfaWQ6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIGZpbGVfcGF0aDogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgKiprd2FyZ3M6IEFueSwKICAgICkgLT4gT3B0aW9uYWxbc3RyXToKICAgICAgICAiIiIKICAgICAgICDmuLLmn5MgVVJMIOaooeadvwoKICAgICAgICA6cGFyYW0gZmlsZV9uYW1lIChzdHIpOiDmlofku7blkI0KICAgICAgICA6cGFyYW0gYmFzZV91cmwgKHN0cik6IOWfuuehgCBVUkwKICAgICAgICA6cGFyYW0gcGlja2NvZGUgKHN0cik6IOaWh+S7tiBwaWNrY29kZQogICAgICAgIDpwYXJhbSBzaGFyZV9jb2RlIChzdHIpOiDliIbkuqvnoIEKICAgICAgICA6cGFyYW0gcmVjZWl2ZV9jb2RlIChzdHIpOiDmj5Dlj5bnoIEKICAgICAgICA6cGFyYW0gZmlsZV9pZCAoc3RyKTog5paH5Lu2IElECiAgICAgICAgOnBhcmFtIGZpbGVfcGF0aCAoc3RyKTog5paH5Lu2572R55uY6Lev5b6ECgogICAgICAgIDpyZXR1cm4gc3RyOiDmuLLmn5PlkI7nmoQgVVJMIOWtl+espuS4su+8jOWmguaenOayoeacieWPr+eUqOaooeadv+WImei/lOWbniBOb25lCiAgICAgICAgIiIiCiAgICAgICAgdGVtcGxhdGUgPSBzZWxmLmdldF90ZW1wbGF0ZV9mb3JfZmlsZShmaWxlX25hbWUpCgogICAgICAgIGlmIG5vdCB0ZW1wbGF0ZToKICAgICAgICAgICAgcmV0dXJuIE5vbmUKCiAgICAgICAgY29udGV4dCA9IHsKICAgICAgICAgICAgImJhc2VfdXJsIjogYmFzZV91cmwucnN0cmlwKCIvIiksCiAgICAgICAgICAgICJwaWNrY29kZSI6IHBpY2tjb2RlIG9yICIiLAogICAgICAgICAgICAic2hhcmVfY29kZSI6IHNoYXJlX2NvZGUgb3IgIiIsCiAgICAgICAgICAgICJyZWNlaXZlX2NvZGUiOiByZWNlaXZlX2NvZGUgb3IgIiIsCiAgICAgICAgICAgICJmaWxlX2lkIjogZmlsZV9pZCBvciAiIiwKICAgICAgICAgICAgImZpbGVfbmFtZSI6IGZpbGVfbmFtZSBvciAiIiwKICAgICAgICAgICAgImZpbGVfcGF0aCI6IGZpbGVfcGF0aCBvciAiIiwKICAgICAgICAgICAgKiprd2FyZ3MsCiAgICAgICAgfQoKICAgICAgICB0cnk6CiAgICAgICAgICAgIHJldHVybiB0ZW1wbGF0ZS5yZW5kZXIoKipjb250ZXh0KQogICAgICAgIGV4Y2VwdCBUZW1wbGF0ZUVycm9yIGFzIGU6CiAgICAgICAgICAgIGxvZ2dlci5lcnJvcihmIuOAkFNUUk0gVVJMIOaooeadv+OAkeaooeadv+a4suafk+Wksei0pToge2V9LCDkuIrkuIvmloc6IHtjb250ZXh0fSIpCiAgICAgICAgICAgIHJhaXNlCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIFVSTCDmqKHmnb/jgJHmuLLmn5Pml7blj5HnlJ/mnKrnn6XplJnor686IHtlfSIpCiAgICAgICAgICAgIHJhaXNlCgoKY2xhc3MgU3RybUZpbGVuYW1lVGVtcGxhdGVSZXNvbHZlcjoKICAgICIiIgogICAg5Z+65LqOIEppbmphMiDnmoQgU1RSTSDmlofku7blkI3mqKHmnb/op6PmnpDlmagKICAgICIiIgoKICAgIGRlZiBfX2luaXRfXygKICAgICAgICBzZWxmLAogICAgICAgIGJhc2VfdGVtcGxhdGU6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIGN1c3RvbV9ydWxlczogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICApOgogICAgICAgICIiIgogICAgICAgIOWIneWni+WMluaooeadv+ino+aekOWZqAoKICAgICAgICA6cGFyYW0gYmFzZV90ZW1wbGF0ZSAoc3RyKTog5Z+656GAIEppbmphMiDmqKHmnb/lrZfnrKbkuLIKICAgICAgICA6cGFyYW0gY3VzdG9tX3J1bGVzIChzdHIpOiDmianlsZXlkI3nibnlrprmqKHmnb/op4TliJnvvIzmoLzlvI/vvJpleHQxLGV4dDIgPT4gdGVtcGxhdGUKICAgICAgICAiIiIKICAgICAgICBzZWxmLmVudiA9IEVudmlyb25tZW50KAogICAgICAgICAgICBhdXRvZXNjYXBlPUZhbHNlLAogICAgICAgICAgICB0cmltX2Jsb2Nrcz1UcnVlLAogICAgICAgICAgICBsc3RyaXBfYmxvY2tzPVRydWUsCiAgICAgICAgKQoKICAgICAgICBzZWxmLl9yZWdpc3Rlcl9maWx0ZXJzKCkKCiAgICAgICAgc2VsZi5iYXNlX3RlbXBsYXRlID0gTm9uZQogICAgICAgIGlmIGJhc2VfdGVtcGxhdGU6CiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHNlbGYuYmFzZV90ZW1wbGF0ZSA9IHNlbGYuZW52LmZyb21fc3RyaW5nKGJhc2VfdGVtcGxhdGUpCiAgICAgICAgICAgIGV4Y2VwdCBUZW1wbGF0ZUVycm9yIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIOaWh+S7tuWQjeaooeadv+OAkeWfuuehgOaooeadv+ino+aekOWksei0pToge2V9IikKICAgICAgICAgICAgICAgIHJhaXNlCgogICAgICAgIHNlbGYuZXh0ZW5zaW9uX3RlbXBsYXRlczogRGljdFtzdHIsIFRlbXBsYXRlXSA9IHt9CiAgICAgICAgaWYgY3VzdG9tX3J1bGVzOgogICAgICAgICAgICBzZWxmLl9wYXJzZV9jdXN0b21fcnVsZXMoY3VzdG9tX3J1bGVzKQoKICAgIGRlZiBfcmVnaXN0ZXJfZmlsdGVycyhzZWxmKToKICAgICAgICAiIiIKICAgICAgICDms6jlhozoh6rlrprkuYnov4fmu6TlmagKICAgICAgICAiIiIKCiAgICAgICAgZGVmIHVwcGVyX2ZpbHRlcih2YWx1ZTogc3RyKSAtPiBzdHI6CiAgICAgICAgICAgICIiIgogICAgICAgICAgICDovazlpKflhpkKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIHJldHVybiBzdHIodmFsdWUpLnVwcGVyKCkgaWYgdmFsdWUgZWxzZSAiIgoKICAgICAgICBkZWYgbG93ZXJfZmlsdGVyKHZhbHVlOiBzdHIpIC0+IHN0cjoKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIOi9rOWwj+WGmQogICAgICAgICAgICAiIiIKICAgICAgICAgICAgcmV0dXJuIHN0cih2YWx1ZSkubG93ZXIoKSBpZiB2YWx1ZSBlbHNlICIiCgogICAgICAgIGRlZiBzYW5pdGl6ZV9maWx0ZXIodmFsdWU6IHN0cikgLT4gc3RyOgogICAgICAgICAgICAiIiIKICAgICAgICAgICAg5paH5Lu25ZCN5riF55CG6L+H5ruk5Zmo77yI56e76Zmk5oiW5pu/5o2i5LiN5ZCI5rOV5a2X56ym77yJCiAgICAgICAgICAgICIiIgogICAgICAgICAgICBpZiBub3QgdmFsdWU6CiAgICAgICAgICAgICAgICByZXR1cm4gIiIKICAgICAgICAgICAgcmVzdWx0ID0gc3RyKHZhbHVlKS5yZXBsYWNlKCI6IiwgIu+8miIpCiAgICAgICAgICAgIGlsbGVnYWxfY2hhcnMgPSAnPD4iL1xcfD8qJwogICAgICAgICAgICBmb3IgY2hhciBpbiBpbGxlZ2FsX2NoYXJzOgogICAgICAgICAgICAgICAgcmVzdWx0ID0gcmVzdWx0LnJlcGxhY2UoY2hhciwgIl8iKQogICAgICAgICAgICByZXR1cm4gcmVzdWx0CgogICAgICAgIHNlbGYuZW52LmZpbHRlcnNbInVwcGVyIl0gPSB1cHBlcl9maWx0ZXIKICAgICAgICBzZWxmLmVudi5maWx0ZXJzWyJsb3dlciJdID0gbG93ZXJfZmlsdGVyCiAgICAgICAgc2VsZi5lbnYuZmlsdGVyc1sic2FuaXRpemUiXSA9IHNhbml0aXplX2ZpbHRlcgoKICAgIGRlZiBfcGFyc2VfY3VzdG9tX3J1bGVzKHNlbGYsIGNvbmZpZ19zdHI6IHN0cik6CiAgICAgICAgIiIiCiAgICAgICAg6Kej5p6Q5omp5bGV5ZCN54m55a6a5qih5p2/6KeE5YiZCgogICAgICAgIDpwYXJhbSBjb25maWdfc3RyIChzdHIpOiDop4TliJnlrZfnrKbkuLLvvIzmoLzlvI/vvJpleHQxLGV4dDIgPT4gdGVtcGxhdGXvvIjmr4/ooYzkuIDkuKrvvIkKICAgICAgICAiIiIKICAgICAgICBmb3IgcnVsZSBpbiBjb25maWdfc3RyLnN0cmlwKCkuc3BsaXQoIlxuIik6CiAgICAgICAgICAgIHJ1bGUgPSBydWxlLnN0cmlwKCkKICAgICAgICAgICAgaWYgbm90IHJ1bGUgb3IgIj0+IiBub3QgaW4gcnVsZToKICAgICAgICAgICAgICAgIGNvbnRpbnVlCgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICBleHRlbnNpb25zX3BhcnQsIHRlbXBsYXRlX3N0ciA9IHJ1bGUuc3BsaXQoIj0+IiwgMSkKICAgICAgICAgICAgICAgIGV4dGVuc2lvbnMgPSBbZXh0LnN0cmlwKCkubG93ZXIoKSBmb3IgZXh0IGluIGV4dGVuc2lvbnNfcGFydC5zcGxpdCgiLCIpXQogICAgICAgICAgICAgICAgdGVtcGxhdGVfc3RyID0gdGVtcGxhdGVfc3RyLnN0cmlwKCkKCiAgICAgICAgICAgICAgICBpZiBub3QgdGVtcGxhdGVfc3RyOgogICAgICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKGYi44CQU1RSTSDmlofku7blkI3mqKHmnb/jgJHop4TliJnmqKHmnb/kuLrnqbrvvIzot7Pov4c6IHtydWxlfSIpCiAgICAgICAgICAgICAgICAgICAgY29udGludWUKCiAgICAgICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICAgICAgdGVtcGxhdGUgPSBzZWxmLmVudi5mcm9tX3N0cmluZyh0ZW1wbGF0ZV9zdHIpCiAgICAgICAgICAgICAgICBleGNlcHQgVGVtcGxhdGVFcnJvciBhcyBlOgogICAgICAgICAgICAgICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgICAgICAgICAgICAgZiLjgJBTVFJNIOaWh+S7tuWQjeaooeadv+OAkeaJqeWxleWQjeaooeadv+ino+aekOWksei0pToge3J1bGV9LCDplJnor686IHtlfSIKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgY29udGludWUKCiAgICAgICAgICAgICAgICBmb3IgZXh0IGluIGV4dGVuc2lvbnM6CiAgICAgICAgICAgICAgICAgICAgaWYgbm90IGV4dDoKICAgICAgICAgICAgICAgICAgICAgICAgY29udGludWUKICAgICAgICAgICAgICAgICAgICBpZiBub3QgZXh0LnN0YXJ0c3dpdGgoIi4iKToKICAgICAgICAgICAgICAgICAgICAgICAgZXh0ID0gIi4iICsgZXh0CiAgICAgICAgICAgICAgICAgICAgc2VsZi5leHRlbnNpb25fdGVtcGxhdGVzW2V4dF0gPSB0ZW1wbGF0ZQogICAgICAgICAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZygKICAgICAgICAgICAgICAgICAgICAgICAgZiLjgJBTVFJNIOaWh+S7tuWQjeaooeadv+OAkeazqOWGjOaJqeWxleWQjeaooeadvzoge2V4dH0gPT4ge3RlbXBsYXRlX3N0cls6NTBdfS4uLiIKICAgICAgICAgICAgICAgICAgICApCgogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIOaWh+S7tuWQjeaooeadv+OAkeino+aekOinhOWImeWksei0pToge3J1bGV9LCDplJnor686IHtlfSIpCiAgICAgICAgICAgICAgICBjb250aW51ZQoKICAgIGRlZiBnZXRfdGVtcGxhdGVfZm9yX2ZpbGUoc2VsZiwgZmlsZV9uYW1lOiBzdHIpIC0+IE9wdGlvbmFsW1RlbXBsYXRlXToKICAgICAgICAiIiIKICAgICAgICDmoLnmja7mlofku7blkI3ojrflj5blr7nlupTnmoTmqKHmnb8KCiAgICAgICAgOnBhcmFtIGZpbGVfbmFtZSAoc3RyKTog5paH5Lu25ZCNCgogICAgICAgIDpyZXR1cm4gVGVtcGxhdGU6IOWMuemFjeeahOaooeadv++8jOWmguaenOayoeacieWMuemFjeWImei/lOWbnuWfuuehgOaooeadv++8jOWmguaenOmDveayoeacieWImei/lOWbniBOb25lCiAgICAgICAgIiIiCiAgICAgICAgZXh0ZW5zaW9uID0gUGF0aChmaWxlX25hbWUpLnN1ZmZpeC5sb3dlcigpCgogICAgICAgIGlmIGV4dGVuc2lvbiBpbiBzZWxmLmV4dGVuc2lvbl90ZW1wbGF0ZXM6CiAgICAgICAgICAgIHJldHVybiBzZWxmLmV4dGVuc2lvbl90ZW1wbGF0ZXNbZXh0ZW5zaW9uXQoKICAgICAgICByZXR1cm4gc2VsZi5iYXNlX3RlbXBsYXRlCgogICAgZGVmIHJlbmRlcigKICAgICAgICBzZWxmLAogICAgICAgIGZpbGVfbmFtZTogc3RyLAogICAgICAgIGZpbGVfcGF0aDogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgZmlsZV9zdGVtOiBPcHRpb25hbFtzdHJdID0gTm9uZSwKICAgICAgICBmaWxlX3N1ZmZpeDogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgKiprd2FyZ3M6IEFueSwKICAgICkgLT4gT3B0aW9uYWxbc3RyXToKICAgICAgICAiIiIKICAgICAgICDmuLLmn5Pmlofku7blkI3mqKHmnb8KCiAgICAgICAgOnBhcmFtIGZpbGVfbmFtZSAoc3RyKTog5paH5Lu25ZCN77yI5YyF5ZCr5omp5bGV5ZCN77yJCiAgICAgICAgOnBhcmFtIGZpbGVfcGF0aCAoc3RyKTog5paH5Lu26Lev5b6ECiAgICAgICAgOnBhcmFtIGZpbGVfc3RlbSAoc3RyKTog5paH5Lu25ZCN77yI5LiN5ZCr5omp5bGV5ZCN77yJCiAgICAgICAgOnBhcmFtIGZpbGVfc3VmZml4IChzdHIpOiDmlofku7bmianlsZXlkI3vvIjljIXlkKvngrnlj7fvvIkKCiAgICAgICAgOnJldHVybiBzdHI6IOa4suafk+WQjueahOaWh+S7tuWQjeWtl+espuS4su+8jOWmguaenOayoeacieWPr+eUqOaooeadv+WImei/lOWbniBOb25lCiAgICAgICAgIiIiCiAgICAgICAgdGVtcGxhdGUgPSBzZWxmLmdldF90ZW1wbGF0ZV9mb3JfZmlsZShmaWxlX25hbWUpCgogICAgICAgIGlmIG5vdCB0ZW1wbGF0ZToKICAgICAgICAgICAgcmV0dXJuIE5vbmUKCiAgICAgICAgaWYgZmlsZV9zdGVtIGlzIE5vbmU6CiAgICAgICAgICAgIGZpbGVfc3RlbSA9IFBhdGgoZmlsZV9uYW1lKS5zdGVtCiAgICAgICAgaWYgZmlsZV9zdWZmaXggaXMgTm9uZToKICAgICAgICAgICAgZmlsZV9zdWZmaXggPSBQYXRoKGZpbGVfbmFtZSkuc3VmZml4CgogICAgICAgIGNvbnRleHQgPSB7CiAgICAgICAgICAgICJmaWxlX25hbWUiOiBmaWxlX25hbWUgb3IgIiIsCiAgICAgICAgICAgICJmaWxlX3N0ZW0iOiBmaWxlX3N0ZW0gb3IgIiIsCiAgICAgICAgICAgICJmaWxlX3N1ZmZpeCI6IGZpbGVfc3VmZml4IG9yICIiLAogICAgICAgICAgICAiZmlsZV9wYXRoIjogZmlsZV9wYXRoIG9yICIiLAogICAgICAgICAgICAqKmt3YXJncywKICAgICAgICB9CgogICAgICAgIHRyeToKICAgICAgICAgICAgcmVzdWx0ID0gdGVtcGxhdGUucmVuZGVyKCoqY29udGV4dCkKICAgICAgICAgICAgcmVzdWx0ID0gcmVzdWx0LnJlcGxhY2UoIjoiLCAi77yaIikKICAgICAgICAgICAgaWxsZWdhbF9jaGFycyA9ICc8PiIvXFx8PyonCiAgICAgICAgICAgIGZvciBjaGFyIGluIGlsbGVnYWxfY2hhcnM6CiAgICAgICAgICAgICAgICByZXN1bHQgPSByZXN1bHQucmVwbGFjZShjaGFyLCAiXyIpCiAgICAgICAgICAgIHJldHVybiByZXN1bHQKICAgICAgICBleGNlcHQgVGVtcGxhdGVFcnJvciBhcyBlOgogICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIOaWh+S7tuWQjeaooeadv+OAkeaooeadv+a4suafk+Wksei0pToge2V9LCDkuIrkuIvmloc6IHtjb250ZXh0fSIpCiAgICAgICAgICAgIHJhaXNlCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIOaWh+S7tuWQjeaooeadv+OAkea4suafk+aXtuWPkeeUn+acquefpemUmeivrzoge2V9IikKICAgICAgICAgICAgcmFpc2UKCgpjbGFzcyBTdHJtVXJsR2V0dGVyOgogICAgIiIiCiAgICDojrflj5YgU3RybSBVUkwKICAgICIiIgoKICAgIGRlZiBfX2luaXRfXyhzZWxmKToKICAgICAgICAiIiIKICAgICAgICDliJ3lp4vljJYgU1RSTSBVUkwg6I635Y+W5Zmo77yM5Yqg6L29IFVSTCDmqKHmnb/op6PmnpDlmagKICAgICAgICAiIiIKICAgICAgICBzZWxmLnN0cm1fdXJsX2VuY29kZSA9IGNvbmZpZ2VyLnN0cm1fdXJsX2VuY29kZQoKICAgICAgICBzZWxmLmJhc2VfdXJsX2NhY2hlID0gZiJ7Y29uZmlnZXIubW92aWVwaWxvdF9hZGRyZXNzLnJzdHJpcCgnLycpfS9hcGkvdjEvcGx1Z2luL1AxMTVTdHJtSGVscGVyL3JlZGlyZWN0X3VybCIKCiAgICAgICAgc2VsZi51cmxfdGVtcGxhdGVfcmVzb2x2ZXIgPSBOb25lCiAgICAgICAgaWYgY29uZmlnZXIuc3RybV91cmxfdGVtcGxhdGVfZW5hYmxlZDoKICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgc2VsZi51cmxfdGVtcGxhdGVfcmVzb2x2ZXIgPSBTdHJtVXJsVGVtcGxhdGVSZXNvbHZlcigKICAgICAgICAgICAgICAgICAgICBiYXNlX3RlbXBsYXRlPWNvbmZpZ2VyLnN0cm1fdXJsX3RlbXBsYXRlLAogICAgICAgICAgICAgICAgICAgIGN1c3RvbV9ydWxlcz1jb25maWdlci5zdHJtX3VybF90ZW1wbGF0ZV9jdXN0b20sCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgICAgIGxvZ2dlci5lcnJvcihmIuOAkFNUUk0gVVJMIOaooeadv+OAkeWIneWni+WMluWksei0pToge2V9IikKICAgICAgICAgICAgICAgIHNlbGYudXJsX3RlbXBsYXRlX3Jlc29sdmVyID0gTm9uZQoKICAgIGRlZiBnZXRfc3RybV91cmwoc2VsZiwgcGlja2NvZGU6IHN0ciwgZmlsZV9uYW1lOiBzdHIsIGZpbGVfcGF0aDogc3RyKSAtPiBzdHI6CiAgICAgICAgIiIiCiAgICAgICAg6I635Y+W5pmu6YCaIFNUUk0gVVJMCgogICAgICAgIDpwYXJhbSBwaWNrY29kZSAoc3RyKTog5paH5Lu2IHBpY2tjb2RlCiAgICAgICAgOnBhcmFtIGZpbGVfbmFtZSAoc3RyKTog5paH5Lu25ZCN56ewCiAgICAgICAgOnBhcmFtIGZpbGVfcGF0aCAoc3RyKTog5paH5Lu2572R55uY6Lev5b6ECgogICAgICAgIDpyZXR1cm4gc3RyOiBTVFJNIFVSTCDlrZfnrKbkuLIKICAgICAgICAiIiIKICAgICAgICBpZiBzZWxmLnVybF90ZW1wbGF0ZV9yZXNvbHZlcjoKICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgcmVzdWx0ID0gc2VsZi51cmxfdGVtcGxhdGVfcmVzb2x2ZXIucmVuZGVyKAogICAgICAgICAgICAgICAgICAgIGZpbGVfbmFtZT1maWxlX25hbWUsCiAgICAgICAgICAgICAgICAgICAgYmFzZV91cmw9c2VsZi5iYXNlX3VybF9jYWNoZSwKICAgICAgICAgICAgICAgICAgICBwaWNrY29kZT1waWNrY29kZSwKICAgICAgICAgICAgICAgICAgICBmaWxlX3BhdGg9ZmlsZV9wYXRoLAogICAgICAgICAgICAgICAgICAgIGZpbGVfaWQ9c3RyKHRvX2lkKHBpY2tjb2RlKSksCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBpZiByZXN1bHQ6CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJlc3VsdAogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIFVSTCDmqKHmnb/jgJHmuLLmn5PlpLHotKXvvIzkvb/nlKjpu5jorqTmoLzlvI86IHtlfSIpCgogICAgICAgIGlmIGNvbmZpZ2VyLmZ1c2Vfc3RybV90YWtlb3Zlcl9lbmFibGVkOgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICBmcm9tIC4uaGVscGVyLnN0cm0ubW91bnQgaW1wb3J0IG1hdGNoX2Z1c2Vfc3RybV90YWtlb3ZlcgoKICAgICAgICAgICAgICAgIGZ1c2Vfc3RybV9jb250ZW50ID0gbWF0Y2hfZnVzZV9zdHJtX3Rha2VvdmVyKAogICAgICAgICAgICAgICAgICAgIGZpbGVfbmFtZT1maWxlX25hbWUsIGZpbGVfcGF0aD1maWxlX3BhdGgKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIGlmIGZ1c2Vfc3RybV9jb250ZW50OgogICAgICAgICAgICAgICAgICAgIHJldHVybiBmdXNlX3N0cm1fY29udGVudAogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBGVVNFIFNUUk0g5o6l566h44CR5aSE55CG5aSx6LSlOiB7ZX0iLCBleGNfaW5mbz1UcnVlKQoKICAgICAgICBzdHJtX3VybCA9IGYie3NlbGYuYmFzZV91cmxfY2FjaGV9P3BpY2tjb2RlPXtwaWNrY29kZX0iCiAgICAgICAgaWYgY29uZmlnZXIuc3RybV91cmxfZm9ybWF0ID09ICJwaWNrbmFtZSI6CiAgICAgICAgICAgIGlmIHNlbGYuc3RybV91cmxfZW5jb2RlOgogICAgICAgICAgICAgICAgZmlsZV9uYW1lID0gcXVvdGUoZmlsZV9uYW1lKQogICAgICAgICAgICBzdHJtX3VybCArPSBmIiZmaWxlX25hbWU9e2ZpbGVfbmFtZX0iCgogICAgICAgIHJldHVybiBzdHJtX3VybAoKICAgIGRlZiBnZXRfc2hhcmVfc3RybV91cmwoCiAgICAgICAgc2VsZiwKICAgICAgICBzaGFyZV9jb2RlOiBzdHIsCiAgICAgICAgcmVjZWl2ZV9jb2RlOiBzdHIsCiAgICAgICAgZmlsZV9pZDogc3RyLAogICAgICAgIGZpbGVfbmFtZTogc3RyLAogICAgICAgIGZpbGVfcGF0aDogc3RyLAogICAgKSAtPiBzdHI6CiAgICAgICAgIiIiCiAgICAgICAg6I635Y+W5YiG5LqrIFNUUk0gVVJMCgogICAgICAgIDpwYXJhbSBzaGFyZV9jb2RlIChzdHIpOiDliIbkuqvnoIEKICAgICAgICA6cGFyYW0gcmVjZWl2ZV9jb2RlIChzdHIpOiDmj5Dlj5bnoIEKICAgICAgICA6cGFyYW0gZmlsZV9pZCAoc3RyKTog5paH5Lu2IElECiAgICAgICAgOnBhcmFtIGZpbGVfbmFtZSAoc3RyKTog5paH5Lu25ZCN56ewCiAgICAgICAgOnBhcmFtIGZpbGVfcGF0aCAoc3RyKTog5paH5Lu2572R55uY6Lev5b6ECgogICAgICAgIDpyZXR1cm4gc3RyOiDliIbkuqsgU1RSTSBVUkwg5a2X56ym5LiyCiAgICAgICAgIiIiCiAgICAgICAgaWYgc2VsZi51cmxfdGVtcGxhdGVfcmVzb2x2ZXI6CiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHJlc3VsdCA9IHNlbGYudXJsX3RlbXBsYXRlX3Jlc29sdmVyLnJlbmRlcigKICAgICAgICAgICAgICAgICAgICBmaWxlX25hbWU9ZmlsZV9uYW1lLAogICAgICAgICAgICAgICAgICAgIGJhc2VfdXJsPXNlbGYuYmFzZV91cmxfY2FjaGUsCiAgICAgICAgICAgICAgICAgICAgc2hhcmVfY29kZT1zaGFyZV9jb2RlLAogICAgICAgICAgICAgICAgICAgIHJlY2VpdmVfY29kZT1yZWNlaXZlX2NvZGUsCiAgICAgICAgICAgICAgICAgICAgZmlsZV9pZD1maWxlX2lkLAogICAgICAgICAgICAgICAgICAgIGZpbGVfcGF0aD1maWxlX3BhdGgsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBpZiByZXN1bHQ6CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJlc3VsdAogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIFVSTCDmqKHmnb/jgJHmuLLmn5PlpLHotKXvvIzkvb/nlKjpu5jorqTmoLzlvI86IHtlfSIpCgogICAgICAgIHN0cm1fdXJsID0gZiJ7c2VsZi5iYXNlX3VybF9jYWNoZX0/c2hhcmVfY29kZT17c2hhcmVfY29kZX0mcmVjZWl2ZV9jb2RlPXtyZWNlaXZlX2NvZGV9JmlkPXtmaWxlX2lkfSIKICAgICAgICBpZiBjb25maWdlci5zdHJtX3VybF9mb3JtYXQgPT0gInBpY2tuYW1lIjoKICAgICAgICAgICAgc3RybV91cmwgKz0gZiImZmlsZV9uYW1lPXtmaWxlX25hbWV9IgoKICAgICAgICByZXR1cm4gc3RybV91cmwKCgpjbGFzcyBTdHJtR2VuZXJhdGVyOgogICAgIiIiCiAgICBTVFJNIOaWh+S7tueUn+aIkOW3peWFt+exuwogICAgIiIiCgogICAgX2ZpbGVuYW1lX3RlbXBsYXRlX3Jlc29sdmVyOiBPcHRpb25hbFtVbmlvbltTdHJtRmlsZW5hbWVUZW1wbGF0ZVJlc29sdmVyLCBib29sXV0gPSAoCiAgICAgICAgTm9uZQogICAgKQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBfZ2V0X2ZpbGVuYW1lX3RlbXBsYXRlX3Jlc29sdmVyKCkgLT4gT3B0aW9uYWxbU3RybUZpbGVuYW1lVGVtcGxhdGVSZXNvbHZlcl06CiAgICAgICAgIiIiCiAgICAgICAg6I635Y+W5paH5Lu25ZCN5qih5p2/6Kej5p6Q5ZmoCiAgICAgICAgIiIiCiAgICAgICAgcmVzb2x2ZXIgPSBTdHJtR2VuZXJhdGVyLl9maWxlbmFtZV90ZW1wbGF0ZV9yZXNvbHZlcgoKICAgICAgICBpZiBpc2luc3RhbmNlKHJlc29sdmVyLCBTdHJtRmlsZW5hbWVUZW1wbGF0ZVJlc29sdmVyKToKICAgICAgICAgICAgcmV0dXJuIHJlc29sdmVyCgogICAgICAgIGlmIHJlc29sdmVyIGlzIEZhbHNlOgogICAgICAgICAgICByZXR1cm4gTm9uZQoKICAgICAgICBpZiBub3QgY29uZmlnZXIuc3RybV9maWxlbmFtZV90ZW1wbGF0ZV9lbmFibGVkOgogICAgICAgICAgICBTdHJtR2VuZXJhdGVyLl9maWxlbmFtZV90ZW1wbGF0ZV9yZXNvbHZlciA9IEZhbHNlCiAgICAgICAgICAgIHJldHVybiBOb25lCgogICAgICAgIHRyeToKICAgICAgICAgICAgcmVzb2x2ZXIgPSBTdHJtRmlsZW5hbWVUZW1wbGF0ZVJlc29sdmVyKAogICAgICAgICAgICAgICAgYmFzZV90ZW1wbGF0ZT1jb25maWdlci5zdHJtX2ZpbGVuYW1lX3RlbXBsYXRlLAogICAgICAgICAgICAgICAgY3VzdG9tX3J1bGVzPWNvbmZpZ2VyLnN0cm1fZmlsZW5hbWVfdGVtcGxhdGVfY3VzdG9tLAogICAgICAgICAgICApCiAgICAgICAgICAgIFN0cm1HZW5lcmF0ZXIuX2ZpbGVuYW1lX3RlbXBsYXRlX3Jlc29sdmVyID0gcmVzb2x2ZXIKICAgICAgICAgICAgcmV0dXJuIHJlc29sdmVyCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIOaWh+S7tuWQjeaooeadv+OAkeWIneWni+WMluWksei0pToge2V9IikKICAgICAgICAgICAgU3RybUdlbmVyYXRlci5fZmlsZW5hbWVfdGVtcGxhdGVfcmVzb2x2ZXIgPSBGYWxzZQogICAgICAgICAgICByZXR1cm4gTm9uZQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBfcmVzZXRfZmlsZW5hbWVfdGVtcGxhdGVfcmVzb2x2ZXIoKToKICAgICAgICAiIiIKICAgICAgICDph43nva7mlofku7blkI3mqKHmnb/op6PmnpDlmagKICAgICAgICAiIiIKICAgICAgICBTdHJtR2VuZXJhdGVyLl9maWxlbmFtZV90ZW1wbGF0ZV9yZXNvbHZlciA9IE5vbmUKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgc2hvdWxkX2dlbmVyYXRlX3N0cm0oCiAgICAgICAgZmlsZW5hbWU6IHN0ciwKICAgICAgICBtb2RlOiBzdHIsCiAgICAgICAgZmlsZXNpemU6IE9wdGlvbmFsW2ludF0gfCBDb21wYXJlTWluU2l6ZSA9IE5vbmUsCiAgICAgICAgYmxhY2tsaXN0X2F1dG9tYXRvbjogT3B0aW9uYWxbQXV0b21hdG9uXSA9IE5vbmUsCiAgICApIC0+IHR1cGxlW3N0ciwgYm9vbF06CiAgICAgICAgIiIiCiAgICAgICAg5Yik5pat5paH5Lu25piv5ZCm6IO955Sf5oiQ5oC76KeE5YiZCgogICAgICAgIDpwYXJhbSBmaWxlbmFtZSAoc3RyKTog5paH5Lu25ZCNCiAgICAgICAgOnBhcmFtIG1vZGUgKHN0cik6IOWQjOatpeaooeW8jwogICAgICAgIDpwYXJhbSBmaWxlc2l6ZSAoaW50KTog5paH5Lu25aSn5bCP77yM5Y+v5Li6IENvbXBhcmVNaW5TaXplCiAgICAgICAgOnBhcmFtIGJsYWNrbGlzdF9hdXRvbWF0b24gKEF1dG9tYXRvbik6IOm7keWQjeWNleiHquWKqOacugoKICAgICAgICA6cmV0dXJuIFR1cGxlOiAo5ouS57ud5Y6f5ZugLCDmmK/lkKblhYHorrgpCiAgICAgICAgIiIiCiAgICAgICAgIyAxLiDliKTmlq3mmK/lkKblnKjpu5HlkI3ljZUKICAgICAgICBpZiBibGFja2xpc3RfYXV0b21hdG9uOgogICAgICAgICAgICBibGFja2xpc3RfbXNnLCBibGFja2xpc3Rfc3RhdHVzID0gU3RybUdlbmVyYXRlci5ub3RfYmxhY2tsaXN0X2tleV9hdXRvbWF0b24oCiAgICAgICAgICAgICAgICBmaWxlbmFtZSwgYmxhY2tsaXN0X2F1dG9tYXRvbgogICAgICAgICAgICApCiAgICAgICAgZWxzZToKICAgICAgICAgICAgYmxhY2tsaXN0X21zZywgYmxhY2tsaXN0X3N0YXR1cyA9IFN0cm1HZW5lcmF0ZXIubm90X2JsYWNrbGlzdF9rZXkoZmlsZW5hbWUpCiAgICAgICAgaWYgbm90IGJsYWNrbGlzdF9zdGF0dXM6CiAgICAgICAgICAgIHJldHVybiBibGFja2xpc3RfbXNnLCBibGFja2xpc3Rfc3RhdHVzCgogICAgICAgICMgMi4g5Yik5pat5aSn5bCP5piv5ZCm5L2O5LqO5pyA5L2O6ZmQ5Yi2CiAgICAgICAgbWluc2l6ZV9tc2csIG1pbnNpemVfc3RhdHVzID0gU3RybUdlbmVyYXRlci5ub3RfbWluX2xpbWl0KG1vZGUsIGZpbGVzaXplKQogICAgICAgIGlmIG5vdCBtaW5zaXplX3N0YXR1czoKICAgICAgICAgICAgcmV0dXJuIG1pbnNpemVfbXNnLCBtaW5zaXplX3N0YXR1cwoKICAgICAgICByZXR1cm4gIiIsIFRydWUKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgbm90X2JsYWNrbGlzdF9rZXlfYXV0b21hdG9uKAogICAgICAgIGZpbGVuYW1lLCBibGFja2xpc3RfYXV0b21hdG9uOiBBdXRvbWF0b24KICAgICkgLT4gdHVwbGVbc3RyLCBib29sXToKICAgICAgICAiIiIKICAgICAgICDkvb/nlKggQWhvLUNvcmFzaWNrIOiHquWKqOacuuWIpOaWreaWh+S7tuWQjeaYr+WQpuWMheWQq+m7keWQjeWNleS4reeahOS7u+S9leWFs+mUruivjQoKICAgICAgICA6cGFyYW0gZmlsZW5hbWUgKHN0cik6IOaWh+S7tuWQjQogICAgICAgIDpwYXJhbSBibGFja2xpc3RfYXV0b21hdG9uIChBdXRvbWF0b24pOiDpu5HlkI3ljZXoh6rliqjmnLoKCiAgICAgICAgOnJldHVybiBUdXBsZTogKOWMuemFjeWIsOeahOWFs+mUruivjSwg5piv5ZCm6YCa6L+HKQogICAgICAgICIiIgogICAgICAgIGlmIG5vdCBibGFja2xpc3RfYXV0b21hdG9uOgogICAgICAgICAgICByZXR1cm4gIiIsIFRydWUKICAgICAgICBsb3dlcl9maWxlbmFtZSA9IGZpbGVuYW1lLmxvd2VyKCkKICAgICAgICB0cnk6CiAgICAgICAgICAgIF8sIChvcmlnaW5hbF9rZXl3b3JkLCBfKSA9IG5leHQoYmxhY2tsaXN0X2F1dG9tYXRvbi5pdGVyKGxvd2VyX2ZpbGVuYW1lKSkKICAgICAgICAgICAgcmV0dXJuIGYi5Yy56YWN5Yiw6buR5ZCN5Y2V5YWz6ZSu6K+NIHtvcmlnaW5hbF9rZXl3b3JkfSIsIEZhbHNlCiAgICAgICAgZXhjZXB0IFN0b3BJdGVyYXRpb246CiAgICAgICAgICAgIHJldHVybiAiIiwgVHJ1ZQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBub3RfYmxhY2tsaXN0X2tleShmaWxlbmFtZSkgLT4gdHVwbGVbc3RyLCBib29sXToKICAgICAgICAiIiIKICAgICAgICDliKTmlq3mlofku7blkI3mmK/lkKbljIXlkKvpu5HlkI3ljZXkuK3nmoTku7vkvZXlhbPplK7or40KCiAgICAgICAgOnBhcmFtIGZpbGVuYW1lIChzdHIpOiDmlofku7blkI0KCiAgICAgICAgOnJldHVybiBUdXBsZTogKOWMuemFjeWIsOeahOWFs+mUruivjSwg5piv5ZCm6YCa6L+HKQogICAgICAgICIiIgogICAgICAgIGJsYWNrbGlzdCA9IGNvbmZpZ2VyLnN0cm1fZ2VuZXJhdGVfYmxhY2tsaXN0CgogICAgICAgIGlmIG5vdCBibGFja2xpc3Q6CiAgICAgICAgICAgIHJldHVybiAiIiwgVHJ1ZQogICAgICAgIGxvd2VyX2ZpbGVuYW1lID0gZmlsZW5hbWUubG93ZXIoKQogICAgICAgIGZvciBrZXl3b3JkIGluIGJsYWNrbGlzdDogICMgcHlsaW50OiBkaXNhYmxlPUUxMTMzCiAgICAgICAgICAgIGlmIGtleXdvcmQubG93ZXIoKSBpbiBsb3dlcl9maWxlbmFtZToKICAgICAgICAgICAgICAgIHJldHVybiBmIuWMuemFjeWIsOm7keWQjeWNleWFs+mUruivjSB7a2V5d29yZH0iLCBGYWxzZQogICAgICAgIHJldHVybiAiIiwgVHJ1ZQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBub3RfbWluX2xpbWl0KAogICAgICAgIG1vZGU6IHN0ciwgZmlsZXNpemU6IE9wdGlvbmFsW2ludF0gfCBDb21wYXJlTWluU2l6ZSA9IE5vbmUKICAgICkgLT4gdHVwbGVbc3RyLCBib29sXToKICAgICAgICAiIiIKICAgICAgICDliKTmlq3mlofku7blpKflsI/mmK/lkKbkvY7kuo7mnIDkvY7pmZDliLYKCiAgICAgICAgOnBhcmFtIG1vZGUgKHN0cik6IOWQjOatpeaooeW8j++8iGZ1bGwgLyBsaWZlIC8gaW5jcmVtZW5077yJCiAgICAgICAgOnBhcmFtIGZpbGVzaXplIChpbnQpOiDmlofku7blpKflsI/vvIzlj6/kuLogQ29tcGFyZU1pblNpemUKCiAgICAgICAgOnJldHVybiBUdXBsZTogKOaLkue7neWOn+WboCwg5piv5ZCm6YCa6L+HKQogICAgICAgICIiIgogICAgICAgIG1pbl9zaXplID0gTm9uZQogICAgICAgIGlmIGlzaW5zdGFuY2UoZmlsZXNpemUsIENvbXBhcmVNaW5TaXplKToKICAgICAgICAgICAgbWluX3NpemUgPSBmaWxlc2l6ZS5taW5fc2l6ZQogICAgICAgICAgICBmaWxlc2l6ZSA9IGZpbGVzaXplLmZpbGVfc2l6ZQogICAgICAgIGlmIG1vZGUgPT0gImZ1bGwiOgogICAgICAgICAgICBtaW5fc2l6ZSA9IGNvbmZpZ2VyLmZ1bGxfc3luY19taW5fZmlsZV9zaXplCiAgICAgICAgZWxpZiBtb2RlID09ICJsaWZlIjoKICAgICAgICAgICAgbWluX3NpemUgPSBjb25maWdlci5tb25pdG9yX2xpZmVfbWluX2ZpbGVfc2l6ZQogICAgICAgIGVsaWYgbW9kZSA9PSAiaW5jcmVtZW50IjoKICAgICAgICAgICAgbWluX3NpemUgPSBjb25maWdlci5pbmNyZW1lbnRfc3luY19taW5fZmlsZV9zaXplCgogICAgICAgIGlmIG5vdCBtaW5fc2l6ZSBvciBtaW5fc2l6ZSA9PSAwOgogICAgICAgICAgICByZXR1cm4gIiIsIFRydWUKCiAgICAgICAgaWYgbm90IGZpbGVzaXplOgogICAgICAgICAgICByZXR1cm4gIiIsIFRydWUKCiAgICAgICAgaWYgZmlsZXNpemUgPCBtaW5fc2l6ZToKICAgICAgICAgICAgcmV0dXJuICLlsI/kuo7mnIDlsI/mlofku7blpKflsI8iLCBGYWxzZQoKICAgICAgICByZXR1cm4gIiIsIFRydWUKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgZ2V0X3N0cm1fZmlsZW5hbWUoCiAgICAgICAgZmlsZV9wYXRoOiBQYXRoLAogICAgICAgIGZpbGVfbmFtZTogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgZmlsZV9wYXRoX3N0cjogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgKiprd2FyZ3M6IEFueSwKICAgICkgLT4gc3RyOgogICAgICAgICIiIgogICAgICAgIOagueaNruWOn+Wni+aWh+S7tui3r+W+hOeUn+aIkCBTVFJNIOaWh+S7tuWQjQoKICAgICAgICA6cGFyYW0gZmlsZV9wYXRoIChQYXRoKTog5Y6f5aeL5paH5Lu26Lev5b6E77yIUGF0aCDlr7nosaHvvIkKICAgICAgICA6cGFyYW0gZmlsZV9uYW1lIChzdHIpOiDmlofku7blkI3vvIjlj6/pgInvvIzlpoLmnpzkuI3mj5DkvpvliJnku45maWxlX3BhdGjmj5Dlj5bvvIkKICAgICAgICA6cGFyYW0gZmlsZV9wYXRoX3N0ciAoc3RyKTog5paH5Lu26Lev5b6E5a2X56ym5Liy77yI5Y+v6YCJ77yM55So5LqO5qih5p2/5riy5p+T77yJCiAgICAgICAgOnBhcmFtIGt3YXJncyAoRGljdCk6IOWFtuS7luS4iuS4i+aWh+S/oeaBr++8iOeUqOS6juaooeadv+a4suafk++8iQoKICAgICAgICA6cmV0dXJuIHN0cjogU1RSTSDmlofku7blkI3vvIjlpoIgIm1vdmllLmlzby5zdHJtIiDmiJYgIm1vdmllLnN0cm0i77yJCiAgICAgICAgIiIiCiAgICAgICAgaWYgU3RybUdlbmVyYXRlci5fZmlsZW5hbWVfdGVtcGxhdGVfcmVzb2x2ZXIgaXMgRmFsc2U6CiAgICAgICAgICAgIHN1ZmZpeCA9IGZpbGVfcGF0aC5zdWZmaXgubG93ZXIoKQogICAgICAgICAgICBzdGVtID0gZmlsZV9wYXRoLnN0ZW0KICAgICAgICAgICAgaWYgc3VmZml4ID09ICIuaXNvIjoKICAgICAgICAgICAgICAgIHJldHVybiBmIntzdGVtfS5pc28uc3RybSIKICAgICAgICAgICAgcmV0dXJuIGYie3N0ZW19LnN0cm0iCgogICAgICAgIHRlbXBsYXRlX3Jlc29sdmVyID0gU3RybUdlbmVyYXRlci5fZ2V0X2ZpbGVuYW1lX3RlbXBsYXRlX3Jlc29sdmVyKCkKICAgICAgICBpZiB0ZW1wbGF0ZV9yZXNvbHZlcjoKICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgc3VmZml4ID0gZmlsZV9wYXRoLnN1ZmZpeAogICAgICAgICAgICAgICAgc3RlbSA9IGZpbGVfcGF0aC5zdGVtCgogICAgICAgICAgICAgICAgaWYgZmlsZV9uYW1lIGlzIE5vbmU6CiAgICAgICAgICAgICAgICAgICAgZmlsZV9uYW1lID0gZmlsZV9wYXRoLm5hbWUKCiAgICAgICAgICAgICAgICByZXN1bHQgPSB0ZW1wbGF0ZV9yZXNvbHZlci5yZW5kZXIoCiAgICAgICAgICAgICAgICAgICAgZmlsZV9uYW1lPWZpbGVfbmFtZSwKICAgICAgICAgICAgICAgICAgICBmaWxlX3BhdGg9ZmlsZV9wYXRoX3N0ciBvciBzdHIoZmlsZV9wYXRoKSwKICAgICAgICAgICAgICAgICAgICBmaWxlX3N0ZW09c3RlbSwKICAgICAgICAgICAgICAgICAgICBmaWxlX3N1ZmZpeD1zdWZmaXgsCiAgICAgICAgICAgICAgICAgICAgKiprd2FyZ3MsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBpZiByZXN1bHQ6CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJlc3VsdAogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJNIOaWh+S7tuWQjeaooeadv+OAkea4suafk+Wksei0pe+8jOS9v+eUqOm7mOiupOagvOW8jzoge2V9IikKCiAgICAgICAgc3VmZml4ID0gZmlsZV9wYXRoLnN1ZmZpeC5sb3dlcigpCiAgICAgICAgc3RlbSA9IGZpbGVfcGF0aC5zdGVtCiAgICAgICAgaWYgc3VmZml4ID09ICIuaXNvIjoKICAgICAgICAgICAgcmV0dXJuIGYie3N0ZW19Lmlzby5zdHJtIgogICAgICAgIHJldHVybiBmIntzdGVtfS5zdHJtIgo=
+__all__ = [
+    "StrmUrlTemplateResolver",
+    "StrmFilenameTemplateResolver",
+    "StrmUrlGetter",
+    "StrmGenerater",
+]
+
+
+from pathlib import Path
+from typing import Optional, Dict, Any, Union
+from urllib.parse import quote
+
+from app.log import logger
+
+from ahocorasick import Automaton
+from p115pickcode import to_id
+from jinja2 import Template, Environment, select_autoescape
+from jinja2.exceptions import TemplateError
+
+from ..core.config import configer
+from ..schemas.size import CompareMinSize
+
+
+class StrmUrlTemplateResolver:
+    """
+    基于 Jinja2 的 STRM URL 模板解析器
+    """
+
+    def __init__(
+        self,
+        base_template: Optional[str] = None,
+        custom_rules: Optional[str] = None,
+        auto_escape: bool = False,
+    ):
+        """
+        初始化模板解析器
+
+        :param base_template (str): 基础 Jinja2 模板字符串
+        :param custom_rules (str): 扩展名特定模板规则，格式：ext1,ext2 => template
+        :param auto_escape (bool): 是否自动转义
+        """
+        self.env = Environment(
+            autoescape=select_autoescape(["html", "xml"]) if auto_escape else False,
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
+
+        self._register_filters()
+
+        self.base_template = None
+        if base_template:
+            try:
+                self.base_template = self.env.from_string(base_template)
+            except TemplateError as e:
+                logger.error(f"【STRM URL 模板】基础模板解析失败: {e}")
+                raise
+
+        self.extension_templates: Dict[str, Template] = {}
+        if custom_rules:
+            self._parse_custom_rules(custom_rules)
+
+    def _register_filters(self):
+        """
+        注册自定义过滤器
+        """
+
+        def urlencode_filter(value: str) -> str:
+            """
+            URL 编码过滤器
+            """
+            if not value:
+                return ""
+            return quote(str(value), safe="")
+
+        def path_encode_filter(value: str) -> str:
+            """
+            路径编码过滤器（保留斜杠）
+            """
+            if not value:
+                return ""
+            return quote(str(value), safe="/")
+
+        def upper_filter(value: str) -> str:
+            """
+            转大写
+            """
+            return str(value).upper() if value else ""
+
+        def lower_filter(value: str) -> str:
+            """
+            转小写
+            """
+            return str(value).lower() if value else ""
+
+        self.env.filters["urlencode"] = urlencode_filter
+        self.env.filters["path_encode"] = path_encode_filter
+        self.env.filters["upper"] = upper_filter
+        self.env.filters["lower"] = lower_filter
+
+    def _parse_custom_rules(self, config_str: str):
+        """
+        解析扩展名特定模板规则
+
+        :param config_str (str): 规则字符串，格式：ext1,ext2 => template（每行一个）
+        """
+        for rule in config_str.strip().split("\n"):
+            rule = rule.strip()
+            if not rule or "=>" not in rule:
+                continue
+
+            try:
+                extensions_part, template_str = rule.split("=>", 1)
+                extensions = [ext.strip().lower() for ext in extensions_part.split(",")]
+                template_str = template_str.strip()
+
+                if not template_str:
+                    logger.warning(f"【STRM URL 模板】规则模板为空，跳过: {rule}")
+                    continue
+
+                # 解析模板
+                try:
+                    template = self.env.from_string(template_str)
+                except TemplateError as e:
+                    logger.error(
+                        f"【STRM URL 模板】扩展名模板解析失败: {rule}, 错误: {e}"
+                    )
+                    continue
+
+                # 为每个扩展名注册模板
+                for ext in extensions:
+                    if not ext:
+                        continue
+                    if not ext.startswith("."):
+                        ext = "." + ext
+                    self.extension_templates[ext] = template
+                    logger.debug(
+                        f"【STRM URL 模板】注册扩展名模板: {ext} => {template_str[:50]}..."
+                    )
+
+            except Exception as e:
+                logger.error(f"【STRM URL 模板】解析规则失败: {rule}, 错误: {e}")
+                continue
+
+    def get_template_for_file(self, file_name: str) -> Optional[Template]:
+        """
+        根据文件名获取对应的模板
+
+        :param file_name (str): 文件名
+
+        :return Template: 匹配的模板，如果没有匹配则返回基础模板，如果都没有则返回 None
+        """
+        extension = Path(file_name).suffix.lower()
+
+        if extension in self.extension_templates:
+            return self.extension_templates[extension]
+
+        return self.base_template
+
+    def render(
+        self,
+        file_name: str,
+        base_url: str,
+        pickcode: Optional[str] = None,
+        share_code: Optional[str] = None,
+        receive_code: Optional[str] = None,
+        file_id: Optional[str] = None,
+        file_path: Optional[str] = None,
+        **kwargs: Any,
+    ) -> Optional[str]:
+        """
+        渲染 URL 模板
+
+        :param file_name (str): 文件名
+        :param base_url (str): 基础 URL
+        :param pickcode (str): 文件 pickcode
+        :param share_code (str): 分享码
+        :param receive_code (str): 提取码
+        :param file_id (str): 文件 ID
+        :param file_path (str): 文件网盘路径
+
+        :return str: 渲染后的 URL 字符串，如果没有可用模板则返回 None
+        """
+        template = self.get_template_for_file(file_name)
+
+        if not template:
+            return None
+
+        context = {
+            "base_url": base_url.rstrip("/"),
+            "pickcode": pickcode or "",
+            "share_code": share_code or "",
+            "receive_code": receive_code or "",
+            "file_id": file_id or "",
+            "file_name": file_name or "",
+            "file_path": file_path or "",
+            **kwargs,
+        }
+
+        try:
+            return template.render(**context)
+        except TemplateError as e:
+            logger.error(f"【STRM URL 模板】模板渲染失败: {e}, 上下文: {context}")
+            raise
+        except Exception as e:
+            logger.error(f"【STRM URL 模板】渲染时发生未知错误: {e}")
+            raise
+
+
+class StrmFilenameTemplateResolver:
+    """
+    基于 Jinja2 的 STRM 文件名模板解析器
+    """
+
+    def __init__(
+        self,
+        base_template: Optional[str] = None,
+        custom_rules: Optional[str] = None,
+    ):
+        """
+        初始化模板解析器
+
+        :param base_template (str): 基础 Jinja2 模板字符串
+        :param custom_rules (str): 扩展名特定模板规则，格式：ext1,ext2 => template
+        """
+        self.env = Environment(
+            autoescape=False,
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
+
+        self._register_filters()
+
+        self.base_template = None
+        if base_template:
+            try:
+                self.base_template = self.env.from_string(base_template)
+            except TemplateError as e:
+                logger.error(f"【STRM 文件名模板】基础模板解析失败: {e}")
+                raise
+
+        self.extension_templates: Dict[str, Template] = {}
+        if custom_rules:
+            self._parse_custom_rules(custom_rules)
+
+    def _register_filters(self):
+        """
+        注册自定义过滤器
+        """
+
+        def upper_filter(value: str) -> str:
+            """
+            转大写
+            """
+            return str(value).upper() if value else ""
+
+        def lower_filter(value: str) -> str:
+            """
+            转小写
+            """
+            return str(value).lower() if value else ""
+
+        def sanitize_filter(value: str) -> str:
+            """
+            文件名清理过滤器（移除或替换不合法字符）
+            """
+            if not value:
+                return ""
+            result = str(value).replace(":", "：")
+            illegal_chars = '<>"/\\|?*'
+            for char in illegal_chars:
+                result = result.replace(char, "_")
+            return result
+
+        self.env.filters["upper"] = upper_filter
+        self.env.filters["lower"] = lower_filter
+        self.env.filters["sanitize"] = sanitize_filter
+
+    def _parse_custom_rules(self, config_str: str):
+        """
+        解析扩展名特定模板规则
+
+        :param config_str (str): 规则字符串，格式：ext1,ext2 => template（每行一个）
+        """
+        for rule in config_str.strip().split("\n"):
+            rule = rule.strip()
+            if not rule or "=>" not in rule:
+                continue
+
+            try:
+                extensions_part, template_str = rule.split("=>", 1)
+                extensions = [ext.strip().lower() for ext in extensions_part.split(",")]
+                template_str = template_str.strip()
+
+                if not template_str:
+                    logger.warning(f"【STRM 文件名模板】规则模板为空，跳过: {rule}")
+                    continue
+
+                try:
+                    template = self.env.from_string(template_str)
+                except TemplateError as e:
+                    logger.error(
+                        f"【STRM 文件名模板】扩展名模板解析失败: {rule}, 错误: {e}"
+                    )
+                    continue
+
+                for ext in extensions:
+                    if not ext:
+                        continue
+                    if not ext.startswith("."):
+                        ext = "." + ext
+                    self.extension_templates[ext] = template
+                    logger.debug(
+                        f"【STRM 文件名模板】注册扩展名模板: {ext} => {template_str[:50]}..."
+                    )
+
+            except Exception as e:
+                logger.error(f"【STRM 文件名模板】解析规则失败: {rule}, 错误: {e}")
+                continue
+
+    def get_template_for_file(self, file_name: str) -> Optional[Template]:
+        """
+        根据文件名获取对应的模板
+
+        :param file_name (str): 文件名
+
+        :return Template: 匹配的模板，如果没有匹配则返回基础模板，如果都没有则返回 None
+        """
+        extension = Path(file_name).suffix.lower()
+
+        if extension in self.extension_templates:
+            return self.extension_templates[extension]
+
+        return self.base_template
+
+    def render(
+        self,
+        file_name: str,
+        file_path: Optional[str] = None,
+        file_stem: Optional[str] = None,
+        file_suffix: Optional[str] = None,
+        **kwargs: Any,
+    ) -> Optional[str]:
+        """
+        渲染文件名模板
+
+        :param file_name (str): 文件名（包含扩展名）
+        :param file_path (str): 文件路径
+        :param file_stem (str): 文件名（不含扩展名）
+        :param file_suffix (str): 文件扩展名（包含点号）
+
+        :return str: 渲染后的文件名字符串，如果没有可用模板则返回 None
+        """
+        template = self.get_template_for_file(file_name)
+
+        if not template:
+            return None
+
+        if file_stem is None:
+            file_stem = Path(file_name).stem
+        if file_suffix is None:
+            file_suffix = Path(file_name).suffix
+
+        context = {
+            "file_name": file_name or "",
+            "file_stem": file_stem or "",
+            "file_suffix": file_suffix or "",
+            "file_path": file_path or "",
+            **kwargs,
+        }
+
+        try:
+            result = template.render(**context)
+            result = result.replace(":", "：")
+            illegal_chars = '<>"/\\|?*'
+            for char in illegal_chars:
+                result = result.replace(char, "_")
+            return result
+        except TemplateError as e:
+            logger.error(f"【STRM 文件名模板】模板渲染失败: {e}, 上下文: {context}")
+            raise
+        except Exception as e:
+            logger.error(f"【STRM 文件名模板】渲染时发生未知错误: {e}")
+            raise
+
+
+class StrmUrlGetter:
+    """
+    获取 Strm URL
+    """
+
+    def __init__(self):
+        """
+        初始化 STRM URL 获取器，加载 URL 模板解析器
+        """
+        self.strm_url_encode = configer.strm_url_encode
+
+        self.base_url_cache = f"{configer.moviepilot_address.rstrip('/')}/api/v1/plugin/P115StrmHelper/redirect_url"
+
+        self.url_template_resolver = None
+        if configer.strm_url_template_enabled:
+            try:
+                self.url_template_resolver = StrmUrlTemplateResolver(
+                    base_template=configer.strm_url_template,
+                    custom_rules=configer.strm_url_template_custom,
+                )
+            except Exception as e:
+                logger.error(f"【STRM URL 模板】初始化失败: {e}")
+                self.url_template_resolver = None
+
+    def get_strm_url(self, pickcode: str, file_name: str, file_path: str) -> str:
+        """
+        获取普通 STRM URL
+
+        :param pickcode (str): 文件 pickcode
+        :param file_name (str): 文件名称
+        :param file_path (str): 文件网盘路径
+
+        :return str: STRM URL 字符串
+        """
+        if self.url_template_resolver:
+            try:
+                result = self.url_template_resolver.render(
+                    file_name=file_name,
+                    base_url=self.base_url_cache,
+                    pickcode=pickcode,
+                    file_path=file_path,
+                    file_id=str(to_id(pickcode)),
+                )
+                if result:
+                    return result
+            except Exception as e:
+                logger.error(f"【STRM URL 模板】渲染失败，使用默认格式: {e}")
+
+        if configer.fuse_strm_takeover_enabled:
+            try:
+                from ..helper.strm.mount import match_fuse_strm_takeover
+
+                fuse_strm_content = match_fuse_strm_takeover(
+                    file_name=file_name, file_path=file_path
+                )
+                if fuse_strm_content:
+                    return fuse_strm_content
+            except Exception as e:
+                logger.error(f"【FUSE STRM 接管】处理失败: {e}", exc_info=True)
+
+        strm_url = f"{self.base_url_cache}?pickcode={pickcode}"
+        if configer.strm_url_format == "pickname":
+            if self.strm_url_encode:
+                file_name = quote(file_name)
+            strm_url += f"&file_name={file_name}"
+
+        return strm_url
+
+    def get_share_strm_url(
+        self,
+        share_code: str,
+        receive_code: str,
+        file_id: str,
+        file_name: str,
+        file_path: str,
+    ) -> str:
+        """
+        获取分享 STRM URL
+
+        :param share_code (str): 分享码
+        :param receive_code (str): 提取码
+        :param file_id (str): 文件 ID
+        :param file_name (str): 文件名称
+        :param file_path (str): 文件网盘路径
+
+        :return str: 分享 STRM URL 字符串
+        """
+        if self.url_template_resolver:
+            try:
+                result = self.url_template_resolver.render(
+                    file_name=file_name,
+                    base_url=self.base_url_cache,
+                    share_code=share_code,
+                    receive_code=receive_code,
+                    file_id=file_id,
+                    file_path=file_path,
+                )
+                if result:
+                    return result
+            except Exception as e:
+                logger.error(f"【STRM URL 模板】渲染失败，使用默认格式: {e}")
+
+        strm_url = f"{self.base_url_cache}?share_code={share_code}&receive_code={receive_code}&id={file_id}"
+        if configer.strm_url_format == "pickname":
+            strm_url += f"&file_name={file_name}"
+
+        return strm_url
+
+
+class StrmGenerater:
+    """
+    STRM 文件生成工具类
+    """
+
+    _filename_template_resolver: Optional[Union[StrmFilenameTemplateResolver, bool]] = (
+        None
+    )
+
+    @staticmethod
+    def _get_filename_template_resolver() -> Optional[StrmFilenameTemplateResolver]:
+        """
+        获取文件名模板解析器
+        """
+        resolver = StrmGenerater._filename_template_resolver
+
+        if isinstance(resolver, StrmFilenameTemplateResolver):
+            return resolver
+
+        if resolver is False:
+            return None
+
+        if not configer.strm_filename_template_enabled:
+            StrmGenerater._filename_template_resolver = False
+            return None
+
+        try:
+            resolver = StrmFilenameTemplateResolver(
+                base_template=configer.strm_filename_template,
+                custom_rules=configer.strm_filename_template_custom,
+            )
+            StrmGenerater._filename_template_resolver = resolver
+            return resolver
+        except Exception as e:
+            logger.error(f"【STRM 文件名模板】初始化失败: {e}")
+            StrmGenerater._filename_template_resolver = False
+            return None
+
+    @staticmethod
+    def _reset_filename_template_resolver():
+        """
+        重置文件名模板解析器
+        """
+        StrmGenerater._filename_template_resolver = None
+
+    @staticmethod
+    def should_generate_strm(
+        filename: str,
+        mode: str,
+        filesize: Optional[int] | CompareMinSize = None,
+        blacklist_automaton: Optional[Automaton] = None,
+    ) -> tuple[str, bool]:
+        """
+        判断文件是否能生成总规则
+
+        :param filename (str): 文件名
+        :param mode (str): 同步模式
+        :param filesize (int): 文件大小，可为 CompareMinSize
+        :param blacklist_automaton (Automaton): 黑名单自动机
+
+        :return Tuple: (拒绝原因, 是否允许)
+        """
+        # 1. 判断是否在黑名单
+        if blacklist_automaton:
+            blacklist_msg, blacklist_status = StrmGenerater.not_blacklist_key_automaton(
+                filename, blacklist_automaton
+            )
+        else:
+            blacklist_msg, blacklist_status = StrmGenerater.not_blacklist_key(filename)
+        if not blacklist_status:
+            return blacklist_msg, blacklist_status
+
+        # 2. 判断大小是否低于最低限制
+        minsize_msg, minsize_status = StrmGenerater.not_min_limit(mode, filesize)
+        if not minsize_status:
+            return minsize_msg, minsize_status
+
+        return "", True
+
+    @staticmethod
+    def not_blacklist_key_automaton(
+        filename, blacklist_automaton: Automaton
+    ) -> tuple[str, bool]:
+        """
+        使用 Aho-Corasick 自动机判断文件名是否包含黑名单中的任何关键词
+
+        :param filename (str): 文件名
+        :param blacklist_automaton (Automaton): 黑名单自动机
+
+        :return Tuple: (匹配到的关键词, 是否通过)
+        """
+        if not blacklist_automaton:
+            return "", True
+        lower_filename = filename.lower()
+        try:
+            _, (original_keyword, _) = next(blacklist_automaton.iter(lower_filename))
+            return f"匹配到黑名单关键词 {original_keyword}", False
+        except StopIteration:
+            return "", True
+
+    @staticmethod
+    def not_blacklist_key(filename) -> tuple[str, bool]:
+        """
+        判断文件名是否包含黑名单中的任何关键词
+
+        :param filename (str): 文件名
+
+        :return Tuple: (匹配到的关键词, 是否通过)
+        """
+        blacklist = configer.strm_generate_blacklist
+
+        if not blacklist:
+            return "", True
+        lower_filename = filename.lower()
+        for keyword in blacklist:  # pylint: disable=E1133
+            if keyword.lower() in lower_filename:
+                return f"匹配到黑名单关键词 {keyword}", False
+        return "", True
+
+    @staticmethod
+    def not_min_limit(
+        mode: str, filesize: Optional[int] | CompareMinSize = None
+    ) -> tuple[str, bool]:
+        """
+        判断文件大小是否低于最低限制
+
+        :param mode (str): 同步模式（full / life / increment）
+        :param filesize (int): 文件大小，可为 CompareMinSize
+
+        :return Tuple: (拒绝原因, 是否通过)
+        """
+        min_size = None
+        if isinstance(filesize, CompareMinSize):
+            min_size = filesize.min_size
+            filesize = filesize.file_size
+        if mode == "full":
+            min_size = configer.full_sync_min_file_size
+        elif mode == "life":
+            min_size = configer.monitor_life_min_file_size
+        elif mode == "increment":
+            min_size = configer.increment_sync_min_file_size
+
+        if not min_size or min_size == 0:
+            return "", True
+
+        if not filesize:
+            return "", True
+
+        if filesize < min_size:
+            return "小于最小文件大小", False
+
+        return "", True
+
+    @staticmethod
+    def get_strm_filename(
+        file_path: Path,
+        file_name: Optional[str] = None,
+        file_path_str: Optional[str] = None,
+        **kwargs: Any,
+    ) -> str:
+        """
+        根据原始文件路径生成 STRM 文件名
+
+        :param file_path (Path): 原始文件路径（Path 对象）
+        :param file_name (str): 文件名（可选，如果不提供则从file_path提取）
+        :param file_path_str (str): 文件路径字符串（可选，用于模板渲染）
+        :param kwargs (Dict): 其他上下文信息（用于模板渲染）
+
+        :return str: STRM 文件名（如 "movie.iso.strm" 或 "movie.strm"）
+        """
+        if StrmGenerater._filename_template_resolver is False:
+            suffix = file_path.suffix.lower()
+            stem = file_path.stem
+            if suffix == ".iso":
+                return f"{stem}.iso.strm"
+            return f"{stem}.strm"
+
+        template_resolver = StrmGenerater._get_filename_template_resolver()
+        if template_resolver:
+            try:
+                suffix = file_path.suffix
+                stem = file_path.stem
+
+                if file_name is None:
+                    file_name = file_path.name
+
+                result = template_resolver.render(
+                    file_name=file_name,
+                    file_path=file_path_str or str(file_path),
+                    file_stem=stem,
+                    file_suffix=suffix,
+                    **kwargs,
+                )
+                if result:
+                    return result
+            except Exception as e:
+                logger.error(f"【STRM 文件名模板】渲染失败，使用默认格式: {e}")
+
+        suffix = file_path.suffix.lower()
+        stem = file_path.stem
+        if suffix == ".iso":
+            return f"{stem}.iso.strm"
+        return f"{stem}.strm"

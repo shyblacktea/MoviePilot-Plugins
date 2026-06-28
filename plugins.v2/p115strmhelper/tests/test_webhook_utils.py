@@ -1,1 +1,173 @@
-IiIiCldlYmhvb2tVdGlscyDmtYvor5XmqKHlnZcKCuWMheWQqyBXZWJob29rVXRpbHMg55u45YWz5pa55rOV55qE5Y2V5YWD5rWL6K+VCiIiIgoKZnJvbSBqc29uIGltcG9ydCBsb2FkCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aApmcm9tIHVuaXR0ZXN0IGltcG9ydCBUZXN0Q2FzZQoKZnJvbSB1dGlscy53ZWJob29rIGltcG9ydCBXZWJob29rVXRpbHMKCgpjbGFzcyBUZXN0UGFyc2VJdGVtUGF0aHMoVGVzdENhc2UpOgogICAgIiIiCiAgICDmtYvor5UgV2ViaG9va1V0aWxzLnBhcnNlX2l0ZW1fcGF0aHNfZnJvbV9kZXNjcmlwdGlvbgogICAgIiIiCgogICAgZGVmIHRlc3RfcGFyc2Vfc2luZ2xlX2l0ZW1fcGF0aChzZWxmKToKICAgICAgICAiIiLmtYvor5Xop6PmnpDljZXkuKogSXRlbSBQYXRoIiIiCiAgICAgICAgZGVzY3JpcHRpb24gPSAiIiJJdGVtIE5hbWU6CueLguaAkuaymeaatAoKSXRlbSBQYXRoOgovZGF0YTIvdGVzdC/ni4LmgJLmspnmmrQgKDIwMjMpL+eLguaAkuaymeaatCAoMjAyMykgLSAxMDgwcC5zdHJtCgpNb3VudCBQYXRoczoKaHR0cDovLzE5Mi4xNjguMzEuOTk6MjMwMDAvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci9yZWRpcmVjdF91cmw/cGlja2NvZGU9Y2cwNGN0aW5rbjNhaWRiemMiIiIKCiAgICAgICAgcmVzdWx0ID0gV2ViaG9va1V0aWxzLnBhcnNlX2l0ZW1fcGF0aHNfZnJvbV9kZXNjcmlwdGlvbihkZXNjcmlwdGlvbikKICAgICAgICBleHBlY3RlZCA9IFsiL2RhdGEyL3Rlc3Qv54uC5oCS5rKZ5pq0ICgyMDIzKS/ni4LmgJLmspnmmrQgKDIwMjMpIC0gMTA4MHAuc3RybSJdCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChyZXN1bHQsIGV4cGVjdGVkKQoKICAgIGRlZiB0ZXN0X3BhcnNlX211bHRpcGxlX2l0ZW1fcGF0aHMoc2VsZik6CiAgICAgICAgIiIi5rWL6K+V6Kej5p6Q5aSa5LiqIEl0ZW0gUGF0aO+8iOWkmueJiOacrOWJp+mbhu+8iSIiIgogICAgICAgIGRlc2NyaXB0aW9uID0gIiIiSXRlbSBOYW1lOgrni4LmgJLmspnmmrQKCkl0ZW0gUGF0aDoKL2RhdGEyL3Rlc3Qv54uC5oCS5rKZ5pq0ICgyMDIzKS/ni4LmgJLmspnmmrQgKDIwMjMpIC0gMTA4MHAuc3RybQovZGF0YTIvdGVzdC/ni4LmgJLmspnmmrQgKDIwMjMpL+eLguaAkuaymeaatCAoMjAyMykgLSA3MjBwLnN0cm0KCk1vdW50IFBhdGhzOgpodHRwOi8vMTkyLjE2OC4zMS45OToyMzAwMC9hcGkvdjEvcGx1Z2luL1AxMTVTdHJtSGVscGVyL3JlZGlyZWN0X3VybD9waWNrY29kZT1jZzA0Y3RpbmtuM2FpZGJ6YyIiIgoKICAgICAgICByZXN1bHQgPSBXZWJob29rVXRpbHMucGFyc2VfaXRlbV9wYXRoc19mcm9tX2Rlc2NyaXB0aW9uKGRlc2NyaXB0aW9uKQogICAgICAgIGV4cGVjdGVkID0gWwogICAgICAgICAgICAiL2RhdGEyL3Rlc3Qv54uC5oCS5rKZ5pq0ICgyMDIzKS/ni4LmgJLmspnmmrQgKDIwMjMpIC0gMTA4MHAuc3RybSIsCiAgICAgICAgICAgICIvZGF0YTIvdGVzdC/ni4LmgJLmspnmmrQgKDIwMjMpL+eLguaAkuaymeaatCAoMjAyMykgLSA3MjBwLnN0cm0iLAogICAgICAgIF0KICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHJlc3VsdCwgZXhwZWN0ZWQpCgogICAgZGVmIHRlc3RfcGFyc2VfaXRlbV9wYXRoX29uX3NhbWVfbGluZShzZWxmKToKICAgICAgICAiIiLmtYvor5UgSXRlbSBQYXRoIOWcqOWQjOS4gOihjOeahOaDheWGtSIiIgogICAgICAgIGRlc2NyaXB0aW9uID0gIiIiSXRlbSBOYW1lOiDni4LmgJLmspnmmrQKSXRlbSBQYXRoOiAvZGF0YTIvdGVzdC/ni4LmgJLmspnmmrQgKDIwMjMpL+eLguaAkuaymeaatCAoMjAyMykgLSAxMDgwcC5zdHJtCk1vdW50IFBhdGhzOiBodHRwOi8vZXhhbXBsZS5jb20iIiIKCiAgICAgICAgcmVzdWx0ID0gV2ViaG9va1V0aWxzLnBhcnNlX2l0ZW1fcGF0aHNfZnJvbV9kZXNjcmlwdGlvbihkZXNjcmlwdGlvbikKICAgICAgICBleHBlY3RlZCA9IFsiL2RhdGEyL3Rlc3Qv54uC5oCS5rKZ5pq0ICgyMDIzKS/ni4LmgJLmspnmmrQgKDIwMjMpIC0gMTA4MHAuc3RybSJdCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChyZXN1bHQsIGV4cGVjdGVkKQoKICAgIGRlZiB0ZXN0X3BhcnNlX2VtcHR5X2Rlc2NyaXB0aW9uKHNlbGYpOgogICAgICAgICIiIua1i+ivleepuiBEZXNjcmlwdGlvbiIiIgogICAgICAgIHJlc3VsdCA9IFdlYmhvb2tVdGlscy5wYXJzZV9pdGVtX3BhdGhzX2Zyb21fZGVzY3JpcHRpb24oIiIpCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChyZXN1bHQsIFtdKQoKICAgIGRlZiB0ZXN0X3BhcnNlX25vX2l0ZW1fcGF0aChzZWxmKToKICAgICAgICAiIiLmtYvor5XmsqHmnIkgSXRlbSBQYXRoIOeahOaDheWGtSIiIgogICAgICAgIGRlc2NyaXB0aW9uID0gIiIiSXRlbSBOYW1lOiDni4LmgJLmspnmmrQKTW91bnQgUGF0aHM6IGh0dHA6Ly9leGFtcGxlLmNvbSIiIgoKICAgICAgICByZXN1bHQgPSBXZWJob29rVXRpbHMucGFyc2VfaXRlbV9wYXRoc19mcm9tX2Rlc2NyaXB0aW9uKGRlc2NyaXB0aW9uKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocmVzdWx0LCBbXSkKCiAgICBkZWYgdGVzdF9wYXJzZV93aXRoX3dpbmRvd3NfcGF0aChzZWxmKToKICAgICAgICAiIiLmtYvor5UgV2luZG93cyDot6/lvoTmoLzlvI8iIiIKICAgICAgICBkZXNjcmlwdGlvbiA9ICIiIkl0ZW0gUGF0aDoKQzpcXGRhdGFcXHRlc3RcXG1vdmllLnN0cm0KRDpcXGRhdGFcXHRlc3RcXG1vdmllMi5zdHJtIiIiCgogICAgICAgIHJlc3VsdCA9IFdlYmhvb2tVdGlscy5wYXJzZV9pdGVtX3BhdGhzX2Zyb21fZGVzY3JpcHRpb24oZGVzY3JpcHRpb24pCiAgICAgICAgZXhwZWN0ZWQgPSBbIkM6XFxkYXRhXFx0ZXN0XFxtb3ZpZS5zdHJtIiwgIkQ6XFxkYXRhXFx0ZXN0XFxtb3ZpZTIuc3RybSJdCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChyZXN1bHQsIGV4cGVjdGVkKQoKICAgIGRlZiB0ZXN0X3BhcnNlX3dpdGhfcmVsYXRpdmVfcGF0aChzZWxmKToKICAgICAgICAiIiLmtYvor5Xnm7jlr7not6/lvoQiIiIKICAgICAgICBkZXNjcmlwdGlvbiA9ICIiIkl0ZW0gUGF0aDoKLi9kYXRhL3Rlc3QvbW92aWUuc3RybQouLi9kYXRhL3Rlc3QvbW92aWUyLnN0cm0iIiIKCiAgICAgICAgcmVzdWx0ID0gV2ViaG9va1V0aWxzLnBhcnNlX2l0ZW1fcGF0aHNfZnJvbV9kZXNjcmlwdGlvbihkZXNjcmlwdGlvbikKICAgICAgICBleHBlY3RlZCA9IFsiLi9kYXRhL3Rlc3QvbW92aWUuc3RybSIsICIuLi9kYXRhL3Rlc3QvbW92aWUyLnN0cm0iXQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocmVzdWx0LCBleHBlY3RlZCkKCiAgICBkZWYgdGVzdF9wYXJzZV9pZ25vcmVfdXJscyhzZWxmKToKICAgICAgICAiIiLmtYvor5Xlv73nlaUgVVJMIiIiCiAgICAgICAgZGVzY3JpcHRpb24gPSAiIiJJdGVtIFBhdGg6Ci9kYXRhMi90ZXN0L21vdmllLnN0cm0KaHR0cDovL2V4YW1wbGUuY29tL3BhdGgvdG8vZmlsZQpodHRwczovL2V4YW1wbGUuY29tL3BhdGgvdG8vZmlsZQovZGF0YTIvdGVzdC9tb3ZpZTIuc3RybSIiIgoKICAgICAgICByZXN1bHQgPSBXZWJob29rVXRpbHMucGFyc2VfaXRlbV9wYXRoc19mcm9tX2Rlc2NyaXB0aW9uKGRlc2NyaXB0aW9uKQogICAgICAgIGV4cGVjdGVkID0gWyIvZGF0YTIvdGVzdC9tb3ZpZS5zdHJtIiwgIi9kYXRhMi90ZXN0L21vdmllMi5zdHJtIl0KICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHJlc3VsdCwgZXhwZWN0ZWQpCgogICAgZGVmIHRlc3RfcGFyc2Vfd2l0aF9leHRyYV93aGl0ZXNwYWNlKHNlbGYpOgogICAgICAgICIiIua1i+ivleWMheWQq+mineWkluepuueZveWtl+espueahOaDheWGtSIiIgogICAgICAgIGRlc2NyaXB0aW9uID0gIiIiSXRlbSBQYXRoOgogICAgL2RhdGEyL3Rlc3QvbW92aWUuc3RybQoKICAgIC9kYXRhMi90ZXN0L21vdmllMi5zdHJtCiAgICAiIiIKCiAgICAgICAgcmVzdWx0ID0gV2ViaG9va1V0aWxzLnBhcnNlX2l0ZW1fcGF0aHNfZnJvbV9kZXNjcmlwdGlvbihkZXNjcmlwdGlvbikKICAgICAgICBleHBlY3RlZCA9IFsiL2RhdGEyL3Rlc3QvbW92aWUuc3RybSIsICIvZGF0YTIvdGVzdC9tb3ZpZTIuc3RybSJdCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChyZXN1bHQsIGV4cGVjdGVkKQoKICAgIGRlZiB0ZXN0X3BhcnNlX2NvbXBsZXhfZGVzY3JpcHRpb24oc2VsZik6CiAgICAgICAgIiIi5rWL6K+V5aSN5p2C55qEIERlc2NyaXB0aW9uIOagvOW8jyIiIgogICAgICAgIGRlc2NyaXB0aW9uID0gIiIiSXRlbSBOYW1lOgrni4LmgJLmspnmmrQKCkl0ZW0gUGF0aDoKL2RhdGEyL3Rlc3Qv54uC5oCS5rKZ5pq0ICgyMDIzKS/ni4LmgJLmspnmmrQgKDIwMjMpIC0gMTA4MHAuc3RybQovZGF0YTIvdGVzdC/ni4LmgJLmspnmmrQgKDIwMjMpL+eLguaAkuaymeaatCAoMjAyMykgLSA3MjBwLnN0cm0KL2RhdGEyL3Rlc3Qv54uC5oCS5rKZ5pq0ICgyMDIzKS/ni4LmgJLmspnmmrQgKDIwMjMpIC0gNEsuc3RybQoKTW91bnQgUGF0aHM6Cmh0dHA6Ly8xOTIuMTY4LjMxLjk5OjIzMDAwL2FwaS92MS9wbHVnaW4vUDExNVN0cm1IZWxwZXIvcmVkaXJlY3RfdXJsP3BpY2tjb2RlPWNnMDRjdGlua24zYWlkYnpjCgpPdGhlciBJbmZvOgpTb21lIG90aGVyIGluZm9ybWF0aW9uIGhlcmUiIiIKCiAgICAgICAgcmVzdWx0ID0gV2ViaG9va1V0aWxzLnBhcnNlX2l0ZW1fcGF0aHNfZnJvbV9kZXNjcmlwdGlvbihkZXNjcmlwdGlvbikKICAgICAgICBleHBlY3RlZCA9IFsKICAgICAgICAgICAgIi9kYXRhMi90ZXN0L+eLguaAkuaymeaatCAoMjAyMykv54uC5oCS5rKZ5pq0ICgyMDIzKSAtIDEwODBwLnN0cm0iLAogICAgICAgICAgICAiL2RhdGEyL3Rlc3Qv54uC5oCS5rKZ5pq0ICgyMDIzKS/ni4LmgJLmspnmmrQgKDIwMjMpIC0gNzIwcC5zdHJtIiwKICAgICAgICAgICAgIi9kYXRhMi90ZXN0L+eLguaAkuaymeaatCAoMjAyMykv54uC5oCS5rKZ5pq0ICgyMDIzKSAtIDRLLnN0cm0iLAogICAgICAgIF0KICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHJlc3VsdCwgZXhwZWN0ZWQpCgogICAgZGVmIHRlc3RfcGFyc2Vfd2l0aF9yZWFsX2pzb25fZGF0YShzZWxmKToKICAgICAgICAiIiLkvb/nlKjnnJ/lrp7nmoQgd2ViaG9va19kZWxldGUuanNvbiDmlbDmja7mtYvor5UiIiIKICAgICAgICBqc29uX2ZpbGUgPSAoCiAgICAgICAgICAgIFBhdGgoX19maWxlX18pLnJlc29sdmUoKS5wYXJlbnQucGFyZW50LnBhcmVudC5wYXJlbnQKICAgICAgICAgICAgLyAiZGV2IgogICAgICAgICAgICAvICJwMTE1c3RybWhlbHBlciIKICAgICAgICAgICAgLyAid2ViaG9va19kZWxldGUuanNvbiIKICAgICAgICApCgogICAgICAgIGlmIG5vdCBqc29uX2ZpbGUuZXhpc3RzKCk6CiAgICAgICAgICAgIHNlbGYuc2tpcFRlc3QoZiLmtYvor5Xmlofku7bkuI3lrZjlnKg6IHtqc29uX2ZpbGV9IikKCiAgICAgICAgd2l0aCBvcGVuKGpzb25fZmlsZSwgInIiLCBlbmNvZGluZz0idXRmLTgiKSBhcyBmOgogICAgICAgICAgICBkYXRhID0gbG9hZChmKQoKICAgICAgICBkZXNjcmlwdGlvbiA9IGRhdGEuZ2V0KCJEZXNjcmlwdGlvbiIsICIiKQogICAgICAgIHJlc3VsdCA9IFdlYmhvb2tVdGlscy5wYXJzZV9pdGVtX3BhdGhzX2Zyb21fZGVzY3JpcHRpb24oZGVzY3JpcHRpb24pCgogICAgICAgIGV4cGVjdGVkID0gWwogICAgICAgICAgICAiL2RhdGEyL3Rlc3Qv54uC5oCS5rKZ5pq0ICgyMDIzKS/ni4LmgJLmspnmmrQgKDIwMjMpIC0gMTA4MHAuc3RybSIsCiAgICAgICAgICAgICIvZGF0YTIvdGVzdC/ni4LmgJLmspnmmrQgKDIwMjMpL+eLguaAkuaymeaatCAoMjAyMykgLSA3MjBwLnN0cm0iLAogICAgICAgIF0KCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChyZXN1bHQsIGV4cGVjdGVkKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBmcm9tIHVuaXR0ZXN0IGltcG9ydCBtYWluCgogICAgbWFpbih2ZXJib3NpdHk9MikK
+"""
+WebhookUtils 测试模块
+
+包含 WebhookUtils 相关方法的单元测试
+"""
+
+from json import load
+from pathlib import Path
+from unittest import TestCase
+
+from utils.webhook import WebhookUtils
+
+
+class TestParseItemPaths(TestCase):
+    """
+    测试 WebhookUtils.parse_item_paths_from_description
+    """
+
+    def test_parse_single_item_path(self):
+        """测试解析单个 Item Path"""
+        description = """Item Name:
+狂怒沙暴
+
+Item Path:
+/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm
+
+Mount Paths:
+http://192.168.31.99:23000/api/v1/plugin/P115StrmHelper/redirect_url?pickcode=cg04ctinkn3aidbzc"""
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        expected = ["/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm"]
+        self.assertEqual(result, expected)
+
+    def test_parse_multiple_item_paths(self):
+        """测试解析多个 Item Path（多版本剧集）"""
+        description = """Item Name:
+狂怒沙暴
+
+Item Path:
+/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm
+/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 720p.strm
+
+Mount Paths:
+http://192.168.31.99:23000/api/v1/plugin/P115StrmHelper/redirect_url?pickcode=cg04ctinkn3aidbzc"""
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        expected = [
+            "/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm",
+            "/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 720p.strm",
+        ]
+        self.assertEqual(result, expected)
+
+    def test_parse_item_path_on_same_line(self):
+        """测试 Item Path 在同一行的情况"""
+        description = """Item Name: 狂怒沙暴
+Item Path: /data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm
+Mount Paths: http://example.com"""
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        expected = ["/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm"]
+        self.assertEqual(result, expected)
+
+    def test_parse_empty_description(self):
+        """测试空 Description"""
+        result = WebhookUtils.parse_item_paths_from_description("")
+        self.assertEqual(result, [])
+
+    def test_parse_no_item_path(self):
+        """测试没有 Item Path 的情况"""
+        description = """Item Name: 狂怒沙暴
+Mount Paths: http://example.com"""
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        self.assertEqual(result, [])
+
+    def test_parse_with_windows_path(self):
+        """测试 Windows 路径格式"""
+        description = """Item Path:
+C:\\data\\test\\movie.strm
+D:\\data\\test\\movie2.strm"""
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        expected = ["C:\\data\\test\\movie.strm", "D:\\data\\test\\movie2.strm"]
+        self.assertEqual(result, expected)
+
+    def test_parse_with_relative_path(self):
+        """测试相对路径"""
+        description = """Item Path:
+./data/test/movie.strm
+../data/test/movie2.strm"""
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        expected = ["./data/test/movie.strm", "../data/test/movie2.strm"]
+        self.assertEqual(result, expected)
+
+    def test_parse_ignore_urls(self):
+        """测试忽略 URL"""
+        description = """Item Path:
+/data2/test/movie.strm
+http://example.com/path/to/file
+https://example.com/path/to/file
+/data2/test/movie2.strm"""
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        expected = ["/data2/test/movie.strm", "/data2/test/movie2.strm"]
+        self.assertEqual(result, expected)
+
+    def test_parse_with_extra_whitespace(self):
+        """测试包含额外空白字符的情况"""
+        description = """Item Path:
+    /data2/test/movie.strm
+
+    /data2/test/movie2.strm
+    """
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        expected = ["/data2/test/movie.strm", "/data2/test/movie2.strm"]
+        self.assertEqual(result, expected)
+
+    def test_parse_complex_description(self):
+        """测试复杂的 Description 格式"""
+        description = """Item Name:
+狂怒沙暴
+
+Item Path:
+/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm
+/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 720p.strm
+/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 4K.strm
+
+Mount Paths:
+http://192.168.31.99:23000/api/v1/plugin/P115StrmHelper/redirect_url?pickcode=cg04ctinkn3aidbzc
+
+Other Info:
+Some other information here"""
+
+        result = WebhookUtils.parse_item_paths_from_description(description)
+        expected = [
+            "/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm",
+            "/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 720p.strm",
+            "/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 4K.strm",
+        ]
+        self.assertEqual(result, expected)
+
+    def test_parse_with_real_json_data(self):
+        """使用真实的 webhook_delete.json 数据测试"""
+        json_file = (
+            Path(__file__).resolve().parent.parent.parent.parent
+            / "dev"
+            / "p115strmhelper"
+            / "webhook_delete.json"
+        )
+
+        if not json_file.exists():
+            self.skipTest(f"测试文件不存在: {json_file}")
+
+        with open(json_file, "r", encoding="utf-8") as f:
+            data = load(f)
+
+        description = data.get("Description", "")
+        result = WebhookUtils.parse_item_paths_from_description(description)
+
+        expected = [
+            "/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 1080p.strm",
+            "/data2/test/狂怒沙暴 (2023)/狂怒沙暴 (2023) - 720p.strm",
+        ]
+
+        self.assertEqual(result, expected)
+
+
+if __name__ == "__main__":
+    from unittest import main
+
+    main(verbosity=2)

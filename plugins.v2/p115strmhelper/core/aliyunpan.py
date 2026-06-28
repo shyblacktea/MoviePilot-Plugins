@@ -1,1 +1,135 @@
-X19hbGxfXyA9IFsiQWxpeXVuUGFuTG9naW4iLCAiQkFsaWdvIl0KCgpmcm9tIHR5cGluZyBpbXBvcnQgTGlzdCwgRGljdCwgT3B0aW9uYWwKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgppbXBvcnQgaHR0cHgKZnJvbSBvcmpzb24gaW1wb3J0IGxvYWRzCmZyb20gYWxpZ28gaW1wb3J0IEFsaWdvLCBCYXRjaFJlcXVlc3QsIEJhdGNoU3ViUmVxdWVzdAoKCmNsYXNzIEFsaXl1blBhbkxvZ2luOgogICAgIiIiCiAgICDpmL/ph4zkupHnm5jnmbvlhaUKICAgICIiIgoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBxcigpIC0+IERpY3Q6CiAgICAgICAgIiIiCiAgICAgICAgcXIg6I635Y+WCiAgICAgICAgIiIiCiAgICAgICAgdXJsID0gImh0dHBzOi8vcGFzc3BvcnQuYWxpeXVuZHJpdmUuY29tL25ld2xvZ2luL3FyY29kZS9nZW5lcmF0ZS5kbyIKICAgICAgICBwYXJhbXMgPSB7CiAgICAgICAgICAgICJhcHBOYW1lIjogImFsaXl1bl9kcml2ZSIsCiAgICAgICAgICAgICJmcm9tU2l0ZSI6ICI1MiIsCiAgICAgICAgICAgICJhcHBFbnRyYW5jZSI6ICJ3ZWIiLAogICAgICAgICAgICAiX2NzcmZfdG9rZW4iOiAiIiwKICAgICAgICAgICAgInVtaWRUb2tlbiI6ICIiLAogICAgICAgICAgICAiaXNNb2JpbGUiOiAiZmFsc2UiLAogICAgICAgICAgICAibGFuZyI6ICJ6aF9DTiIsCiAgICAgICAgICAgICJyZXR1cm5VcmwiOiAiIiwKICAgICAgICAgICAgImhzaXoiOiAiIiwKICAgICAgICAgICAgImJpelBhcmFtcyI6ICIiLAogICAgICAgICAgICAiX2J4LXYiOiAiMi4wLjMxIiwKICAgICAgICB9CgogICAgICAgIHRyeToKICAgICAgICAgICAgcmVzID0gaHR0cHguZ2V0KHVybCwgcGFyYW1zPXBhcmFtcywgdGltZW91dD0xMCwgZm9sbG93X3JlZGlyZWN0cz1UcnVlKQogICAgICAgICAgICByZXMucmFpc2VfZm9yX3N0YXR1cygpCiAgICAgICAgICAgIHJldHVybiByZXMuanNvbigpCiAgICAgICAgZXhjZXB0IGh0dHB4LlJlcXVlc3RFcnJvciBhcyBlOgogICAgICAgICAgICByZXR1cm4geyJlcnJvciI6IHN0cihlKX0KCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgY2sodCwgY2spIC0+IERpY3Q6CiAgICAgICAgIiIiCiAgICAgICAgY2sg6I635Y+WCiAgICAgICAgIiIiCiAgICAgICAgdHJ5OgogICAgICAgICAgICB1cmwgPSAoCiAgICAgICAgICAgICAgICAiaHR0cHM6Ly9wYXNzcG9ydC5hbGl5dW5kcml2ZS5jb20vbmV3bG9naW4vcXJjb2RlL3F1ZXJ5LmRvIgogICAgICAgICAgICAgICAgIj9hcHBOYW1lPWFsaXl1bl9kcml2ZSZmcm9tU2l0ZT01MiZfYngtdj0yLjAuMzEiCiAgICAgICAgICAgICkKICAgICAgICAgICAgZm9ybV9kYXRhID0gewogICAgICAgICAgICAgICAgInQiOiB0LAogICAgICAgICAgICAgICAgImNrIjogY2ssCiAgICAgICAgICAgICAgICAidWEiOiAiMTQwI0Fwem9UMU8renpQRFJRbzI0NSt1MzNTYzJxcTN2T3N4MzdidEtndFlwLytJUVR3cGlsbVJXTDdVa2xLaVhPU3hFZ21ybEJQdzRvT0tVM2hxenpuZ0V6Q05PYSt4eld6OGlqbHVsRnp4MkREM1Z0aHF6RkhjSGJ6dW01MXh4RDJpVlAvL2xiengyZGZIS0NVSTF3YmE3WEVseWI5OEZMa0djQnE5TkxUd1NnQXpMK3lJQ1dxL2w1V3JZSitCM3FsUFBGSmcrQnh1T0prcG0ra3N6ZVVxMjlUaU91Y2xlZ0dRR3JwS2JGUU9QQ1FFK3U5NG5UN2FMOEc5QXE4NE5iTDduaGZlRkQ5QnBuelJQckVKcmJDYnBBM0trN0lzRVczZ0RJZ1NDNHBRVkt1TTFWd3dHYUl1TmRvdG5WdGZ1Q2NlT0Z4V2VkREdNS0hscjlOTEF1OUpLelJKQkFTRkhSTmRPYlNVZVNrbHhaZFhJSG51cGliQWtHOW1Ud0FFdGFqc3RWdVg3NVk3aWNPUzVLaGdRRlA3aU51cUVFZUFSWDNEaU1rSTBwRHcwWWJqNVE1SnJYQ3o5QUw2Q1RXM3QwWnc1bEU2OFVtRUNwaTFlTXd1WTQ2Qlh5a2s0RVQ3K0ptN2ErUlZVVG5XUDV2ZkZWMG9tTmF1Qk5wc1ZnZ3cvTVlNeHk0Y3pNZk1SaVF3Z2xKR0JJVncrTXIxOFMrQkF2SnpxYVVYZytIRFVwaElTRnNpclVORDAvdTN6ZytGTTA2WmM2cnNWbXhFMmVTZmZFM2NwZ2ZWWW9OL0hmMjR5RkpDT1ZuVmxJRWFnUUYyQ1B4QlFJREwrUTlFL2YxbDNsZlFrdHFyQzBHZ3hkUE52NWlmanpwOUlEYjN0NGg3NU8yZGFvSkRuS2NZaERmYktGdnBxVWd3a1VDenpZc3BEUlB2NFhYQWhzTnE2S1FacjNuUDFBS2RTakVMNFhRU0FHaDRIQ0UxekhydktQejkzQllsNjhaSFppZzk5NzV2SCsvZlFsZ3pNUlFFM05SYVBCU2gxYTJJZjUzTG5NRmo2ZjFnNU9IMVpFUElaQnErSzZSU0dzNlJKSjhOUktpYlg4d2VYUUVYd1ZhcjlVZUJLeEl3R1BXNE55c2l0YjkvTGUyTllwRWYwb0tJckdCL1QwQUV5aWVSMUJOdjhNOHBORElKOU0vbFBEeW9ONGtCNXN4RDBFKz0iLCAgIyBub3FhOiBFNTAxCiAgICAgICAgICAgICAgICAiYXBwTmFtZSI6ICJhbGl5dW5fZHJpdmUiLAogICAgICAgICAgICAgICAgImFwcEVudHJhbmNlIjogIndlYiIsCiAgICAgICAgICAgICAgICAiX2NzcmZfdG9rZW4iOiAidUpQTWt6Nlh1ZEc0MFJYbzZ4Q3VXNSIsCiAgICAgICAgICAgICAgICAidW1pZFRva2VuIjogIjY3OTVmNWM0Y2FhZmJmNmU5NjIzOTQxYjhhMzA1NmIzZTMxOGMxZmQiLAogICAgICAgICAgICAgICAgImlzTW9iaWxlIjogImZhbHNlIiwKICAgICAgICAgICAgICAgICJsYW5nIjogInpoX0NOIiwKICAgICAgICAgICAgICAgICJyZXR1cm5VcmwiOiAiIiwKICAgICAgICAgICAgICAgICJoc2l6IjogIjEwOTE4ZjA0YTM1ZThjODNjZjAzMmU0NjJlYjg4NjQ3IiwKICAgICAgICAgICAgICAgICJmcm9tU2l0ZSI6ICI1MiIsCiAgICAgICAgICAgICAgICAiYml6UGFyYW1zIjogIiIsCiAgICAgICAgICAgICAgICAibmF2bGFuZ3VhZ2UiOiAiemgtQ04iLAogICAgICAgICAgICAgICAgIm5hdlVzZXJBZ2VudCI6ICJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvOTEuMC40NDcyLjExNCBTYWZhcmkvNTM3LjM2IiwgICMgbm9xYTogRTUwMQogICAgICAgICAgICAgICAgIm5hdlBsYXRmb3JtIjogIldpbjMyIiwKICAgICAgICAgICAgfQogICAgICAgICAgICBoZWFkZXJzID0gewogICAgICAgICAgICAgICAgIm9yaWdpbiI6ICJodHRwczovL3Bhc3Nwb3J0LmFsaXl1bmRyaXZlLmNvbSIsCiAgICAgICAgICAgICAgICAicmVmZXJlciI6ICJodHRwczovL3Bhc3Nwb3J0LmFsaXl1bmRyaXZlLmNvbS9taW5pX2xvZ2luLmh0bT8mYXBwTmFtZT1hbGl5dW5fZHJpdmUiLAogICAgICAgICAgICB9CgogICAgICAgICAgICByZXMgPSBodHRweC5wb3N0KHVybCwgZGF0YT1mb3JtX2RhdGEsIGhlYWRlcnM9aGVhZGVycywgdGltZW91dD0xMCwgZm9sbG93X3JlZGlyZWN0cz1UcnVlKQogICAgICAgICAgICByZXMucmFpc2VfZm9yX3N0YXR1cygpCgogICAgICAgICAgICByZXR1cm4gcmVzLmpzb24oKQoKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGVycjogICMgcHlsaW50OiBkaXNhYmxlPVcwNzE4CiAgICAgICAgICAgIHJldHVybiB7ImVycm9yIjogc3RyKGVycil9CgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIGdldF90b2tlbihwYXRoOiBQYXRoKSAtPiBPcHRpb25hbFtzdHJdOgogICAgICAgICIiIgogICAgICAgIOiOt+WPliBBbGlnbyBUb2tlbgogICAgICAgICIiIgogICAgICAgIGlmIG5vdCBwYXRoLmV4aXN0cygpOgogICAgICAgICAgICByZXR1cm4gTm9uZQogICAgICAgIHdpdGggb3BlbihwYXRoLCAicmIiKSBhcyBmaWxlOgogICAgICAgICAgICBkYXRhID0gbG9hZHMoZmlsZS5yZWFkKCkpCiAgICAgICAgICAgIGFsaWdvX3JlZnJlc2hfdG9rZW4gPSBkYXRhLmdldCgicmVmcmVzaF90b2tlbiIpCiAgICAgICAgICAgIGlmIGFsaWdvX3JlZnJlc2hfdG9rZW46CiAgICAgICAgICAgICAgICByZXR1cm4gYWxpZ29fcmVmcmVzaF90b2tlbgogICAgICAgIHJldHVybiBOb25lCgoKY2xhc3MgQkFsaWdvKEFsaWdvKToKICAgICIiIgogICAg5aKe5Yqg5om56YeP5Yig6Zmk5paH5Lu25Yqf6IO9CiAgICAiIiIKCiAgICBWM19GSUxFX0RFTEVURSA9ICIvdjMvZmlsZS9kZWxldGUiCgogICAgZGVmIGRlbGV0ZV9maWxlKHNlbGYsIGZpbGVfaWQ6IHN0ciwgZHJpdmVfaWQ6IHN0ciA9IE5vbmUpIC0+IGJvb2w6CiAgICAgICAgIiIiCiAgICAgICAg5Yig6Zmk5paH5Lu2CiAgICAgICAgIiIiCiAgICAgICAgZHJpdmVfaWQgPSBkcml2ZV9pZCBvciBzZWxmLmRlZmF1bHRfZHJpdmVfaWQKICAgICAgICByZXNwb25zZSA9IHNlbGYucG9zdCgKICAgICAgICAgICAgc2VsZi5WM19GSUxFX0RFTEVURSwgYm9keT17ImRyaXZlX2lkIjogZHJpdmVfaWQsICJmaWxlX2lkIjogZmlsZV9pZH0KICAgICAgICApCiAgICAgICAgcmV0dXJuIHJlc3BvbnNlLnN0YXR1c19jb2RlID09IDIwNAoKICAgIGRlZiBiYXRjaF9kZWxldGVfZmlsZXMoc2VsZiwgZmlsZV9pZF9saXN0OiBMaXN0W3N0cl0sIGRyaXZlX2lkOiBzdHIgPSBOb25lKSAtPiBMaXN0OgogICAgICAgICIiIgogICAgICAgIOaJuemHj+WIoOmZpOaWh+S7tgogICAgICAgICIiIgogICAgICAgIGRyaXZlX2lkID0gZHJpdmVfaWQgb3Igc2VsZi5kZWZhdWx0X2RyaXZlX2lkCiAgICAgICAgcmVzdWx0ID0gc2VsZi5iYXRjaF9yZXF1ZXN0KAogICAgICAgICAgICBCYXRjaFJlcXVlc3QoCiAgICAgICAgICAgICAgICByZXF1ZXN0cz1bCiAgICAgICAgICAgICAgICAgICAgQmF0Y2hTdWJSZXF1ZXN0KAogICAgICAgICAgICAgICAgICAgICAgICBpZD1maWxlX2lkLAogICAgICAgICAgICAgICAgICAgICAgICB1cmw9Ii9maWxlL2RlbGV0ZSIsCiAgICAgICAgICAgICAgICAgICAgICAgIGJvZHk9eyJkcml2ZV9pZCI6IGRyaXZlX2lkLCAiZmlsZV9pZCI6IGZpbGVfaWR9LAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBmb3IgZmlsZV9pZCBpbiBmaWxlX2lkX2xpc3QKICAgICAgICAgICAgICAgIF0KICAgICAgICAgICAgKSwKICAgICAgICAgICAgZGljdCwKICAgICAgICApCiAgICAgICAgcmV0dXJuIGxpc3QocmVzdWx0KQo=
+__all__ = ["AliyunPanLogin", "BAligo"]
+
+
+from typing import List, Dict, Optional
+from pathlib import Path
+
+import httpx
+from orjson import loads
+from aligo import Aligo, BatchRequest, BatchSubRequest
+
+
+class AliyunPanLogin:
+    """
+    阿里云盘登入
+    """
+
+    @staticmethod
+    def qr() -> Dict:
+        """
+        qr 获取
+        """
+        url = "https://passport.aliyundrive.com/newlogin/qrcode/generate.do"
+        params = {
+            "appName": "aliyun_drive",
+            "fromSite": "52",
+            "appEntrance": "web",
+            "_csrf_token": "",
+            "umidToken": "",
+            "isMobile": "false",
+            "lang": "zh_CN",
+            "returnUrl": "",
+            "hsiz": "",
+            "bizParams": "",
+            "_bx-v": "2.0.31",
+        }
+
+        try:
+            res = httpx.get(url, params=params, timeout=10, follow_redirects=True)
+            res.raise_for_status()
+            return res.json()
+        except httpx.RequestError as e:
+            return {"error": str(e)}
+
+    @staticmethod
+    def ck(t, ck) -> Dict:
+        """
+        ck 获取
+        """
+        try:
+            url = (
+                "https://passport.aliyundrive.com/newlogin/qrcode/query.do"
+                "?appName=aliyun_drive&fromSite=52&_bx-v=2.0.31"
+            )
+            form_data = {
+                "t": t,
+                "ck": ck,
+                "ua": "140#ApzoT1O+zzPDRQo245+u33Sc2qq3vOsx37btKgtYp/+IQTwpilmRWL7UklKiXOSxEgmrlBPw4oOKU3hqzzngEzCNOa+xzWz8ijlulFzx2DD3VthqzFHcHbzum51xxD2iVP//lbzx2dfHKCUI1wba7XElyb98FLkGcBq9NLTwSgAzL+yICWq/l5WrYJ+B3qlPPFJg+BxuOJkpm+kszeUq29TiOuclegGQGrpKbFQOPCQE+u94nT7aL8G9Aq84NbL7nhfeFD9BpnzRPrEJrbCbpA3Kk7IsEW3gDIgSC4pQVKuM1VwwGaIuNdotnVtfuCceOFxWedDGMKHlr9NLAu9JKzRJBASFHRNdObSUeSklxZdXIHnupibAkG9mTwAEtajstVuX75Y7icOS5KhgQFP7iNuqEEeARX3DiMkI0pDw0Ybj5Q5JrXCz9AL6CTW3t0Zw5lE68UmECpi1eMwuY46BXykk4ET7+Jm7a+RVUTnWP5vfFV0omNauBNpsVggw/MYMxy4czMfMRiQwglJGBIVw+Mr18S+BAvJzqaUXg+HDUphISFsirUND0/u3zg+FM06Zc6rsVmxE2eSffE3cpgfVYoN/Hf24yFJCOVnVlIEagQF2CPxBQIDL+Q9E/f1l3lfQktqrC0GgxdPNv5ifjzp9IDb3t4h75O2daoJDnKcYhDfbKFvpqUgwkUCzzYspDRPv4XXAhsNq6KQZr3nP1AKdSjEL4XQSAGh4HCE1zHrvKPz93BYl68ZHZig9975vH+/fQlgzMRQE3NRaPBSh1a2If53LnMFj6f1g5OH1ZEPIZBq+K6RSGs6RJJ8NRKibX8weXQEXwVar9UeBKxIwGPW4Nysitb9/Le2NYpEf0oKIrGB/T0AEyieR1BNv8M8pNDIJ9M/lPDyoN4kB5sxD0E+=",  # noqa: E501
+                "appName": "aliyun_drive",
+                "appEntrance": "web",
+                "_csrf_token": "uJPMkz6XudG40RXo6xCuW5",
+                "umidToken": "6795f5c4caafbf6e9623941b8a3056b3e318c1fd",
+                "isMobile": "false",
+                "lang": "zh_CN",
+                "returnUrl": "",
+                "hsiz": "10918f04a35e8c83cf032e462eb88647",
+                "fromSite": "52",
+                "bizParams": "",
+                "navlanguage": "zh-CN",
+                "navUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",  # noqa: E501
+                "navPlatform": "Win32",
+            }
+            headers = {
+                "origin": "https://passport.aliyundrive.com",
+                "referer": "https://passport.aliyundrive.com/mini_login.htm?&appName=aliyun_drive",
+            }
+
+            res = httpx.post(url, data=form_data, headers=headers, timeout=10, follow_redirects=True)
+            res.raise_for_status()
+
+            return res.json()
+
+        except Exception as err:  # pylint: disable=W0718
+            return {"error": str(err)}
+
+    @staticmethod
+    def get_token(path: Path) -> Optional[str]:
+        """
+        获取 Aligo Token
+        """
+        if not path.exists():
+            return None
+        with open(path, "rb") as file:
+            data = loads(file.read())
+            aligo_refresh_token = data.get("refresh_token")
+            if aligo_refresh_token:
+                return aligo_refresh_token
+        return None
+
+
+class BAligo(Aligo):
+    """
+    增加批量删除文件功能
+    """
+
+    V3_FILE_DELETE = "/v3/file/delete"
+
+    def delete_file(self, file_id: str, drive_id: str = None) -> bool:
+        """
+        删除文件
+        """
+        drive_id = drive_id or self.default_drive_id
+        response = self.post(
+            self.V3_FILE_DELETE, body={"drive_id": drive_id, "file_id": file_id}
+        )
+        return response.status_code == 204
+
+    def batch_delete_files(self, file_id_list: List[str], drive_id: str = None) -> List:
+        """
+        批量删除文件
+        """
+        drive_id = drive_id or self.default_drive_id
+        result = self.batch_request(
+            BatchRequest(
+                requests=[
+                    BatchSubRequest(
+                        id=file_id,
+                        url="/file/delete",
+                        body={"drive_id": drive_id, "file_id": file_id},
+                    )
+                    for file_id in file_id_list
+                ]
+            ),
+            dict,
+        )
+        return list(result)

@@ -1,1 +1,92 @@
-ZnJvbSB0aW1lIGltcG9ydCBzbGVlcApmcm9tIHR5cGluZyBpbXBvcnQgVHVwbGUKCmZyb20gcDExNWNsaWVudCBpbXBvcnQgY2hlY2tfcmVzcG9uc2UKCmZyb20gYXBwLmxvZyBpbXBvcnQgbG9nZ2VyCmZyb20gYXBwLnNjaGVtYXMgaW1wb3J0IE5vdGlmaWNhdGlvblR5cGUKCmZyb20gLi4uY29yZS5jb25maWcgaW1wb3J0IGNvbmZpZ2VyCmZyb20gLi4uY29yZS5tZXNzYWdlIGltcG9ydCBwb3N0X21lc3NhZ2UKZnJvbSAuLi51dGlscy5zZW50cnkgaW1wb3J0IHNlbnRyeV9tYW5hZ2VyCgpfUDExNV9DSEVDS0lOX01BWF9SRVRSSUVTID0gMwpfUDExNV9DSEVDS0lOX1JFVFJZX0RFTEFZID0gMwoKCkBzZW50cnlfbWFuYWdlci5jYXB0dXJlX3BsdWdpbl9leGNlcHRpb25zCmRlZiBydW5fcDExNV9jaGVja2luX29uY2UoCiAgICBjbGllbnQsCiAgICBtYW51YWw6IGJvb2wgPSBGYWxzZSwKICAgIHNlbmRfbm90aWZ5OiBib29sID0gVHJ1ZSwKKSAtPiBUdXBsZVtib29sLCBzdHJdOgogICAgIiIiCiAgICDosIPnlKggMTE1IOetvuWIsCBBUEkg5omn6KGM5q+P5pel562+5YiwCgogICAgOnBhcmFtIGNsaWVudDogUDExNUNsaWVudCDlrp7kvosKICAgIDpwYXJhbSBtYW51YWw6IOS4uiBUcnVlIOaXtuihqOekuui/nOeoi+WRveS7pOinpuWPke+8jOS4jeW8uuWItuimgeaxguW3suW8gOWQr+avj+aXpeetvuWIsAogICAgOnBhcmFtIHNlbmRfbm90aWZ5OiDmmK/lkKblnKjnu5Pmnpzml7bmjInlhajlsYDpgJrnn6XlvIDlhbPlj5HpgIHmj5Lku7bmtojmga8KICAgIDpyZXR1cm46ICjmmK/lkKbmiJDlip8sIOivtOaYjuaWh+ahiCkKICAgICIiIgogICAgaWYgbm90IGNvbmZpZ2VyLmVuYWJsZWQ6CiAgICAgICAgcmV0dXJuIEZhbHNlLCAi5o+S5Lu25pyq5ZCv55SoIgoKICAgIGlmIG5vdCBjb25maWdlci5wMTE1X2NoZWNraW5fZW5hYmxlZCBhbmQgbm90IG1hbnVhbDoKICAgICAgICByZXR1cm4gRmFsc2UsICIxMTUg5q+P5pel562+5Yiw5pyq5ZCv55SoIgoKICAgIGlmIG5vdCBjbGllbnQ6CiAgICAgICAgcmV0dXJuIEZhbHNlLCAiMTE1IOWuouaIt+err+acquWIneWni+WMliIKCiAgICB0cnk6CiAgICAgICAgbG9nZ2VyLmluZm8oIuOAkDExNSDnrb7liLDjgJHmn6Xor6Lku4rml6Xnrb7liLDnirbmgIEuLi4iKQogICAgICAgIHN0YXR1c19yZXNwID0gY2hlY2tfcmVzcG9uc2UoY2xpZW50LnVzZXJfcG9pbnRzX3NpZ24oKSkKICAgICAgICBpZiBzdGF0dXNfcmVzcC5nZXQoImRhdGEiLCB7fSkuZ2V0KCJpc19zaWduX3RvZGF5IikgPT0gMToKICAgICAgICAgICAgbXNnID0gIuS7iuaXpeW3suetvuWIsO+8jOaXoOmcgOmHjeWkjeetvuWIsCIKICAgICAgICAgICAgbG9nZ2VyLmluZm8oIuOAkDExNSDnrb7liLDjgJElcyIsIG1zZykKICAgICAgICAgICAgcmV0dXJuIFRydWUsIG1zZwoKICAgICAgICBsb2dnZXIuaW5mbygi44CQMTE1IOetvuWIsOOAkeaJp+ihjOetvuWIsC4uLiIpCiAgICAgICAgb2sgPSBGYWxzZQogICAgICAgIGRldGFpbCA9ICIiCiAgICAgICAgZm9yIGF0dGVtcHQgaW4gcmFuZ2UoMSwgX1AxMTVfQ0hFQ0tJTl9NQVhfUkVUUklFUyArIDEpOgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICByZXNwID0gY2hlY2tfcmVzcG9uc2UoY2xpZW50LnVzZXJfcG9pbnRzX3NpZ25fcG9zdCgpKQogICAgICAgICAgICAgICAgZGF0YSA9IHJlc3AuZ2V0KCJkYXRhIiwge30pCiAgICAgICAgICAgICAgICBjb250aW51b3VzX2RheSA9IGRhdGEuZ2V0KCJjb250aW51b3VzX2RheSIsIDApCiAgICAgICAgICAgICAgICBwb2ludHNfbnVtID0gZGF0YS5nZXQoInBvaW50c19udW0iLCAwKQogICAgICAgICAgICAgICAgZGV0YWlsID0gKAogICAgICAgICAgICAgICAgICAgIGYi562+5Yiw5oiQ5Yqf77yM6L+e57ut562+5YiwIHtjb250aW51b3VzX2RheX0g5aSp77yM6I635b6XIHtwb2ludHNfbnVtfSDnp6/liIYiCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBsb2dnZXIuaW5mbygi44CQMTE1IOetvuWIsOOAkSVzIiwgZGV0YWlsKQogICAgICAgICAgICAgICAgb2sgPSBUcnVlCiAgICAgICAgICAgICAgICBicmVhawogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIud2FybmluZygKICAgICAgICAgICAgICAgICAgICAi44CQMTE1IOetvuWIsOOAkeesrCAlZC8lZCDmrKHlsJ3or5XlpLHotKXvvJolc++8jCVkIOenkuWQjumHjeivlSIsCiAgICAgICAgICAgICAgICAgICAgYXR0ZW1wdCwKICAgICAgICAgICAgICAgICAgICBfUDExNV9DSEVDS0lOX01BWF9SRVRSSUVTLAogICAgICAgICAgICAgICAgICAgIGUsCiAgICAgICAgICAgICAgICAgICAgX1AxMTVfQ0hFQ0tJTl9SRVRSWV9ERUxBWSwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIGRldGFpbCA9IHN0cihlKQogICAgICAgICAgICAgICAgaWYgYXR0ZW1wdCA8IF9QMTE1X0NIRUNLSU5fTUFYX1JFVFJJRVM6CiAgICAgICAgICAgICAgICAgICAgc2xlZXAoX1AxMTVfQ0hFQ0tJTl9SRVRSWV9ERUxBWSkKCiAgICAgICAgaWYgc2VuZF9ub3RpZnkgYW5kIGNvbmZpZ2VyLm5vdGlmeToKICAgICAgICAgICAgcG9zdF9tZXNzYWdlKAogICAgICAgICAgICAgICAgbXR5cGU9Tm90aWZpY2F0aW9uVHlwZS5QbHVnaW4sCiAgICAgICAgICAgICAgICB0aXRsZT0iMTE1IOetvuWIsCIgKyAoIuaIkOWKnyIgaWYgb2sgZWxzZSAi5aSx6LSlIiksCiAgICAgICAgICAgICAgICB0ZXh0PSJcbiIgKyBkZXRhaWwgKyAiXG4iLAogICAgICAgICAgICApCiAgICAgICAgcmV0dXJuIG9rLCBkZXRhaWwKCiAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgbG9nZ2VyLmVycm9yKCLjgJAxMTUg562+5Yiw44CR5omn6KGM5byC5bi477yaJXMiLCBlLCBleGNfaW5mbz1UcnVlKQogICAgICAgIGVyciA9IHN0cihlKQogICAgICAgIGlmIHNlbmRfbm90aWZ5IGFuZCBjb25maWdlci5ub3RpZnk6CiAgICAgICAgICAgIHBvc3RfbWVzc2FnZSgKICAgICAgICAgICAgICAgIG10eXBlPU5vdGlmaWNhdGlvblR5cGUuUGx1Z2luLAogICAgICAgICAgICAgICAgdGl0bGU9IjExNSDnrb7liLDlvILluLgiLAogICAgICAgICAgICAgICAgdGV4dD0iXG4iICsgZXJyICsgIlxuIiwKICAgICAgICAgICAgKQogICAgICAgIHJldHVybiBGYWxzZSwgZXJyCg==
+from time import sleep
+from typing import Tuple
+
+from p115client import check_response
+
+from app.log import logger
+from app.schemas import NotificationType
+
+from ...core.config import configer
+from ...core.message import post_message
+from ...utils.sentry import sentry_manager
+
+_P115_CHECKIN_MAX_RETRIES = 3
+_P115_CHECKIN_RETRY_DELAY = 3
+
+
+@sentry_manager.capture_plugin_exceptions
+def run_p115_checkin_once(
+    client,
+    manual: bool = False,
+    send_notify: bool = True,
+) -> Tuple[bool, str]:
+    """
+    调用 115 签到 API 执行每日签到
+
+    :param client: P115Client 实例
+    :param manual: 为 True 时表示远程命令触发，不强制要求已开启每日签到
+    :param send_notify: 是否在结果时按全局通知开关发送插件消息
+    :return: (是否成功, 说明文案)
+    """
+    if not configer.enabled:
+        return False, "插件未启用"
+
+    if not configer.p115_checkin_enabled and not manual:
+        return False, "115 每日签到未启用"
+
+    if not client:
+        return False, "115 客户端未初始化"
+
+    try:
+        logger.info("【115 签到】查询今日签到状态...")
+        status_resp = check_response(client.user_points_sign())
+        if status_resp.get("data", {}).get("is_sign_today") == 1:
+            msg = "今日已签到，无需重复签到"
+            logger.info("【115 签到】%s", msg)
+            return True, msg
+
+        logger.info("【115 签到】执行签到...")
+        ok = False
+        detail = ""
+        for attempt in range(1, _P115_CHECKIN_MAX_RETRIES + 1):
+            try:
+                resp = check_response(client.user_points_sign_post())
+                data = resp.get("data", {})
+                continuous_day = data.get("continuous_day", 0)
+                points_num = data.get("points_num", 0)
+                detail = (
+                    f"签到成功，连续签到 {continuous_day} 天，获得 {points_num} 积分"
+                )
+                logger.info("【115 签到】%s", detail)
+                ok = True
+                break
+            except Exception as e:
+                logger.warning(
+                    "【115 签到】第 %d/%d 次尝试失败：%s，%d 秒后重试",
+                    attempt,
+                    _P115_CHECKIN_MAX_RETRIES,
+                    e,
+                    _P115_CHECKIN_RETRY_DELAY,
+                )
+                detail = str(e)
+                if attempt < _P115_CHECKIN_MAX_RETRIES:
+                    sleep(_P115_CHECKIN_RETRY_DELAY)
+
+        if send_notify and configer.notify:
+            post_message(
+                mtype=NotificationType.Plugin,
+                title="115 签到" + ("成功" if ok else "失败"),
+                text="\n" + detail + "\n",
+            )
+        return ok, detail
+
+    except Exception as e:
+        logger.error("【115 签到】执行异常：%s", e, exc_info=True)
+        err = str(e)
+        if send_notify and configer.notify:
+            post_message(
+                mtype=NotificationType.Plugin,
+                title="115 签到异常",
+                text="\n" + err + "\n",
+            )
+        return False, err

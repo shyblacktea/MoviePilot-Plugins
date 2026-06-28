@@ -1,1 +1,201 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IE9wdGlvbmFsLCBMaXN0Cgpmcm9tIHB5ZGFudGljIGltcG9ydCBCYXNlTW9kZWwsIEZpZWxkCgoKY2xhc3MgU3RybUFwaUNvbmZpZyhCYXNlTW9kZWwpOgogICAgIiIiCiAgICBBUEkg6LCD55So55Sf5oiQIFNUUk0g6YWN572uCiAgICAiIiIKCiAgICBsb2NhbF9wYXRoOiBPcHRpb25hbFtzdHJdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5pys5Zyw6Lev5b6EIikKICAgIHBhbl9wYXRoOiBPcHRpb25hbFtzdHJdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i572R55uY6Lev5b6EIikKCgpjbGFzcyBTdHJtQXBpRGF0YShCYXNlTW9kZWwpOgogICAgIiIiCiAgICBBUEkg6LCD55So55Sf5oiQIFNUUk0g5pWw5o2uCgogICAgQXR0cmlidXRlczoKICAgICAgICBpZDog5paH5Lu2IElECiAgICAgICAgbmFtZTog5paH5Lu25ZCNCiAgICAgICAgc2hhMTog5paH5Lu2IFNIQTEKICAgICAgICBzaXplOiDmlofku7blpKflsI8KICAgICAgICBwaWNrX2NvZGU6IOaWh+S7tiBwaWNrY29kZQogICAgICAgIGxvY2FsX3BhdGg6IOacrOWcsOi3r+W+hAogICAgICAgIHBhbl9wYXRoOiDnvZHnm5jot6/lvoQKICAgICAgICBwYW5fbWVkaWFfcGF0aDog572R55uY5aqS5L2T5bqT6Lev5b6ECiAgICAgICAgbWVkaWFfc2VydmVyX3JlZnJlc2g6IOaYr+WQpuWIt+aWsOWqkuS9k+acjeWKoeWZqAogICAgICAgIHNjcmFwZV9tZXRhZGF0YTog5piv5ZCm5Yiu5YmK5YWD5pWw5o2uCiAgICAgICAgYXV0b19kb3dubG9hZF9tZWRpYWluZm86IOaYr+WQpuiHquWKqOS4i+i9veWqkuS9k+WFg+aVsOaNrgogICAgIiIiCgogICAgaWQ6IE9wdGlvbmFsW2ludF0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLmlofku7ZJRCIpCiAgICBuYW1lOiBPcHRpb25hbFtzdHJdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5paH5Lu25ZCNIikKICAgIHNoYTE6IE9wdGlvbmFsW3N0cl0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLmlofku7ZTSEExIikKICAgIHNpemU6IE9wdGlvbmFsW2ludF0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLmlofku7blpKflsI8iKQogICAgcGlja19jb2RlOiBPcHRpb25hbFtzdHJdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5paH5Lu2cGlja2NvZGUiKQogICAgbG9jYWxfcGF0aDogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249IuacrOWcsOi3r+W+hCIpCiAgICBwYW5fcGF0aDogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249Iue9keebmOi3r+W+hCIpCiAgICBwYW5fbWVkaWFfcGF0aDogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249Iue9keebmOWqkuS9k+W6k+i3r+W+hCIpCiAgICBtZWRpYV9zZXJ2ZXJfcmVmcmVzaDogT3B0aW9uYWxbYm9vbF0gPSBGaWVsZCgKICAgICAgICBkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLmmK/lkKbliLfmlrDlqpLkvZPmnI3liqHlmagiCiAgICApCiAgICBzY3JhcGVfbWV0YWRhdGE6IE9wdGlvbmFsW2Jvb2xdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5piv5ZCm5Yiu5YmK5YWD5pWw5o2uIikKICAgIGF1dG9fZG93bmxvYWRfbWVkaWFpbmZvOiBib29sID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1GYWxzZSwgZGVzY3JpcHRpb249IuaYr+WQpuiHquWKqOS4i+i9veWqkuS9k+WFg+aVsOaNriIKICAgICkKCgpjbGFzcyBTdHJtQXBpUmVzcG9uc2VGYWlsKFN0cm1BcGlEYXRhKToKICAgICIiIgogICAg55Sf5oiQ5aSx6LSlIFNUUk0g5L+h5oGvCiAgICAiIiIKCiAgICBjb2RlOiBpbnQgPSBGaWVsZChkZXNjcmlwdGlvbj0i6ZSZ6K+v5Luj56CBIikKICAgIHJlYXNvbjogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249IuWksei0peWOn+WboCIpCgoKY2xhc3MgU3RybUFwaVBheWxvYWREYXRhKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIEFQSSDosIPnlKjnlJ/miJAgU1RSTSDlj4LmlbAKICAgICIiIgoKICAgIGRhdGE6IExpc3RbU3RybUFwaURhdGFdID0gRmllbGQoCiAgICAgICAgZGVmYXVsdF9mYWN0b3J5PWxpc3QsIGRlc2NyaXB0aW9uPSJTVFJN55Sf5oiQ5pWw5o2u5YiX6KGoIgogICAgKQoKCmNsYXNzIFN0cm1BcGlQYXlsb2FkQnlQYXRoSXRlbShCYXNlTW9kZWwpOgogICAgIiIiCiAgICBBUEkg6LCD55So55Sf5oiQIFNUUk0g6Lev5b6E57uECiAgICAiIiIKCiAgICBsb2NhbF9wYXRoOiBPcHRpb25hbFtzdHJdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5pys5Zyw6Lev5b6EIikKICAgIHBhbl9tZWRpYV9wYXRoOiBzdHIgPSBGaWVsZChkZXNjcmlwdGlvbj0i572R55uY5aqS5L2T5bqT6Lev5b6EIikKICAgIHJlbW92ZV9zdHJtX3V1aWQ6IGJvb2wgPSBGaWVsZCgKICAgICAgICBkZWZhdWx0PUZhbHNlLCBkZXNjcmlwdGlvbj0i5piv5ZCm55Sf5oiQ5Yig6Zmk5peg5pWI5paH5Lu2VVVJROe8k+WtmCIKICAgICkKCgpjbGFzcyBTdHJtQXBpUGF5bG9hZEJ5UGF0aERhdGEoQmFzZU1vZGVsKToKICAgICIiIgogICAgQVBJIOiwg+eUqOeUn+aIkCBTVFJNIOWPguaVsO+8iGJ5X3BhdGjvvIkKICAgICIiIgoKICAgIGRhdGE6IExpc3RbU3RybUFwaVBheWxvYWRCeVBhdGhJdGVtXSA9IEZpZWxkKAogICAgICAgIGRlZmF1bHRfZmFjdG9yeT1saXN0LCBkZXNjcmlwdGlvbj0i6ZyA6KaB55Sf5oiQU1RSTeeahOS4gOe7hOaWh+S7tuWkuemFjee9rumhuSIKICAgICkKICAgIG1lZGlhX3NlcnZlcl9yZWZyZXNoOiBPcHRpb25hbFtib29sXSA9IEZpZWxkKAogICAgICAgIGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249IuaYr+WQpuWIt+aWsOWqkuS9k+acjeWKoeWZqCIKICAgICkKICAgIHNjcmFwZV9tZXRhZGF0YTogT3B0aW9uYWxbYm9vbF0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLmmK/lkKbliK7liYrlhYPmlbDmja4iKQogICAgYXV0b19kb3dubG9hZF9tZWRpYWluZm86IGJvb2wgPSBGaWVsZCgKICAgICAgICBkZWZhdWx0PUZhbHNlLCBkZXNjcmlwdGlvbj0i5piv5ZCm6Ieq5Yqo5LiL6L295aqS5L2T5YWD5pWw5o2uIgogICAgKQoKCmNsYXNzIFN0cm1BcGlSZXNwb25zZURhdGEoQmFzZU1vZGVsKToKICAgICIiIgogICAgQVBJIOi/lOWbnueUn+aIkCBTVFJNIOS/oeaBrwogICAgIiIiCgogICAgc3VjY2VzczogTGlzdFtTdHJtQXBpRGF0YV0gPSBGaWVsZCgKICAgICAgICBkZWZhdWx0X2ZhY3Rvcnk9bGlzdCwgZGVzY3JpcHRpb249IuaIkOWKn+eUn+aIkOeahFNUUk3liJfooagiCiAgICApCiAgICBmYWlsOiBMaXN0W1N0cm1BcGlSZXNwb25zZUZhaWxdID0gRmllbGQoCiAgICAgICAgZGVmYXVsdF9mYWN0b3J5PWxpc3QsIGRlc2NyaXB0aW9uPSLnlJ/miJDlpLHotKXnmoRTVFJN5YiX6KGoIgogICAgKQogICAgZG93bmxvYWRfZmFpbDogTGlzdFtzdHJdID0gRmllbGQoCiAgICAgICAgZGVmYXVsdF9mYWN0b3J5PWxpc3QsIGRlc2NyaXB0aW9uPSLkuIvovb3lpLHotKXmlofku7bliJfooagiCiAgICApCiAgICBzdWNjZXNzX2NvdW50OiBpbnQgPSBGaWVsZChkZWZhdWx0PTAsIGRlc2NyaXB0aW9uPSLmiJDlip/mlbDph48iKQogICAgZmFpbF9jb3VudDogaW50ID0gRmllbGQoZGVmYXVsdD0wLCBkZXNjcmlwdGlvbj0i5aSx6LSl5pWw6YePIikKICAgIGRvd25sb2FkX3N1Y2Nlc3NfY291bnQ6IGludCA9IEZpZWxkKGRlZmF1bHQ9MCwgZGVzY3JpcHRpb249IuS4i+i9veaIkOWKn+aVsOmHjyIpCiAgICBkb3dubG9hZF9mYWlsX2NvdW50OiBpbnQgPSBGaWVsZChkZWZhdWx0PTAsIGRlc2NyaXB0aW9uPSLkuIvovb3lpLHotKXmlbDph48iKQoKCmNsYXNzIFN0cm1BcGlSZXNwb25zZUJ5UGF0aEl0ZW0oQmFzZU1vZGVsKToKICAgICIiIgogICAgQVBJIOiwg+eUqOeUn+aIkCBTVFJNIOi3r+W+hOe7hAogICAgIiIiCgogICAgbG9jYWxfcGF0aDogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249IuacrOWcsOi3r+W+hCIpCiAgICBwYW5fbWVkaWFfcGF0aDogc3RyID0gRmllbGQoZGVzY3JpcHRpb249Iue9keebmOWqkuS9k+W6k+i3r+W+hCIpCiAgICByZW1vdmVfc3RybV91dWlkOiBPcHRpb25hbFtzdHJdID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5Yig6Zmk5peg5pWI5paH5Lu255qEVVVJROe8k+WtmCIKICAgICkKCgpjbGFzcyBTdHJtQXBpUmVzcG9uc2VCeVBhdGhEYXRhKFN0cm1BcGlSZXNwb25zZURhdGEpOgogICAgIiIiCiAgICBBUEkg6L+U5Zue55Sf5oiQIFNUUk0g5L+h5oGv77yIYnlfcGF0aO+8iQogICAgIiIiCgogICAgcGF0aHNfaW5mbzogTGlzdFtTdHJtQXBpUmVzcG9uc2VCeVBhdGhJdGVtXSA9IEZpZWxkKAogICAgICAgIGRlZmF1bHRfZmFjdG9yeT1saXN0LCBkZXNjcmlwdGlvbj0i55Sf5oiQU1RSTeeahOaWh+S7tuWkueaVsOaNrumhuSIKICAgICkKCgpjbGFzcyBTdHJtQXBpUGF5bG9hZFJlbW92ZUl0ZW0oQmFzZU1vZGVsKToKICAgICIiIgogICAg5riF55CG5peg5pWIIFNUUk0g6YWN572u6aG5CiAgICAiIiIKCiAgICBsb2NhbF9wYXRoOiBzdHIgPSBGaWVsZChkZXNjcmlwdGlvbj0i5pys5Zyw6Lev5b6EIikKICAgIHBhbl9tZWRpYV9wYXRoOiBzdHIgPSBGaWVsZChkZXNjcmlwdGlvbj0i572R55uY5aqS5L2T5bqT6Lev5b6EIikKICAgIHJlbW92ZV9zdHJtX3V1aWQ6IE9wdGlvbmFsW3N0cl0gPSBGaWVsZCgKICAgICAgICBkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLliKDpmaTml6DmlYjmlofku7bnmoRVVUlE57yT5a2YIgogICAgKQogICAgcmVtb3ZlX3VubGVzc19tZXRhOiBib29sID0gRmllbGQoZGVmYXVsdD1GYWxzZSwgZGVzY3JpcHRpb249Iua4heeQhuaXoOaViOWqkuS9k+WFg+aVsOaNriIpCiAgICByZW1vdmVfdW5sZXNzX3BhcmVudDogYm9vbCA9IEZpZWxkKGRlZmF1bHQ9RmFsc2UsIGRlc2NyaXB0aW9uPSLmuIXnkIbnqbrmlofku7blpLkiKQoKCmNsYXNzIFN0cm1BcGlQYXlsb2FkUmVtb3ZlRGF0YShCYXNlTW9kZWwpOgogICAgIiIiCiAgICDmuIXnkIbml6DmlYggU1RSTSDlj4LmlbAKICAgICIiIgoKICAgIGRhdGE6IExpc3RbU3RybUFwaVBheWxvYWRSZW1vdmVJdGVtXSA9IEZpZWxkKAogICAgICAgIGRlZmF1bHRfZmFjdG9yeT1saXN0LCBkZXNjcmlwdGlvbj0i5Yig6Zmk6YWN572u6aG5IgogICAgKQoKCmNsYXNzIFN0cm1BcGlSZXNwb25zZVJlbW92ZURhdGEoQmFzZU1vZGVsKToKICAgICIiIgogICAg5riF55CG5peg5pWIIFNUUk0g6L+U5Zue57uT5p6cCiAgICAiIiIKCiAgICByZW1vdmVfc3RybV9jb3VudDogaW50ID0gRmllbGQoZGVmYXVsdD0wLCBkZXNjcmlwdGlvbj0i5riF55CGIFNUUk0g5paH5Lu25Liq5pWwIikKICAgIGRhdGE6IExpc3RbU3RybUFwaVBheWxvYWRSZW1vdmVJdGVtXSA9IEZpZWxkKAogICAgICAgIGRlZmF1bHRfZmFjdG9yeT1saXN0LCBkZXNjcmlwdGlvbj0i5Yig6Zmk6YWN572u6aG5IgogICAgKQoKCmNsYXNzIE1hbnVhbFRyYW5zZmVyUGF5bG9hZChCYXNlTW9kZWwpOgogICAgIiIiCiAgICDmiYvliqjmlbTnkIblj4LmlbAKICAgICIiIgoKICAgIHBhdGg6IHN0ciA9IEZpZWxkKGRlc2NyaXB0aW9uPSLnvZHnm5jot6/lvoQiKQoKCmNsYXNzIFN0cm1BcGlTdGF0dXNDb2RlOgogICAgIiIiCiAgICBBUEkgU1RSTSDplJnor68KICAgICIiIgoKICAgICMg5oiQ5YqfCiAgICBTdWNjZXNzOiBpbnQgPSAxMDIwMAogICAgIyDmnKrkvKDmnInmlYjlj4LmlbAKICAgIE1pc3NQYXlsb2FkOiBpbnQgPSAxMDQwMAogICAgIyDnvLrlpLHlv4XopoHlj4LmlbDvvIxwaWNrX2NvZGXvvIxpZCDmiJYgcGFuX3BhdGgg5Y+C5pWwCiAgICBNaXNzUGNPcklkOiBpbnQgPSAxMDQyMgogICAgIyDmlofku7bmianlsZXlkI3kuI3lsZ7kuo7lj6/mlbTnkIblqpLkvZPmlofku7bmianlsZXlkI0KICAgIE5vdFJtdE1lZGlhRXh0OiBpbnQgPSAxMDYwMAogICAgIyDml6Dms5Xojrflj5bmnKzlnLDnlJ/miJAgU1RSTSDot6/lvoQKICAgIEdldExvY2FsUGF0aEVycm9yOiBpbnQgPSAxMDYwMQogICAgIyDml6Dms5Xojrflj5bnvZHnm5jlqpLkvZPlupPot6/lvoQKICAgIEdldFBhbk1lZGlhUGF0aEVycm9yOiBpbnQgPSAxMDYwMgogICAgIyBTVFJNIOaWh+S7tueUn+aIkOWksei0pQogICAgQ3JlYXRlU3RybUVycm9yOiBpbnQgPSAxMDkxMQo=
+from typing import Optional, List
+
+from pydantic import BaseModel, Field
+
+
+class StrmApiConfig(BaseModel):
+    """
+    API 调用生成 STRM 配置
+    """
+
+    local_path: Optional[str] = Field(default=None, description="本地路径")
+    pan_path: Optional[str] = Field(default=None, description="网盘路径")
+
+
+class StrmApiData(BaseModel):
+    """
+    API 调用生成 STRM 数据
+
+    Attributes:
+        id: 文件 ID
+        name: 文件名
+        sha1: 文件 SHA1
+        size: 文件大小
+        pick_code: 文件 pickcode
+        local_path: 本地路径
+        pan_path: 网盘路径
+        pan_media_path: 网盘媒体库路径
+        media_server_refresh: 是否刷新媒体服务器
+        scrape_metadata: 是否刮削元数据
+        auto_download_mediainfo: 是否自动下载媒体元数据
+    """
+
+    id: Optional[int] = Field(default=None, description="文件ID")
+    name: Optional[str] = Field(default=None, description="文件名")
+    sha1: Optional[str] = Field(default=None, description="文件SHA1")
+    size: Optional[int] = Field(default=None, description="文件大小")
+    pick_code: Optional[str] = Field(default=None, description="文件pickcode")
+    local_path: Optional[str] = Field(default=None, description="本地路径")
+    pan_path: Optional[str] = Field(default=None, description="网盘路径")
+    pan_media_path: Optional[str] = Field(default=None, description="网盘媒体库路径")
+    media_server_refresh: Optional[bool] = Field(
+        default=None, description="是否刷新媒体服务器"
+    )
+    scrape_metadata: Optional[bool] = Field(default=None, description="是否刮削元数据")
+    auto_download_mediainfo: bool = Field(
+        default=False, description="是否自动下载媒体元数据"
+    )
+
+
+class StrmApiResponseFail(StrmApiData):
+    """
+    生成失败 STRM 信息
+    """
+
+    code: int = Field(description="错误代码")
+    reason: Optional[str] = Field(default=None, description="失败原因")
+
+
+class StrmApiPayloadData(BaseModel):
+    """
+    API 调用生成 STRM 参数
+    """
+
+    data: List[StrmApiData] = Field(
+        default_factory=list, description="STRM生成数据列表"
+    )
+
+
+class StrmApiPayloadByPathItem(BaseModel):
+    """
+    API 调用生成 STRM 路径组
+    """
+
+    local_path: Optional[str] = Field(default=None, description="本地路径")
+    pan_media_path: str = Field(description="网盘媒体库路径")
+    remove_strm_uuid: bool = Field(
+        default=False, description="是否生成删除无效文件UUID缓存"
+    )
+
+
+class StrmApiPayloadByPathData(BaseModel):
+    """
+    API 调用生成 STRM 参数（by_path）
+    """
+
+    data: List[StrmApiPayloadByPathItem] = Field(
+        default_factory=list, description="需要生成STRM的一组文件夹配置项"
+    )
+    media_server_refresh: Optional[bool] = Field(
+        default=None, description="是否刷新媒体服务器"
+    )
+    scrape_metadata: Optional[bool] = Field(default=None, description="是否刮削元数据")
+    auto_download_mediainfo: bool = Field(
+        default=False, description="是否自动下载媒体元数据"
+    )
+
+
+class StrmApiResponseData(BaseModel):
+    """
+    API 返回生成 STRM 信息
+    """
+
+    success: List[StrmApiData] = Field(
+        default_factory=list, description="成功生成的STRM列表"
+    )
+    fail: List[StrmApiResponseFail] = Field(
+        default_factory=list, description="生成失败的STRM列表"
+    )
+    download_fail: List[str] = Field(
+        default_factory=list, description="下载失败文件列表"
+    )
+    success_count: int = Field(default=0, description="成功数量")
+    fail_count: int = Field(default=0, description="失败数量")
+    download_success_count: int = Field(default=0, description="下载成功数量")
+    download_fail_count: int = Field(default=0, description="下载失败数量")
+
+
+class StrmApiResponseByPathItem(BaseModel):
+    """
+    API 调用生成 STRM 路径组
+    """
+
+    local_path: Optional[str] = Field(default=None, description="本地路径")
+    pan_media_path: str = Field(description="网盘媒体库路径")
+    remove_strm_uuid: Optional[str] = Field(
+        default=None, description="删除无效文件的UUID缓存"
+    )
+
+
+class StrmApiResponseByPathData(StrmApiResponseData):
+    """
+    API 返回生成 STRM 信息（by_path）
+    """
+
+    paths_info: List[StrmApiResponseByPathItem] = Field(
+        default_factory=list, description="生成STRM的文件夹数据项"
+    )
+
+
+class StrmApiPayloadRemoveItem(BaseModel):
+    """
+    清理无效 STRM 配置项
+    """
+
+    local_path: str = Field(description="本地路径")
+    pan_media_path: str = Field(description="网盘媒体库路径")
+    remove_strm_uuid: Optional[str] = Field(
+        default=None, description="删除无效文件的UUID缓存"
+    )
+    remove_unless_meta: bool = Field(default=False, description="清理无效媒体元数据")
+    remove_unless_parent: bool = Field(default=False, description="清理空文件夹")
+
+
+class StrmApiPayloadRemoveData(BaseModel):
+    """
+    清理无效 STRM 参数
+    """
+
+    data: List[StrmApiPayloadRemoveItem] = Field(
+        default_factory=list, description="删除配置项"
+    )
+
+
+class StrmApiResponseRemoveData(BaseModel):
+    """
+    清理无效 STRM 返回结果
+    """
+
+    remove_strm_count: int = Field(default=0, description="清理 STRM 文件个数")
+    data: List[StrmApiPayloadRemoveItem] = Field(
+        default_factory=list, description="删除配置项"
+    )
+
+
+class ManualTransferPayload(BaseModel):
+    """
+    手动整理参数
+    """
+
+    path: str = Field(description="网盘路径")
+
+
+class StrmApiStatusCode:
+    """
+    API STRM 错误
+    """
+
+    # 成功
+    Success: int = 10200
+    # 未传有效参数
+    MissPayload: int = 10400
+    # 缺失必要参数，pick_code，id 或 pan_path 参数
+    MissPcOrId: int = 10422
+    # 文件扩展名不属于可整理媒体文件扩展名
+    NotRmtMediaExt: int = 10600
+    # 无法获取本地生成 STRM 路径
+    GetLocalPathError: int = 10601
+    # 无法获取网盘媒体库路径
+    GetPanMediaPathError: int = 10602
+    # STRM 文件生成失败
+    CreateStrmError: int = 10911

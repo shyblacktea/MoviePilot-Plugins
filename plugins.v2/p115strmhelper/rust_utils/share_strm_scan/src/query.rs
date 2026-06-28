@@ -1,1 +1,92 @@
-dXNlIHN0ZDo6Ym9ycm93OjpDb3c7Cgp1c2UgbWVtY2hyOjptZW1tZW07CnVzZSB1cmw6OlVybDsKCmNvbnN0IE5FRURMRV9QMTE1OiAmW3U4XSA9IGIiUDExNVN0cm1IZWxwZXIiOwpjb25zdCBORUVETEVfU0hBUkU6ICZbdThdID0gYiJzaGFyZV9jb2RlPSI7CmNvbnN0IE5FRURMRV9SRUNWOiAmW3U4XSA9IGIicmVjZWl2ZV9jb2RlPSI7CgpwdWIgZm4gZ2F0ZV9zaGFyZV9zdHJtKGxpbmU6ICZbdThdKSAtPiBib29sIHsKICAgIGlmIG1lbW1lbTo6ZmluZChsaW5lLCBORUVETEVfUDExNSkuaXNfbm9uZSgpIHsKICAgICAgICByZXR1cm4gZmFsc2U7CiAgICB9CiAgICBpZiBtZW1tZW06OmZpbmQobGluZSwgTkVFRExFX1NIQVJFKS5pc19ub25lKCkgewogICAgICAgIHJldHVybiBmYWxzZTsKICAgIH0KICAgIG1lbW1lbTo6ZmluZChsaW5lLCBORUVETEVfUkVDVikuaXNfc29tZSgpCn0KCnB1YiBmbiBleHRyYWN0X3F1ZXJ5X3N0cmluZyhsaW5lOiAmc3RyKSAtPiBPcHRpb248Q293PCdfLCBzdHI+PiB7CiAgICBpZiBsZXQgT2sodSkgPSBVcmw6OnBhcnNlKGxpbmUpIHsKICAgICAgICBpZiBsZXQgU29tZShxKSA9IHUucXVlcnkoKSB7CiAgICAgICAgICAgIGlmICFxLmlzX2VtcHR5KCkgewogICAgICAgICAgICAgICAgcmV0dXJuIFNvbWUoQ293OjpPd25lZChxLnRvX3N0cmluZygpKSk7CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9CiAgICBpZiBsaW5lLmNvbnRhaW5zKCc/JykgewogICAgICAgIGxldCByZXN0ID0gbGluZS5zcGxpdF9vbmNlKCc/JykubWFwKHwoXywgcil8IHIpPzsKICAgICAgICBsZXQgZW5kID0gcmVzdC5maW5kKCcjJykudW53cmFwX29yKHJlc3QubGVuKCkpOwogICAgICAgIHJldHVybiBTb21lKENvdzo6Qm9ycm93ZWQoJnJlc3RbLi5lbmRdKSk7CiAgICB9CiAgICBOb25lCn0KCnB1YiBmbiBwYXJzZV9zaGFyZV9wYWlyX2Zyb21fcXVlcnkocXVlcnk6ICZzdHIpIC0+IE9wdGlvbjwoU3RyaW5nLCBTdHJpbmcpPiB7CiAgICBsZXQgbXV0IHNoYXJlOiBPcHRpb248U3RyaW5nPiA9IE5vbmU7CiAgICBsZXQgbXV0IHJlY3Y6IE9wdGlvbjxTdHJpbmc+ID0gTm9uZTsKICAgIGZvciAoaywgdikgaW4gdXJsOjpmb3JtX3VybGVuY29kZWQ6OnBhcnNlKHF1ZXJ5LmFzX2J5dGVzKCkpIHsKICAgICAgICBpZiBrID09ICJzaGFyZV9jb2RlIiAmJiBzaGFyZS5pc19ub25lKCkgewogICAgICAgICAgICBzaGFyZSA9IFNvbWUodi5pbnRvX293bmVkKCkpOwogICAgICAgIH0gZWxzZSBpZiBrID09ICJyZWNlaXZlX2NvZGUiICYmIHJlY3YuaXNfbm9uZSgpIHsKICAgICAgICAgICAgcmVjdiA9IFNvbWUodi5pbnRvX293bmVkKCkpOwogICAgICAgIH0KICAgICAgICBpZiBzaGFyZS5pc19zb21lKCkgJiYgcmVjdi5pc19zb21lKCkgewogICAgICAgICAgICBicmVhazsKICAgICAgICB9CiAgICB9CiAgICBsZXQgcyA9IHNoYXJlPzsKICAgIGxldCByID0gcmVjdj87CiAgICBpZiBzLmlzX2VtcHR5KCkgfHwgci5pc19lbXB0eSgpIHsKICAgICAgICByZXR1cm4gTm9uZTsKICAgIH0KICAgIFNvbWUoKHMsIHIpKQp9CgpwdWIgZm4gcGFyc2Vfc2hhcmVfc3RybV9saW5lKGxpbmU6ICZzdHIpIC0+IE9wdGlvbjwoU3RyaW5nLCBTdHJpbmcpPiB7CiAgICBpZiAhZ2F0ZV9zaGFyZV9zdHJtKGxpbmUuYXNfYnl0ZXMoKSkgewogICAgICAgIHJldHVybiBOb25lOwogICAgfQogICAgbGV0IHEgPSBleHRyYWN0X3F1ZXJ5X3N0cmluZyhsaW5lKT87CiAgICBwYXJzZV9zaGFyZV9wYWlyX2Zyb21fcXVlcnkocS5hc19yZWYoKSkKfQoKI1tjZmcodGVzdCldCm1vZCB0ZXN0cyB7CiAgICB1c2Ugc3VwZXI6Oio7CgogICAgI1t0ZXN0XQogICAgZm4gZ2F0ZV9yZXF1aXJlc19wbHVnaW5fbmFtZSgpIHsKICAgICAgICBhc3NlcnQhKCFnYXRlX3NoYXJlX3N0cm0oYiJodHRwOi8veD9zaGFyZV9jb2RlPWEmcmVjZWl2ZV9jb2RlPWIiKSk7CiAgICAgICAgYXNzZXJ0IShnYXRlX3NoYXJlX3N0cm0oCiAgICAgICAgICAgIGIiaHR0cDovL2gvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci94P3NoYXJlX2NvZGU9YSZyZWNlaXZlX2NvZGU9YiIKICAgICAgICApKTsKICAgIH0KCiAgICAjW3Rlc3RdCiAgICBmbiBleHRyYWN0X3F1ZXJ5X2ZhbGxiYWNrX2xpa2VfcHl0aG9uKCkgewogICAgICAgIGxldCBsaW5lX3dpdGhfcGx1Z2luID0gImZvb1AxMTVTdHJtSGVscGVyP3NoYXJlX2NvZGU9eCZyZWNlaXZlX2NvZGU9eSI7CiAgICAgICAgYXNzZXJ0IShnYXRlX3NoYXJlX3N0cm0obGluZV93aXRoX3BsdWdpbi5hc19ieXRlcygpKSk7CiAgICAgICAgbGV0IHEgPSBleHRyYWN0X3F1ZXJ5X3N0cmluZyhsaW5lX3dpdGhfcGx1Z2luKS51bndyYXAoKTsKICAgICAgICBhc3NlcnRfZXEhKHEuYXNfcmVmKCksICJzaGFyZV9jb2RlPXgmcmVjZWl2ZV9jb2RlPXkiKTsKICAgIH0KCiAgICAjW3Rlc3RdCiAgICBmbiBmdWxsX3VybF9wYXJzZSgpIHsKICAgICAgICBsZXQgbGluZSA9ICJodHRwOi8vMTI3LjAuMC4xOjMwMDAvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci9yZWRpcmVjdF91cmw/c2hhcmVfY29kZT1zYyZyZWNlaXZlX2NvZGU9cmMmaWQ9MSI7CiAgICAgICAgbGV0IHAgPSBwYXJzZV9zaGFyZV9zdHJtX2xpbmUobGluZSkudW53cmFwKCk7CiAgICAgICAgYXNzZXJ0X2VxIShwLjAsICJzYyIpOwogICAgICAgIGFzc2VydF9lcSEocC4xLCAicmMiKTsKICAgIH0KfQo=
+use std::borrow::Cow;
+
+use memchr::memmem;
+use url::Url;
+
+const NEEDLE_P115: &[u8] = b"P115StrmHelper";
+const NEEDLE_SHARE: &[u8] = b"share_code=";
+const NEEDLE_RECV: &[u8] = b"receive_code=";
+
+pub fn gate_share_strm(line: &[u8]) -> bool {
+    if memmem::find(line, NEEDLE_P115).is_none() {
+        return false;
+    }
+    if memmem::find(line, NEEDLE_SHARE).is_none() {
+        return false;
+    }
+    memmem::find(line, NEEDLE_RECV).is_some()
+}
+
+pub fn extract_query_string(line: &str) -> Option<Cow<'_, str>> {
+    if let Ok(u) = Url::parse(line) {
+        if let Some(q) = u.query() {
+            if !q.is_empty() {
+                return Some(Cow::Owned(q.to_string()));
+            }
+        }
+    }
+    if line.contains('?') {
+        let rest = line.split_once('?').map(|(_, r)| r)?;
+        let end = rest.find('#').unwrap_or(rest.len());
+        return Some(Cow::Borrowed(&rest[..end]));
+    }
+    None
+}
+
+pub fn parse_share_pair_from_query(query: &str) -> Option<(String, String)> {
+    let mut share: Option<String> = None;
+    let mut recv: Option<String> = None;
+    for (k, v) in url::form_urlencoded::parse(query.as_bytes()) {
+        if k == "share_code" && share.is_none() {
+            share = Some(v.into_owned());
+        } else if k == "receive_code" && recv.is_none() {
+            recv = Some(v.into_owned());
+        }
+        if share.is_some() && recv.is_some() {
+            break;
+        }
+    }
+    let s = share?;
+    let r = recv?;
+    if s.is_empty() || r.is_empty() {
+        return None;
+    }
+    Some((s, r))
+}
+
+pub fn parse_share_strm_line(line: &str) -> Option<(String, String)> {
+    if !gate_share_strm(line.as_bytes()) {
+        return None;
+    }
+    let q = extract_query_string(line)?;
+    parse_share_pair_from_query(q.as_ref())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gate_requires_plugin_name() {
+        assert!(!gate_share_strm(b"http://x?share_code=a&receive_code=b"));
+        assert!(gate_share_strm(
+            b"http://h/api/v1/plugin/P115StrmHelper/x?share_code=a&receive_code=b"
+        ));
+    }
+
+    #[test]
+    fn extract_query_fallback_like_python() {
+        let line_with_plugin = "fooP115StrmHelper?share_code=x&receive_code=y";
+        assert!(gate_share_strm(line_with_plugin.as_bytes()));
+        let q = extract_query_string(line_with_plugin).unwrap();
+        assert_eq!(q.as_ref(), "share_code=x&receive_code=y");
+    }
+
+    #[test]
+    fn full_url_parse() {
+        let line = "http://127.0.0.1:3000/api/v1/plugin/P115StrmHelper/redirect_url?share_code=sc&receive_code=rc&id=1";
+        let p = parse_share_strm_line(line).unwrap();
+        assert_eq!(p.0, "sc");
+        assert_eq!(p.1, "rc");
+    }
+}

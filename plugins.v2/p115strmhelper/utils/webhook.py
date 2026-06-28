@@ -1,1 +1,68 @@
-X19hbGxfXyA9IFsiV2ViaG9va1V0aWxzIl0KCgpmcm9tIHR5cGluZyBpbXBvcnQgTGlzdAoKCmNsYXNzIFdlYmhvb2tVdGlsczoKICAgICIiIgogICAgV2ViaG9vayDkuovku7blpITnkIblt6XlhbfnsbsKICAgICIiIgoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBwYXJzZV9pdGVtX3BhdGhzX2Zyb21fZGVzY3JpcHRpb24oZGVzY3JpcHRpb246IHN0cikgLT4gTGlzdFtzdHJdOgogICAgICAgICIiIgogICAgICAgIOS7jkRlc2NyaXB0aW9u5a2X5q616Kej5p6QSXRlbSBQYXRo5YiX6KGoCgogICAgICAgIDpwYXJhbSBkZXNjcmlwdGlvbiAoc3RyKTogRGVzY3JpcHRpb27lrZfmrrXlhoXlrrkKCiAgICAgICAgOnJldHVybiBMaXN0OiBJdGVtIFBhdGjliJfooagKICAgICAgICAiIiIKICAgICAgICBpZiBub3QgZGVzY3JpcHRpb246CiAgICAgICAgICAgIHJldHVybiBbXQoKICAgICAgICBpdGVtX3BhdGhzID0gW10KICAgICAgICBsaW5lcyA9IGRlc2NyaXB0aW9uLnNwbGl0KCJcbiIpCiAgICAgICAgaW5faXRlbV9wYXRoX3NlY3Rpb24gPSBGYWxzZQoKICAgICAgICBmb3IgbGluZSBpbiBsaW5lczoKICAgICAgICAgICAgbGluZSA9IGxpbmUuc3RyaXAoKQoKICAgICAgICAgICAgaWYgIkl0ZW0gUGF0aDoiIGluIGxpbmU6CiAgICAgICAgICAgICAgICBpbl9pdGVtX3BhdGhfc2VjdGlvbiA9IFRydWUKICAgICAgICAgICAgICAgIGlmICI6IiBpbiBsaW5lOgogICAgICAgICAgICAgICAgICAgIHBhdGhfcGFydCA9IGxpbmUuc3BsaXQoIjoiLCAxKVsxXS5zdHJpcCgpCiAgICAgICAgICAgICAgICAgICAgaWYgcGF0aF9wYXJ0OgogICAgICAgICAgICAgICAgICAgICAgICBpdGVtX3BhdGhzLmFwcGVuZChwYXRoX3BhcnQpCiAgICAgICAgICAgICAgICBjb250aW51ZQoKICAgICAgICAgICAgaWYgaW5faXRlbV9wYXRoX3NlY3Rpb246CiAgICAgICAgICAgICAgICBpZiBhbnkoCiAgICAgICAgICAgICAgICAgICAgbWFya2VyIGluIGxpbmUKICAgICAgICAgICAgICAgICAgICBmb3IgbWFya2VyIGluIFsKICAgICAgICAgICAgICAgICAgICAgICAgIk1vdW50IFBhdGhzOiIsCiAgICAgICAgICAgICAgICAgICAgICAgICJJdGVtIE5hbWU6IiwKICAgICAgICAgICAgICAgICAgICAgICAgIkRlc2NyaXB0aW9uOiIsCiAgICAgICAgICAgICAgICAgICAgICAgICJPdGhlciBJbmZvOiIsCiAgICAgICAgICAgICAgICAgICAgXQogICAgICAgICAgICAgICAgKToKICAgICAgICAgICAgICAgICAgICBpbl9pdGVtX3BhdGhfc2VjdGlvbiA9IEZhbHNlCiAgICAgICAgICAgICAgICAgICAgY29udGludWUKCiAgICAgICAgICAgICAgICBpZiBsaW5lOgogICAgICAgICAgICAgICAgICAgIGlmIGxpbmUuc3RhcnRzd2l0aCgiaHR0cDovLyIpIG9yIGxpbmUuc3RhcnRzd2l0aCgiaHR0cHM6Ly8iKTogICMgbm9xYQogICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICAgICAgICAgIGlmICgKICAgICAgICAgICAgICAgICAgICAgICAgbGluZS5zdGFydHN3aXRoKCIvIikKICAgICAgICAgICAgICAgICAgICAgICAgb3IgbGluZS5zdGFydHN3aXRoKCJcXCIpCiAgICAgICAgICAgICAgICAgICAgICAgIG9yIGxpbmUuc3RhcnRzd2l0aCgiLi8iKQogICAgICAgICAgICAgICAgICAgICAgICBvciBsaW5lLnN0YXJ0c3dpdGgoIi4uLyIpCiAgICAgICAgICAgICAgICAgICAgICAgIG9yIChsZW4obGluZSkgPiAyIGFuZCBsaW5lWzFdID09ICI6IiBhbmQgbGluZVsyXSBpbiAiL1xcIikKICAgICAgICAgICAgICAgICAgICAgICAgb3IgKCIvIiBpbiBsaW5lIGFuZCAiOi8vIiBub3QgaW4gbGluZSkKICAgICAgICAgICAgICAgICAgICApOgogICAgICAgICAgICAgICAgICAgICAgICBpdGVtX3BhdGhzLmFwcGVuZChsaW5lKQoKICAgICAgICBpdGVtX3BhdGhzID0gbGlzdCgKICAgICAgICAgICAgZmlsdGVyKE5vbmUsIFtwYXRoLnN0cmlwKCkgZm9yIHBhdGggaW4gaXRlbV9wYXRocyBpZiBwYXRoLnN0cmlwKCldKQogICAgICAgICkKICAgICAgICByZXR1cm4gaXRlbV9wYXRocwo=
+__all__ = ["WebhookUtils"]
+
+
+from typing import List
+
+
+class WebhookUtils:
+    """
+    Webhook 事件处理工具类
+    """
+
+    @staticmethod
+    def parse_item_paths_from_description(description: str) -> List[str]:
+        """
+        从Description字段解析Item Path列表
+
+        :param description (str): Description字段内容
+
+        :return List: Item Path列表
+        """
+        if not description:
+            return []
+
+        item_paths = []
+        lines = description.split("\n")
+        in_item_path_section = False
+
+        for line in lines:
+            line = line.strip()
+
+            if "Item Path:" in line:
+                in_item_path_section = True
+                if ":" in line:
+                    path_part = line.split(":", 1)[1].strip()
+                    if path_part:
+                        item_paths.append(path_part)
+                continue
+
+            if in_item_path_section:
+                if any(
+                    marker in line
+                    for marker in [
+                        "Mount Paths:",
+                        "Item Name:",
+                        "Description:",
+                        "Other Info:",
+                    ]
+                ):
+                    in_item_path_section = False
+                    continue
+
+                if line:
+                    if line.startswith("http://") or line.startswith("https://"):  # noqa
+                        continue
+                    if (
+                        line.startswith("/")
+                        or line.startswith("\\")
+                        or line.startswith("./")
+                        or line.startswith("../")
+                        or (len(line) > 2 and line[1] == ":" and line[2] in "/\\")
+                        or ("/" in line and "://" not in line)
+                    ):
+                        item_paths.append(line)
+
+        item_paths = list(
+            filter(None, [path.strip() for path in item_paths if path.strip()])
+        )
+        return item_paths

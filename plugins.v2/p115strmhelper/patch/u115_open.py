@@ -1,1 +1,156 @@
-ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gdHlwaW5nIGltcG9ydCBPcHRpb25hbCwgQ2FsbGFibGUsIEFueSwgRGljdAoKZnJvbSBwMTE1Y2VudGVyIGltcG9ydCBQMTE1Q2VudGVyCgpmcm9tIGFwcCBpbXBvcnQgc2NoZW1hcwpmcm9tIGFwcC5sb2cgaW1wb3J0IGxvZ2dlcgpmcm9tIGFwcC5tb2R1bGVzLmZpbGVtYW5hZ2VyLnN0b3JhZ2VzLnUxMTUgaW1wb3J0IFUxMTVQYW4KCmZyb20gLi5jb3JlLnUxMTVfb3BlbiBpbXBvcnQgVTExNU9wZW5IZWxwZXIKZnJvbSAuLmNvcmUuY29uZmlnIGltcG9ydCBjb25maWdlcgoKCmNsYXNzIFUxMTVQYXRjaGVyOgogICAgIiIiCiAgICDkuIDkuKrnlKjkuo7mjqfliLYgVTExNVBhbiDnjLTlrZDooaXkuIHnmoTnrqHnkIblmagKICAgIOaUr+aMgeaJi+WKqOWQr+eUqC/npoHnlKjvvIzkuZ/mlK/mjIHkvZzkuLrkuIrkuIvmlofnrqHnkIblmajkvb/nlKgKICAgICIiIgoKICAgIF9vcmlnaW5hbF9tZXRob2Q6IERpY3Rbc3RyLCBDYWxsYWJsZVsuLi4sIEFueV1dID0gewogICAgICAgICJ1cGxvYWQiOiBOb25lLAogICAgICAgICJjcmVhdGVfZm9sZGVyIjogTm9uZSwKICAgICAgICAiZ2V0X2l0ZW0iOiBOb25lLAogICAgICAgICJnZXRfZm9sZGVyIjogTm9uZSwKICAgICAgICAicmVuYW1lIjogTm9uZSwKICAgIH0KICAgIF9mdW5jX2FjdGl2ZTogRGljdFtzdHIsIGJvb2xdID0gewogICAgICAgICJ1cGxvYWQiOiBGYWxzZSwKICAgICAgICAiY3JlYXRlX2ZvbGRlciI6IEZhbHNlLAogICAgICAgICJnZXRfaXRlbSI6IEZhbHNlLAogICAgICAgICJnZXRfZm9sZGVyIjogRmFsc2UsCiAgICAgICAgInJlbmFtZSI6IEZhbHNlLAogICAgfQogICAgbG9nX21hcDogRGljdFtzdHIsIHN0cl0gPSB7CiAgICAgICAgInVwbG9hZCI6ICLkuIrkvKAiLAogICAgICAgICJjcmVhdGVfZm9sZGVyIjogIuWIm+W7uuebruW9lSIsCiAgICAgICAgImdldF9pdGVtIjogIuiOt+WPluaWh+S7tuS/oeaBryIsCiAgICAgICAgImdldF9mb2xkZXIiOiAi6I635Y+W55uu5b2V5L+h5oGvIiwKICAgICAgICAicmVuYW1lIjogIumHjeWRveWQjSIsCiAgICB9CgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIF9wYXRjaF91cGxvYWQoCiAgICAgICAgc2VsZl9pbnN0YW5jZTogVTExNVBhbiwKICAgICAgICB0YXJnZXRfZGlyOiBzY2hlbWFzLkZpbGVJdGVtLAogICAgICAgIGxvY2FsX3BhdGg6IFBhdGgsCiAgICAgICAgbmV3X25hbWU6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgKSAtPiBPcHRpb25hbFtzY2hlbWFzLkZpbGVJdGVtXToKICAgICAgICAiIiIKICAgICAgICDoh6rlrprkuYkgdXBsb2FkCiAgICAgICAgIiIiCiAgICAgICAgaGVscGVyID0gVTExNU9wZW5IZWxwZXIoKQogICAgICAgIGxvZ2dlci5kZWJ1Zygi44CQUDExNU9wZW7jgJHosIPnlKjooaXkuIHmjqXlj6PkuIrkvKAiKQogICAgICAgIHJldHVybiBoZWxwZXIudXBsb2FkKAogICAgICAgICAgICB0YXJnZXRfZGlyPXRhcmdldF9kaXIsIGxvY2FsX3BhdGg9bG9jYWxfcGF0aCwgbmV3X25hbWU9bmV3X25hbWUKICAgICAgICApCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIF9wYXRjaF9jcmVhdGVfZm9sZGVyKAogICAgICAgIHNlbGZfaW5zdGFuY2U6IFUxMTVQYW4sIHBhcmVudF9pdGVtOiBzY2hlbWFzLkZpbGVJdGVtLCBuYW1lOiBzdHIKICAgICkgLT4gT3B0aW9uYWxbc2NoZW1hcy5GaWxlSXRlbV06CiAgICAgICAgIiIiCiAgICAgICAg6Ieq5a6a5LmJIGNyZWF0ZV9mb2xkZXIKICAgICAgICAiIiIKICAgICAgICBoZWxwZXIgPSBVMTE1T3BlbkhlbHBlcigpCiAgICAgICAgbG9nZ2VyLmRlYnVnKCLjgJBQMTE1T3BlbuOAkeiwg+eUqOihpeS4geaOpeWPo+WIm+W7uuebruW9lSIpCiAgICAgICAgcmV0dXJuIGhlbHBlci5jcmVhdGVfZm9sZGVyKHBhcmVudF9pdGVtPXBhcmVudF9pdGVtLCBuYW1lPW5hbWUpCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIF9wYXRjaF9nZXRfaXRlbSgKICAgICAgICBzZWxmX2luc3RhbmNlOiBVMTE1UGFuLCBwYXRoOiBQYXRoCiAgICApIC0+IE9wdGlvbmFsW3NjaGVtYXMuRmlsZUl0ZW1dOgogICAgICAgICIiIgogICAgICAgIOiHquWumuS5iSBnZXRfaXRlbQogICAgICAgICIiIgogICAgICAgIGhlbHBlciA9IFUxMTVPcGVuSGVscGVyKCkKICAgICAgICBsb2dnZXIuZGVidWcoIuOAkFAxMTVPcGVu44CR6LCD55So6KGl5LiB5o6l5Y+j6I635Y+W5paH5Lu25L+h5oGvIikKICAgICAgICByZXR1cm4gaGVscGVyLmdldF9pdGVtKHBhdGg9cGF0aCkKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgX3BhdGNoX2dldF9mb2xkZXIoCiAgICAgICAgc2VsZl9pbnN0YW5jZTogVTExNVBhbiwgcGF0aDogUGF0aAogICAgKSAtPiBPcHRpb25hbFtzY2hlbWFzLkZpbGVJdGVtXToKICAgICAgICAiIiIKICAgICAgICDoh6rlrprkuYkgZ2V0X2ZvbGRlcgogICAgICAgICIiIgogICAgICAgIGhlbHBlciA9IFUxMTVPcGVuSGVscGVyKCkKICAgICAgICBsb2dnZXIuZGVidWcoIuOAkFAxMTVPcGVu44CR6LCD55So6KGl5LiB5o6l5Y+j6I635Y+W55uu5b2V5L+h5oGvIikKICAgICAgICByZXR1cm4gaGVscGVyLmdldF9mb2xkZXIocGF0aD1wYXRoKQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBfcGF0Y2hfcmVuYW1lKAogICAgICAgIHNlbGZfaW5zdGFuY2U6IFUxMTVQYW4sIGZpbGVpdGVtOiBzY2hlbWFzLkZpbGVJdGVtLCBuYW1lOiBzdHIKICAgICkgLT4gYm9vbDoKICAgICAgICAiIiIKICAgICAgICDoh6rlrprkuYkgcmVuYW1lCiAgICAgICAgIiIiCiAgICAgICAgaGVscGVyID0gVTExNU9wZW5IZWxwZXIoKQogICAgICAgIGxvZ2dlci5kZWJ1Zygi44CQUDExNU9wZW7jgJHosIPnlKjooaXkuIHmjqXlj6Pojrflj5bnm67lvZXkv6Hmga8iKQogICAgICAgIHJldHVybiBoZWxwZXIucmVuYW1lKGZpbGVpdGVtPWZpbGVpdGVtLCBuYW1lPW5hbWUpCgogICAgQGNsYXNzbWV0aG9kCiAgICBkZWYgZW5hYmxlKGNscyk6CiAgICAgICAgIiIiCiAgICAgICAg5ZCv55So54y05a2Q6KGl5LiBCiAgICAgICAgIiIiCiAgICAgICAgaWYgY29uZmlnZXIuZ2V0X2NvbmZpZygidXBsb2FkX21vZHVsZV9lbmhhbmNlbWVudCIpOgogICAgICAgICAgICBpZiBjbHMuX2Z1bmNfYWN0aXZlWyJ1cGxvYWQiXToKICAgICAgICAgICAgICAgIHJldHVybgoKICAgICAgICAgICAgaWYgY2xzLl9vcmlnaW5hbF9tZXRob2RbInVwbG9hZCJdIGlzIE5vbmU6CiAgICAgICAgICAgICAgICBjbHMuX29yaWdpbmFsX21ldGhvZFsidXBsb2FkIl0gPSBVMTE1UGFuLnVwbG9hZAoKICAgICAgICAgICAgVTExNVBhbi51cGxvYWQgPSBjbHMuX3BhdGNoX3VwbG9hZAogICAgICAgICAgICBjbHMuX2Z1bmNfYWN0aXZlWyJ1cGxvYWQiXSA9IFRydWUKICAgICAgICAgICAgbG9nZ2VyLmluZm8oIuOAkFAxMTVPcGVu44CR5LiK5Lyg5o6l5Y+j6KGl5LiB5bqU55So5oiQ5YqfIikKCiAgICAgICAgdHJ5OgogICAgICAgICAgICBjbGllbnQgPSBQMTE1Q2VudGVyKGNvbmZpZ2VyLmdldF9jb25maWcoIm1hY2hpbmVfaWQiKSkKICAgICAgICAgICAgcmVzcCA9IGNsaWVudC5jaGVja19mZWF0dXJlKCJ0cmFuc2Zlcl9tb2R1bGVfZW5oYW5jZW1lbnQiKQogICAgICAgICAgICBzdGF0dXMgPSByZXNwLmdldCgiZW5hYmxlZCIpCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbjoKICAgICAgICAgICAgc3RhdHVzID0gRmFsc2UKCiAgICAgICAgaWYgY29uZmlnZXIudHJhbnNmZXJfbW9kdWxlX2VuaGFuY2VtZW50IGFuZCBzdGF0dXM6CiAgICAgICAgICAgIG1vZHVsZXMgPSBbImNyZWF0ZV9mb2xkZXIiLCAiZ2V0X2l0ZW0iLCAiZ2V0X2ZvbGRlciIsICJyZW5hbWUiXQogICAgICAgICAgICBmb3IgbW9kdWxlIGluIG1vZHVsZXM6CiAgICAgICAgICAgICAgICBpZiBjbHMuX2Z1bmNfYWN0aXZlLmdldChtb2R1bGUpOgogICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlCgogICAgICAgICAgICAgICAgb3JpZ2luYWxfbWV0aG9kX25hbWUgPSBtb2R1bGUKICAgICAgICAgICAgICAgIHBhdGNoX21ldGhvZF9uYW1lID0gZiJfcGF0Y2hfe21vZHVsZX0iCgogICAgICAgICAgICAgICAgb3JpZ2luYWxfbWV0aG9kID0gZ2V0YXR0cihVMTE1UGFuLCBvcmlnaW5hbF9tZXRob2RfbmFtZSkKICAgICAgICAgICAgICAgIHBhdGNoX21ldGhvZCA9IGdldGF0dHIoY2xzLCBwYXRjaF9tZXRob2RfbmFtZSkKCiAgICAgICAgICAgICAgICBpZiBjbHMuX29yaWdpbmFsX21ldGhvZC5nZXQobW9kdWxlKSBpcyBOb25lOgogICAgICAgICAgICAgICAgICAgIGNscy5fb3JpZ2luYWxfbWV0aG9kW21vZHVsZV0gPSBvcmlnaW5hbF9tZXRob2QKCiAgICAgICAgICAgICAgICBzZXRhdHRyKFUxMTVQYW4sIG9yaWdpbmFsX21ldGhvZF9uYW1lLCBwYXRjaF9tZXRob2QpCgogICAgICAgICAgICAgICAgY2xzLl9mdW5jX2FjdGl2ZVttb2R1bGVdID0gVHJ1ZQogICAgICAgICAgICAgICAgbG9nZ2VyLmluZm8oZiLjgJBQMTE1T3BlbuOAkXtjbHMubG9nX21hcFttb2R1bGVdfeaOpeWPo+ihpeS4geW6lOeUqOaIkOWKnyIpCgogICAgQGNsYXNzbWV0aG9kCiAgICBkZWYgZGlzYWJsZShjbHMpOgogICAgICAgICIiIgogICAgICAgIOemgeeUqOeMtOWtkOihpeS4gQogICAgICAgICIiIgogICAgICAgIGZvciBrZXksIHN0YXR1cyBpbiBjbHMuX2Z1bmNfYWN0aXZlLml0ZW1zKCk6CiAgICAgICAgICAgIGlmIHN0YXR1czoKICAgICAgICAgICAgICAgIGlmIGNscy5fb3JpZ2luYWxfbWV0aG9kW2tleV0gaXMgbm90IE5vbmU6CiAgICAgICAgICAgICAgICAgICAgc2V0YXR0cihVMTE1UGFuLCBrZXksIGNscy5fb3JpZ2luYWxfbWV0aG9kW2tleV0pCgogICAgICAgICAgICBjbHMuX2Z1bmNfYWN0aXZlW2tleV0gPSBGYWxzZQogICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkFAxMTVPcGVu44CRe2Nscy5sb2dfbWFwW2tleV195o6l5Y+j5oGi5aSN5Y6f5aeL54q25oCB5oiQ5YqfIikK
+from pathlib import Path
+from typing import Optional, Callable, Any, Dict
+
+from p115center import P115Center
+
+from app import schemas
+from app.log import logger
+from app.modules.filemanager.storages.u115 import U115Pan
+
+from ..core.u115_open import U115OpenHelper
+from ..core.config import configer
+
+
+class U115Patcher:
+    """
+    一个用于控制 U115Pan 猴子补丁的管理器
+    支持手动启用/禁用，也支持作为上下文管理器使用
+    """
+
+    _original_method: Dict[str, Callable[..., Any]] = {
+        "upload": None,
+        "create_folder": None,
+        "get_item": None,
+        "get_folder": None,
+        "rename": None,
+    }
+    _func_active: Dict[str, bool] = {
+        "upload": False,
+        "create_folder": False,
+        "get_item": False,
+        "get_folder": False,
+        "rename": False,
+    }
+    log_map: Dict[str, str] = {
+        "upload": "上传",
+        "create_folder": "创建目录",
+        "get_item": "获取文件信息",
+        "get_folder": "获取目录信息",
+        "rename": "重命名",
+    }
+
+    @staticmethod
+    def _patch_upload(
+        self_instance: U115Pan,
+        target_dir: schemas.FileItem,
+        local_path: Path,
+        new_name: Optional[str] = None,
+    ) -> Optional[schemas.FileItem]:
+        """
+        自定义 upload
+        """
+        helper = U115OpenHelper()
+        logger.debug("【P115Open】调用补丁接口上传")
+        return helper.upload(
+            target_dir=target_dir, local_path=local_path, new_name=new_name
+        )
+
+    @staticmethod
+    def _patch_create_folder(
+        self_instance: U115Pan, parent_item: schemas.FileItem, name: str
+    ) -> Optional[schemas.FileItem]:
+        """
+        自定义 create_folder
+        """
+        helper = U115OpenHelper()
+        logger.debug("【P115Open】调用补丁接口创建目录")
+        return helper.create_folder(parent_item=parent_item, name=name)
+
+    @staticmethod
+    def _patch_get_item(
+        self_instance: U115Pan, path: Path
+    ) -> Optional[schemas.FileItem]:
+        """
+        自定义 get_item
+        """
+        helper = U115OpenHelper()
+        logger.debug("【P115Open】调用补丁接口获取文件信息")
+        return helper.get_item(path=path)
+
+    @staticmethod
+    def _patch_get_folder(
+        self_instance: U115Pan, path: Path
+    ) -> Optional[schemas.FileItem]:
+        """
+        自定义 get_folder
+        """
+        helper = U115OpenHelper()
+        logger.debug("【P115Open】调用补丁接口获取目录信息")
+        return helper.get_folder(path=path)
+
+    @staticmethod
+    def _patch_rename(
+        self_instance: U115Pan, fileitem: schemas.FileItem, name: str
+    ) -> bool:
+        """
+        自定义 rename
+        """
+        helper = U115OpenHelper()
+        logger.debug("【P115Open】调用补丁接口获取目录信息")
+        return helper.rename(fileitem=fileitem, name=name)
+
+    @classmethod
+    def enable(cls):
+        """
+        启用猴子补丁
+        """
+        if configer.get_config("upload_module_enhancement"):
+            if cls._func_active["upload"]:
+                return
+
+            if cls._original_method["upload"] is None:
+                cls._original_method["upload"] = U115Pan.upload
+
+            U115Pan.upload = cls._patch_upload
+            cls._func_active["upload"] = True
+            logger.info("【P115Open】上传接口补丁应用成功")
+
+        try:
+            client = P115Center(configer.get_config("machine_id"))
+            resp = client.check_feature("transfer_module_enhancement")
+            status = resp.get("enabled")
+        except Exception:
+            status = False
+
+        if configer.transfer_module_enhancement and status:
+            modules = ["create_folder", "get_item", "get_folder", "rename"]
+            for module in modules:
+                if cls._func_active.get(module):
+                    continue
+
+                original_method_name = module
+                patch_method_name = f"_patch_{module}"
+
+                original_method = getattr(U115Pan, original_method_name)
+                patch_method = getattr(cls, patch_method_name)
+
+                if cls._original_method.get(module) is None:
+                    cls._original_method[module] = original_method
+
+                setattr(U115Pan, original_method_name, patch_method)
+
+                cls._func_active[module] = True
+                logger.info(f"【P115Open】{cls.log_map[module]}接口补丁应用成功")
+
+    @classmethod
+    def disable(cls):
+        """
+        禁用猴子补丁
+        """
+        for key, status in cls._func_active.items():
+            if status:
+                if cls._original_method[key] is not None:
+                    setattr(U115Pan, key, cls._original_method[key])
+
+            cls._func_active[key] = False
+            logger.info(f"【P115Open】{cls.log_map[key]}接口恢复原始状态成功")

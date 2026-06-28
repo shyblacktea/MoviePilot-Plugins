@@ -1,1 +1,150 @@
-ZnJvbSByZSBpbXBvcnQgc2VhcmNoCgpfX2FsbF9fID0gWwogICAgIlBhblBhdGhOb3RGb3VuZCIsCiAgICAiVTExNU5vQ2hlY2tJbkV4Y2VwdGlvbiIsCiAgICAiUGFuRGF0YU5vdEluRGIiLAogICAgIkNhbk5vdEZpbmRQYXRoVG9DaWQiLAogICAgIlBhdGhOb3RJbktleSIsCiAgICAiRG93bmxvYWRWYWxpZGF0aW9uRmFpbCIsCiAgICAiRmlsZUl0ZW1LZXlNaXNzIiwKICAgICJJdGVydHJlZUludGVybmFsRXJyb3IiLAogICAgIk5vdGlmeUV4Y2VwdGlvbkZvcm1hdHRlciIsCl0KCgpjbGFzcyBOb3RpZnlFeGNlcHRpb25Gb3JtYXR0ZXI6CiAgICAiIiIKICAgIOWwhuW8guW4uOagvOW8j+WMluS4uumAguWQiOmAmuefpeWxleekuueahOeugOefreaPj+i/sAogICAgIiIiCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIGZvcm1hdF9leGNlcHRpb25fZm9yX25vdGlmeShleGM6IEJhc2VFeGNlcHRpb24sIG1heF9sZW5ndGg6IGludCA9IDQwMCkgLT4gc3RyOgogICAgICAgICIiIgogICAgICAgIOWwhuW8guW4uOagvOW8j+WMluS4uumAguWQiOmAmuefpeWxleekuueahOeugOefreaPj+i/sAoKICAgICAgICA6cGFyYW0gZXhjIChCYXNlRXhjZXB0aW9uKTog5byC5bi45a+56LGhCiAgICAgICAgOnBhcmFtIG1heF9sZW5ndGggKGludCk6IOacgOWkp+mVv+W6pgoKICAgICAgICA6cmV0dXJuIHN0cjog5qC85byP5YyW5ZCO55qE5byC5bi45o+P6L+wCiAgICAgICAgIiIiCiAgICAgICAgZSA9IGV4YwoKICAgICAgICBjb2RlID0gZ2V0YXR0cihlLCAiY29kZSIsIE5vbmUpIG9yIGdldGF0dHIoZSwgInN0YXR1c19jb2RlIiwgTm9uZSkKICAgICAgICByZWFzb24gPSBnZXRhdHRyKGUsICJyZWFzb24iLCBOb25lKQogICAgICAgIG1lc3NhZ2UgPSBnZXRhdHRyKGUsICJtZXNzYWdlIiwgTm9uZSkKICAgICAgICBpZiBjb2RlIGlzIG5vdCBOb25lIG9yIHJlYXNvbiBvciBtZXNzYWdlOgogICAgICAgICAgICBjb2RlX3MgPSBmIkhUVFAge2NvZGV9IiBpZiBjb2RlIGlzIG5vdCBOb25lIGVsc2UgIuivt+axgumUmeivryIKICAgICAgICAgICAgcmVhc29uX3MgPSBzdHIocmVhc29uKS5zdHJpcCgpIGlmIHJlYXNvbiBlbHNlICIiCiAgICAgICAgICAgIG1zZ19zID0gc3RyKG1lc3NhZ2UpLnN0cmlwKCkgaWYgbWVzc2FnZSBlbHNlICIiCiAgICAgICAgICAgIGlmIHJlYXNvbl9zIGFuZCBtc2dfczoKICAgICAgICAgICAgICAgIHJldHVybiBmIntjb2RlX3N977yIe3JlYXNvbl9zfe+8ie+8mnttc2dfc30iCiAgICAgICAgICAgIGlmIHJlYXNvbl9zOgogICAgICAgICAgICAgICAgcmV0dXJuIGYie2NvZGVfc33vvIh7cmVhc29uX3N977yJIgogICAgICAgICAgICBpZiBtc2dfczoKICAgICAgICAgICAgICAgIHJldHVybiBmIntjb2RlX3N977yae21zZ19zfSIKICAgICAgICAgICAgcmV0dXJuIGNvZGVfcwoKICAgICAgICBzID0gc3RyKGUpLnN0cmlwKCkKICAgICAgICBpZiBub3QgczoKICAgICAgICAgICAgcmV0dXJuIHR5cGUoZSkuX19uYW1lX18KCiAgICAgICAgY29kZV9tID0gc2VhcmNoKHIiXGJjb2RlPShcZCspIiwgcykKICAgICAgICByZWFzb25fbSA9IHNlYXJjaChyInJlYXNvbj0nKFteJ10qKSciLCBzKQogICAgICAgIG1zZ19tID0gc2VhcmNoKHIibWVzc2FnZT0nKFteJ10qKSciLCBzKQogICAgICAgIGlmIGNvZGVfbSBvciByZWFzb25fbSBvciBtc2dfbToKICAgICAgICAgICAgY29kZSA9IGNvZGVfbS5ncm91cCgxKSBpZiBjb2RlX20gZWxzZSBOb25lCiAgICAgICAgICAgIHJlYXNvbiA9IHJlYXNvbl9tLmdyb3VwKDEpIGlmIHJlYXNvbl9tIGVsc2UgIiIKICAgICAgICAgICAgbWVzc2FnZSA9IG1zZ19tLmdyb3VwKDEpIGlmIG1zZ19tIGVsc2UgIiIKICAgICAgICAgICAgY29kZV9zID0gZiJIVFRQIHtjb2RlfSIgaWYgY29kZSBlbHNlICLor7fmsYLplJnor68iCiAgICAgICAgICAgIGlmIHJlYXNvbiBhbmQgbWVzc2FnZToKICAgICAgICAgICAgICAgIHJldHVybiBmIntjb2RlX3N977yIe3JlYXNvbn3vvInvvJp7bWVzc2FnZX0iCiAgICAgICAgICAgIGlmIHJlYXNvbjoKICAgICAgICAgICAgICAgIHJldHVybiBmIntjb2RlX3N977yIe3JlYXNvbn3vvIkiCiAgICAgICAgICAgIGlmIG1lc3NhZ2U6CiAgICAgICAgICAgICAgICByZXR1cm4gZiJ7Y29kZV9zfe+8mnttZXNzYWdlfSIKICAgICAgICAgICAgcmV0dXJuIGNvZGVfcwoKICAgICAgICBmb3Igc2VwIGluICgicmVzcG9uc2VfYm9keT0iLCAiaGVhZGVycz0iLCAicmVxdWVzdD0iLCAicmVzcG9uc2U9Iik6CiAgICAgICAgICAgIGlmIHNlcCBpbiBzOgogICAgICAgICAgICAgICAgcyA9IHMuc3BsaXQoc2VwKVswXS5zdHJpcCgpCiAgICAgICAgaWYgbm90IHM6CiAgICAgICAgICAgIHJldHVybiAi572R57uc5oiW5o6l5Y+j6L+U5Zue5byC5bi477yM6K+35p+l55yL5pel5b+XIgoKICAgICAgICBsaW5lcyA9IFtsaW5lLnN0cmlwKCkgZm9yIGxpbmUgaW4gcy5zcGxpdGxpbmVzKCkgaWYgbGluZS5zdHJpcCgpXQogICAgICAgIGlmIGxpbmVzOgogICAgICAgICAgICBmb3IgbGluZSBpbiByZXZlcnNlZChsaW5lcyk6CiAgICAgICAgICAgICAgICBpZiBsaW5lLnN0YXJ0c3dpdGgoIkZpbGUgIikgb3IgbGluZS5zdGFydHN3aXRoKCIgIEZpbGUgIik6CiAgICAgICAgICAgICAgICAgICAgY29udGludWUKICAgICAgICAgICAgICAgIGlmICI6IiBpbiBsaW5lIG9yIGxpbmUuc3RhcnRzd2l0aCh0eXBlKGUpLl9fbmFtZV9fKToKICAgICAgICAgICAgICAgICAgICBzID0gbGluZQogICAgICAgICAgICAgICAgICAgIGJyZWFrCiAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICBzID0gbGluZXNbLTFdCgogICAgICAgIHR5cGVfbmFtZSA9IHR5cGUoZSkuX19uYW1lX18KICAgICAgICBpZiBub3Qgcy5zdGFydHN3aXRoKHR5cGVfbmFtZSkgYW5kIG5vdCBzLnN0YXJ0c3dpdGgodHlwZV9uYW1lICsgIjoiKToKICAgICAgICAgICAgaWYgZS5hcmdzIGFuZCBzdHIoZS5hcmdzWzBdKS5zdHJpcCgpOgogICAgICAgICAgICAgICAgbXNnID0gc3RyKGUuYXJnc1swXSkuc3RyaXAoKQogICAgICAgICAgICAgICAgaWYgbGVuKG1zZykgPD0gbWF4X2xlbmd0aDoKICAgICAgICAgICAgICAgICAgICBzID0gZiJ7dHlwZV9uYW1lfToge21zZ30iCiAgICAgICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgICAgIHMgPSBmInt0eXBlX25hbWV9OiB7bXNnWzogbWF4X2xlbmd0aCAtIGxlbih0eXBlX25hbWUpIC0gMl194oCmIgogICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgcyA9IHR5cGVfbmFtZSBpZiBub3QgcyBlbHNlIHMKCiAgICAgICAgcmV0dXJuIHNbOm1heF9sZW5ndGhdLnJzdHJpcCgpIGlmIGxlbihzKSA+IG1heF9sZW5ndGggZWxzZSBzCgoKY2xhc3MgUGFuUGF0aE5vdEZvdW5kKEZpbGVOb3RGb3VuZEVycm9yKToKICAgICIiIgogICAg572R55uY6Lev5b6E5LiN5a2Y5ZyoCiAgICAiIiIKCgpjbGFzcyBVMTE1Tm9DaGVja0luRXhjZXB0aW9uKEV4Y2VwdGlvbik6CiAgICAiIiIKICAgIDExNSBPcGVuIOacqueZu+W9lQogICAgIiIiCgoKY2xhc3MgUGFuRGF0YU5vdEluRGIoRXhjZXB0aW9uKToKICAgICIiIgogICAg572R55uY5pWw5o2u5pyq5Zyo5pWw5o2u5bqT5YaFCiAgICAiIiIKCgpjbGFzcyBDYW5Ob3RGaW5kUGF0aFRvQ2lkKEV4Y2VwdGlvbik6CiAgICAiIiIKICAgIOaXoOazleaJvuWIsOi3r+W+hOWvueW6lOeahCBjaWQKICAgICIiIgoKCmNsYXNzIFBhdGhOb3RJbktleShWYWx1ZUVycm9yKToKICAgICIiIgogICAg6ZSu5Lit5LiN5YyF5ZCrIFBhdGgg6aG5CiAgICAiIiIKCgpjbGFzcyBEb3dubG9hZFZhbGlkYXRpb25GYWlsKEV4Y2VwdGlvbik6CiAgICAiIiIKICAgIOS4i+i9veWQjueahOaWh+S7tuacquiDvemAmui/h+mqjOivgQogICAgIiIiCgogICAgcGFzcwoKCmNsYXNzIEZpbGVJdGVtS2V5TWlzcyhFeGNlcHRpb24pOgogICAgIiIiCiAgICDmlofku7bmlbDmja7kuI3lrozmlbQKICAgICIiIgoKICAgIHBhc3MKCgpjbGFzcyBJdGVydHJlZUludGVybmFsRXJyb3IoRXhjZXB0aW9uKToKICAgICIiIgogICAg572R55uY55uu5b2V5qCR6L+t5Luj77yIX19pdGVydHJlZe+8ieWGhemDqOmUmeivrwogICAgIiIiCgogICAgcGFzcwo=
+from re import search
+
+__all__ = [
+    "PanPathNotFound",
+    "U115NoCheckInException",
+    "PanDataNotInDb",
+    "CanNotFindPathToCid",
+    "PathNotInKey",
+    "DownloadValidationFail",
+    "FileItemKeyMiss",
+    "ItertreeInternalError",
+    "NotifyExceptionFormatter",
+]
+
+
+class NotifyExceptionFormatter:
+    """
+    将异常格式化为适合通知展示的简短描述
+    """
+
+    @staticmethod
+    def format_exception_for_notify(exc: BaseException, max_length: int = 400) -> str:
+        """
+        将异常格式化为适合通知展示的简短描述
+
+        :param exc (BaseException): 异常对象
+        :param max_length (int): 最大长度
+
+        :return str: 格式化后的异常描述
+        """
+        e = exc
+
+        code = getattr(e, "code", None) or getattr(e, "status_code", None)
+        reason = getattr(e, "reason", None)
+        message = getattr(e, "message", None)
+        if code is not None or reason or message:
+            code_s = f"HTTP {code}" if code is not None else "请求错误"
+            reason_s = str(reason).strip() if reason else ""
+            msg_s = str(message).strip() if message else ""
+            if reason_s and msg_s:
+                return f"{code_s}（{reason_s}）：{msg_s}"
+            if reason_s:
+                return f"{code_s}（{reason_s}）"
+            if msg_s:
+                return f"{code_s}：{msg_s}"
+            return code_s
+
+        s = str(e).strip()
+        if not s:
+            return type(e).__name__
+
+        code_m = search(r"\bcode=(\d+)", s)
+        reason_m = search(r"reason='([^']*)'", s)
+        msg_m = search(r"message='([^']*)'", s)
+        if code_m or reason_m or msg_m:
+            code = code_m.group(1) if code_m else None
+            reason = reason_m.group(1) if reason_m else ""
+            message = msg_m.group(1) if msg_m else ""
+            code_s = f"HTTP {code}" if code else "请求错误"
+            if reason and message:
+                return f"{code_s}（{reason}）：{message}"
+            if reason:
+                return f"{code_s}（{reason}）"
+            if message:
+                return f"{code_s}：{message}"
+            return code_s
+
+        for sep in ("response_body=", "headers=", "request=", "response="):
+            if sep in s:
+                s = s.split(sep)[0].strip()
+        if not s:
+            return "网络或接口返回异常，请查看日志"
+
+        lines = [line.strip() for line in s.splitlines() if line.strip()]
+        if lines:
+            for line in reversed(lines):
+                if line.startswith("File ") or line.startswith("  File "):
+                    continue
+                if ":" in line or line.startswith(type(e).__name__):
+                    s = line
+                    break
+            else:
+                s = lines[-1]
+
+        type_name = type(e).__name__
+        if not s.startswith(type_name) and not s.startswith(type_name + ":"):
+            if e.args and str(e.args[0]).strip():
+                msg = str(e.args[0]).strip()
+                if len(msg) <= max_length:
+                    s = f"{type_name}: {msg}"
+                else:
+                    s = f"{type_name}: {msg[: max_length - len(type_name) - 2]}…"
+            else:
+                s = type_name if not s else s
+
+        return s[:max_length].rstrip() if len(s) > max_length else s
+
+
+class PanPathNotFound(FileNotFoundError):
+    """
+    网盘路径不存在
+    """
+
+
+class U115NoCheckInException(Exception):
+    """
+    115 Open 未登录
+    """
+
+
+class PanDataNotInDb(Exception):
+    """
+    网盘数据未在数据库内
+    """
+
+
+class CanNotFindPathToCid(Exception):
+    """
+    无法找到路径对应的 cid
+    """
+
+
+class PathNotInKey(ValueError):
+    """
+    键中不包含 Path 项
+    """
+
+
+class DownloadValidationFail(Exception):
+    """
+    下载后的文件未能通过验证
+    """
+
+    pass
+
+
+class FileItemKeyMiss(Exception):
+    """
+    文件数据不完整
+    """
+
+    pass
+
+
+class ItertreeInternalError(Exception):
+    """
+    网盘目录树迭代（__itertree）内部错误
+    """
+
+    pass

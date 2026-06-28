@@ -1,1 +1,26 @@
-IyAxMTXnvZHnm5hTVFJN5Yqp5omLIChQMTE1U3RybUhlbHBlcikKCj4g5Z+65LqOIFtERFNSZW1dKGh0dHBzOi8vZ2l0aHViLmNvbS9ERFNSZW0pIOW8gOWPkeeahCBbMTE1572R55uYU1RSTeWKqeaJi10oaHR0cHM6Ly9naXRodWIuY29tL0REU1JlbS1EZXYvTW92aWVQaWxvdC1QbHVnaW5zKSDmnKzlnLDkv67lpI3niYjjgIIKPgo+IOaEn+iwouWOn+S9nOiAheeahOadsOWHuui0oeeMru+8gQoKIyMg5Y6f5L2c6ICFCgotICoq5L2c6ICFKio6IFtERFNSZW1dKGh0dHBzOi8vZ2l0aHViLmNvbS9ERFNSZW0pCi0gKirljp/ku5PlupMqKjogW2h0dHBzOi8vZ2l0aHViLmNvbS9ERFNSZW0tRGV2L01vdmllUGlsb3QtUGx1Z2luc10oaHR0cHM6Ly9naXRodWIuY29tL0REU1JlbS1EZXYvTW92aWVQaWxvdC1QbHVnaW5zKQotICoq5Y6f5o+S5Lu2Kio6IDExNee9keebmFNUUk3liqnmiYsg4oCUIDExNee9keebmFNUUk3nlJ/miJDkuIDmnaHpvpnmnI3liqEKCuacrOmhueebruWcqOWOn+S9nOWfuuehgOS4iui/m+ihjOS6huacrOWcsOS/ruWkjeWSjOWKn+iDveWinuW8uu+8jOaEn+iwoiBERFNSZW0g55qE5Y2T6LaK5bel5L2c77yBCgojIyDniYjmnKwKCuW9k+WJjeeJiOacrDogKip2Mi44LjQ5KioKCiMjIyB2Mi44LjQ5IOabtOaWsOWGheWuuQotIGZpeDog5L+u5aSN5omr56CB55m75b2VIOKAlCDnu5Xov4cgYGxvZ2luX3FyY29kZSgpYCDnm7TmjqXor7fmsYLluKYgdWlkIOeahOWumOaWueS6jOe7tOeggeWcsOWdgAotIGZpeDog5L+u5aSN5YWo6YeP5ZCM5q2lIOKAlCDliIfmjaIgUHl0aG9uIOaooeW8j++8jOino+WGsyBSdXN0IENvcmUgdjAuMS41IOi/h+a7pCBidWcKLSBmaXg6IOS/ruWkjSBzeW50YXggZXJyb3Ig4oCUIGBmdWxsL19faW5pdF9fLnB5YCDmi6zlj7fkuI3ljLnphY0KCiMjIOivtOaYjgoK5pys5LuT5bqT5LuF5YyF5ZCrIFAxMTVTdHJtSGVscGVyIOaPkuS7tu+8jOWmgumcgOWujOaVtOaPkuS7tuW4guWcuuivt+iuv+mXruWOn+S9nOiAheS7k+W6k+OAgg==
+# 115网盘STRM助手 (P115StrmHelper)
+
+> 基于 [DDSRem](https://github.com/DDSRem) 开发的 [115网盘STRM助手](https://github.com/DDSRem-Dev/MoviePilot-Plugins) 本地修复版。
+>
+> 感谢原作者的杰出贡献！
+
+## 原作者
+
+- **作者**: [DDSRem](https://github.com/DDSRem)
+- **原仓库**: [https://github.com/DDSRem-Dev/MoviePilot-Plugins](https://github.com/DDSRem-Dev/MoviePilot-Plugins)
+- **原插件**: 115网盘STRM助手 — 115网盘STRM生成一条龙服务
+
+本项目在原作基础上进行了本地修复和功能增强，感谢 DDSRem 的卓越工作！
+
+## 版本
+
+当前版本: **v2.8.49**
+
+### v2.8.49 更新内容
+- fix: 修复扫码登录 — 绕过 `login_qrcode()` 直接请求带 uid 的官方二维码地址
+- fix: 修复全量同步 — 切换 Python 模式，解决 Rust Core v0.1.5 过滤 bug
+- fix: 修复 syntax error — `full/__init__.py` 括号不匹配
+
+## 说明
+
+本仓库仅包含 P115StrmHelper 插件，如需完整插件市场请访问原作者仓库。

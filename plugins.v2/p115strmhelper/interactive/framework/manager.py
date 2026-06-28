@@ -1,1 +1,96 @@
-aW1wb3J0IGhhc2hsaWIKaW1wb3J0IHRocmVhZGluZwppbXBvcnQgdGltZQpmcm9tIHR5cGluZyBpbXBvcnQgQW55LCBEaWN0LCBPcHRpb25hbCwgVHlwZSwgR2VuZXJpYwoKZnJvbSAuc2NoZW1hcyBpbXBvcnQgVFNlc3Npb24KCgpjbGFzcyBCYXNlU2Vzc2lvbk1hbmFnZXIoR2VuZXJpY1tUU2Vzc2lvbl0pOgogICAgIiIiCiAgICBTZXNzaW9uIOeuoeeQhuWZqOeahOmAmueUqOWfuuexuwogICAgIiIiCgogICAgZGVmIF9faW5pdF9fKHNlbGYsIHNlc3Npb25fY2xhc3M6IFR5cGVbVFNlc3Npb25dKToKICAgICAgICAiIiIKICAgICAgICDliJ3lp4vljJYgU2Vzc2lvbiDnrqHnkIblmagKICAgICAgICA6cGFyYW0gc2Vzc2lvbl9jbGFzczog5Lya6K+d57G777yM5b+F6aG75pivIEJhc2VTZXNzaW9uIOeahOWtkOexuwogICAgICAgICIiIgogICAgICAgIHNlbGYuX3Nlc3Npb25zOiBEaWN0W3N0ciwgVFNlc3Npb25dID0ge30KICAgICAgICBzZWxmLl9sb2NrID0gdGhyZWFkaW5nLkxvY2soKQogICAgICAgIHNlbGYuVElNRU9VVF9TRUNPTkRTID0gNjAwCiAgICAgICAgc2VsZi5zZXNzaW9uX2NsYXNzID0gc2Vzc2lvbl9jbGFzcwoKICAgIGRlZiBzZXRfdGltZW91dChzZWxmLCBtaW51dGVzOiBpbnQpOgogICAgICAgICIiIgogICAgICAgIOiuvue9ruS8muivnei2heaXtuaXtumXtO+8iOWIhumSn++8iQogICAgICAgICIiIgogICAgICAgIHNlbGYuVElNRU9VVF9TRUNPTkRTID0gbWludXRlcyAqIDYwCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIF9nZW5lcmF0ZV9zZXNzaW9uX2lkKGV2ZW50X2RhdGE6IERpY3Rbc3RyLCBBbnldKSAtPiBzdHI6CiAgICAgICAgIiIiCiAgICAgICAg5Li65q+P5Liq55So5oi35Zyo5q+P5Liq6IGK5aSp5Lit55Sf5oiQ5LiA5Liq5ZSv5LiA55qE44CB566A55+t55qE5Lya6K+dSUQKICAgICAgICA6cGFyYW0gZXZlbnRfZGF0YTog5a2X5YW477yM5YyF5ZCr5LqL5Lu25pWw5o2u77yM5b+F6aG75YyF5ZCrICdjaGFubmVsJywgJ3NvdXJjZScsICd1c2VyaWQnIOaIliAndXNlcicg5a2X5q61CiAgICAgICAgIiIiCiAgICAgICAgY2hhbm5lbCA9IGV2ZW50X2RhdGEuZ2V0KCJjaGFubmVsIikKICAgICAgICBzb3VyY2UgPSBldmVudF9kYXRhLmdldCgic291cmNlIikKICAgICAgICB1c2VyaWQgPSBldmVudF9kYXRhLmdldCgidXNlcmlkIikgb3IgZXZlbnRfZGF0YS5nZXQoInVzZXIiKQogICAgICAgIGlmIG5vdCB1c2VyaWQ6CiAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIumcgOimgSB1c2VyaWQg5oiWIHVzZXIg5a2X5q615p2l55Sf5oiQ5Lya6K+dIElEIikKICAgICAgICBvcmlnaW5hbF9pZCA9IGYie2NoYW5uZWx9Ontzb3VyY2V9Ont1c2VyaWR9IgogICAgICAgIHJldHVybiBoYXNobGliLm1kNShvcmlnaW5hbF9pZC5lbmNvZGUoKSkuaGV4ZGlnZXN0KClbOjhdCgogICAgZGVmIGdldF9vcl9jcmVhdGUoc2VsZiwgZXZlbnRfZGF0YTogRGljdFtzdHIsIEFueV0sIHBsdWdpbl9pZDogc3RyKSAtPiBUU2Vzc2lvbjoKICAgICAgICAiIiIKICAgICAgICDojrflj5bmiJbliJvlu7rkuIDkuKrkvJror50KICAgICAgICAiIiIKICAgICAgICBzZXNzaW9uX2lkID0gc2VsZi5fZ2VuZXJhdGVfc2Vzc2lvbl9pZChldmVudF9kYXRhKQogICAgICAgIHdpdGggc2VsZi5fbG9jazoKICAgICAgICAgICAgc2Vzc2lvbiA9IHNlbGYuX3Nlc3Npb25zLmdldChzZXNzaW9uX2lkKQogICAgICAgICAgICBpZiBub3Qgc2Vzc2lvbiBvciAoCiAgICAgICAgICAgICAgICB0aW1lLnRpbWUoKSAtIHNlc3Npb24ubGFzdF9hY3RpdmUgPiBzZWxmLlRJTUVPVVRfU0VDT05EUwogICAgICAgICAgICApOgogICAgICAgICAgICAgICAgc2Vzc2lvbiA9IHNlbGYuc2Vzc2lvbl9jbGFzcyhzZXNzaW9uX2lkPXNlc3Npb25faWQsIHBsdWdpbl9pZD1wbHVnaW5faWQpCiAgICAgICAgICAgICAgICBzZWxmLl9zZXNzaW9uc1tzZXNzaW9uX2lkXSA9IHNlc3Npb24KICAgICAgICAgICAgaWYgaGFzYXR0cihzZXNzaW9uLCAidXBkYXRlX21lc3NhZ2VfY29udGV4dCIpOgogICAgICAgICAgICAgICAgc2Vzc2lvbi51cGRhdGVfbWVzc2FnZV9jb250ZXh0KGV2ZW50X2RhdGEpCiAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICBzZXNzaW9uLnVwZGF0ZV9hY3Rpdml0eSgpCiAgICAgICAgICAgIHNlc3Npb24ucGx1Z2luX2lkID0gcGx1Z2luX2lkCiAgICAgICAgICAgIHJldHVybiBzZXNzaW9uCgogICAgZGVmIGdldChzZWxmLCBzZXNzaW9uX2lkOiBzdHIpIC0+IE9wdGlvbmFsW1RTZXNzaW9uXToKICAgICAgICAiIiIKICAgICAgICDmoLnmja7kvJror50gSUQg6I635Y+W5Lya6K+d77yM5aaC5p6c5Lya6K+d5a2Y5Zyo5LiU5pyq6LaF5pe277yM5YiZ6L+U5Zue6K+l5Lya6K+dCiAgICAgICAgOnBhcmFtIHNlc3Npb25faWQ6IOS8muivnSBJRAogICAgICAgICIiIgogICAgICAgIHdpdGggc2VsZi5fbG9jazoKICAgICAgICAgICAgc2Vzc2lvbiA9IHNlbGYuX3Nlc3Npb25zLmdldChzZXNzaW9uX2lkKQogICAgICAgICAgICBpZiBzZXNzaW9uIGFuZCAodGltZS50aW1lKCkgLSBzZXNzaW9uLmxhc3RfYWN0aXZlIDw9IHNlbGYuVElNRU9VVF9TRUNPTkRTKToKICAgICAgICAgICAgICAgIHNlc3Npb24udXBkYXRlX2FjdGl2aXR5KCkKICAgICAgICAgICAgICAgIHJldHVybiBzZXNzaW9uCiAgICAgICAgICAgIHJldHVybiBOb25lCgogICAgZGVmIGVuZChzZWxmLCBzZXNzaW9uX2lkOiBzdHIpOgogICAgICAgICIiIgogICAgICAgIOe7k+adn+S8muivne+8jOenu+mZpOS8muivneiusOW9lQogICAgICAgIDpwYXJhbSBzZXNzaW9uX2lkOiDkvJror50gSUQKICAgICAgICAiIiIKICAgICAgICB3aXRoIHNlbGYuX2xvY2s6CiAgICAgICAgICAgIHNlbGYuX3Nlc3Npb25zLnBvcChzZXNzaW9uX2lkLCBOb25lKQoKICAgIGRlZiBjbGVhbnVwKHNlbGYpOgogICAgICAgICIiIgogICAgICAgIOa4heeQhui/h+acn+eahOS8muivnQogICAgICAgICIiIgogICAgICAgIG5vdyA9IHRpbWUudGltZSgpCiAgICAgICAgd2l0aCBzZWxmLl9sb2NrOgogICAgICAgICAgICAjIOaJvuWHuuaJgOaciei/h+acn+eahOS8muivnQogICAgICAgICAgICBleHBpcmVkX2tleXMgPSBbCiAgICAgICAgICAgICAgICBzaWQKICAgICAgICAgICAgICAgIGZvciBzaWQsIHMgaW4gc2VsZi5fc2Vzc2lvbnMuaXRlbXMoKQogICAgICAgICAgICAgICAgaWYgbm93IC0gcy5sYXN0X2FjdGl2ZSA+IHNlbGYuVElNRU9VVF9TRUNPTkRTCiAgICAgICAgICAgIF0KICAgICAgICAgICAgZm9yIGtleSBpbiBleHBpcmVkX2tleXM6CiAgICAgICAgICAgICAgICBzZWxmLl9zZXNzaW9ucy5wb3Aoa2V5LCBOb25lKQo=
+import hashlib
+import threading
+import time
+from typing import Any, Dict, Optional, Type, Generic
+
+from .schemas import TSession
+
+
+class BaseSessionManager(Generic[TSession]):
+    """
+    Session 管理器的通用基类
+    """
+
+    def __init__(self, session_class: Type[TSession]):
+        """
+        初始化 Session 管理器
+        :param session_class: 会话类，必须是 BaseSession 的子类
+        """
+        self._sessions: Dict[str, TSession] = {}
+        self._lock = threading.Lock()
+        self.TIMEOUT_SECONDS = 600
+        self.session_class = session_class
+
+    def set_timeout(self, minutes: int):
+        """
+        设置会话超时时间（分钟）
+        """
+        self.TIMEOUT_SECONDS = minutes * 60
+
+    @staticmethod
+    def _generate_session_id(event_data: Dict[str, Any]) -> str:
+        """
+        为每个用户在每个聊天中生成一个唯一的、简短的会话ID
+        :param event_data: 字典，包含事件数据，必须包含 'channel', 'source', 'userid' 或 'user' 字段
+        """
+        channel = event_data.get("channel")
+        source = event_data.get("source")
+        userid = event_data.get("userid") or event_data.get("user")
+        if not userid:
+            raise ValueError("需要 userid 或 user 字段来生成会话 ID")
+        original_id = f"{channel}:{source}:{userid}"
+        return hashlib.md5(original_id.encode()).hexdigest()[:8]
+
+    def get_or_create(self, event_data: Dict[str, Any], plugin_id: str) -> TSession:
+        """
+        获取或创建一个会话
+        """
+        session_id = self._generate_session_id(event_data)
+        with self._lock:
+            session = self._sessions.get(session_id)
+            if not session or (
+                time.time() - session.last_active > self.TIMEOUT_SECONDS
+            ):
+                session = self.session_class(session_id=session_id, plugin_id=plugin_id)
+                self._sessions[session_id] = session
+            if hasattr(session, "update_message_context"):
+                session.update_message_context(event_data)
+            else:
+                session.update_activity()
+            session.plugin_id = plugin_id
+            return session
+
+    def get(self, session_id: str) -> Optional[TSession]:
+        """
+        根据会话 ID 获取会话，如果会话存在且未超时，则返回该会话
+        :param session_id: 会话 ID
+        """
+        with self._lock:
+            session = self._sessions.get(session_id)
+            if session and (time.time() - session.last_active <= self.TIMEOUT_SECONDS):
+                session.update_activity()
+                return session
+            return None
+
+    def end(self, session_id: str):
+        """
+        结束会话，移除会话记录
+        :param session_id: 会话 ID
+        """
+        with self._lock:
+            self._sessions.pop(session_id, None)
+
+    def cleanup(self):
+        """
+        清理过期的会话
+        """
+        now = time.time()
+        with self._lock:
+            # 找出所有过期的会话
+            expired_keys = [
+                sid
+                for sid, s in self._sessions.items()
+                if now - s.last_active > self.TIMEOUT_SECONDS
+            ]
+            for key in expired_keys:
+                self._sessions.pop(key, None)

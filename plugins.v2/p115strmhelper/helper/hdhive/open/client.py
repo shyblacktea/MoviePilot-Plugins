@@ -1,1 +1,413 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IEFueSwgTGl0ZXJhbAoKZnJvbSBodHRweCBpbXBvcnQgQ2xpZW50Cgpmcm9tIGFwcC5jb3JlLmNvbmZpZyBpbXBvcnQgc2V0dGluZ3MKZnJvbSBhcHAudXRpbHMuaHR0cCBpbXBvcnQgQXN5bmNSZXF1ZXN0VXRpbHMKCmZyb20gLi4uLnV0aWxzLnNlbnRyeSBpbXBvcnQgc2VudHJ5X21hbmFnZXIKZnJvbSAuY29uc3RhbnRzIGltcG9ydCBIREhJVkVfT1BFTl9CQVNFX1VSTApmcm9tIC5lcnJvcnMgaW1wb3J0IHJhaXNlX2Zvcl9yZXNwb25zZQoKTWVkaWFUeXBlID0gTGl0ZXJhbFsibW92aWUiLCAidHYiXQoKVmlkZW9SZXNvbHV0aW9uID0gTGl0ZXJhbFsiNDgwUCIsICI3MjBQIiwgIjEwODBQIiwgIjJLIiwgIjRLIiwgIjhLIl0KU291cmNlID0gTGl0ZXJhbFsKICAgICLok53lhYnljp/nm5gvSVNPIiwKICAgICLok53lhYnljp/nm5gvUkVNVVgiLAogICAgIkJEUmlwL0JsdVJheUVuY29kZSIsCiAgICAiV0VCLURML1dFQlJpcCIsCiAgICAiSERUVi9IRFRWUmlwIiwKXQpTdWJ0aXRsZUxhbmd1YWdlID0gTGl0ZXJhbFsKICAgICLnlJ/ogokiLAogICAgIueugOS4rSIsCiAgICAi57mB5LitIiwKICAgICLnroDml6UiLAogICAgIue5geaXpSIsCiAgICAi566A6IuxIiwKICAgICLnuYHoi7EiLAogICAgIueugOmfqSIsCiAgICAi57mB6Z+pIiwKICAgICLnroDml6Xlj4zor60iLAogICAgIue5geaXpeWPjOivrSIsCiAgICAi566A6Iux5Y+M6K+tIiwKICAgICLnuYHoi7Hlj4zor60iLApdClN1YnRpdGxlVHlwZSA9IExpdGVyYWxbIuWkluaMgiIsICLlhoXlsIEiLCAi5YaF5bWMIl0KCl9NRVRBX1BBVEhTID0gZnJvemVuc2V0KHsiL3BpbmciLCAiL3F1b3RhIiwgIi91c2FnZSIsICIvdXNhZ2UvdG9kYXkifSkKCgpAc2VudHJ5X21hbmFnZXIuY2FwdHVyZV9hbGxfY2xhc3NfZXhjZXB0aW9ucwpjbGFzcyBIREhpdmVPcGVuQ2xpZW50OgogICAgIiIiCiAgICBIREhpdmUgT3BlbiBBUEkg5ZCM5q2l5a6i5oi356uvCgogICAg5omA5pyJ6K+35rGC5pC65bimIGBgWC1BUEktS2V5YGDvvJvpnZ4gbWV0YSDmjqXlj6PlnKggT0F1dGgg5qih5byP5LiL6L+Y6ZyAIGBgQXV0aG9yaXphdGlvbjogQmVhcmVyYGAKICAgICIiIgoKICAgIEJBU0VfVVJMID0gSERISVZFX09QRU5fQkFTRV9VUkwKCiAgICBkZWYgX19pbml0X18oCiAgICAgICAgc2VsZiwKICAgICAgICBhcGlfa2V5OiBzdHIgPSAiIiwKICAgICAgICAqLAogICAgICAgIGFjY2Vzc190b2tlbjogc3RyIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgdGltZW91dDogZmxvYXQgPSAzMC4wLAogICAgICAgIGNsaWVudDogQ2xpZW50IHwgTm9uZSA9IE5vbmUsCiAgICAgICAgZGVmZXJfY2xpZW50OiBib29sID0gRmFsc2UsCiAgICApIC0+IE5vbmU6CiAgICAgICAgIiIiCiAgICAgICAg5Yid5aeL5YyW5a6i5oi356uvCgogICAgICAgIDpwYXJhbSBhcGlfa2V5IChzdHIpOiBPcGVuQVBJIOW6lOeUqCBTZWNyZXTvvIjku4XmnI3liqHnq68v5Lit6L2s5L2/55So77yJCiAgICAgICAgOnBhcmFtIGFjY2Vzc190b2tlbiAoc3RyKTogT0F1dGgg55So5oi3IEFjY2VzcyBUb2tlbu+8jOmdniBtZXRhIOaOpeWPo+W/heWhqwogICAgICAgIDpwYXJhbSB0aW1lb3V0IChmbG9hdCk6IOWNleasoeivt+axgui2heaXtuenkuaVsAogICAgICAgIDpwYXJhbSBjbGllbnQgKENsaWVudCk6IOWPr+mAieWklumDqCBgYENsaWVudGBg77yb5Lyg5YWl5pe25Lya5ZCI5bm26Ym05p2D5aS0CiAgICAgICAgOnBhcmFtIGRlZmVyX2NsaWVudCAoYm9vbCk6IOS4uiBUcnVlIOaXtuS4jeWIm+W7uiBodHRweCDlrqLmiLfnq6/vvIjnlLHlrZDnsbvopoblhpkgYGBfcmVxdWVzdGBg77yJCiAgICAgICAgIiIiCiAgICAgICAgc2VsZi5fYXBpX2tleSA9IGFwaV9rZXkKICAgICAgICBzZWxmLl9hY2Nlc3NfdG9rZW4gPSBhY2Nlc3NfdG9rZW4KICAgICAgICBzZWxmLl9vd25zX2NsaWVudCA9IEZhbHNlCiAgICAgICAgc2VsZi5fY2xpZW50OiBDbGllbnQgfCBOb25lID0gY2xpZW50CiAgICAgICAgaWYgZGVmZXJfY2xpZW50OgogICAgICAgICAgICByZXR1cm4KICAgICAgICBzZWxmLl9vd25zX2NsaWVudCA9IGNsaWVudCBpcyBOb25lCiAgICAgICAgcHJveHlfaCA9ICgKICAgICAgICAgICAgQXN5bmNSZXF1ZXN0VXRpbHMuX2NvbnZlcnRfcHJveGllc19mb3JfaHR0cHgoc2V0dGluZ3MuUFJPWFkpCiAgICAgICAgICAgIGlmIHNldHRpbmdzLlBST1hZCiAgICAgICAgICAgIGVsc2UgTm9uZQogICAgICAgICkKICAgICAgICBzZWxmLl9jbGllbnQgPSBjbGllbnQgb3IgQ2xpZW50KAogICAgICAgICAgICBiYXNlX3VybD1zZWxmLkJBU0VfVVJMLAogICAgICAgICAgICBoZWFkZXJzPXsiWC1BUEktS2V5IjogYXBpX2tleX0sCiAgICAgICAgICAgIHRpbWVvdXQ9dGltZW91dCwKICAgICAgICAgICAgcHJveHk9cHJveHlfaCwKICAgICAgICApCiAgICAgICAgaWYgbm90IHNlbGYuX293bnNfY2xpZW50IGFuZCBzZWxmLl9jbGllbnQgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIHNlbGYuX2NsaWVudC5oZWFkZXJzLnVwZGF0ZSh7IlgtQVBJLUtleSI6IGFwaV9rZXl9KQoKICAgIGRlZiBfX2VudGVyX18oc2VsZikgLT4gIkhESGl2ZU9wZW5DbGllbnQiOgogICAgICAgICIiIgogICAgICAgIOi/m+WFpeS4iuS4i+aWh++8jOi/lOWbnuiHqui6qwoKICAgICAgICA6cmV0dXJuIEhESGl2ZU9wZW5DbGllbnQ6IOW9k+WJjeWuouaIt+err+WunuS+iwogICAgICAgICIiIgogICAgICAgIHJldHVybiBzZWxmCgogICAgZGVmIF9fZXhpdF9fKHNlbGYsICpfOiBBbnkpIC0+IE5vbmU6CiAgICAgICAgIiIiCiAgICAgICAg6YCA5Ye65LiK5LiL5paH5pe25YWz6Zet6Ieq5pyJ55qE5bqV5bGCIENsaWVudAogICAgICAgICIiIgogICAgICAgIHNlbGYuY2xvc2UoKQoKICAgIGRlZiBjbG9zZShzZWxmKSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIOiLpeaehOmAoOaXtuacquS8oOWFpeWklumDqCBDbGllbnTvvIzliJnlhbPpl63lhoXpg6jmjIHmnInnmoQgaHR0cHggQ2xpZW50CiAgICAgICAgIiIiCiAgICAgICAgaWYgc2VsZi5fb3duc19jbGllbnQgYW5kIHNlbGYuX2NsaWVudCBpcyBub3QgTm9uZToKICAgICAgICAgICAgc2VsZi5fY2xpZW50LmNsb3NlKCkKCiAgICBkZWYgX3JlcXVlc3QoCiAgICAgICAgc2VsZiwKICAgICAgICBtZXRob2Q6IHN0ciwKICAgICAgICBwYXRoOiBzdHIsCiAgICAgICAgKiwKICAgICAgICBwYXJhbXM6IGRpY3Rbc3RyLCBBbnldIHwgTm9uZSA9IE5vbmUsCiAgICAgICAganNvbjogQW55ID0gTm9uZSwKICAgICAgICBhY2Nlc3NfdG9rZW46IHN0ciB8IE5vbmUgPSBOb25lLAogICAgKSAtPiBBbnk6CiAgICAgICAgIiIiCiAgICAgICAg5Y+R6LW36K+35rGC5bm26Kej5p6QIEpTT07vvIzlpLHotKXml7bmipvlh7ogYGBIREhpdmVBUElFcnJvcmBgIOWtkOexuwoKICAgICAgICA6cGFyYW0gbWV0aG9kIChzdHIpOiBIVFRQIOaWueazlQogICAgICAgIDpwYXJhbSBwYXRoIChzdHIpOiDnm7jlr7kgYGBCQVNFX1VSTGBgIOeahOi3r+W+hAogICAgICAgIDpwYXJhbSBwYXJhbXMgKERpY3QpOiDmn6Xor6Llj4LmlbAKICAgICAgICA6cGFyYW0ganNvbiAoQW55KTogSlNPTiDor7fmsYLkvZMKICAgICAgICA6cGFyYW0gYWNjZXNzX3Rva2VuIChzdHIpOiDopobnm5blrp7kvovnuqcgQmVhcmVyIFRva2VuCiAgICAgICAgOnJldHVybiBUdXBsZTogYGAoZGF0YSwgbWV0YSlgYCDlhYPnu4TvvIzkuI4gT3BlbiBBUEkg5ZON5bqU57uT5p6E5LiA6Ie0CiAgICAgICAgIiIiCiAgICAgICAgdG9rZW4gPSBhY2Nlc3NfdG9rZW4gaWYgYWNjZXNzX3Rva2VuIGlzIG5vdCBOb25lIGVsc2Ugc2VsZi5fYWNjZXNzX3Rva2VuCiAgICAgICAgaGVhZGVyczogZGljdFtzdHIsIHN0cl0gPSB7fQogICAgICAgIGlmIHRva2VuIGFuZCBwYXRoIG5vdCBpbiBfTUVUQV9QQVRIUzoKICAgICAgICAgICAgaGVhZGVyc1siQXV0aG9yaXphdGlvbiJdID0gZiJCZWFyZXIge3Rva2VufSIKICAgICAgICBpZiBzZWxmLl9jbGllbnQgaXMgTm9uZToKICAgICAgICAgICAgcmFpc2UgUnVudGltZUVycm9yKAogICAgICAgICAgICAgICAgIkhESGl2ZU9wZW5DbGllbnQgaGFzIG5vIGh0dHB4IGNsaWVudDsgb3ZlcnJpZGUgX3JlcXVlc3QiCiAgICAgICAgICAgICkKICAgICAgICByZXNwID0gc2VsZi5fY2xpZW50LnJlcXVlc3QoCiAgICAgICAgICAgIG1ldGhvZCwgcGF0aCwgcGFyYW1zPXBhcmFtcywganNvbj1qc29uLCBoZWFkZXJzPWhlYWRlcnMgb3IgTm9uZQogICAgICAgICkKICAgICAgICByYWlzZV9mb3JfcmVzcG9uc2UocmVzcCkKICAgICAgICBib2R5OiBkaWN0W3N0ciwgQW55XSA9IHJlc3AuanNvbigpCiAgICAgICAgcmV0dXJuIGJvZHkuZ2V0KCJkYXRhIiksIGJvZHkuZ2V0KCJtZXRhIikKCiAgICBkZWYgcGluZyhzZWxmKSAtPiBkaWN0W3N0ciwgQW55XToKICAgICAgICAiIiIKICAgICAgICBgYEdFVCAvcGluZ2Bg77ya5YGl5bq35qOA5p+l5bm25qCh6aqMIEFQSSBLZXkKCiAgICAgICAgOnJldHVybiBEaWN0OiDlk43lupQgYGBkYXRhYGAg5a2X5q61CiAgICAgICAgIiIiCiAgICAgICAgZGF0YSwgXyA9IHNlbGYuX3JlcXVlc3QoIkdFVCIsICIvcGluZyIpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgZ2V0X3F1b3RhKHNlbGYpIC0+IGRpY3Rbc3RyLCBBbnldOgogICAgICAgICIiIgogICAgICAgIGBgR0VUIC9xdW90YWBg77ya5p+l6K+iIEFQSSBLZXkg6YWN6aKd5L+h5oGv77yIbWV0YSBzY29wZe+8iQoKICAgICAgICA6cmV0dXJuIERpY3Q6IOWTjeW6lCBgYGRhdGFgYCDlrZfmrrUKICAgICAgICAiIiIKICAgICAgICBkYXRhLCBfID0gc2VsZi5fcmVxdWVzdCgiR0VUIiwgIi9xdW90YSIpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgZ2V0X3VzYWdlKAogICAgICAgIHNlbGYsCiAgICAgICAgc3RhcnRfZGF0ZTogc3RyIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgZW5kX2RhdGU6IHN0ciB8IE5vbmUgPSBOb25lLAogICAgKSAtPiBkaWN0W3N0ciwgQW55XToKICAgICAgICAiIiIKICAgICAgICBgYEdFVCAvdXNhZ2VgYO+8muaMieaXpeacn+WMuumXtOafpeivoueUqOmHj++8iG1ldGEgc2NvcGXvvIkKCiAgICAgICAgOnBhcmFtIHN0YXJ0X2RhdGUgKHN0cik6IOi1t+Wni+aXpeacn++8jOWPr+mAiQogICAgICAgIDpwYXJhbSBlbmRfZGF0ZSAoc3RyKTog57uT5p2f5pel5pyf77yM5Y+v6YCJCiAgICAgICAgOnJldHVybiBEaWN0OiDlk43lupQgYGBkYXRhYGAg5a2X5q61CiAgICAgICAgIiIiCiAgICAgICAgcGFyYW1zOiBkaWN0W3N0ciwgQW55XSA9IHt9CiAgICAgICAgaWYgc3RhcnRfZGF0ZToKICAgICAgICAgICAgcGFyYW1zWyJzdGFydF9kYXRlIl0gPSBzdGFydF9kYXRlCiAgICAgICAgaWYgZW5kX2RhdGU6CiAgICAgICAgICAgIHBhcmFtc1siZW5kX2RhdGUiXSA9IGVuZF9kYXRlCiAgICAgICAgZGF0YSwgXyA9IHNlbGYuX3JlcXVlc3QoIkdFVCIsICIvdXNhZ2UiLCBwYXJhbXM9cGFyYW1zIG9yIE5vbmUpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgZ2V0X3VzYWdlX3RvZGF5KHNlbGYpIC0+IGRpY3Rbc3RyLCBBbnldOgogICAgICAgICIiIgogICAgICAgIGBgR0VUIC91c2FnZS90b2RheWBg77ya5b2T5pel55So6YeP57uf6K6h77yIbWV0YSBzY29wZe+8iQoKICAgICAgICA6cmV0dXJuIERpY3Q6IOWTjeW6lCBgYGRhdGFgYCDlrZfmrrUKICAgICAgICAiIiIKICAgICAgICBkYXRhLCBfID0gc2VsZi5fcmVxdWVzdCgiR0VUIiwgIi91c2FnZS90b2RheSIpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgZ2V0X3Jlc291cmNlcygKICAgICAgICBzZWxmLAogICAgICAgIG1lZGlhX3R5cGU6IE1lZGlhVHlwZSwKICAgICAgICB0bWRiX2lkOiBzdHIgfCBpbnQsCiAgICApIC0+IHR1cGxlW2xpc3RbZGljdFtzdHIsIEFueV1dLCBkaWN0W3N0ciwgQW55XV06CiAgICAgICAgIiIiCiAgICAgICAgYGBHRVQgL3Jlc291cmNlcy86dHlwZS86dG1kYl9pZGBg77ya5oyJIFRNREIgSUQg5YiX5Ye66LWE5rqQ77yIcXVlcnkgc2NvcGXvvIkKCiAgICAgICAgOnBhcmFtIG1lZGlhX3R5cGUgKE1lZGlhVHlwZSk6IGBgbW92aWVgYCDmiJYgYGB0dmBgCiAgICAgICAgOnBhcmFtIHRtZGJfaWQgKHN0ciB8IGludCk6IFRNREIg5L2c5ZOBIElECiAgICAgICAgOnJldHVybiBUdXBsZTogYGAoZGF0YSDliJfooagsIG1ldGEpYGDvvIxgYG1ldGFgYCDkuK3lkKsgYGB0b3RhbGBgIOetieWIhumhteS/oeaBrwogICAgICAgICIiIgogICAgICAgIGRhdGEsIG1ldGEgPSBzZWxmLl9yZXF1ZXN0KCJHRVQiLCBmIi9yZXNvdXJjZXMve21lZGlhX3R5cGV9L3t0bWRiX2lkfSIpCiAgICAgICAgcmV0dXJuIGRhdGEgb3IgW10sIG1ldGEgb3Ige30KCiAgICBkZWYgdW5sb2NrX3Jlc291cmNlKHNlbGYsIHNsdWc6IHN0cikgLT4gZGljdFtzdHIsIEFueV06CiAgICAgICAgIiIiCiAgICAgICAgYGBQT1NUIC9yZXNvdXJjZXMvdW5sb2NrYGDvvJrmtojogJfnp6/liIbop6PplIHotYTmupDvvIh1bmxvY2sgc2NvcGXvvIkKCiAgICAgICAgOnBhcmFtIHNsdWcgKHN0cik6IOi1hOa6kCBzbHVnCiAgICAgICAgOnJldHVybiBEaWN0OiDlkKsgYGB1cmxgYOOAgWBgYWNjZXNzX2NvZGVgYOOAgWBgZnVsbF91cmxgYOOAgWBgYWxyZWFkeV9vd25lZGBgIOetieWtl+autQogICAgICAgICIiIgogICAgICAgIGRhdGEsIF8gPSBzZWxmLl9yZXF1ZXN0KCJQT1NUIiwgIi9yZXNvdXJjZXMvdW5sb2NrIiwganNvbj17InNsdWciOiBzbHVnfSkKICAgICAgICByZXR1cm4gZGF0YQoKICAgIGRlZiBjaGVja19yZXNvdXJjZShzZWxmLCB1cmw6IHN0cikgLT4gZGljdFtzdHIsIEFueV06CiAgICAgICAgIiIiCiAgICAgICAgYGBQT1NUIC9jaGVjay9yZXNvdXJjZWBg77ya6K+G5Yir572R55uY57G75Z6L5bm25LuO6ZO+5o6l6Kej5p6Q5o+Q5Y+W56CB562J77yIcXVlcnkgc2NvcGXvvIkKCiAgICAgICAgOnBhcmFtIHVybCAoc3RyKTog6LWE5rqQ6ZO+5o6lCiAgICAgICAgOnJldHVybiBEaWN0OiDlkKsgYGB3ZWJzaXRlYGDjgIFgYHVybGBg44CBYGBiYXNlX2xpbmtgYOOAgWBgYWNjZXNzX2NvZGVgYCDnrYnlrZfmrrUKICAgICAgICAiIiIKICAgICAgICBkYXRhLCBfID0gc2VsZi5fcmVxdWVzdCgiUE9TVCIsICIvY2hlY2svcmVzb3VyY2UiLCBqc29uPXsidXJsIjogdXJsfSkKICAgICAgICByZXR1cm4gZGF0YQoKICAgIGRlZiBnZXRfbWUoc2VsZikgLT4gZGljdFtzdHIsIEFueV06CiAgICAgICAgIiIiCiAgICAgICAgYGBHRVQgL21lYGDvvJrlvZPliY3mjojmnYPnlKjmiLfln7rnoYDkv6Hmga/vvIhxdWVyeSBzY29wZe+8iQoKICAgICAgICA6cmV0dXJuIERpY3Q6IOWTjeW6lCBgYGRhdGFgYCDlrZfmrrUKICAgICAgICAiIiIKICAgICAgICBkYXRhLCBfID0gc2VsZi5fcmVxdWVzdCgiR0VUIiwgIi9tZSIpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgY2hlY2tpbihzZWxmLCBpc19nYW1ibGVyOiBib29sID0gRmFsc2UpIC0+IGRpY3Rbc3RyLCBBbnldOgogICAgICAgICIiIgogICAgICAgIGBgUE9TVCAvY2hlY2tpbmBg77ya5q+P5pel562+5Yiw77yId3JpdGUgc2NvcGXvvIkKCiAgICAgICAgOnBhcmFtIGlzX2dhbWJsZXIgKGJvb2wpOiDmmK/lkKblvIDlkK/otYzlvpLmqKHlvI/vvIjpq5jpo47pmanpq5jlm57miqXvvIkKICAgICAgICA6cmV0dXJuIERpY3Q6IOWQqyBgYGNoZWNrZWRfaW5gYO+8iGJvb2zvvInjgIFgYG1lc3NhZ2VgYO+8iHN0cu+8ieetieWtl+autQogICAgICAgICIiIgogICAgICAgIGJvZHk6IGRpY3Rbc3RyLCBBbnldID0ge30KICAgICAgICBpZiBpc19nYW1ibGVyOgogICAgICAgICAgICBib2R5WyJpc19nYW1ibGVyIl0gPSBUcnVlCiAgICAgICAgZGF0YSwgXyA9IHNlbGYuX3JlcXVlc3QoIlBPU1QiLCAiL2NoZWNraW4iLCBqc29uPWJvZHkgb3IgTm9uZSkKICAgICAgICByZXR1cm4gZGF0YQoKICAgIGRlZiBnZXRfdmlwX2VudGl0bGVtZW50cyhzZWxmKSAtPiBkaWN0W3N0ciwgQW55XToKICAgICAgICAiIiIKICAgICAgICBgYEdFVCAvdmlwL2VudGl0bGVtZW50c2Bg77yaUHJlbWl1bSDnlKjmiLfmnYPnm4rmkZjopoHvvIh2aXAgc2NvcGXvvIkKCiAgICAgICAgOnJldHVybiBEaWN0OiDlk43lupQgYGBkYXRhYGAg5a2X5q61CiAgICAgICAgIiIiCiAgICAgICAgZGF0YSwgXyA9IHNlbGYuX3JlcXVlc3QoIkdFVCIsICIvdmlwL2VudGl0bGVtZW50cyIpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgZ2V0X3ZpcF93ZWVrbHlfZnJlZV9xdW90YShzZWxmKSAtPiBkaWN0W3N0ciwgQW55XToKICAgICAgICAiIiIKICAgICAgICBgYEdFVCAvdmlwL3dlZWtseS1mcmVlLXF1b3RhYGDvvJrmsLjkuYUgVklQIOavj+WRqOWFjei0ueino+mUgemFjemine+8iHZpcCBzY29wZe+8iQoKICAgICAgICA6cmV0dXJuIERpY3Q6IOWTjeW6lCBgYGRhdGFgYCDlrZfmrrUKICAgICAgICAiIiIKICAgICAgICBkYXRhLCBfID0gc2VsZi5fcmVxdWVzdCgiR0VUIiwgIi92aXAvd2Vla2x5LWZyZWUtcXVvdGEiKQogICAgICAgIHJldHVybiBkYXRhCgogICAgZGVmIGdldF9zaGFyZXMoCiAgICAgICAgc2VsZiwKICAgICAgICBwYWdlOiBpbnQgPSAxLAogICAgICAgIHBhZ2Vfc2l6ZTogaW50ID0gMjAsCiAgICApIC0+IHR1cGxlW2xpc3RbZGljdFtzdHIsIEFueV1dLCBkaWN0W3N0ciwgQW55XV06CiAgICAgICAgIiIiCiAgICAgICAgYGBHRVQgL3NoYXJlc2Bg77ya5YiG6aG15YiX5Ye65b2T5YmN55So5oi355qE5YiG5Lqr77yId3JpdGUgc2NvcGXvvIkKCiAgICAgICAgOnBhcmFtIHBhZ2UgKGludCk6IOmhteeggQogICAgICAgIDpwYXJhbSBwYWdlX3NpemUgKGludCk6IOavj+mhteadoeaVsAogICAgICAgIDpyZXR1cm4gVHVwbGU6IGBgKGRhdGEg5YiX6KGoLCBtZXRhKWBg77yMYGBtZXRhYGAg5ZCrIGBgdG90YWxgYOOAgWBgcGFnZWBg44CBYGBwYWdlX3NpemVgYAogICAgICAgICIiIgogICAgICAgIHBhcmFtcyA9IHsicGFnZSI6IHBhZ2UsICJwYWdlX3NpemUiOiBwYWdlX3NpemV9CiAgICAgICAgZGF0YSwgbWV0YSA9IHNlbGYuX3JlcXVlc3QoIkdFVCIsICIvc2hhcmVzIiwgcGFyYW1zPXBhcmFtcykKICAgICAgICByZXR1cm4gZGF0YSBvciBbXSwgbWV0YSBvciB7fQoKICAgIGRlZiBnZXRfc2hhcmUoc2VsZiwgc2x1Zzogc3RyKSAtPiBkaWN0W3N0ciwgQW55XToKICAgICAgICAiIiIKICAgICAgICBgYEdFVCAvc2hhcmVzLzpzbHVnYGDvvJrmjIkgc2x1ZyDojrflj5bliIbkuqvor6bmg4XvvIhxdWVyeSBzY29wZe+8iQoKICAgICAgICA6cGFyYW0gc2x1ZyAoc3RyKTog5YiG5LqrIHNsdWcKICAgICAgICA6cmV0dXJuIERpY3Q6IOWTjeW6lCBgYGRhdGFgYCDlrZfmrrUKICAgICAgICAiIiIKICAgICAgICBkYXRhLCBfID0gc2VsZi5fcmVxdWVzdCgiR0VUIiwgZiIvc2hhcmVzL3tzbHVnfSIpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgY3JlYXRlX3NoYXJlKAogICAgICAgIHNlbGYsCiAgICAgICAgdXJsOiBzdHIsCiAgICAgICAgKiwKICAgICAgICB0bWRiX2lkOiBzdHIgfCBpbnQgfCBOb25lID0gTm9uZSwKICAgICAgICBtZWRpYV90eXBlOiBNZWRpYVR5cGUgfCBOb25lID0gTm9uZSwKICAgICAgICBtb3ZpZV9pZDogaW50IHwgTm9uZSA9IE5vbmUsCiAgICAgICAgdHZfaWQ6IGludCB8IE5vbmUgPSBOb25lLAogICAgICAgIGNvbGxlY3Rpb25faWQ6IGludCB8IE5vbmUgPSBOb25lLAogICAgICAgIHRpdGxlOiBzdHIgfCBOb25lID0gTm9uZSwKICAgICAgICBhY2Nlc3NfY29kZTogc3RyIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgc2hhcmVfc2l6ZTogc3RyIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgdmlkZW9fcmVzb2x1dGlvbjogbGlzdFtWaWRlb1Jlc29sdXRpb25dIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgc291cmNlOiBsaXN0W1NvdXJjZV0gfCBOb25lID0gTm9uZSwKICAgICAgICBzdWJ0aXRsZV9sYW5ndWFnZTogbGlzdFtTdWJ0aXRsZUxhbmd1YWdlXSB8IE5vbmUgPSBOb25lLAogICAgICAgIHN1YnRpdGxlX3R5cGU6IGxpc3RbU3VidGl0bGVUeXBlXSB8IE5vbmUgPSBOb25lLAogICAgICAgIHJlbWFyazogc3RyIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgdW5sb2NrX3BvaW50czogaW50IHwgTm9uZSA9IE5vbmUsCiAgICAgICAgaXNfYW5vbnltb3VzOiBib29sID0gRmFsc2UsCiAgICAgICAgaGlkZV9saW5rOiBib29sID0gVHJ1ZSwKICAgICkgLT4gZGljdFtzdHIsIEFueV06CiAgICAgICAgIiIiCiAgICAgICAgYGBQT1NUIC9zaGFyZXNgYO+8muWIm+W7uuWIhuS6q++8iHdyaXRlIHNjb3Bl77yJCiAgICAgICAgIiIiCiAgICAgICAgYm9keTogZGljdFtzdHIsIEFueV0gPSB7InVybCI6IHVybH0KICAgICAgICBpZiB0bWRiX2lkIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJ0bWRiX2lkIl0gPSBzdHIodG1kYl9pZCkKICAgICAgICBpZiBtZWRpYV90eXBlIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJtZWRpYV90eXBlIl0gPSBtZWRpYV90eXBlCiAgICAgICAgaWYgbW92aWVfaWQgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGJvZHlbIm1vdmllX2lkIl0gPSBtb3ZpZV9pZAogICAgICAgIGlmIHR2X2lkIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJ0dl9pZCJdID0gdHZfaWQKICAgICAgICBpZiBjb2xsZWN0aW9uX2lkIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJjb2xsZWN0aW9uX2lkIl0gPSBjb2xsZWN0aW9uX2lkCiAgICAgICAgaWYgdGl0bGUgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGJvZHlbInRpdGxlIl0gPSB0aXRsZQogICAgICAgIGlmIGFjY2Vzc19jb2RlIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJhY2Nlc3NfY29kZSJdID0gYWNjZXNzX2NvZGUKICAgICAgICBpZiBzaGFyZV9zaXplIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJzaGFyZV9zaXplIl0gPSBzaGFyZV9zaXplCiAgICAgICAgaWYgdmlkZW9fcmVzb2x1dGlvbiBpcyBub3QgTm9uZToKICAgICAgICAgICAgYm9keVsidmlkZW9fcmVzb2x1dGlvbiJdID0gdmlkZW9fcmVzb2x1dGlvbgogICAgICAgIGlmIHNvdXJjZSBpcyBub3QgTm9uZToKICAgICAgICAgICAgYm9keVsic291cmNlIl0gPSBzb3VyY2UKICAgICAgICBpZiBzdWJ0aXRsZV9sYW5ndWFnZSBpcyBub3QgTm9uZToKICAgICAgICAgICAgYm9keVsic3VidGl0bGVfbGFuZ3VhZ2UiXSA9IHN1YnRpdGxlX2xhbmd1YWdlCiAgICAgICAgaWYgc3VidGl0bGVfdHlwZSBpcyBub3QgTm9uZToKICAgICAgICAgICAgYm9keVsic3VidGl0bGVfdHlwZSJdID0gc3VidGl0bGVfdHlwZQogICAgICAgIGlmIHJlbWFyayBpcyBub3QgTm9uZToKICAgICAgICAgICAgYm9keVsicmVtYXJrIl0gPSByZW1hcmsKICAgICAgICBpZiB1bmxvY2tfcG9pbnRzIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJ1bmxvY2tfcG9pbnRzIl0gPSB1bmxvY2tfcG9pbnRzCiAgICAgICAgYm9keVsiaXNfYW5vbnltb3VzIl0gPSBpc19hbm9ueW1vdXMKICAgICAgICBib2R5WyJoaWRlX2xpbmsiXSA9IGhpZGVfbGluawogICAgICAgIGRhdGEsIF8gPSBzZWxmLl9yZXF1ZXN0KCJQT1NUIiwgIi9zaGFyZXMiLCBqc29uPWJvZHkpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgdXBkYXRlX3NoYXJlKAogICAgICAgIHNlbGYsCiAgICAgICAgc2x1Zzogc3RyLAogICAgICAgICosCiAgICAgICAgdGl0bGU6IHN0ciB8IE5vbmUgPSBOb25lLAogICAgICAgIHVybDogc3RyIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgYWNjZXNzX2NvZGU6IHN0ciB8IE5vbmUgPSBOb25lLAogICAgICAgIHNoYXJlX3NpemU6IHN0ciB8IE5vbmUgPSBOb25lLAogICAgICAgIHZpZGVvX3Jlc29sdXRpb246IGxpc3RbVmlkZW9SZXNvbHV0aW9uXSB8IE5vbmUgPSBOb25lLAogICAgICAgIHNvdXJjZTogbGlzdFtTb3VyY2VdIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgc3VidGl0bGVfbGFuZ3VhZ2U6IGxpc3RbU3VidGl0bGVMYW5ndWFnZV0gfCBOb25lID0gTm9uZSwKICAgICAgICBzdWJ0aXRsZV90eXBlOiBsaXN0W1N1YnRpdGxlVHlwZV0gfCBOb25lID0gTm9uZSwKICAgICAgICByZW1hcms6IHN0ciB8IE5vbmUgPSBOb25lLAogICAgICAgIHVubG9ja19wb2ludHM6IGludCB8IE5vbmUgPSBOb25lLAogICAgICAgIGlzX2Fub255bW91czogYm9vbCB8IE5vbmUgPSBOb25lLAogICAgICAgIGhpZGVfbGluazogYm9vbCB8IE5vbmUgPSBOb25lLAogICAgICAgIG5vdGlmeTogYm9vbCB8IE5vbmUgPSBOb25lLAogICAgKSAtPiBkaWN0W3N0ciwgQW55XToKICAgICAgICAiIiIKICAgICAgICBgYFBBVENIIC9zaGFyZXMvOnNsdWdgYO+8mumDqOWIhuabtOaWsOWIhuS6q++8iHdyaXRlIHNjb3Bl77yJCgogICAgICAgIDpyYWlzZXMgVmFsdWVFcnJvcjog5pyq5o+Q5L6b5Lu75L2V5Y+v5pu05paw5a2X5q615pe2CiAgICAgICAgIiIiCiAgICAgICAgYm9keTogZGljdFtzdHIsIEFueV0gPSB7fQogICAgICAgIGlmIHRpdGxlIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJ0aXRsZSJdID0gdGl0bGUKICAgICAgICBpZiB1cmwgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGJvZHlbInVybCJdID0gdXJsCiAgICAgICAgaWYgYWNjZXNzX2NvZGUgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGJvZHlbImFjY2Vzc19jb2RlIl0gPSBhY2Nlc3NfY29kZQogICAgICAgIGlmIHNoYXJlX3NpemUgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGJvZHlbInNoYXJlX3NpemUiXSA9IHNoYXJlX3NpemUKICAgICAgICBpZiB2aWRlb19yZXNvbHV0aW9uIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJ2aWRlb19yZXNvbHV0aW9uIl0gPSB2aWRlb19yZXNvbHV0aW9uCiAgICAgICAgaWYgc291cmNlIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJzb3VyY2UiXSA9IHNvdXJjZQogICAgICAgIGlmIHN1YnRpdGxlX2xhbmd1YWdlIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJzdWJ0aXRsZV9sYW5ndWFnZSJdID0gc3VidGl0bGVfbGFuZ3VhZ2UKICAgICAgICBpZiBzdWJ0aXRsZV90eXBlIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJzdWJ0aXRsZV90eXBlIl0gPSBzdWJ0aXRsZV90eXBlCiAgICAgICAgaWYgcmVtYXJrIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJyZW1hcmsiXSA9IHJlbWFyawogICAgICAgIGlmIHVubG9ja19wb2ludHMgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGJvZHlbInVubG9ja19wb2ludHMiXSA9IHVubG9ja19wb2ludHMKICAgICAgICBpZiBpc19hbm9ueW1vdXMgaXMgbm90IE5vbmU6CiAgICAgICAgICAgIGJvZHlbImlzX2Fub255bW91cyJdID0gaXNfYW5vbnltb3VzCiAgICAgICAgaWYgaGlkZV9saW5rIGlzIG5vdCBOb25lOgogICAgICAgICAgICBib2R5WyJoaWRlX2xpbmsiXSA9IGhpZGVfbGluawogICAgICAgIGlmIG5vdGlmeSBpcyBub3QgTm9uZToKICAgICAgICAgICAgYm9keVsibm90aWZ5Il0gPSBub3RpZnkKICAgICAgICBpZiBub3QgYm9keToKICAgICAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigidXBkYXRlX3NoYXJlIHJlcXVpcmVzIGF0IGxlYXN0IG9uZSBmaWVsZCB0byB1cGRhdGUiKQogICAgICAgIGRhdGEsIF8gPSBzZWxmLl9yZXF1ZXN0KCJQQVRDSCIsIGYiL3NoYXJlcy97c2x1Z30iLCBqc29uPWJvZHkpCiAgICAgICAgcmV0dXJuIGRhdGEKCiAgICBkZWYgZGVsZXRlX3NoYXJlKHNlbGYsIHNsdWc6IHN0cikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICBgYERFTEVURSAvc2hhcmVzLzpzbHVnYGDvvJrliKDpmaTliIbkuqvvvIh3cml0ZSBzY29wZe+8iQoKICAgICAgICA6cGFyYW0gc2x1ZyAoc3RyKTog5YiG5LqrIHNsdWcKICAgICAgICAiIiIKICAgICAgICBzZWxmLl9yZXF1ZXN0KCJERUxFVEUiLCBmIi9zaGFyZXMve3NsdWd9IikK
+from typing import Any, Literal
+
+from httpx import Client
+
+from app.core.config import settings
+from app.utils.http import AsyncRequestUtils
+
+from ....utils.sentry import sentry_manager
+from .constants import HDHIVE_OPEN_BASE_URL
+from .errors import raise_for_response
+
+MediaType = Literal["movie", "tv"]
+
+VideoResolution = Literal["480P", "720P", "1080P", "2K", "4K", "8K"]
+Source = Literal[
+    "蓝光原盘/ISO",
+    "蓝光原盘/REMUX",
+    "BDRip/BluRayEncode",
+    "WEB-DL/WEBRip",
+    "HDTV/HDTVRip",
+]
+SubtitleLanguage = Literal[
+    "生肉",
+    "简中",
+    "繁中",
+    "简日",
+    "繁日",
+    "简英",
+    "繁英",
+    "简韩",
+    "繁韩",
+    "简日双语",
+    "繁日双语",
+    "简英双语",
+    "繁英双语",
+]
+SubtitleType = Literal["外挂", "内封", "内嵌"]
+
+_META_PATHS = frozenset({"/ping", "/quota", "/usage", "/usage/today"})
+
+
+@sentry_manager.capture_all_class_exceptions
+class HDHiveOpenClient:
+    """
+    HDHive Open API 同步客户端
+
+    所有请求携带 ``X-API-Key``；非 meta 接口在 OAuth 模式下还需 ``Authorization: Bearer``
+    """
+
+    BASE_URL = HDHIVE_OPEN_BASE_URL
+
+    def __init__(
+        self,
+        api_key: str = "",
+        *,
+        access_token: str | None = None,
+        timeout: float = 30.0,
+        client: Client | None = None,
+        defer_client: bool = False,
+    ) -> None:
+        """
+        初始化客户端
+
+        :param api_key (str): OpenAPI 应用 Secret（仅服务端/中转使用）
+        :param access_token (str): OAuth 用户 Access Token，非 meta 接口必填
+        :param timeout (float): 单次请求超时秒数
+        :param client (Client): 可选外部 ``Client``；传入时会合并鉴权头
+        :param defer_client (bool): 为 True 时不创建 httpx 客户端（由子类覆写 ``_request``）
+        """
+        self._api_key = api_key
+        self._access_token = access_token
+        self._owns_client = False
+        self._client: Client | None = client
+        if defer_client:
+            return
+        self._owns_client = client is None
+        proxy_h = (
+            AsyncRequestUtils._convert_proxies_for_httpx(settings.PROXY)
+            if settings.PROXY
+            else None
+        )
+        self._client = client or Client(
+            base_url=self.BASE_URL,
+            headers={"X-API-Key": api_key},
+            timeout=timeout,
+            proxy=proxy_h,
+        )
+        if not self._owns_client and self._client is not None:
+            self._client.headers.update({"X-API-Key": api_key})
+
+    def __enter__(self) -> "HDHiveOpenClient":
+        """
+        进入上下文，返回自身
+
+        :return HDHiveOpenClient: 当前客户端实例
+        """
+        return self
+
+    def __exit__(self, *_: Any) -> None:
+        """
+        退出上下文时关闭自有的底层 Client
+        """
+        self.close()
+
+    def close(self) -> None:
+        """
+        若构造时未传入外部 Client，则关闭内部持有的 httpx Client
+        """
+        if self._owns_client and self._client is not None:
+            self._client.close()
+
+    def _request(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: dict[str, Any] | None = None,
+        json: Any = None,
+        access_token: str | None = None,
+    ) -> Any:
+        """
+        发起请求并解析 JSON，失败时抛出 ``HDHiveAPIError`` 子类
+
+        :param method (str): HTTP 方法
+        :param path (str): 相对 ``BASE_URL`` 的路径
+        :param params (Dict): 查询参数
+        :param json (Any): JSON 请求体
+        :param access_token (str): 覆盖实例级 Bearer Token
+        :return Tuple: ``(data, meta)`` 元组，与 Open API 响应结构一致
+        """
+        token = access_token if access_token is not None else self._access_token
+        headers: dict[str, str] = {}
+        if token and path not in _META_PATHS:
+            headers["Authorization"] = f"Bearer {token}"
+        if self._client is None:
+            raise RuntimeError(
+                "HDHiveOpenClient has no httpx client; override _request"
+            )
+        resp = self._client.request(
+            method, path, params=params, json=json, headers=headers or None
+        )
+        raise_for_response(resp)
+        body: dict[str, Any] = resp.json()
+        return body.get("data"), body.get("meta")
+
+    def ping(self) -> dict[str, Any]:
+        """
+        ``GET /ping``：健康检查并校验 API Key
+
+        :return Dict: 响应 ``data`` 字段
+        """
+        data, _ = self._request("GET", "/ping")
+        return data
+
+    def get_quota(self) -> dict[str, Any]:
+        """
+        ``GET /quota``：查询 API Key 配额信息（meta scope）
+
+        :return Dict: 响应 ``data`` 字段
+        """
+        data, _ = self._request("GET", "/quota")
+        return data
+
+    def get_usage(
+        self,
+        start_date: str | None = None,
+        end_date: str | None = None,
+    ) -> dict[str, Any]:
+        """
+        ``GET /usage``：按日期区间查询用量（meta scope）
+
+        :param start_date (str): 起始日期，可选
+        :param end_date (str): 结束日期，可选
+        :return Dict: 响应 ``data`` 字段
+        """
+        params: dict[str, Any] = {}
+        if start_date:
+            params["start_date"] = start_date
+        if end_date:
+            params["end_date"] = end_date
+        data, _ = self._request("GET", "/usage", params=params or None)
+        return data
+
+    def get_usage_today(self) -> dict[str, Any]:
+        """
+        ``GET /usage/today``：当日用量统计（meta scope）
+
+        :return Dict: 响应 ``data`` 字段
+        """
+        data, _ = self._request("GET", "/usage/today")
+        return data
+
+    def get_resources(
+        self,
+        media_type: MediaType,
+        tmdb_id: str | int,
+    ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        """
+        ``GET /resources/:type/:tmdb_id``：按 TMDB ID 列出资源（query scope）
+
+        :param media_type (MediaType): ``movie`` 或 ``tv``
+        :param tmdb_id (str | int): TMDB 作品 ID
+        :return Tuple: ``(data 列表, meta)``，``meta`` 中含 ``total`` 等分页信息
+        """
+        data, meta = self._request("GET", f"/resources/{media_type}/{tmdb_id}")
+        return data or [], meta or {}
+
+    def unlock_resource(self, slug: str) -> dict[str, Any]:
+        """
+        ``POST /resources/unlock``：消耗积分解锁资源（unlock scope）
+
+        :param slug (str): 资源 slug
+        :return Dict: 含 ``url``、``access_code``、``full_url``、``already_owned`` 等字段
+        """
+        data, _ = self._request("POST", "/resources/unlock", json={"slug": slug})
+        return data
+
+    def check_resource(self, url: str) -> dict[str, Any]:
+        """
+        ``POST /check/resource``：识别网盘类型并从链接解析提取码等（query scope）
+
+        :param url (str): 资源链接
+        :return Dict: 含 ``website``、``url``、``base_link``、``access_code`` 等字段
+        """
+        data, _ = self._request("POST", "/check/resource", json={"url": url})
+        return data
+
+    def get_me(self) -> dict[str, Any]:
+        """
+        ``GET /me``：当前授权用户基础信息（query scope）
+
+        :return Dict: 响应 ``data`` 字段
+        """
+        data, _ = self._request("GET", "/me")
+        return data
+
+    def checkin(self, is_gambler: bool = False) -> dict[str, Any]:
+        """
+        ``POST /checkin``：每日签到（write scope）
+
+        :param is_gambler (bool): 是否开启赌徒模式（高风险高回报）
+        :return Dict: 含 ``checked_in``（bool）、``message``（str）等字段
+        """
+        body: dict[str, Any] = {}
+        if is_gambler:
+            body["is_gambler"] = True
+        data, _ = self._request("POST", "/checkin", json=body or None)
+        return data
+
+    def get_vip_entitlements(self) -> dict[str, Any]:
+        """
+        ``GET /vip/entitlements``：Premium 用户权益摘要（vip scope）
+
+        :return Dict: 响应 ``data`` 字段
+        """
+        data, _ = self._request("GET", "/vip/entitlements")
+        return data
+
+    def get_vip_weekly_free_quota(self) -> dict[str, Any]:
+        """
+        ``GET /vip/weekly-free-quota``：永久 VIP 每周免费解锁配额（vip scope）
+
+        :return Dict: 响应 ``data`` 字段
+        """
+        data, _ = self._request("GET", "/vip/weekly-free-quota")
+        return data
+
+    def get_shares(
+        self,
+        page: int = 1,
+        page_size: int = 20,
+    ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        """
+        ``GET /shares``：分页列出当前用户的分享（write scope）
+
+        :param page (int): 页码
+        :param page_size (int): 每页条数
+        :return Tuple: ``(data 列表, meta)``，``meta`` 含 ``total``、``page``、``page_size``
+        """
+        params = {"page": page, "page_size": page_size}
+        data, meta = self._request("GET", "/shares", params=params)
+        return data or [], meta or {}
+
+    def get_share(self, slug: str) -> dict[str, Any]:
+        """
+        ``GET /shares/:slug``：按 slug 获取分享详情（query scope）
+
+        :param slug (str): 分享 slug
+        :return Dict: 响应 ``data`` 字段
+        """
+        data, _ = self._request("GET", f"/shares/{slug}")
+        return data
+
+    def create_share(
+        self,
+        url: str,
+        *,
+        tmdb_id: str | int | None = None,
+        media_type: MediaType | None = None,
+        movie_id: int | None = None,
+        tv_id: int | None = None,
+        collection_id: int | None = None,
+        title: str | None = None,
+        access_code: str | None = None,
+        share_size: str | None = None,
+        video_resolution: list[VideoResolution] | None = None,
+        source: list[Source] | None = None,
+        subtitle_language: list[SubtitleLanguage] | None = None,
+        subtitle_type: list[SubtitleType] | None = None,
+        remark: str | None = None,
+        unlock_points: int | None = None,
+        is_anonymous: bool = False,
+        hide_link: bool = True,
+    ) -> dict[str, Any]:
+        """
+        ``POST /shares``：创建分享（write scope）
+        """
+        body: dict[str, Any] = {"url": url}
+        if tmdb_id is not None:
+            body["tmdb_id"] = str(tmdb_id)
+        if media_type is not None:
+            body["media_type"] = media_type
+        if movie_id is not None:
+            body["movie_id"] = movie_id
+        if tv_id is not None:
+            body["tv_id"] = tv_id
+        if collection_id is not None:
+            body["collection_id"] = collection_id
+        if title is not None:
+            body["title"] = title
+        if access_code is not None:
+            body["access_code"] = access_code
+        if share_size is not None:
+            body["share_size"] = share_size
+        if video_resolution is not None:
+            body["video_resolution"] = video_resolution
+        if source is not None:
+            body["source"] = source
+        if subtitle_language is not None:
+            body["subtitle_language"] = subtitle_language
+        if subtitle_type is not None:
+            body["subtitle_type"] = subtitle_type
+        if remark is not None:
+            body["remark"] = remark
+        if unlock_points is not None:
+            body["unlock_points"] = unlock_points
+        body["is_anonymous"] = is_anonymous
+        body["hide_link"] = hide_link
+        data, _ = self._request("POST", "/shares", json=body)
+        return data
+
+    def update_share(
+        self,
+        slug: str,
+        *,
+        title: str | None = None,
+        url: str | None = None,
+        access_code: str | None = None,
+        share_size: str | None = None,
+        video_resolution: list[VideoResolution] | None = None,
+        source: list[Source] | None = None,
+        subtitle_language: list[SubtitleLanguage] | None = None,
+        subtitle_type: list[SubtitleType] | None = None,
+        remark: str | None = None,
+        unlock_points: int | None = None,
+        is_anonymous: bool | None = None,
+        hide_link: bool | None = None,
+        notify: bool | None = None,
+    ) -> dict[str, Any]:
+        """
+        ``PATCH /shares/:slug``：部分更新分享（write scope）
+
+        :raises ValueError: 未提供任何可更新字段时
+        """
+        body: dict[str, Any] = {}
+        if title is not None:
+            body["title"] = title
+        if url is not None:
+            body["url"] = url
+        if access_code is not None:
+            body["access_code"] = access_code
+        if share_size is not None:
+            body["share_size"] = share_size
+        if video_resolution is not None:
+            body["video_resolution"] = video_resolution
+        if source is not None:
+            body["source"] = source
+        if subtitle_language is not None:
+            body["subtitle_language"] = subtitle_language
+        if subtitle_type is not None:
+            body["subtitle_type"] = subtitle_type
+        if remark is not None:
+            body["remark"] = remark
+        if unlock_points is not None:
+            body["unlock_points"] = unlock_points
+        if is_anonymous is not None:
+            body["is_anonymous"] = is_anonymous
+        if hide_link is not None:
+            body["hide_link"] = hide_link
+        if notify is not None:
+            body["notify"] = notify
+        if not body:
+            raise ValueError("update_share requires at least one field to update")
+        data, _ = self._request("PATCH", f"/shares/{slug}", json=body)
+        return data
+
+    def delete_share(self, slug: str) -> None:
+        """
+        ``DELETE /shares/:slug``：删除分享（write scope）
+
+        :param slug (str): 分享 slug
+        """
+        self._request("DELETE", f"/shares/{slug}")

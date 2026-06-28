@@ -1,1 +1,15 @@
-W2J1aWxkLXN5c3RlbV0KcmVxdWlyZXMgPSBbIm1hdHVyaW4+PTEuOSw8Mi4wIl0KYnVpbGQtYmFja2VuZCA9ICJtYXR1cmluIgoKW3Byb2plY3RdCm5hbWUgPSAiZnVsbF9zdHJtX3N5bmMiCnJlcXVpcmVzLXB5dGhvbiA9ICI+PTMuMTIiCmNsYXNzaWZpZXJzID0gWwogICAgIlByb2dyYW1taW5nIExhbmd1YWdlIDo6IFJ1c3QiLAogICAgIlByb2dyYW1taW5nIExhbmd1YWdlIDo6IFB5dGhvbiA6OiBJbXBsZW1lbnRhdGlvbiA6OiBDUHl0aG9uIiwKICAgICJQcm9ncmFtbWluZyBMYW5ndWFnZSA6OiBQeXRob24gOjogSW1wbGVtZW50YXRpb24gOjogUHlQeSIsCl0KZHluYW1pYyA9IFsidmVyc2lvbiJdClt0b29sLm1hdHVyaW5dCmZlYXR1cmVzID0gWyJweW8zL2V4dGVuc2lvbi1tb2R1bGUiXQo=
+[build-system]
+requires = ["maturin>=1.9,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "full_strm_sync"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["version"]
+[tool.maturin]
+features = ["pyo3/extension-module"]

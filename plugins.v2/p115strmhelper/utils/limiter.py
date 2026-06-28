@@ -1,1 +1,74 @@
-X19hbGxfXyA9IFsiUmF0ZUxpbWl0ZXIiLCAiQXBpRW5kcG9pbnRDb29sZG93biJdCgpmcm9tIHRocmVhZGluZyBpbXBvcnQgTG9jawpmcm9tIHRpbWUgaW1wb3J0IG1vbm90b25pYywgc2xlZXAKZnJvbSB0eXBpbmcgaW1wb3J0IENhbGxhYmxlCgoKY2xhc3MgUmF0ZUxpbWl0ZXI6CiAgICAiIiIKICAgIOmAn+eOh+aOp+WItuWZqO+8jOeyvuehruaOp+WItiBRUFMKICAgICIiIgoKICAgIGRlZiBfX2luaXRfXyhzZWxmLCBxcHM6IGZsb2F0KToKICAgICAgICAiIiIKICAgICAgICDliJ3lp4vljJbpgJ/njofmjqfliLblmagKCiAgICAgICAgOnBhcmFtIHFwcyAoZmxvYXQpOiDmr4/np5LlhYHorrjnmoTor7fmsYLmlbAKICAgICAgICAiIiIKICAgICAgICBpZiBxcHMgPD0gMDoKICAgICAgICAgICAgcXBzID0gZmxvYXQoImluZiIpCiAgICAgICAgc2VsZi5pbnRlcnZhbCA9IDEuMCAvIHFwcwogICAgICAgIHNlbGYubG9jayA9IExvY2soKQogICAgICAgIHNlbGYubmV4dF9jYWxsX3RpbWUgPSBtb25vdG9uaWMoKQoKICAgIGRlZiBhY3F1aXJlKHNlbGYpOgogICAgICAgICIiIgogICAgICAgIOiOt+WPluiwg+eUqOiuuOWPr++8jOmYu+WhnuebtOWIsOa7oei2s+mAn+eOh+mZkOWItgogICAgICAgICIiIgogICAgICAgIHNsZWVwX2R1cmF0aW9uID0gMAogICAgICAgIHdpdGggc2VsZi5sb2NrOgogICAgICAgICAgICBub3cgPSBtb25vdG9uaWMoKQogICAgICAgICAgICBzbGVlcF9kdXJhdGlvbiA9IHNlbGYubmV4dF9jYWxsX3RpbWUgLSBub3cKICAgICAgICAgICAgc2VsZi5uZXh0X2NhbGxfdGltZSA9IG1heChub3csIHNlbGYubmV4dF9jYWxsX3RpbWUpICsgc2VsZi5pbnRlcnZhbAogICAgICAgIGlmIHNsZWVwX2R1cmF0aW9uID4gMDoKICAgICAgICAgICAgc2xlZXAoc2xlZXBfZHVyYXRpb24pCgoKY2xhc3MgQXBpRW5kcG9pbnRDb29sZG93bjoKICAgICIiIgogICAg54us56uL5Ya35Y205pe26Ze05ZKM57q/56iL6ZSB55qEIEFQSSDnq6/ngrkKICAgICIiIgoKICAgIGRlZiBfX2luaXRfXyhzZWxmLCBhcGlfY2FsbGFibGU6IENhbGxhYmxlLCBjb29sZG93bjogZmxvYXQgfCBpbnQpOgogICAgICAgICIiIgogICAgICAgIOWIneWni+WMliBBUEkg56uv54K55Ya35Y205o6n5Yi25ZmoCgogICAgICAgIDpwYXJhbSBhcGlfY2FsbGFibGUgKENhbGxhYmxlKTog6KaB6LCD55So55qEIEFQSSDlh73mlbAKICAgICAgICA6cGFyYW0gY29vbGRvd24gKGZsb2F0IHwgaW50KTog5Ya35Y205pe26Ze077yI56eS77yJCiAgICAgICAgIiIiCiAgICAgICAgc2VsZi5hcGlfY2FsbGFibGUgPSBhcGlfY2FsbGFibGUKICAgICAgICBzZWxmLmNvb2xkb3duID0gY29vbGRvd24KICAgICAgICBzZWxmLmxvY2sgPSBMb2NrKCkKICAgICAgICBzZWxmLmxhc3RfY2FsbF90aW1lID0gbW9ub3RvbmljKCkgLSBjb29sZG93bgoKICAgIGRlZiBfX2NhbGxfXyhzZWxmLCBwYXlsb2FkOiBkaWN0KSAtPiBkaWN0OgogICAgICAgICIiIgogICAgICAgIOaJp+ihjCBBUEkg6LCD55So77yM5aSE55CG5Ya35Y206YC76L6RCgogICAgICAgIDpwYXJhbSBwYXlsb2FkIChkaWN0KTogQVBJIOiwg+eUqOWPguaVsAoKICAgICAgICA6cmV0dXJuIGRpY3Q6IEFQSSDov5Tlm57nu5PmnpwKICAgICAgICAiIiIKICAgICAgICBpZiBzZWxmLmNvb2xkb3duID4gMDoKICAgICAgICAgICAgc2xlZXBfZHVyYXRpb24gPSAwCiAgICAgICAgICAgIHdpdGggc2VsZi5sb2NrOgogICAgICAgICAgICAgICAgbm93ID0gbW9ub3RvbmljKCkKICAgICAgICAgICAgICAgIGVsYXBzZWQgPSBub3cgLSBzZWxmLmxhc3RfY2FsbF90aW1lCiAgICAgICAgICAgICAgICBpZiBlbGFwc2VkIDwgc2VsZi5jb29sZG93bjoKICAgICAgICAgICAgICAgICAgICBzbGVlcF9kdXJhdGlvbiA9IHNlbGYuY29vbGRvd24gLSBlbGFwc2VkCiAgICAgICAgICAgIGlmIHNsZWVwX2R1cmF0aW9uID4gMDoKICAgICAgICAgICAgICAgIHNsZWVwKHNsZWVwX2R1cmF0aW9uKQogICAgICAgICAgICB3aXRoIHNlbGYubG9jazoKICAgICAgICAgICAgICAgIHNlbGYubGFzdF9jYWxsX3RpbWUgPSBtb25vdG9uaWMoKQogICAgICAgIHJldHVybiBzZWxmLmFwaV9jYWxsYWJsZShwYXlsb2FkKQo=
+__all__ = ["RateLimiter", "ApiEndpointCooldown"]
+
+from threading import Lock
+from time import monotonic, sleep
+from typing import Callable
+
+
+class RateLimiter:
+    """
+    速率控制器，精确控制 QPS
+    """
+
+    def __init__(self, qps: float):
+        """
+        初始化速率控制器
+
+        :param qps (float): 每秒允许的请求数
+        """
+        if qps <= 0:
+            qps = float("inf")
+        self.interval = 1.0 / qps
+        self.lock = Lock()
+        self.next_call_time = monotonic()
+
+    def acquire(self):
+        """
+        获取调用许可，阻塞直到满足速率限制
+        """
+        sleep_duration = 0
+        with self.lock:
+            now = monotonic()
+            sleep_duration = self.next_call_time - now
+            self.next_call_time = max(now, self.next_call_time) + self.interval
+        if sleep_duration > 0:
+            sleep(sleep_duration)
+
+
+class ApiEndpointCooldown:
+    """
+    独立冷却时间和线程锁的 API 端点
+    """
+
+    def __init__(self, api_callable: Callable, cooldown: float | int):
+        """
+        初始化 API 端点冷却控制器
+
+        :param api_callable (Callable): 要调用的 API 函数
+        :param cooldown (float | int): 冷却时间（秒）
+        """
+        self.api_callable = api_callable
+        self.cooldown = cooldown
+        self.lock = Lock()
+        self.last_call_time = monotonic() - cooldown
+
+    def __call__(self, payload: dict) -> dict:
+        """
+        执行 API 调用，处理冷却逻辑
+
+        :param payload (dict): API 调用参数
+
+        :return dict: API 返回结果
+        """
+        if self.cooldown > 0:
+            sleep_duration = 0
+            with self.lock:
+                now = monotonic()
+                elapsed = now - self.last_call_time
+                if elapsed < self.cooldown:
+                    sleep_duration = self.cooldown - elapsed
+            if sleep_duration > 0:
+                sleep(sleep_duration)
+            with self.lock:
+                self.last_call_time = monotonic()
+        return self.api_callable(payload)

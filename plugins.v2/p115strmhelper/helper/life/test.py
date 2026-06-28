@@ -1,1 +1,157 @@
-ZnJvbSBkYXRldGltZSBpbXBvcnQgZGF0ZXRpbWUsIHRpbWV6b25lCmZyb20gdGltZSBpbXBvcnQgdGltZQoKZnJvbSBwMTE1Y2xpZW50IGltcG9ydCBjaGVja19yZXNwb25zZSwgUDExNUF1dGhlbnRpY2F0aW9uRXJyb3IKZnJvbSBwMTE1Y2xpZW50LnRvb2wubGlmZSBpbXBvcnQgaXRlcl9saWZlX2JlaGF2aW9yX29uY2UsIGxpZmVfc2hvdwoKZnJvbSAuLi5jb3JlLmNvbmZpZyBpbXBvcnQgY29uZmlnZXIKCgpjbGFzcyBNb25pdG9yTGlmZVRlc3Q6CiAgICAiIiIKICAgIOeUn+a0u+S6i+S7tua1i+ivleexuwogICAgIiIiCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIHRlc3RfbGlmZV9ldmVudF9zdGF0dXMoY2xpZW50KToKICAgICAgICAiIiIKICAgICAgICDmtYvor5XnlJ/mtLvkuovku7blvIDlkK/nirbmgIEKCiAgICAgICAgOnBhcmFtIGNsaWVudCAoUDExNUNsaWVudCk6IFAxMTVDbGllbnTlrp7kvosKCiAgICAgICAgOnJldHVybiBUdXBsZTogdHVwbGUgKHN1Y2Nlc3M6IGJvb2wsIGRlYnVnX2luZm86IExpc3Rbc3RyXSwgZXJyb3JfbWVzc2FnZTogT3B0aW9uYWxbc3RyXSkKICAgICAgICAiIiIKICAgICAgICBkZWJ1Z19pbmZvID0gW10KICAgICAgICB0cnk6CiAgICAgICAgICAgIHJlc3AgPSBsaWZlX3Nob3coY2xpZW50LCB0aW1lb3V0PTEwLCAqKmNvbmZpZ2VyLmdldF9pb3NfdWFfYXBwKGFwcD1GYWxzZSkpCiAgICAgICAgICAgIGNoZWNrX3Jlc3BvbnNlKHJlc3ApCiAgICAgICAgICAgIGlmIHJlc3AuZ2V0KCJzdGF0ZSIpOgogICAgICAgICAgICAgICAgZGVidWdfaW5mby5hcHBlbmQoIiAgIOeUn+a0u+S6i+S7tuW8gOWQrzog5pivIikKICAgICAgICAgICAgICAgIHJldHVybiBUcnVlLCBkZWJ1Z19pbmZvLCBOb25lCiAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZCgiICAg55Sf5rS75LqL5Lu25byA5ZCvOiDlkKYiKQogICAgICAgICAgICAgICAgZGVidWdfaW5mby5hcHBlbmQoZiIgICDplJnor6/kv6Hmga86IHtyZXNwfSIpCiAgICAgICAgICAgICAgICByZXR1cm4gRmFsc2UsIGRlYnVnX2luZm8sICLnlJ/mtLvkuovku7bmnKrlvIDlkK8iCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZChmIiAgIOeUn+a0u+S6i+S7tuajgOafpeW8guW4uDoge3N0cihlKX0iKQogICAgICAgICAgICByZXR1cm4gRmFsc2UsIGRlYnVnX2luZm8sIGYi55Sf5rS75LqL5Lu25qOA5p+l5byC5bi4OiB7c3RyKGUpfSIKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgdGVzdF9saWZlX2V2ZW50X3B1bGwoY2xpZW50KToKICAgICAgICAiIiIKICAgICAgICDmtYvor5Xmi4nlj5bnlJ/mtLvkuovku7bmlbDmja4KCiAgICAgICAgOnBhcmFtIGNsaWVudCAoUDExNUNsaWVudCk6IFAxMTVDbGllbnTlrp7kvosKCiAgICAgICAgOnJldHVybiBUdXBsZTogdHVwbGUgKHN1Y2Nlc3M6IGJvb2wsIGRlYnVnX2luZm86IExpc3Rbc3RyXSwgZXJyb3JfbWVzc2FnZXM6IExpc3Rbc3RyXSkKICAgICAgICAiIiIKICAgICAgICBkZWJ1Z19pbmZvID0gW10KICAgICAgICBlcnJvcl9tZXNzYWdlcyA9IFtdCiAgICAgICAgc3VjY2VzcyA9IFRydWUKCiAgICAgICAgdHJ5OgogICAgICAgICAgICBldmVudHNfaXRlcmF0b3IgPSBpdGVyX2xpZmVfYmVoYXZpb3Jfb25jZSgKICAgICAgICAgICAgICAgIGNsaWVudD1jbGllbnQsCiAgICAgICAgICAgICAgICBmcm9tX3RpbWU9aW50KHRpbWUoKSksCiAgICAgICAgICAgICAgICBmcm9tX2lkPTAsCiAgICAgICAgICAgICAgICBjb29sZG93bj00LAogICAgICAgICAgICAgICAgKipjb25maWdlci5nZXRfaW9zX3VhX2FwcCgpLAogICAgICAgICAgICApCiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIGZpcnN0X2V2ZW50ID0gbmV4dChldmVudHNfaXRlcmF0b3IpCiAgICAgICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZCgiICAg5ouJ5Y+W5rWL6K+VOiDmiJDlip8iKQogICAgICAgICAgICAgICAgZGVidWdfaW5mby5hcHBlbmQoIiAgIOiOt+WPluWIsOS6i+S7tjog5pivIikKICAgICAgICAgICAgICAgIGRlYnVnX2luZm8uYXBwZW5kKGYiICAg5LqL5Lu257G75Z6LOiB7Zmlyc3RfZXZlbnQuZ2V0KCd0eXBlJywgJ+acquefpScpfSIpCiAgICAgICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZChmIiAgIOS6i+S7tklEOiB7Zmlyc3RfZXZlbnQuZ2V0KCdpZCcsICfmnKrnn6UnKX0iKQogICAgICAgICAgICAgICAgZXZlbnRfY291bnQgPSAxCiAgICAgICAgICAgICAgICBmb3IgXyBpbiByYW5nZSg5KToKICAgICAgICAgICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICAgICAgICAgIG5leHQoZXZlbnRzX2l0ZXJhdG9yKQogICAgICAgICAgICAgICAgICAgICAgICBldmVudF9jb3VudCArPSAxCiAgICAgICAgICAgICAgICAgICAgZXhjZXB0IFN0b3BJdGVyYXRpb246CiAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrCiAgICAgICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZChmIiAgIOaLieWPluWIsOS6i+S7tuaVsDoge2V2ZW50X2NvdW50feS4qiIpCiAgICAgICAgICAgIGV4Y2VwdCBTdG9wSXRlcmF0aW9uOgogICAgICAgICAgICAgICAgZGVidWdfaW5mby5hcHBlbmQoIiAgIOaLieWPlua1i+ivlTog5oiQ5YqfIikKICAgICAgICAgICAgICAgIGRlYnVnX2luZm8uYXBwZW5kKCIgICDojrflj5bliLDkuovku7Y6IOWQpu+8iOaXoOaWsOS6i+S7tu+8jOato+W4uOaDheWGte+8iSIpCiAgICAgICAgICAgIGV4Y2VwdCBQMTE1QXV0aGVudGljYXRpb25FcnJvcjoKICAgICAgICAgICAgICAgIGRlYnVnX2luZm8uYXBwZW5kKCIgICDmi4nlj5bmtYvor5U6IOWksei0pSIpCiAgICAgICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZCgiICAg6ZSZ6K+vOiDnmbvlhaXlpLHmlYjvvIzor7fph43mlrDmiavnoIHnmbvlhaUiKQogICAgICAgICAgICAgICAgc3VjY2VzcyA9IEZhbHNlCiAgICAgICAgICAgICAgICBlcnJvcl9tZXNzYWdlcy5hcHBlbmQoIjExNeeZu+WFpeWkseaViCIpCiAgICAgICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgICAgIGRlYnVnX2luZm8uYXBwZW5kKCIgICDmi4nlj5bmtYvor5U6IOWksei0pSIpCiAgICAgICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZChmIiAgIOmUmeivrzoge3N0cihlKX0iKQogICAgICAgICAgICAgICAgc3VjY2VzcyA9IEZhbHNlCiAgICAgICAgICAgICAgICBlcnJvcl9tZXNzYWdlcy5hcHBlbmQoZiLmi4nlj5bmlbDmja7lpLHotKU6IHtzdHIoZSl9IikKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgIGRlYnVnX2luZm8uYXBwZW5kKCIgICDmi4nlj5bmtYvor5U6IOW8guW4uCIpCiAgICAgICAgICAgIGRlYnVnX2luZm8uYXBwZW5kKGYiICAg5byC5bi45L+h5oGvOiB7c3RyKGUpfSIpCiAgICAgICAgICAgIHN1Y2Nlc3MgPSBGYWxzZQogICAgICAgICAgICBlcnJvcl9tZXNzYWdlcy5hcHBlbmQoZiLmi4nlj5bmlbDmja7lvILluLg6IHtzdHIoZSl9IikKCiAgICAgICAgcmV0dXJuIHN1Y2Nlc3MsIGRlYnVnX2luZm8sIGVycm9yX21lc3NhZ2VzCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIHRlc3RfbGlmZV9ldmVudF9wdWxsX2Zyb21fdGltZShjbGllbnQsIGZyb21fdGltZTogaW50KToKICAgICAgICAiIiIKICAgICAgICDmi4nlj5bmjIflrprlvIDlp4vml7bpl7Tku6XmnaXnmoTlhajpg6jnlJ/mtLvkuovku7bmlbDmja7vvIznu5/orqHmlbDph4/lubbpgJDmnaHovpPlh7rliLDosIPor5Xkv6Hmga8KCiAgICAgICAgOnBhcmFtIGNsaWVudCAoUDExNUNsaWVudCk6IFAxMTVDbGllbnQg5a6e5L6LCiAgICAgICAgOnBhcmFtIGZyb21fdGltZSAoaW50KTog5byA5aeL5pe26Ze077yIVW5peCDml7bpl7TmiLPvvIznp5LvvIzlkKvvvIkKCiAgICAgICAgOnJldHVybiBUdXBsZTogdHVwbGUgKHN1Y2Nlc3M6IGJvb2wsIGRlYnVnX2luZm86IExpc3Rbc3RyXSwgZXJyb3JfbWVzc2FnZXM6IExpc3Rbc3RyXSkKICAgICAgICAiIiIKICAgICAgICBkZWJ1Z19pbmZvID0gW10KICAgICAgICBlcnJvcl9tZXNzYWdlcyA9IFtdCiAgICAgICAgc3VjY2VzcyA9IFRydWUKICAgICAgICB0cnk6CiAgICAgICAgICAgIGR0X3N0ciA9IGRhdGV0aW1lLmZyb210aW1lc3RhbXAoZnJvbV90aW1lLCB0ej10aW1lem9uZS51dGMpLnN0cmZ0aW1lKAogICAgICAgICAgICAgICAgIiVZLSVtLSVkICVIOiVNOiVTIFVUQyIKICAgICAgICAgICAgKQogICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZChmIiAgIOaMh+WumuW8gOWni+aXtumXtDoge2R0X3N0cn0gKHtmcm9tX3RpbWV9KSIpCiAgICAgICAgICAgIGV2ZW50c19pdGVyYXRvciA9IGl0ZXJfbGlmZV9iZWhhdmlvcl9vbmNlKAogICAgICAgICAgICAgICAgY2xpZW50PWNsaWVudCwKICAgICAgICAgICAgICAgIGZyb21fdGltZT1mcm9tX3RpbWUsCiAgICAgICAgICAgICAgICBmcm9tX2lkPTAsCiAgICAgICAgICAgICAgICBjb29sZG93bj00LAogICAgICAgICAgICAgICAgKipjb25maWdlci5nZXRfaW9zX3VhX2FwcCgpLAogICAgICAgICAgICApCiAgICAgICAgICAgIGV2ZW50c19saXN0ID0gbGlzdChldmVudHNfaXRlcmF0b3IpCiAgICAgICAgICAgIGV2ZW50X2NvdW50ID0gbGVuKGV2ZW50c19saXN0KQogICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZCgiICAg5ouJ5Y+W5oyH5a6a5pe26Ze05pWw5o2uOiDmiJDlip8iKQogICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZChmIiAgIOaLieWPluWIsOS6i+S7tuaAu+aVsDoge2V2ZW50X2NvdW50fSDkuKoiKQogICAgICAgICAgICBpZiBldmVudHNfbGlzdDoKICAgICAgICAgICAgICAgIGRlYnVnX2luZm8uYXBwZW5kKCIgICAtLS0tLS0tLS0tIOS6i+S7tuaYjue7hiAtLS0tLS0tLS0tIikKICAgICAgICAgICAgICAgIGZvciBpLCBldmVudCBpbiBlbnVtZXJhdGUoZXZlbnRzX2xpc3QsIDEpOgogICAgICAgICAgICAgICAgICAgIGV2X3R5cGUgPSBldmVudC5nZXQoInR5cGUiLCAiIikKICAgICAgICAgICAgICAgICAgICB0eXBlX25hbWUgPSBldmVudC5nZXQoImV2ZW50X25hbWUiLCAiIikKICAgICAgICAgICAgICAgICAgICB1dCA9IGV2ZW50LmdldCgidXBkYXRlX3RpbWUiKQogICAgICAgICAgICAgICAgICAgIHV0X3N0ciA9ICgKICAgICAgICAgICAgICAgICAgICAgICAgZGF0ZXRpbWUuZnJvbXRpbWVzdGFtcChpbnQodXQpLCB0ej10aW1lem9uZS51dGMpLnN0cmZ0aW1lKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIiVZLSVtLSVkICVIOiVNOiVTIgogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIGlmIHV0IGlzIG5vdCBOb25lCiAgICAgICAgICAgICAgICAgICAgICAgIGVsc2UgIiIKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgZGVidWdfaW5mby5hcHBlbmQoCiAgICAgICAgICAgICAgICAgICAgICAgIGYiICAgW3tpfV0ge3R5cGVfbmFtZX0gaWQ9e2V2ZW50LmdldCgnaWQnKX0gdHlwZT17ZXZfdHlwZX0gIgogICAgICAgICAgICAgICAgICAgICAgICBmInVwZGF0ZV90aW1lPXt1dF9zdHJ9IgogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZCgKICAgICAgICAgICAgICAgICAgICAgICAgZiIgICAgICAgIGZpbGVfbmFtZToge2V2ZW50LmdldCgnZmlsZV9uYW1lJywgJycpfSIKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgZGVidWdfaW5mby5hcHBlbmQoZiIgICAgICAgIHBpY2tjb2RlOiB7ZXZlbnQuZ2V0KCdwaWNrX2NvZGUnLCAnJyl9IikKICAgICAgICAgICAgaWYgZXZlbnRzX2xpc3Q6CiAgICAgICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZCgiICAgLS0tLS0tLS0tLSDmmI7nu4bnu5PmnZ8gLS0tLS0tLS0tLSIpCiAgICAgICAgZXhjZXB0IFAxMTVBdXRoZW50aWNhdGlvbkVycm9yOgogICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZCgiICAg5ouJ5Y+W5oyH5a6a5pe26Ze05pWw5o2uOiDlpLHotKUiKQogICAgICAgICAgICBkZWJ1Z19pbmZvLmFwcGVuZCgiICAg6ZSZ6K+vOiDnmbvlhaXlpLHmlYjvvIzor7fph43mlrDmiavnoIHnmbvlhaUiKQogICAgICAgICAgICBzdWNjZXNzID0gRmFsc2UKICAgICAgICAgICAgZXJyb3JfbWVzc2FnZXMuYXBwZW5kKCLmi4nlj5bmjIflrprml7bpl7TmlbDmja7ml7bnmbvlhaXlpLHmlYgiKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgZGVidWdfaW5mby5hcHBlbmQoIiAgIOaLieWPluaMh+WumuaXtumXtOaVsOaNrjog5aSx6LSlIikKICAgICAgICAgICAgZGVidWdfaW5mby5hcHBlbmQoZiIgICDplJnor686IHtzdHIoZSl9IikKICAgICAgICAgICAgc3VjY2VzcyA9IEZhbHNlCiAgICAgICAgICAgIGVycm9yX21lc3NhZ2VzLmFwcGVuZChmIuaLieWPluaMh+WumuaXtumXtOaVsOaNruWksei0pToge3N0cihlKX0iKQogICAgICAgIHJldHVybiBzdWNjZXNzLCBkZWJ1Z19pbmZvLCBlcnJvcl9tZXNzYWdlcwo=
+from datetime import datetime, timezone
+from time import time
+
+from p115client import check_response, P115AuthenticationError
+from p115client.tool.life import iter_life_behavior_once, life_show
+
+from ...core.config import configer
+
+
+class MonitorLifeTest:
+    """
+    生活事件测试类
+    """
+
+    @staticmethod
+    def test_life_event_status(client):
+        """
+        测试生活事件开启状态
+
+        :param client (P115Client): P115Client实例
+
+        :return Tuple: tuple (success: bool, debug_info: List[str], error_message: Optional[str])
+        """
+        debug_info = []
+        try:
+            resp = life_show(client, timeout=10, **configer.get_ios_ua_app(app=False))
+            check_response(resp)
+            if resp.get("state"):
+                debug_info.append("   生活事件开启: 是")
+                return True, debug_info, None
+            else:
+                debug_info.append("   生活事件开启: 否")
+                debug_info.append(f"   错误信息: {resp}")
+                return False, debug_info, "生活事件未开启"
+        except Exception as e:
+            debug_info.append(f"   生活事件检查异常: {str(e)}")
+            return False, debug_info, f"生活事件检查异常: {str(e)}"
+
+    @staticmethod
+    def test_life_event_pull(client):
+        """
+        测试拉取生活事件数据
+
+        :param client (P115Client): P115Client实例
+
+        :return Tuple: tuple (success: bool, debug_info: List[str], error_messages: List[str])
+        """
+        debug_info = []
+        error_messages = []
+        success = True
+
+        try:
+            events_iterator = iter_life_behavior_once(
+                client=client,
+                from_time=int(time()),
+                from_id=0,
+                cooldown=4,
+                **configer.get_ios_ua_app(),
+            )
+            try:
+                first_event = next(events_iterator)
+                debug_info.append("   拉取测试: 成功")
+                debug_info.append("   获取到事件: 是")
+                debug_info.append(f"   事件类型: {first_event.get('type', '未知')}")
+                debug_info.append(f"   事件ID: {first_event.get('id', '未知')}")
+                event_count = 1
+                for _ in range(9):
+                    try:
+                        next(events_iterator)
+                        event_count += 1
+                    except StopIteration:
+                        break
+                debug_info.append(f"   拉取到事件数: {event_count}个")
+            except StopIteration:
+                debug_info.append("   拉取测试: 成功")
+                debug_info.append("   获取到事件: 否（无新事件，正常情况）")
+            except P115AuthenticationError:
+                debug_info.append("   拉取测试: 失败")
+                debug_info.append("   错误: 登入失效，请重新扫码登入")
+                success = False
+                error_messages.append("115登入失效")
+            except Exception as e:
+                debug_info.append("   拉取测试: 失败")
+                debug_info.append(f"   错误: {str(e)}")
+                success = False
+                error_messages.append(f"拉取数据失败: {str(e)}")
+        except Exception as e:
+            debug_info.append("   拉取测试: 异常")
+            debug_info.append(f"   异常信息: {str(e)}")
+            success = False
+            error_messages.append(f"拉取数据异常: {str(e)}")
+
+        return success, debug_info, error_messages
+
+    @staticmethod
+    def test_life_event_pull_from_time(client, from_time: int):
+        """
+        拉取指定开始时间以来的全部生活事件数据，统计数量并逐条输出到调试信息
+
+        :param client (P115Client): P115Client 实例
+        :param from_time (int): 开始时间（Unix 时间戳，秒，含）
+
+        :return Tuple: tuple (success: bool, debug_info: List[str], error_messages: List[str])
+        """
+        debug_info = []
+        error_messages = []
+        success = True
+        try:
+            dt_str = datetime.fromtimestamp(from_time, tz=timezone.utc).strftime(
+                "%Y-%m-%d %H:%M:%S UTC"
+            )
+            debug_info.append(f"   指定开始时间: {dt_str} ({from_time})")
+            events_iterator = iter_life_behavior_once(
+                client=client,
+                from_time=from_time,
+                from_id=0,
+                cooldown=4,
+                **configer.get_ios_ua_app(),
+            )
+            events_list = list(events_iterator)
+            event_count = len(events_list)
+            debug_info.append("   拉取指定时间数据: 成功")
+            debug_info.append(f"   拉取到事件总数: {event_count} 个")
+            if events_list:
+                debug_info.append("   ---------- 事件明细 ----------")
+                for i, event in enumerate(events_list, 1):
+                    ev_type = event.get("type", "")
+                    type_name = event.get("event_name", "")
+                    ut = event.get("update_time")
+                    ut_str = (
+                        datetime.fromtimestamp(int(ut), tz=timezone.utc).strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        )
+                        if ut is not None
+                        else ""
+                    )
+                    debug_info.append(
+                        f"   [{i}] {type_name} id={event.get('id')} type={ev_type} "
+                        f"update_time={ut_str}"
+                    )
+                    debug_info.append(
+                        f"        file_name: {event.get('file_name', '')}"
+                    )
+                    debug_info.append(f"        pickcode: {event.get('pick_code', '')}")
+            if events_list:
+                debug_info.append("   ---------- 明细结束 ----------")
+        except P115AuthenticationError:
+            debug_info.append("   拉取指定时间数据: 失败")
+            debug_info.append("   错误: 登入失效，请重新扫码登入")
+            success = False
+            error_messages.append("拉取指定时间数据时登入失效")
+        except Exception as e:
+            debug_info.append("   拉取指定时间数据: 失败")
+            debug_info.append(f"   错误: {str(e)}")
+            success = False
+            error_messages.append(f"拉取指定时间数据失败: {str(e)}")
+        return success, debug_info, error_messages

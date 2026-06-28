@@ -1,1 +1,28 @@
-IiIiMS4wLjAKClJldmlzaW9uIElEOiAyOTRiMDA3OTMyZWY1N2UKUmV2aXNlczoKQ3JlYXRlIERhdGU6IDIwMjUtMDEtMjAgMjM6NDM6NDAuNzQxMjUxCgoiIiIKCiMgcmV2aXNpb24gaWRlbnRpZmllcnMsIHVzZWQgYnkgQWxlbWJpYwp2ZXJzaW9uID0gIjEuMC4wIgpyZXZpc2lvbiA9ICIyOTRiMDA3OTM1N2UiCmRvd25fcmV2aXNpb24gPSBOb25lCmJyYW5jaF9sYWJlbHMgPSAoInAxMTVzdHJtaGVscGVyIiwpCmRlcGVuZHNfb24gPSBOb25lCgoKZGVmIHVwZ3JhZGUoKSAtPiBOb25lOgogICAgIiIiCiAgICDliJ3lp4vljJYKICAgICIiIgogICAgcGFzcwoKCmRlZiBkb3duZ3JhZGUoKSAtPiBOb25lOgogICAgIiIiCiAgICDlm57mu5oKICAgICIiIgogICAgcGFzcwo=
+"""1.0.0
+
+Revision ID: 294b007932ef57e
+Revises:
+Create Date: 2025-01-20 23:43:40.741251
+
+"""
+
+# revision identifiers, used by Alembic
+version = "1.0.0"
+revision = "294b0079357e"
+down_revision = None
+branch_labels = ("p115strmhelper",)
+depends_on = None
+
+
+def upgrade() -> None:
+    """
+    初始化
+    """
+    pass
+
+
+def downgrade() -> None:
+    """
+    回滚
+    """
+    pass

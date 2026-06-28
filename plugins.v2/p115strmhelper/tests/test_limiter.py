@@ -1,1 +1,130 @@
-IiIiClJhdGVMaW1pdGVyIOWSjCBBcGlFbmRwb2ludENvb2xkb3duIOa1i+ivleaooeWdlwoK5YyF5ZCr6YCf546H6ZmQ5Yi25bel5YW357G755qE5Y2V5YWD5rWL6K+VCiIiIgoKZnJvbSB0aW1lIGltcG9ydCBtb25vdG9uaWMKZnJvbSB1bml0dGVzdCBpbXBvcnQgVGVzdENhc2UKCmZyb20gdXRpbHMubGltaXRlciBpbXBvcnQgQXBpRW5kcG9pbnRDb29sZG93biwgUmF0ZUxpbWl0ZXIKCgpjbGFzcyBUZXN0UmF0ZUxpbWl0ZXIoVGVzdENhc2UpOgogICAgIiIi5rWL6K+VIFJhdGVMaW1pdGVyIOexuyIiIgoKICAgIGRlZiB0ZXN0X2NyZWF0aW9uX3dpdGhfcG9zaXRpdmVfcXBzKHNlbGYpOgogICAgICAgICIiIua1i+ivleatoyBRUFMg5Yib5bu6IiIiCiAgICAgICAgbGltaXRlciA9IFJhdGVMaW1pdGVyKHFwcz0xMC4wKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGltaXRlci5pbnRlcnZhbCwgMC4xKQoKICAgIGRlZiB0ZXN0X2NyZWF0aW9uX3dpdGhfemVyb19xcHMoc2VsZik6CiAgICAgICAgIiIi5rWL6K+V6Zu2IFFQUyDliJvlu7rvvIjlupTlj5jkuLrml6DpmZDvvIkiIiIKICAgICAgICBsaW1pdGVyID0gUmF0ZUxpbWl0ZXIocXBzPTApCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChsaW1pdGVyLmludGVydmFsLCAwLjApCgogICAgZGVmIHRlc3RfY3JlYXRpb25fd2l0aF9uZWdhdGl2ZV9xcHMoc2VsZik6CiAgICAgICAgIiIi5rWL6K+V6LSfIFFQUyDliJvlu7rvvIjlupTlj5jkuLrml6DpmZDvvIkiIiIKICAgICAgICBsaW1pdGVyID0gUmF0ZUxpbWl0ZXIocXBzPS0xKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGltaXRlci5pbnRlcnZhbCwgMC4wKQoKICAgIGRlZiB0ZXN0X2FjcXVpcmVfZG9lc19ub3RfcmFpc2Uoc2VsZik6CiAgICAgICAgIiIi5rWL6K+VIGFjcXVpcmUg5LiN5oqb5Ye65byC5bi4IiIiCiAgICAgICAgbGltaXRlciA9IFJhdGVMaW1pdGVyKHFwcz0xMDAuMCkgICMgMTAwIFFQUyA9IDEwbXMg6Ze06ZqUCiAgICAgICAgIyDnrKzkuIDmrKHosIPnlKjlupTml6DpmLvloZ4KICAgICAgICBsaW1pdGVyLmFjcXVpcmUoKQogICAgICAgICMg56ys5LqM5qyh6LCD55So5Y+v6IO955+t5pqC6Zi75aGeCiAgICAgICAgbGltaXRlci5hY3F1aXJlKCkKICAgICAgICAjIOWPquimgeayoeaKm+WHuuW8guW4uOWwseeul+mAmui/hwoKICAgIGRlZiB0ZXN0X3JhdGVfbGltaXRpbmdfZWZmZWN0KHNlbGYpOgogICAgICAgICIiIua1i+ivlemAn+eOh+mZkOWItuaViOaenCIiIgogICAgICAgIGxpbWl0ZXIgPSBSYXRlTGltaXRlcihxcHM9MTAuMCkgICMgMTAwbXMg6Ze06ZqUCgogICAgICAgIHN0YXJ0ID0gbW9ub3RvbmljKCkKICAgICAgICBmb3IgXyBpbiByYW5nZSgzKToKICAgICAgICAgICAgbGltaXRlci5hY3F1aXJlKCkKICAgICAgICBlbGFwc2VkID0gbW9ub3RvbmljKCkgLSBzdGFydAoKICAgICAgICAjIDMg5qyh6LCD55So6Iez5bCR5bqU5pyJIDIg5Liq6Ze06ZqUID0gMjAwbXMKICAgICAgICBzZWxmLmFzc2VydEdyZWF0ZXJFcXVhbChlbGFwc2VkLCAwLjE1KQoKICAgIGRlZiB0ZXN0X2hpZ2hfcXBzX25vX2RlbGF5KHNlbGYpOgogICAgICAgICIiIua1i+ivlemrmCBRUFMg5Yeg5LmO5peg5bu26L+fIiIiCiAgICAgICAgbGltaXRlciA9IFJhdGVMaW1pdGVyKHFwcz0xMDAwMC4wKSAgIyAwLjFtcyDpl7TpmpQKCiAgICAgICAgc3RhcnQgPSBtb25vdG9uaWMoKQogICAgICAgIGZvciBfIGluIHJhbmdlKDEwKToKICAgICAgICAgICAgbGltaXRlci5hY3F1aXJlKCkKICAgICAgICBlbGFwc2VkID0gbW9ub3RvbmljKCkgLSBzdGFydAoKICAgICAgICAjIDEwIOasoeiwg+eUqOW6lOWcqOefreaXtumXtOWGheWujOaIkAogICAgICAgIHNlbGYuYXNzZXJ0TGVzcyhlbGFwc2VkLCAwLjEpCgoKY2xhc3MgTW9ja0FwaToKICAgICIiIuaooeaLnyBBUEkg6LCD55SoIiIiCgogICAgZGVmIF9faW5pdF9fKHNlbGYpOgogICAgICAgIHNlbGYuY2FsbF9jb3VudCA9IDAKCiAgICBkZWYgX19jYWxsX18oc2VsZiwgcGF5bG9hZDogZGljdCkgLT4gZGljdDoKICAgICAgICBzZWxmLmNhbGxfY291bnQgKz0gMQogICAgICAgIHJldHVybiB7InJlc3VsdCI6ICJvayIsICJjb3VudCI6IHNlbGYuY2FsbF9jb3VudH0KCgpjbGFzcyBUZXN0QXBpRW5kcG9pbnRDb29sZG93bihUZXN0Q2FzZSk6CiAgICAiIiLmtYvor5UgQXBpRW5kcG9pbnRDb29sZG93biDnsbsiIiIKCiAgICBkZWYgdGVzdF9jcmVhdGlvbihzZWxmKToKICAgICAgICAiIiLmtYvor5XliJvlu7oiIiIKICAgICAgICBhcGkgPSBNb2NrQXBpKCkKICAgICAgICBjb29sZG93biA9IEFwaUVuZHBvaW50Q29vbGRvd24oYXBpLCBjb29sZG93bj0xLjApCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChjb29sZG93bi5jb29sZG93biwgMS4wKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwoY29vbGRvd24uYXBpX2NhbGxhYmxlLCBhcGkpCgogICAgZGVmIHRlc3RfY2FsbF93aXRob3V0X2Nvb2xkb3duKHNlbGYpOgogICAgICAgICIiIua1i+ivleaXoOWGt+WNtOaXtuebtOaOpeiwg+eUqCIiIgogICAgICAgIGFwaSA9IE1vY2tBcGkoKQogICAgICAgIGNvb2xkb3duID0gQXBpRW5kcG9pbnRDb29sZG93bihhcGksIGNvb2xkb3duPTApCgogICAgICAgIHJlc3VsdDEgPSBjb29sZG93bih7ImtleSI6ICJ2YWx1ZTEifSkKICAgICAgICByZXN1bHQyID0gY29vbGRvd24oeyJrZXkiOiAidmFsdWUyIn0pCgogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocmVzdWx0MVsicmVzdWx0Il0sICJvayIpCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChyZXN1bHQyWyJyZXN1bHQiXSwgIm9rIikKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKGFwaS5jYWxsX2NvdW50LCAyKQoKICAgIGRlZiB0ZXN0X2NhbGxfd2l0aF9jb29sZG93bihzZWxmKToKICAgICAgICAiIiLmtYvor5XmnInlhrfljbTml7bnmoTosIPnlKgiIiIKICAgICAgICBhcGkgPSBNb2NrQXBpKCkKICAgICAgICBjb29sZG93biA9IEFwaUVuZHBvaW50Q29vbGRvd24oYXBpLCBjb29sZG93bj0wLjA1KSAgIyA1MG1zIOWGt+WNtAoKICAgICAgICBzdGFydCA9IG1vbm90b25pYygpCiAgICAgICAgcmVzdWx0MSA9IGNvb2xkb3duKHsia2V5IjogInZhbHVlMSJ9KQogICAgICAgIHJlc3VsdDIgPSBjb29sZG93bih7ImtleSI6ICJ2YWx1ZTIifSkKICAgICAgICBlbGFwc2VkID0gbW9ub3RvbmljKCkgLSBzdGFydAoKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHJlc3VsdDFbInJlc3VsdCJdLCAib2siKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocmVzdWx0MlsicmVzdWx0Il0sICJvayIpCiAgICAgICAgIyDkuKTmrKHosIPnlKjkuYvpl7TlupTmnInlhrfljbTlu7bov58KICAgICAgICBzZWxmLmFzc2VydEdyZWF0ZXJFcXVhbChlbGFwc2VkLCAwLjA0KQoKICAgIGRlZiB0ZXN0X2luaXRpYWxfY2FsbF9ub19kZWxheShzZWxmKToKICAgICAgICAiIiLmtYvor5XpppbmrKHosIPnlKjml6Dlu7bov58iIiIKICAgICAgICBhcGkgPSBNb2NrQXBpKCkKICAgICAgICBjb29sZG93biA9IEFwaUVuZHBvaW50Q29vbGRvd24oYXBpLCBjb29sZG93bj0xLjApCgogICAgICAgIHN0YXJ0ID0gbW9ub3RvbmljKCkKICAgICAgICByZXN1bHQgPSBjb29sZG93bih7ImtleSI6ICJ2YWx1ZSJ9KQogICAgICAgIGVsYXBzZWQgPSBtb25vdG9uaWMoKSAtIHN0YXJ0CgogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocmVzdWx0WyJyZXN1bHQiXSwgIm9rIikKICAgICAgICAjIOmmluasoeiwg+eUqOW6lOaXoOW7tui/nwogICAgICAgIHNlbGYuYXNzZXJ0TGVzcyhlbGFwc2VkLCAwLjEpCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIGZyb20gdW5pdHRlc3QgaW1wb3J0IG1haW4KCiAgICBtYWluKHZlcmJvc2l0eT0yKQo=
+"""
+RateLimiter 和 ApiEndpointCooldown 测试模块
+
+包含速率限制工具类的单元测试
+"""
+
+from time import monotonic
+from unittest import TestCase
+
+from utils.limiter import ApiEndpointCooldown, RateLimiter
+
+
+class TestRateLimiter(TestCase):
+    """测试 RateLimiter 类"""
+
+    def test_creation_with_positive_qps(self):
+        """测试正 QPS 创建"""
+        limiter = RateLimiter(qps=10.0)
+        self.assertEqual(limiter.interval, 0.1)
+
+    def test_creation_with_zero_qps(self):
+        """测试零 QPS 创建（应变为无限）"""
+        limiter = RateLimiter(qps=0)
+        self.assertEqual(limiter.interval, 0.0)
+
+    def test_creation_with_negative_qps(self):
+        """测试负 QPS 创建（应变为无限）"""
+        limiter = RateLimiter(qps=-1)
+        self.assertEqual(limiter.interval, 0.0)
+
+    def test_acquire_does_not_raise(self):
+        """测试 acquire 不抛出异常"""
+        limiter = RateLimiter(qps=100.0)  # 100 QPS = 10ms 间隔
+        # 第一次调用应无阻塞
+        limiter.acquire()
+        # 第二次调用可能短暂阻塞
+        limiter.acquire()
+        # 只要没抛出异常就算通过
+
+    def test_rate_limiting_effect(self):
+        """测试速率限制效果"""
+        limiter = RateLimiter(qps=10.0)  # 100ms 间隔
+
+        start = monotonic()
+        for _ in range(3):
+            limiter.acquire()
+        elapsed = monotonic() - start
+
+        # 3 次调用至少应有 2 个间隔 = 200ms
+        self.assertGreaterEqual(elapsed, 0.15)
+
+    def test_high_qps_no_delay(self):
+        """测试高 QPS 几乎无延迟"""
+        limiter = RateLimiter(qps=10000.0)  # 0.1ms 间隔
+
+        start = monotonic()
+        for _ in range(10):
+            limiter.acquire()
+        elapsed = monotonic() - start
+
+        # 10 次调用应在短时间内完成
+        self.assertLess(elapsed, 0.1)
+
+
+class MockApi:
+    """模拟 API 调用"""
+
+    def __init__(self):
+        self.call_count = 0
+
+    def __call__(self, payload: dict) -> dict:
+        self.call_count += 1
+        return {"result": "ok", "count": self.call_count}
+
+
+class TestApiEndpointCooldown(TestCase):
+    """测试 ApiEndpointCooldown 类"""
+
+    def test_creation(self):
+        """测试创建"""
+        api = MockApi()
+        cooldown = ApiEndpointCooldown(api, cooldown=1.0)
+        self.assertEqual(cooldown.cooldown, 1.0)
+        self.assertEqual(cooldown.api_callable, api)
+
+    def test_call_without_cooldown(self):
+        """测试无冷却时直接调用"""
+        api = MockApi()
+        cooldown = ApiEndpointCooldown(api, cooldown=0)
+
+        result1 = cooldown({"key": "value1"})
+        result2 = cooldown({"key": "value2"})
+
+        self.assertEqual(result1["result"], "ok")
+        self.assertEqual(result2["result"], "ok")
+        self.assertEqual(api.call_count, 2)
+
+    def test_call_with_cooldown(self):
+        """测试有冷却时的调用"""
+        api = MockApi()
+        cooldown = ApiEndpointCooldown(api, cooldown=0.05)  # 50ms 冷却
+
+        start = monotonic()
+        result1 = cooldown({"key": "value1"})
+        result2 = cooldown({"key": "value2"})
+        elapsed = monotonic() - start
+
+        self.assertEqual(result1["result"], "ok")
+        self.assertEqual(result2["result"], "ok")
+        # 两次调用之间应有冷却延迟
+        self.assertGreaterEqual(elapsed, 0.04)
+
+    def test_initial_call_no_delay(self):
+        """测试首次调用无延迟"""
+        api = MockApi()
+        cooldown = ApiEndpointCooldown(api, cooldown=1.0)
+
+        start = monotonic()
+        result = cooldown({"key": "value"})
+        elapsed = monotonic() - start
+
+        self.assertEqual(result["result"], "ok")
+        # 首次调用应无延迟
+        self.assertLess(elapsed, 0.1)
+
+
+if __name__ == "__main__":
+    from unittest import main
+
+    main(verbosity=2)

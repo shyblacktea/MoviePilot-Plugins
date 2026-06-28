@@ -1,1 +1,57 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IExpdGVyYWwsIFNldCwgTGlzdCwgRGljdCwgSXRlcmF0b3IKCmZyb20gLiBpbXBvcnQgRGJPcGVyCmZyb20gLm1vZGVscy5vcGVuX2ZpbGUgaW1wb3J0IE9wZW5GaWxlCmZyb20gLm1vZGVscy5vcGVuX2ZvbGRlciBpbXBvcnQgT3BlbkZvbGRlcgoKCmNsYXNzIE9wZW5GaWxlT3BlcihEYk9wZXIpOgogICAgIiIiCiAgICBPcGVuIOaOpeWPo+aWh+S7tuexu+aVsOaNruW6k+aTjeS9nAogICAgIiIiCgogICAgZGVmIGdldF9hbGxfaWQoc2VsZiwgdHlwZTogTGl0ZXJhbFsiZmlsZSIsICJmb2xkZXIiXSA9ICJmaWxlIikgLT4gU2V0W2ludF06CiAgICAgICAgIiIiCiAgICAgICAg6I635Y+W5omA5pyJIElECgogICAgICAgIDpwYXJhbSB0eXBlIChzdHIpOiDmlbDmja7nsbvlnovvvIwiZmlsZSIg5oiWICJmb2xkZXIiCgogICAgICAgIDpyZXR1cm4gU2V0OiBJRCDpm4blkIgKICAgICAgICAiIiIKICAgICAgICBpZiB0eXBlID09ICJmaWxlIjoKICAgICAgICAgICAgcmV0dXJuIE9wZW5GaWxlLmdldF9hbGxfaWQoc2VsZi5fZGIpCiAgICAgICAgcmV0dXJuIE9wZW5Gb2xkZXIuZ2V0X2FsbF9pZChzZWxmLl9kYikKCiAgICBkZWYgdXBzZXJ0X2JhdGNoKHNlbGYsIGJhdGNoOiBMaXN0W0RpY3RdLCB0eXBlOiBMaXRlcmFsWyJmaWxlIiwgImZvbGRlciJdID0gImZpbGUiKToKICAgICAgICAiIiIKICAgICAgICDmibnph4/lhpnlhaUKCiAgICAgICAgOnBhcmFtIGJhdGNoIChMaXN0KTog5YaZ5YWl5pWw5o2uCiAgICAgICAgOnBhcmFtIHR5cGUgKHN0cik6IOaVsOaNruexu+Wei++8jCJmaWxlIiDmiJYgImZvbGRlciIKICAgICAgICAiIiIKICAgICAgICBpZiB0eXBlID09ICJmaWxlIjoKICAgICAgICAgICAgT3BlbkZpbGUudXBzZXJ0X2JhdGNoX2J5X2xpc3Qoc2VsZi5fZGIsIGJhdGNoKQogICAgICAgIHJldHVybiBPcGVuRm9sZGVyLnVwc2VydF9iYXRjaF9ieV9saXN0KHNlbGYuX2RiLCBiYXRjaCkKCiAgICBkZWYgZ2V0X3BhcmVudF9wYXRoX2J5X2lkKHNlbGYsIHBhcmVudF9pZDogaW50KSAtPiBzdHI6CiAgICAgICAgIiIiCiAgICAgICAg6YCa6L+H55uu5b2VIElEIOiOt+WPlui3r+W+hAoKICAgICAgICA6cGFyYW0gcGFyZW50X2lkIChpbnQpOiDniLbnm67lvZUgSUQKCiAgICAgICAgOnJldHVybiBzdHI6IOi3r+W+hAogICAgICAgICIiIgogICAgICAgIHJldHVybiBPcGVuRm9sZGVyLmdldF9ieV9pZChzZWxmLl9kYiwgcGFyZW50X2lkKS5wYXRoCgogICAgZGVmIGdldF9maWxlc19pbmZvX2J5X2lkKHNlbGYsIGlkczogU2V0W2ludF0pIC0+IEl0ZXJhdG9yW0RpY3RdOgogICAgICAgICIiIgogICAgICAgIOiOt+WPluS4gOe7hOaWh+S7tuS/oeaBrwoKICAgICAgICA6cGFyYW0gaWRzIChTZXQpOiDkuIDnu4Tmlofku7YgSUQKCiAgICAgICAgOnJldHVybiBJdGVyYXRvcjog6L+t5Luj5Zmo77yM5paH5Lu25L+h5oGvCiAgICAgICAgIiIiCiAgICAgICAgZm9yIGl0ZW0gaW4gT3BlbkZpbGUuZ2V0X2J5X2lkcyhzZWxmLl9kYiwgaWRzKToKICAgICAgICAgICAgaSA9IGl0ZW0uX19kaWN0X18KICAgICAgICAgICAgaS5wb3AoIl9zYV9pbnN0YW5jZV9zdGF0ZSIsIE5vbmUpCiAgICAgICAgICAgIHlpZWxkIGkK
+from typing import Literal, Set, List, Dict, Iterator
+
+from . import DbOper
+from .models.open_file import OpenFile
+from .models.open_folder import OpenFolder
+
+
+class OpenFileOper(DbOper):
+    """
+    Open 接口文件类数据库操作
+    """
+
+    def get_all_id(self, type: Literal["file", "folder"] = "file") -> Set[int]:
+        """
+        获取所有 ID
+
+        :param type (str): 数据类型，"file" 或 "folder"
+
+        :return Set: ID 集合
+        """
+        if type == "file":
+            return OpenFile.get_all_id(self._db)
+        return OpenFolder.get_all_id(self._db)
+
+    def upsert_batch(self, batch: List[Dict], type: Literal["file", "folder"] = "file"):
+        """
+        批量写入
+
+        :param batch (List): 写入数据
+        :param type (str): 数据类型，"file" 或 "folder"
+        """
+        if type == "file":
+            OpenFile.upsert_batch_by_list(self._db, batch)
+        return OpenFolder.upsert_batch_by_list(self._db, batch)
+
+    def get_parent_path_by_id(self, parent_id: int) -> str:
+        """
+        通过目录 ID 获取路径
+
+        :param parent_id (int): 父目录 ID
+
+        :return str: 路径
+        """
+        return OpenFolder.get_by_id(self._db, parent_id).path
+
+    def get_files_info_by_id(self, ids: Set[int]) -> Iterator[Dict]:
+        """
+        获取一组文件信息
+
+        :param ids (Set): 一组文件 ID
+
+        :return Iterator: 迭代器，文件信息
+        """
+        for item in OpenFile.get_by_ids(self._db, ids):
+            i = item.__dict__
+            i.pop("_sa_instance_state", None)
+            yield i

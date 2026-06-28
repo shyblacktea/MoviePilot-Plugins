@@ -1,1 +1,45 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IExpc3QsIE9wdGlvbmFsCgpmcm9tIHB5ZGFudGljIGltcG9ydCBCYXNlTW9kZWwsIEZpZWxkCgoKY2xhc3MgT2ZmbGluZVRhc2tzUGF5bG9hZChCYXNlTW9kZWwpOgogICAgIiIiCiAgICDnprvnur/ku7vliqHliJfooajor7fmsYLkvZMKICAgICIiIgoKICAgIHBhZ2U6IGludCA9IEZpZWxkKGRlZmF1bHQ9MSwgZ2U9MSwgZGVzY3JpcHRpb249Iumhteegge+8jOW/hemhu+Wkp+S6juetieS6jjEiKQogICAgbGltaXQ6IGludCA9IEZpZWxkKGRlZmF1bHQ9MTAsIGRlc2NyaXB0aW9uPSLmr4/pobXmlbDph4/vvIwtMSDooajnpLrojrflj5bmiYDmnIkiKQoKCmNsYXNzIEFkZE9mZmxpbmVUYXNrUGF5bG9hZChCYXNlTW9kZWwpOgogICAgIiIiCiAgICDmt7vliqDnprvnur/kuIvovb3ku7vliqHor7fmsYLkvZMKICAgICIiIgoKICAgIGxpbmtzOiBMaXN0W3N0cl0gPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLkuIvovb3pk77mjqXliJfooajvvIzkuI3og73kuLrnqboiKQogICAgcGF0aDogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249IuaMh+WumueahOS4i+i9vei3r+W+hO+8iOWPr+mAie+8iSIpCgoKY2xhc3MgT2ZmbGluZVRhc2tJdGVtKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOemu+e6v+S4i+i9veS7u+WKoeWIl+ihqAogICAgIiIiCgogICAgaW5mb19oYXNoOiBzdHIgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLku7vliqFIYXNoIikKICAgIG5hbWU6IHN0ciA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuS7u+WKoeWQjeensCIpCiAgICBzaXplOiBpbnQgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLmlofku7blpKflsI8iKQogICAgc2l6ZV90ZXh0OiBzdHIgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLmlofku7blpKflsI/mlofmnKwiKQogICAgc3RhdHVzOiBpbnQgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLku7vliqHnirbmgIEiKQogICAgc3RhdHVzX3RleHQ6IHN0ciA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuS7u+WKoeeKtuaAgeaWh+acrCIpCiAgICBwZXJjZW50OiBmbG9hdCA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249Iui/m+W6pueZvuWIhuavlCIpCiAgICBhZGRfdGltZTogaW50ID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i5re75Yqg5pe26Ze0IikKCgpjbGFzcyBPZmZsaW5lVGFza3NEYXRhKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOi/lOWbnuaVsOaNrgogICAgIiIiCgogICAgdG90YWw6IGludCA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuaAu+aVsCIpCiAgICB0YXNrczogTGlzdFtPZmZsaW5lVGFza0l0ZW1dID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i5Lu75Yqh5YiX6KGoIikK
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
+
+class OfflineTasksPayload(BaseModel):
+    """
+    离线任务列表请求体
+    """
+
+    page: int = Field(default=1, ge=1, description="页码，必须大于等于1")
+    limit: int = Field(default=10, description="每页数量，-1 表示获取所有")
+
+
+class AddOfflineTaskPayload(BaseModel):
+    """
+    添加离线下载任务请求体
+    """
+
+    links: List[str] = Field(..., description="下载链接列表，不能为空")
+    path: Optional[str] = Field(default=None, description="指定的下载路径（可选）")
+
+
+class OfflineTaskItem(BaseModel):
+    """
+    离线下载任务列表
+    """
+
+    info_hash: str = Field(..., description="任务Hash")
+    name: str = Field(..., description="任务名称")
+    size: int = Field(..., description="文件大小")
+    size_text: str = Field(..., description="文件大小文本")
+    status: int = Field(..., description="任务状态")
+    status_text: str = Field(..., description="任务状态文本")
+    percent: float = Field(..., description="进度百分比")
+    add_time: int = Field(..., description="添加时间")
+
+
+class OfflineTasksData(BaseModel):
+    """
+    返回数据
+    """
+
+    total: int = Field(..., description="总数")
+    tasks: List[OfflineTaskItem] = Field(..., description="任务列表")

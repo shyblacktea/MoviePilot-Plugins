@@ -1,1 +1,8 @@
-ewogICAgInZlcnNpb24iOiAiMS4wLjMiLAogICAgInJldmlzaW9uIjogImM3NmM5YTFmNTJkYyIsCiAgICAibW9kZWxzIjogImRiX21hbmFnZXIubW9kZWxzIiwKICAgICJzY3JpcHRfbG9jYXRpb24iOiAiZGF0YWJhc2UiLAogICAgInZlcnNpb25fbG9jYXRpb24iOiAiZGF0YWJhc2UudmVyc2lvbnMiLAogICAgImRiX2ZpbGVfbmFtZSI6ICJwMTE1c3RybWhlbHBlcl9maWxlLmRiIgp9
+{
+    "version": "1.0.3",
+    "revision": "c76c9a1f52dc",
+    "models": "db_manager.models",
+    "script_location": "database",
+    "version_location": "database.versions",
+    "db_file_name": "p115strmhelper_file.db"
+}

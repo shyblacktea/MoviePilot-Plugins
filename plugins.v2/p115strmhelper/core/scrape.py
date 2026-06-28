@@ -1,1 +1,129 @@
-ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgpmcm9tIGFwcC5jb3JlLmV2ZW50IGltcG9ydCBldmVudG1hbmFnZXIKZnJvbSBhcHAuY29yZS5tZXRhaW5mbyBpbXBvcnQgTWV0YUluZm9QYXRoCmZyb20gYXBwLmNvcmUubWV0YSBpbXBvcnQgTWV0YUJhc2UKZnJvbSBhcHAuY29yZS5jb25maWcgaW1wb3J0IHNldHRpbmdzCmZyb20gYXBwLmNvcmUuY29udGV4dCBpbXBvcnQgTWVkaWFJbmZvCmZyb20gYXBwLmxvZyBpbXBvcnQgbG9nZ2VyCmZyb20gYXBwLmNoYWluLm1lZGlhIGltcG9ydCBNZWRpYUNoYWluCmZyb20gYXBwLnNjaGVtYXMudHlwZXMgaW1wb3J0IE1lZGlhVHlwZSwgRXZlbnRUeXBlCmZyb20gYXBwLnNjaGVtYXMgaW1wb3J0IEZpbGVJdGVtCgoKZGVmIG1lZGlhX3NjcmFwZV9tZXRhZGF0YSgKICAgIHBhdGgsCiAgICBpdGVtX25hbWU6IHN0ciA9ICIiLAogICAgbWVkaWFpbmZvOiBNZWRpYUluZm8gPSBOb25lLAogICAgbWV0YTogTWV0YUJhc2UgPSBOb25lLAopOgogICAgIiIiCiAgICDlqpLkvZPliK7liYrmnI3liqEKICAgIDpwYXJhbSBwYXRoOiDlqpLkvZPmlofku7bot6/lvoQKICAgIDpwYXJhbSBpdGVtX25hbWU6IOWqkuS9k+WQjeensAogICAgOnBhcmFtIG1ldGE6IOWFg+aVsOaNrgogICAgOnBhcmFtIG1lZGlhaW5mbzog5aqS5L2T5L+h5oGvCiAgICAiIiIKICAgIGl0ZW1fbmFtZSA9IGl0ZW1fbmFtZSBpZiBpdGVtX25hbWUgZWxzZSBQYXRoKHBhdGgpLm5hbWUKICAgIG1lZGlhY2hhaW4gPSBNZWRpYUNoYWluKCkKICAgIGxvZ2dlci5pbmZvKGYi44CQ5aqS5L2T5Yiu5YmK44CRe2l0ZW1fbmFtZX0g5byA5aeL5Yiu5YmK5YWD5pWw5o2uIikKICAgIGlmIG1lZGlhaW5mbzoKICAgICAgICAjIOaVtOeQhuaWh+S7tuWIruWJigogICAgICAgIGlmIG1lZGlhaW5mby50eXBlID09IE1lZGlhVHlwZS5NT1ZJRToKICAgICAgICAgICAgIyDnlLXlvbHliK7liYrkuIrnuqfmlofku7blpLkKICAgICAgICAgICAgZGlyX3BhdGggPSBQYXRoKHBhdGgpLnBhcmVudAogICAgICAgICAgICBmaWxlaXRlbSA9IEZpbGVJdGVtKAogICAgICAgICAgICAgICAgc3RvcmFnZT0ibG9jYWwiLAogICAgICAgICAgICAgICAgdHlwZT0iZGlyIiwKICAgICAgICAgICAgICAgIHBhdGg9ZGlyX3BhdGguYXNfcG9zaXgoKSwKICAgICAgICAgICAgICAgIG5hbWU9ZGlyX3BhdGgubmFtZSwKICAgICAgICAgICAgICAgIGJhc2VuYW1lPWRpcl9wYXRoLnN0ZW0sCiAgICAgICAgICAgICAgICBtb2RpZnlfdGltZT1kaXJfcGF0aC5zdGF0KCkuc3RfbXRpbWUsCiAgICAgICAgICAgICkKICAgICAgICBlbHNlOgogICAgICAgICAgICAjIOeUteinhuWJp+WIruWJiuaWh+S7tuWkuQogICAgICAgICAgICAjIOmAmui/h+mHjeWRveWQjeagvOW8j+WIpOaWreagueebruW9leaWh+S7tuWkuQogICAgICAgICAgICAjIOiuoeeul+mHjeWRveWQjeS4reeahOaWh+S7tuWkueWxguaVsAogICAgICAgICAgICByZW5hbWVfZm9ybWF0X2xldmVsID0gbGVuKHNldHRpbmdzLlRWX1JFTkFNRV9GT1JNQVQuc3BsaXQoIi8iKSkgLSAxCiAgICAgICAgICAgIGlmIHJlbmFtZV9mb3JtYXRfbGV2ZWwgPCAxOgogICAgICAgICAgICAgICAgZmlsZV9wYXRoID0gUGF0aChwYXRoKQogICAgICAgICAgICAgICAgZmlsZWl0ZW0gPSBGaWxlSXRlbSgKICAgICAgICAgICAgICAgICAgICBzdG9yYWdlPSJsb2NhbCIsCiAgICAgICAgICAgICAgICAgICAgdHlwZT0iZmlsZSIsCiAgICAgICAgICAgICAgICAgICAgcGF0aD1maWxlX3BhdGguYXNfcG9zaXgoKSwKICAgICAgICAgICAgICAgICAgICBuYW1lPWZpbGVfcGF0aC5uYW1lLAogICAgICAgICAgICAgICAgICAgIGJhc2VuYW1lPWZpbGVfcGF0aC5zdGVtLAogICAgICAgICAgICAgICAgICAgIGV4dGVuc2lvbj1maWxlX3BhdGguc3VmZml4WzE6XS5sb3dlcigpLAogICAgICAgICAgICAgICAgICAgIHNpemU9ZmlsZV9wYXRoLnN0YXQoKS5zdF9zaXplLAogICAgICAgICAgICAgICAgICAgIG1vZGlmeV90aW1lPWZpbGVfcGF0aC5zdGF0KCkuc3RfbXRpbWUsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICBkaXJfcGF0aCA9IFBhdGgoUGF0aChwYXRoKS5wYXJlbnRzW3JlbmFtZV9mb3JtYXRfbGV2ZWwgLSAxXSkKICAgICAgICAgICAgICAgIGZpbGVpdGVtID0gRmlsZUl0ZW0oCiAgICAgICAgICAgICAgICAgICAgc3RvcmFnZT0ibG9jYWwiLAogICAgICAgICAgICAgICAgICAgIHR5cGU9ImRpciIsCiAgICAgICAgICAgICAgICAgICAgcGF0aD1kaXJfcGF0aC5hc19wb3NpeCgpLAogICAgICAgICAgICAgICAgICAgIG5hbWU9ZGlyX3BhdGgubmFtZSwKICAgICAgICAgICAgICAgICAgICBiYXNlbmFtZT1kaXJfcGF0aC5zdGVtLAogICAgICAgICAgICAgICAgICAgIG1vZGlmeV90aW1lPWRpcl9wYXRoLnN0YXQoKS5zdF9tdGltZSwKICAgICAgICAgICAgICAgICkKICAgICAgICBldmVudG1hbmFnZXIuc2VuZF9ldmVudCgKICAgICAgICAgICAgRXZlbnRUeXBlLk1ldGFkYXRhU2NyYXBlLAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAibWV0YSI6IG1ldGEsCiAgICAgICAgICAgICAgICAibWVkaWFpbmZvIjogbWVkaWFpbmZvLAogICAgICAgICAgICAgICAgImZpbGVpdGVtIjogZmlsZWl0ZW0sCiAgICAgICAgICAgIH0sCiAgICAgICAgKQogICAgZWxzZToKICAgICAgICAjIOWvueS6juayoeaciSBtZWRpYWluZm8g55qE5aqS5L2T5paH5Lu25Yiu5YmKCiAgICAgICAgIyDojrflj5blqpLkvZPkv6Hmga8KICAgICAgICBtZXRhID0gTWV0YUluZm9QYXRoKFBhdGgocGF0aCkpCiAgICAgICAgbWVkaWFpbmZvID0gbWVkaWFjaGFpbi5yZWNvZ25pemVfYnlfbWV0YShtZXRhKQogICAgICAgIGlmIG5vdCBtZXRhIG9yIG5vdCBtZWRpYWluZm86CiAgICAgICAgICAgIGxvZ2dlci5pbmZvKGYi44CQ5aqS5L2T5Yiu5YmK44CRe2l0ZW1fbmFtZX0g6I635Y+W5aqS5L2T5L+h5oGv5pWw5o2u5aSx6LSl77yM6Lez6L+H5Yiu5YmKIikKICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgIyDliKTmlq3liK7liYrot6/lvoQKICAgICAgICAjIOWFiOiOt+WPluS4iue6p+ebruW9lSBtZXRhCiAgICAgICAgZmlsZV90eXBlID0gImRpciIKICAgICAgICBkaXJfcGF0aCA9IFBhdGgocGF0aCkucGFyZW50CiAgICAgICAgdGVtX21lZGlhaW5mbyA9IG1lZGlhY2hhaW4ucmVjb2duaXplX2J5X21ldGEoTWV0YUluZm9QYXRoKGRpcl9wYXRoKSkKICAgICAgICAjIOWPquacieS4iue6p+ebruW9leS/oeaBr+WSjOaWh+S7tueahOS/oeaBr+S4gOiHtOaXtuaJjee7p+e7reWIpOaWreS4iue6p+ebruW9lQogICAgICAgIGlmIHRlbV9tZWRpYWluZm8gYW5kIHRlbV9tZWRpYWluZm8uaW1kYl9pZCA9PSBtZWRpYWluZm8uaW1kYl9pZDoKICAgICAgICAgICAgaWYgbWVkaWFpbmZvLnR5cGUgPT0gTWVkaWFUeXBlLlRWOgogICAgICAgICAgICAgICAgIyDlpoLmnpzmmK/nlLXop4bliafvvIzlho3mrKHojrflj5bkuIrnuqfnm67lvZXlqpLkvZPkv6Hmga/vvIzlhbzlrrnnlLXop4bliaflkb3lkI3vvIzojrflj5YgbWVkaWFpbmZvCiAgICAgICAgICAgICAgICBkaXJfcGF0aCA9IGRpcl9wYXRoLnBhcmVudAogICAgICAgICAgICAgICAgdGVtX21lZGlhaW5mbyA9IG1lZGlhY2hhaW4ucmVjb2duaXplX2J5X21ldGEoTWV0YUluZm9QYXRoKGRpcl9wYXRoKSkKICAgICAgICAgICAgICAgIGlmIHRlbV9tZWRpYWluZm8gYW5kIHRlbV9tZWRpYWluZm8uaW1kYl9pZCA9PSBtZWRpYWluZm8uaW1kYl9pZDoKICAgICAgICAgICAgICAgICAgICAjIOWtmOWcqCBtZWRpYWluZm8g5YiZ5L2/55So5pys57qn55uu5b2VCiAgICAgICAgICAgICAgICAgICAgZmluaXNoX3BhdGggPSBkaXJfcGF0aAogICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICAjIOWQpuWImeS9v+eUqOS4iue6p+ebruW9lQogICAgICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuKGYi44CQ5aqS5L2T5Yiu5YmK44CRe2Rpcl9wYXRofSDml6Dms5Xor4bliKvmlofku7blqpLkvZPkv6Hmga/vvIEiKQogICAgICAgICAgICAgICAgICAgIGZpbmlzaF9wYXRoID0gUGF0aChwYXRoKS5wYXJlbnQKICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICMg55S15b2x5oOF5Ya177yM5L2/55So5b2T5YmN55uu5b2V5ZKM5YWD5pWw5o2uCiAgICAgICAgICAgICAgICBmaW5pc2hfcGF0aCA9IGRpcl9wYXRoCiAgICAgICAgZWxzZToKICAgICAgICAgICAgIyDlpoLmnpzkuIrnuqfnm67lvZXmsqHmnInlqpLkvZPkv6Hmga/liJnkvb/nlKjkvKDlhaXnmoTot6/lvoQKICAgICAgICAgICAgbG9nZ2VyLndhcm4oZiLjgJDlqpLkvZPliK7liYrjgJF7ZGlyX3BhdGh9IOaXoOazleivhuWIq+aWh+S7tuWqkuS9k+S/oeaBr++8gSIpCiAgICAgICAgICAgIGZpbmlzaF9wYXRoID0gUGF0aChwYXRoKQogICAgICAgICAgICBmaWxlX3R5cGUgPSAiZmlsZSIKICAgICAgICBmaWxlaXRlbSA9IEZpbGVJdGVtKAogICAgICAgICAgICBzdG9yYWdlPSJsb2NhbCIsCiAgICAgICAgICAgIHR5cGU9ZmlsZV90eXBlLAogICAgICAgICAgICBwYXRoPXN0cihmaW5pc2hfcGF0aCksCiAgICAgICAgICAgIG5hbWU9ZmluaXNoX3BhdGgubmFtZSwKICAgICAgICAgICAgYmFzZW5hbWU9ZmluaXNoX3BhdGguc3RlbSwKICAgICAgICAgICAgbW9kaWZ5X3RpbWU9ZmluaXNoX3BhdGguc3RhdCgpLnN0X210aW1lLAogICAgICAgICkKICAgICAgICBldmVudG1hbmFnZXIuc2VuZF9ldmVudCgKICAgICAgICAgICAgRXZlbnRUeXBlLk1ldGFkYXRhU2NyYXBlLAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAibWV0YSI6IG1ldGEsCiAgICAgICAgICAgICAgICAibWVkaWFpbmZvIjogbWVkaWFpbmZvLAogICAgICAgICAgICAgICAgImZpbGVpdGVtIjogZmlsZWl0ZW0sCiAgICAgICAgICAgIH0sCiAgICAgICAgKQoKICAgIGxvZ2dlci5pbmZvKGYi44CQ5aqS5L2T5Yiu5YmK44CRe2l0ZW1fbmFtZX0g5Yiu5YmK5YWD5pWw5o2u5a6M5oiQIikK
+from pathlib import Path
+
+from app.core.event import eventmanager
+from app.core.metainfo import MetaInfoPath
+from app.core.meta import MetaBase
+from app.core.config import settings
+from app.core.context import MediaInfo
+from app.log import logger
+from app.chain.media import MediaChain
+from app.schemas.types import MediaType, EventType
+from app.schemas import FileItem
+
+
+def media_scrape_metadata(
+    path,
+    item_name: str = "",
+    mediainfo: MediaInfo = None,
+    meta: MetaBase = None,
+):
+    """
+    媒体刮削服务
+    :param path: 媒体文件路径
+    :param item_name: 媒体名称
+    :param meta: 元数据
+    :param mediainfo: 媒体信息
+    """
+    item_name = item_name if item_name else Path(path).name
+    mediachain = MediaChain()
+    logger.info(f"【媒体刮削】{item_name} 开始刮削元数据")
+    if mediainfo:
+        # 整理文件刮削
+        if mediainfo.type == MediaType.MOVIE:
+            # 电影刮削上级文件夹
+            dir_path = Path(path).parent
+            fileitem = FileItem(
+                storage="local",
+                type="dir",
+                path=dir_path.as_posix(),
+                name=dir_path.name,
+                basename=dir_path.stem,
+                modify_time=dir_path.stat().st_mtime,
+            )
+        else:
+            # 电视剧刮削文件夹
+            # 通过重命名格式判断根目录文件夹
+            # 计算重命名中的文件夹层数
+            rename_format_level = len(settings.TV_RENAME_FORMAT.split("/")) - 1
+            if rename_format_level < 1:
+                file_path = Path(path)
+                fileitem = FileItem(
+                    storage="local",
+                    type="file",
+                    path=file_path.as_posix(),
+                    name=file_path.name,
+                    basename=file_path.stem,
+                    extension=file_path.suffix[1:].lower(),
+                    size=file_path.stat().st_size,
+                    modify_time=file_path.stat().st_mtime,
+                )
+            else:
+                dir_path = Path(Path(path).parents[rename_format_level - 1])
+                fileitem = FileItem(
+                    storage="local",
+                    type="dir",
+                    path=dir_path.as_posix(),
+                    name=dir_path.name,
+                    basename=dir_path.stem,
+                    modify_time=dir_path.stat().st_mtime,
+                )
+        eventmanager.send_event(
+            EventType.MetadataScrape,
+            {
+                "meta": meta,
+                "mediainfo": mediainfo,
+                "fileitem": fileitem,
+            },
+        )
+    else:
+        # 对于没有 mediainfo 的媒体文件刮削
+        # 获取媒体信息
+        meta = MetaInfoPath(Path(path))
+        mediainfo = mediachain.recognize_by_meta(meta)
+        if not meta or not mediainfo:
+            logger.info(f"【媒体刮削】{item_name} 获取媒体信息数据失败，跳过刮削")
+            return
+        # 判断刮削路径
+        # 先获取上级目录 meta
+        file_type = "dir"
+        dir_path = Path(path).parent
+        tem_mediainfo = mediachain.recognize_by_meta(MetaInfoPath(dir_path))
+        # 只有上级目录信息和文件的信息一致时才继续判断上级目录
+        if tem_mediainfo and tem_mediainfo.imdb_id == mediainfo.imdb_id:
+            if mediainfo.type == MediaType.TV:
+                # 如果是电视剧，再次获取上级目录媒体信息，兼容电视剧命名，获取 mediainfo
+                dir_path = dir_path.parent
+                tem_mediainfo = mediachain.recognize_by_meta(MetaInfoPath(dir_path))
+                if tem_mediainfo and tem_mediainfo.imdb_id == mediainfo.imdb_id:
+                    # 存在 mediainfo 则使用本级目录
+                    finish_path = dir_path
+                else:
+                    # 否则使用上级目录
+                    logger.warn(f"【媒体刮削】{dir_path} 无法识别文件媒体信息！")
+                    finish_path = Path(path).parent
+            else:
+                # 电影情况，使用当前目录和元数据
+                finish_path = dir_path
+        else:
+            # 如果上级目录没有媒体信息则使用传入的路径
+            logger.warn(f"【媒体刮削】{dir_path} 无法识别文件媒体信息！")
+            finish_path = Path(path)
+            file_type = "file"
+        fileitem = FileItem(
+            storage="local",
+            type=file_type,
+            path=str(finish_path),
+            name=finish_path.name,
+            basename=finish_path.stem,
+            modify_time=finish_path.stat().st_mtime,
+        )
+        eventmanager.send_event(
+            EventType.MetadataScrape,
+            {
+                "meta": meta,
+                "mediainfo": mediainfo,
+                "fileitem": fileitem,
+            },
+        )
+
+    logger.info(f"【媒体刮削】{item_name} 刮削元数据完成")

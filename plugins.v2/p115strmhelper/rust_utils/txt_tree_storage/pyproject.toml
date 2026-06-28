@@ -1,1 +1,16 @@
-W2J1aWxkLXN5c3RlbV0KcmVxdWlyZXMgPSBbIm1hdHVyaW4+PTEuOSw8Mi4wIl0KYnVpbGQtYmFja2VuZCA9ICJtYXR1cmluIgoKW3Byb2plY3RdCm5hbWUgPSAidHh0X3RyZWVfc3RvcmFnZSIKcmVxdWlyZXMtcHl0aG9uID0gIj49My4xMiIKY2xhc3NpZmllcnMgPSBbCiAgICAiUHJvZ3JhbW1pbmcgTGFuZ3VhZ2UgOjogUnVzdCIsCiAgICAiUHJvZ3JhbW1pbmcgTGFuZ3VhZ2UgOjogUHl0aG9uIDo6IEltcGxlbWVudGF0aW9uIDo6IENQeXRob24iLAogICAgIlByb2dyYW1taW5nIExhbmd1YWdlIDo6IFB5dGhvbiA6OiBJbXBsZW1lbnRhdGlvbiA6OiBQeVB5IiwKXQpkeW5hbWljID0gWyJ2ZXJzaW9uIl0KClt0b29sLm1hdHVyaW5dCmZlYXR1cmVzID0gWyJweW8zL2V4dGVuc2lvbi1tb2R1bGUiXQo=
+[build-system]
+requires = ["maturin>=1.9,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "txt_tree_storage"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["version"]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]

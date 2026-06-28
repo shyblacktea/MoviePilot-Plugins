@@ -1,1 +1,209 @@
-ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gdGhyZWFkaW5nIGltcG9ydCBUaW1lcgpmcm9tIHR5cGluZyBpbXBvcnQgT3B0aW9uYWwsIERpY3QsIExpc3QKCmZyb20gYXBwLmNoYWluLm1lZGlhIGltcG9ydCBNZWRpYUNoYWluCmZyb20gYXBwLmNvcmUubWV0YWluZm8gaW1wb3J0IE1ldGFJbmZvUGF0aApmcm9tIGFwcC5oZWxwZXIubWVkaWFzZXJ2ZXIgaW1wb3J0IE1lZGlhU2VydmVySGVscGVyIGFzIE1wTWVkaWFTZXJ2ZXJIZWxwZXIKZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXIKZnJvbSBhcHAuc2NoZW1hcyBpbXBvcnQgU2VydmljZUluZm8sIFJlZnJlc2hNZWRpYUl0ZW0sIE1lZGlhSW5mbwoKZnJvbSAuLi51dGlscy5wYXRoIGltcG9ydCBQYXRoVXRpbHMKCgpjbGFzcyBNZWRpYVNlcnZlclJlZnJlc2g6CiAgICAiIiIKICAgIOWqkuS9k+acjeWKoeWZqOaTjeS9nAogICAgIiIiCgogICAgZGVmIF9faW5pdF9fKAogICAgICAgIHNlbGYsCiAgICAgICAgZnVuY19uYW1lOiBzdHIsCiAgICAgICAgZW5hYmxlZDogYm9vbCA9IEZhbHNlLAogICAgICAgIG1lZGlhc2VydmVyczogT3B0aW9uYWxbTGlzdFtzdHJdXSA9IE5vbmUsCiAgICAgICAgbXBfbWVkaWFzZXJ2ZXI6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIGRlbGF5X3NlY29uZHM6IGludCA9IDAsCiAgICApOgogICAgICAgICIiIgogICAgICAgIOWIneWni+WMluWqkuS9k+acjeWKoeWZqOWIt+aWsOWZqAoKICAgICAgICA6cGFyYW0gZnVuY19uYW1lIChzdHIpOiDosIPnlKjmlrnmoIfor4bvvIznlKjkuo7ml6Xlv5cKICAgICAgICA6cGFyYW0gZW5hYmxlZCAoYm9vbCk6IOaYr+WQpuWQr+eUqOWIt+aWsAogICAgICAgIDpwYXJhbSBtZWRpYXNlcnZlcnMgKExpc3QpOiDlqpLkvZPmnI3liqHlmajlkI3np7DliJfooagKICAgICAgICA6cGFyYW0gbXBfbWVkaWFzZXJ2ZXIgKHN0cik6IE1vdmllUGlsb3Qg5aqS5L2T5pyN5Yqh5Zmo6Lev5b6E6YWN572uCiAgICAgICAgOnBhcmFtIGRlbGF5X3NlY29uZHMgKGludCk6IOWIt+aWsOW7tui/n+enkuaVsAogICAgICAgICIiIgogICAgICAgIHNlbGYuZnVuY19uYW1lID0gZnVuY19uYW1lCiAgICAgICAgc2VsZi5tZWRpYV9zZXJ2ZXJzID0gbWVkaWFzZXJ2ZXJzCiAgICAgICAgc2VsZi5tcF9tZWRpYXNlcnZlciA9IG1wX21lZGlhc2VydmVyCiAgICAgICAgc2VsZi5lbmFibGVkID0gZW5hYmxlZAogICAgICAgIHNlbGYuZGVsYXlfc2Vjb25kcyA9IG1heCgwLCBkZWxheV9zZWNvbmRzKQoKICAgIEBwcm9wZXJ0eQogICAgZGVmIHNlcnZpY2VfaW5mb3Moc2VsZikgLT4gT3B0aW9uYWxbRGljdFtzdHIsIFNlcnZpY2VJbmZvXV06CiAgICAgICAgIiIiCiAgICAgICAg5aqS5L2T5pyN5Yqh5Zmo5pyN5Yqh5L+h5oGvCgogICAgICAgIDpyZXR1cm4gRGljdDog5aqS5L2T5pyN5Yqh5Zmo5pyN5Yqh5L+h5oGvCiAgICAgICAgIiIiCiAgICAgICAgaWYgbm90IHNlbGYubWVkaWFfc2VydmVyczoKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoZiJ7c2VsZi5mdW5jX25hbWV95bCa5pyq6YWN572u5aqS5L2T5pyN5Yqh5Zmo77yM6K+35qOA5p+l6YWN572uIikKICAgICAgICAgICAgcmV0dXJuIE5vbmUKCiAgICAgICAgbWVkaWFzZXJ2ZXJfaGVscGVyID0gTXBNZWRpYVNlcnZlckhlbHBlcigpCgogICAgICAgIHNlcnZpY2VzID0gbWVkaWFzZXJ2ZXJfaGVscGVyLmdldF9zZXJ2aWNlcyhuYW1lX2ZpbHRlcnM9c2VsZi5tZWRpYV9zZXJ2ZXJzKQogICAgICAgIGlmIG5vdCBzZXJ2aWNlczoKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoZiJ7c2VsZi5mdW5jX25hbWV96I635Y+W5aqS5L2T5pyN5Yqh5Zmo5a6e5L6L5aSx6LSl77yM6K+35qOA5p+l6YWN572uIikKICAgICAgICAgICAgcmV0dXJuIE5vbmUKCiAgICAgICAgYWN0aXZlX3NlcnZpY2VzID0ge30KICAgICAgICBmb3Igc2VydmljZV9uYW1lLCBzZXJ2aWNlX2luZm8gaW4gc2VydmljZXMuaXRlbXMoKToKICAgICAgICAgICAgaWYgc2VydmljZV9pbmZvLmluc3RhbmNlLmlzX2luYWN0aXZlKCk6CiAgICAgICAgICAgICAgICBsb2dnZXIud2FybmluZygKICAgICAgICAgICAgICAgICAgICBmIntzZWxmLmZ1bmNfbmFtZX3lqpLkvZPmnI3liqHlmagge3NlcnZpY2VfbmFtZX0g5pyq6L+e5o6l77yM6K+35qOA5p+l6YWN572uIgogICAgICAgICAgICAgICAgKQogICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgYWN0aXZlX3NlcnZpY2VzW3NlcnZpY2VfbmFtZV0gPSBzZXJ2aWNlX2luZm8KCiAgICAgICAgaWYgbm90IGFjdGl2ZV9zZXJ2aWNlczoKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoZiJ7c2VsZi5mdW5jX25hbWV95rKh5pyJ5bey6L+e5o6l55qE5aqS5L2T5pyN5Yqh5Zmo77yM6K+35qOA5p+l6YWN572uIikKICAgICAgICAgICAgcmV0dXJuIE5vbmUKCiAgICAgICAgcmV0dXJuIGFjdGl2ZV9zZXJ2aWNlcwoKICAgIGRlZiBfdHJ5X2VtYnlfbmF0aXZlX3JlZnJlc2goCiAgICAgICAgc2VsZiwgZmlsZV9wYXRoOiBzdHIsIGZpbGVfbmFtZTogT3B0aW9uYWxbc3RyXQogICAgKSAtPiBib29sOgogICAgICAgICIiIgogICAgICAgIOWwneivleS9v+eUqCBFbWJ5IEFQSSDliLfmlrAKCiAgICAgICAgOnBhcmFtIGZpbGVfcGF0aCAoc3RyKTog5paH5Lu26Lev5b6ECiAgICAgICAgOnBhcmFtIGZpbGVfbmFtZSAoc3RyKTog5paH5Lu25ZCNCgogICAgICAgIDpyZXR1cm4gYm9vbDog5piv5ZCm5pyJIEVtYnkg5pyN5Yqh5bm25bey5a6M5oiQ5Yi35paw5bCd6K+VCiAgICAgICAgIiIiCiAgICAgICAgZnJvbSAuZW1ieSBpbXBvcnQgRW1ieU9wZXJhdGUKCiAgICAgICAgZW1ieV9zZXJ2aWNlcyA9IHsKICAgICAgICAgICAgbmFtZTogc2VydmljZQogICAgICAgICAgICBmb3IgbmFtZSwgc2VydmljZSBpbiBzZWxmLnNlcnZpY2VfaW5mb3MuaXRlbXMoKQogICAgICAgICAgICBpZiBzZXJ2aWNlLnR5cGUgPT0gImVtYnkiCiAgICAgICAgfQogICAgICAgIGlmIG5vdCBlbWJ5X3NlcnZpY2VzOgogICAgICAgICAgICByZXR1cm4gRmFsc2UKCiAgICAgICAgZW1ieV9vcGVyYXRlID0gRW1ieU9wZXJhdGUoZnVuY19uYW1lPXNlbGYuZnVuY19uYW1lKQogICAgICAgIGZvciBuYW1lIGluIGVtYnlfc2VydmljZXMua2V5cygpOgogICAgICAgICAgICBpZiBlbWJ5X29wZXJhdGUudHJpZ2dlcl9yZWZyZXNoX2J5X3BhdGgobmFtZSwgZmlsZV9wYXRoKToKICAgICAgICAgICAgICAgIGxvZ2dlci5pbmZvKGYie3NlbGYuZnVuY19uYW1lfXtmaWxlX25hbWV9IEVtYnkg5Yi35paw5oiQ5YqfIikKICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKGYie3NlbGYuZnVuY19uYW1lfXtmaWxlX25hbWV9IEVtYnkg5Yi35paw5aSx6LSlIikKCiAgICAgICAgbm9uX2VtYnlfc2VydmljZXMgPSBbCiAgICAgICAgICAgIG5hbWUKICAgICAgICAgICAgZm9yIG5hbWUsIHNlcnZpY2UgaW4gc2VsZi5zZXJ2aWNlX2luZm9zLml0ZW1zKCkKICAgICAgICAgICAgaWYgc2VydmljZS50eXBlICE9ICJlbWJ5IgogICAgICAgIF0KICAgICAgICBpZiBub25fZW1ieV9zZXJ2aWNlczoKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoCiAgICAgICAgICAgICAgICBmIntzZWxmLmZ1bmNfbmFtZX17ZmlsZV9uYW1lfSDlhbbku5blqpLkvZPmnI3liqHlmaggeycsICcuam9pbihub25fZW1ieV9zZXJ2aWNlcyl9IOaXoOazleWIt+aWsOWqkuS9k+W6kyIKICAgICAgICAgICAgKQogICAgICAgIHJldHVybiBUcnVlCgogICAgZGVmIHJlZnJlc2hfbWVkaWFzZXJ2ZXIoCiAgICAgICAgc2VsZiwKICAgICAgICBmaWxlX3BhdGg6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIGZpbGVfbmFtZTogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgbWVkaWFpbmZvOiBPcHRpb25hbFtNZWRpYUluZm9dID0gTm9uZSwKICAgICAgICByZWZyZXNoX2FsbDogYm9vbCA9IEZhbHNlLAogICAgKSAtPiBib29sOgogICAgICAgICIiIgogICAgICAgIOWIt+aWsOWqkuS9k+acjeWKoeWZqAoKICAgICAgICA6cGFyYW0gZmlsZV9wYXRoIChzdHIpOiDmlofku7bot6/lvoQKICAgICAgICA6cGFyYW0gZmlsZV9uYW1lIChzdHIpOiDmlofku7blkI0KICAgICAgICA6cGFyYW0gbWVkaWFpbmZvIChNZWRpYUluZm8pOiDlqpLkvZPkv6Hmga8KICAgICAgICA6cGFyYW0gcmVmcmVzaF9hbGwgKGJvb2wpOiDmmK/lkKbliLfmlrDmiYDmnInlqpLkvZPmnI3liqHlmagKCiAgICAgICAgOnJldHVybiBib29sOiDmmK/lkKbliLfmlrDmiJDlip8KICAgICAgICAiIiIKICAgICAgICBpZiBub3Qgc2VsZi5lbmFibGVkOgogICAgICAgICAgICByZXR1cm4gVHJ1ZQogICAgICAgIGlmIG5vdCBzZWxmLnNlcnZpY2VfaW5mb3M6CiAgICAgICAgICAgIHJldHVybiBGYWxzZQogICAgICAgIGlmIHNlbGYuZGVsYXlfc2Vjb25kcyA+IDA6CiAgICAgICAgICAgIGxvZ2dlci5pbmZvKAogICAgICAgICAgICAgICAgZiJ7c2VsZi5mdW5jX25hbWV9e2ZpbGVfbmFtZX0g5bu26L+fIHtzZWxmLmRlbGF5X3NlY29uZHN9IOenkuWQjuWIt+aWsOWqkuS9k+acjeWKoeWZqCIKICAgICAgICAgICAgKQogICAgICAgICAgICBUaW1lcigKICAgICAgICAgICAgICAgIHNlbGYuZGVsYXlfc2Vjb25kcywKICAgICAgICAgICAgICAgIHNlbGYuX2RvX3JlZnJlc2gsCiAgICAgICAgICAgICAgICBhcmdzPShmaWxlX3BhdGgsIGZpbGVfbmFtZSwgbWVkaWFpbmZvLCByZWZyZXNoX2FsbCksCiAgICAgICAgICAgICkuc3RhcnQoKQogICAgICAgICAgICByZXR1cm4gVHJ1ZQogICAgICAgIHJldHVybiBzZWxmLl9kb19yZWZyZXNoKGZpbGVfcGF0aCwgZmlsZV9uYW1lLCBtZWRpYWluZm8sIHJlZnJlc2hfYWxsKQoKICAgIGRlZiBfZG9fcmVmcmVzaCgKICAgICAgICBzZWxmLAogICAgICAgIGZpbGVfcGF0aDogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgZmlsZV9uYW1lOiBPcHRpb25hbFtzdHJdID0gTm9uZSwKICAgICAgICBtZWRpYWluZm86IE9wdGlvbmFsW01lZGlhSW5mb10gPSBOb25lLAogICAgICAgIHJlZnJlc2hfYWxsOiBib29sID0gRmFsc2UsCiAgICApIC0+IGJvb2w6CiAgICAgICAgIiIiCiAgICAgICAg5omn6KGM5aqS5L2T5pyN5Yqh5Zmo5Yi35pawCgogICAgICAgIDpwYXJhbSBmaWxlX3BhdGggKHN0cik6IOaWh+S7tui3r+W+hAogICAgICAgIDpwYXJhbSBmaWxlX25hbWUgKHN0cik6IOaWh+S7tuWQjQogICAgICAgIDpwYXJhbSBtZWRpYWluZm8gKE1lZGlhSW5mbyk6IOWqkuS9k+S/oeaBrwogICAgICAgIDpwYXJhbSByZWZyZXNoX2FsbCAoYm9vbCk6IOaYr+WQpuWIt+aWsOaJgOacieWqkuS9k+acjeWKoeWZqAoKICAgICAgICA6cmV0dXJuIGJvb2w6IOaYr+WQpuWIt+aWsOaIkOWKnwogICAgICAgICIiIgogICAgICAgIGxvZ2dlci5pbmZvKGYie3NlbGYuZnVuY19uYW1lfXtmaWxlX25hbWV9IOW8gOWni+WIt+aWsOWqkuS9k+acjeWKoeWZqCIpCiAgICAgICAgaWYgcmVmcmVzaF9hbGw6CiAgICAgICAgICAgIGZvciBuYW1lLCBzZXJ2aWNlIGluIHNlbGYuc2VydmljZV9pbmZvcy5pdGVtcygpOgogICAgICAgICAgICAgICAgaWYgaGFzYXR0cihzZXJ2aWNlLmluc3RhbmNlLCAicmVmcmVzaF9yb290X2xpYnJhcnkiKToKICAgICAgICAgICAgICAgICAgICBzZXJ2aWNlLmluc3RhbmNlLnJlZnJlc2hfcm9vdF9saWJyYXJ5KCkKICAgICAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoZiJ7c2VsZi5mdW5jX25hbWV9e25hbWV9IOS4jeaUr+aMgeWIt+aWsCIpCiAgICAgICAgICAgIHJldHVybiBUcnVlCiAgICAgICAgaWYgc2VsZi5tcF9tZWRpYXNlcnZlcjoKICAgICAgICAgICAgc3RhdHVzLCBtZWRpYXNlcnZlcl9wYXRoLCBtb3ZpZXBpbG90X3BhdGggPSBQYXRoVXRpbHMuZ2V0X21lZGlhX3BhdGgoCiAgICAgICAgICAgICAgICBzZWxmLm1wX21lZGlhc2VydmVyLAogICAgICAgICAgICAgICAgZmlsZV9wYXRoLAogICAgICAgICAgICApCiAgICAgICAgICAgIGlmIHN0YXR1czoKICAgICAgICAgICAgICAgIGxvZ2dlci5pbmZvKGYie3NlbGYuZnVuY19uYW1lfXtmaWxlX25hbWV9IOWIt+aWsOWqkuS9k+acjeWKoeWZqOebruW9leabv+aNouS4rS4uLiIpCiAgICAgICAgICAgICAgICBmaWxlX3BhdGggPSBmaWxlX3BhdGgucmVwbGFjZSgKICAgICAgICAgICAgICAgICAgICBtb3ZpZXBpbG90X3BhdGgsIG1lZGlhc2VydmVyX3BhdGgKICAgICAgICAgICAgICAgICkucmVwbGFjZSgiXFwiLCAiLyIpCiAgICAgICAgICAgICAgICBsb2dnZXIuaW5mbygKICAgICAgICAgICAgICAgICAgICBmIntzZWxmLmZ1bmNfbmFtZX3liLfmlrDlqpLkvZPmnI3liqHlmajnm67lvZXmm7/mjaI6IHttb3ZpZXBpbG90X3BhdGh9IC0tPiB7bWVkaWFzZXJ2ZXJfcGF0aH0iCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBsb2dnZXIuaW5mbyhmIntzZWxmLmZ1bmNfbmFtZX3liLfmlrDlqpLkvZPmnI3liqHlmajnm67lvZU6IHtmaWxlX3BhdGh9IikKICAgICAgICBpZiBub3QgbWVkaWFpbmZvOgogICAgICAgICAgICBtZWRpYV9jaGFpbiA9IE1lZGlhQ2hhaW4oKQogICAgICAgICAgICBtZXRhID0gTWV0YUluZm9QYXRoKHBhdGg9UGF0aChmaWxlX3BhdGgpKQogICAgICAgICAgICBtZWRpYWluZm8gPSBtZWRpYV9jaGFpbi5yZWNvZ25pemVfbWVkaWEobWV0YT1tZXRhKQogICAgICAgICAgICBpZiBub3QgbWVkaWFpbmZvOgogICAgICAgICAgICAgICAgaWYgc2VsZi5fdHJ5X2VtYnlfbmF0aXZlX3JlZnJlc2goZmlsZV9wYXRoLCBmaWxlX25hbWUpOgogICAgICAgICAgICAgICAgICAgIHJldHVybiBUcnVlCiAgICAgICAgICAgICAgICBsb2dnZXIud2FybmluZyhmIntzZWxmLmZ1bmNfbmFtZX17ZmlsZV9uYW1lfSDml6Dms5XliLfmlrDlqpLkvZPlupMiKQogICAgICAgICAgICAgICAgcmV0dXJuIEZhbHNlCiAgICAgICAgaXRlbXMgPSBbCiAgICAgICAgICAgIFJlZnJlc2hNZWRpYUl0ZW0oCiAgICAgICAgICAgICAgICB0aXRsZT1tZWRpYWluZm8udGl0bGUsCiAgICAgICAgICAgICAgICB5ZWFyPW1lZGlhaW5mby55ZWFyLAogICAgICAgICAgICAgICAgdHlwZT1tZWRpYWluZm8udHlwZSwKICAgICAgICAgICAgICAgIGNhdGVnb3J5PW1lZGlhaW5mby5jYXRlZ29yeSwKICAgICAgICAgICAgICAgIHRhcmdldF9wYXRoPVBhdGgoZmlsZV9wYXRoKSwKICAgICAgICAgICAgKQogICAgICAgIF0KICAgICAgICBmb3IgbmFtZSwgc2VydmljZSBpbiBzZWxmLnNlcnZpY2VfaW5mb3MuaXRlbXMoKToKICAgICAgICAgICAgaWYgaGFzYXR0cihzZXJ2aWNlLmluc3RhbmNlLCAicmVmcmVzaF9saWJyYXJ5X2J5X2l0ZW1zIik6CiAgICAgICAgICAgICAgICBzZXJ2aWNlLmluc3RhbmNlLnJlZnJlc2hfbGlicmFyeV9ieV9pdGVtcyhpdGVtcykKICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKGYie3NlbGYuZnVuY19uYW1lfXtmaWxlX25hbWV9IHtuYW1lfSDkuI3mlK/mjIHliLfmlrAiKQogICAgICAgIHJldHVybiBUcnVlCg==
+from pathlib import Path
+from threading import Timer
+from typing import Optional, Dict, List
+
+from app.chain.media import MediaChain
+from app.core.metainfo import MetaInfoPath
+from app.helper.mediaserver import MediaServerHelper as MpMediaServerHelper
+from app.log import logger
+from app.schemas import ServiceInfo, RefreshMediaItem, MediaInfo
+
+from ...utils.path import PathUtils
+
+
+class MediaServerRefresh:
+    """
+    媒体服务器操作
+    """
+
+    def __init__(
+        self,
+        func_name: str,
+        enabled: bool = False,
+        mediaservers: Optional[List[str]] = None,
+        mp_mediaserver: Optional[str] = None,
+        delay_seconds: int = 0,
+    ):
+        """
+        初始化媒体服务器刷新器
+
+        :param func_name (str): 调用方标识，用于日志
+        :param enabled (bool): 是否启用刷新
+        :param mediaservers (List): 媒体服务器名称列表
+        :param mp_mediaserver (str): MoviePilot 媒体服务器路径配置
+        :param delay_seconds (int): 刷新延迟秒数
+        """
+        self.func_name = func_name
+        self.media_servers = mediaservers
+        self.mp_mediaserver = mp_mediaserver
+        self.enabled = enabled
+        self.delay_seconds = max(0, delay_seconds)
+
+    @property
+    def service_infos(self) -> Optional[Dict[str, ServiceInfo]]:
+        """
+        媒体服务器服务信息
+
+        :return Dict: 媒体服务器服务信息
+        """
+        if not self.media_servers:
+            logger.warning(f"{self.func_name}尚未配置媒体服务器，请检查配置")
+            return None
+
+        mediaserver_helper = MpMediaServerHelper()
+
+        services = mediaserver_helper.get_services(name_filters=self.media_servers)
+        if not services:
+            logger.warning(f"{self.func_name}获取媒体服务器实例失败，请检查配置")
+            return None
+
+        active_services = {}
+        for service_name, service_info in services.items():
+            if service_info.instance.is_inactive():
+                logger.warning(
+                    f"{self.func_name}媒体服务器 {service_name} 未连接，请检查配置"
+                )
+            else:
+                active_services[service_name] = service_info
+
+        if not active_services:
+            logger.warning(f"{self.func_name}没有已连接的媒体服务器，请检查配置")
+            return None
+
+        return active_services
+
+    def _try_emby_native_refresh(
+        self, file_path: str, file_name: Optional[str]
+    ) -> bool:
+        """
+        尝试使用 Emby API 刷新
+
+        :param file_path (str): 文件路径
+        :param file_name (str): 文件名
+
+        :return bool: 是否有 Emby 服务并已完成刷新尝试
+        """
+        from .emby import EmbyOperate
+
+        emby_services = {
+            name: service
+            for name, service in self.service_infos.items()
+            if service.type == "emby"
+        }
+        if not emby_services:
+            return False
+
+        emby_operate = EmbyOperate(func_name=self.func_name)
+        for name in emby_services.keys():
+            if emby_operate.trigger_refresh_by_path(name, file_path):
+                logger.info(f"{self.func_name}{file_name} Emby 刷新成功")
+            else:
+                logger.warning(f"{self.func_name}{file_name} Emby 刷新失败")
+
+        non_emby_services = [
+            name
+            for name, service in self.service_infos.items()
+            if service.type != "emby"
+        ]
+        if non_emby_services:
+            logger.warning(
+                f"{self.func_name}{file_name} 其他媒体服务器 {', '.join(non_emby_services)} 无法刷新媒体库"
+            )
+        return True
+
+    def refresh_mediaserver(
+        self,
+        file_path: Optional[str] = None,
+        file_name: Optional[str] = None,
+        mediainfo: Optional[MediaInfo] = None,
+        refresh_all: bool = False,
+    ) -> bool:
+        """
+        刷新媒体服务器
+
+        :param file_path (str): 文件路径
+        :param file_name (str): 文件名
+        :param mediainfo (MediaInfo): 媒体信息
+        :param refresh_all (bool): 是否刷新所有媒体服务器
+
+        :return bool: 是否刷新成功
+        """
+        if not self.enabled:
+            return True
+        if not self.service_infos:
+            return False
+        if self.delay_seconds > 0:
+            logger.info(
+                f"{self.func_name}{file_name} 延迟 {self.delay_seconds} 秒后刷新媒体服务器"
+            )
+            Timer(
+                self.delay_seconds,
+                self._do_refresh,
+                args=(file_path, file_name, mediainfo, refresh_all),
+            ).start()
+            return True
+        return self._do_refresh(file_path, file_name, mediainfo, refresh_all)
+
+    def _do_refresh(
+        self,
+        file_path: Optional[str] = None,
+        file_name: Optional[str] = None,
+        mediainfo: Optional[MediaInfo] = None,
+        refresh_all: bool = False,
+    ) -> bool:
+        """
+        执行媒体服务器刷新
+
+        :param file_path (str): 文件路径
+        :param file_name (str): 文件名
+        :param mediainfo (MediaInfo): 媒体信息
+        :param refresh_all (bool): 是否刷新所有媒体服务器
+
+        :return bool: 是否刷新成功
+        """
+        logger.info(f"{self.func_name}{file_name} 开始刷新媒体服务器")
+        if refresh_all:
+            for name, service in self.service_infos.items():
+                if hasattr(service.instance, "refresh_root_library"):
+                    service.instance.refresh_root_library()
+                else:
+                    logger.warning(f"{self.func_name}{name} 不支持刷新")
+            return True
+        if self.mp_mediaserver:
+            status, mediaserver_path, moviepilot_path = PathUtils.get_media_path(
+                self.mp_mediaserver,
+                file_path,
+            )
+            if status:
+                logger.info(f"{self.func_name}{file_name} 刷新媒体服务器目录替换中...")
+                file_path = file_path.replace(
+                    moviepilot_path, mediaserver_path
+                ).replace("\\", "/")
+                logger.info(
+                    f"{self.func_name}刷新媒体服务器目录替换: {moviepilot_path} --> {mediaserver_path}"
+                )
+                logger.info(f"{self.func_name}刷新媒体服务器目录: {file_path}")
+        if not mediainfo:
+            media_chain = MediaChain()
+            meta = MetaInfoPath(path=Path(file_path))
+            mediainfo = media_chain.recognize_media(meta=meta)
+            if not mediainfo:
+                if self._try_emby_native_refresh(file_path, file_name):
+                    return True
+                logger.warning(f"{self.func_name}{file_name} 无法刷新媒体库")
+                return False
+        items = [
+            RefreshMediaItem(
+                title=mediainfo.title,
+                year=mediainfo.year,
+                type=mediainfo.type,
+                category=mediainfo.category,
+                target_path=Path(file_path),
+            )
+        ]
+        for name, service in self.service_infos.items():
+            if hasattr(service.instance, "refresh_library_by_items"):
+                service.instance.refresh_library_by_items(items)
+            else:
+                logger.warning(f"{self.func_name}{file_name} {name} 不支持刷新")
+        return True

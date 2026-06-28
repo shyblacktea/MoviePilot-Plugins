@@ -1,1 +1,52 @@
-bW9kIHF1ZXJ5Owptb2Qgc2NhbjsKCnVzZSBweW8zOjpwcmVsdWRlOjoqOwp1c2UgcHlvMzo6d3JhcF9weWZ1bmN0aW9uOwp1c2Ugc3RkOjpjb2xsZWN0aW9uczo6SGFzaE1hcDsKdXNlIHN0ZDo6cGF0aDo6UGF0aEJ1ZjsKCiNbcHlmdW5jdGlvbl0KI1tweW8zKHNpZ25hdHVyZSA9IChyb290LCAqLCBtYXhfZmlsZV9ieXRlcz0yNjJfMTQ0dTMyLCBudW1fdGhyZWFkcz1Ob25lKSldCmZuIHNjYW5fc2hhcmVfc3RybV9wYWlycygKICAgIHB5OiBQeXRob248J18+LAogICAgcm9vdDogUGF0aEJ1ZiwKICAgIG1heF9maWxlX2J5dGVzOiB1MzIsCiAgICBudW1fdGhyZWFkczogT3B0aW9uPHVzaXplPiwKKSAtPiBQeVJlc3VsdDxWZWM8KFN0cmluZywgU3RyaW5nKT4+IHsKICAgIGxldCBtYXggPSBtYXhfZmlsZV9ieXRlcyBhcyB1c2l6ZTsKICAgIHB5LmRldGFjaCh8fCB7CiAgICAgICAgc2Nhbjo6c2Nhbl9zaGFyZV9zdHJtX3BhaXJzX2lubmVyKCZyb290LCBtYXgsIG51bV90aHJlYWRzKQogICAgICAgICAgICAubWFwX2Vycih8ZXwgUHlFcnI6Om5ldzo6PHB5bzM6OmV4Y2VwdGlvbnM6OlB5T1NFcnJvciwgXz4oZS50b19zdHJpbmcoKSkpCiAgICB9KQp9CgojW3B5ZnVuY3Rpb25dCiNbcHlvMyhzaWduYXR1cmUgPSAocm9vdCwgKiwgbWF4X2ZpbGVfYnl0ZXM9MjYyXzE0NHUzMiwgbnVtX3RocmVhZHM9Tm9uZSkpXQpmbiBzY2FuX3NoYXJlX3N0cm1faW5kZXgoCiAgICBweTogUHl0aG9uPCdfPiwKICAgIHJvb3Q6IFBhdGhCdWYsCiAgICBtYXhfZmlsZV9ieXRlczogdTMyLAogICAgbnVtX3RocmVhZHM6IE9wdGlvbjx1c2l6ZT4sCikgLT4gUHlSZXN1bHQ8KAogICAgVmVjPChTdHJpbmcsIFN0cmluZyk+LAogICAgSGFzaE1hcDwoU3RyaW5nLCBTdHJpbmcpLCBWZWM8U3RyaW5nPj4sCik+IHsKICAgIGxldCBtYXggPSBtYXhfZmlsZV9ieXRlcyBhcyB1c2l6ZTsKICAgIHB5LmRldGFjaCh8fCB7CiAgICAgICAgc2Nhbjo6c2Nhbl9zaGFyZV9zdHJtX2luZGV4X2lubmVyKCZyb290LCBtYXgsIG51bV90aHJlYWRzKQogICAgICAgICAgICAubWFwKHwocGFpcnMsIGFoYXNoX21hcCl8IHsKICAgICAgICAgICAgICAgIGxldCBtYXA6IEhhc2hNYXA8XywgXz4gPSBhaGFzaF9tYXAuaW50b19pdGVyKCkuY29sbGVjdCgpOwogICAgICAgICAgICAgICAgKHBhaXJzLCBtYXApCiAgICAgICAgICAgIH0pCiAgICAgICAgICAgIC5tYXBfZXJyKHxlfCBQeUVycjo6bmV3Ojo8cHlvMzo6ZXhjZXB0aW9uczo6UHlPU0Vycm9yLCBfPihlLnRvX3N0cmluZygpKSkKICAgIH0pCn0KCiNbcHltb2R1bGVdCmZuIF9zaGFyZV9zdHJtX3NjYW4obTogJkJvdW5kPCdfLCBQeU1vZHVsZT4pIC0+IFB5UmVzdWx0PCgpPiB7CiAgICBtLmFkZCgiX192ZXJzaW9uX18iLCBlbnYhKCJDQVJHT19QS0dfVkVSU0lPTiIpKT87CiAgICBtLmFkZF9mdW5jdGlvbih3cmFwX3B5ZnVuY3Rpb24hKHNjYW5fc2hhcmVfc3RybV9wYWlycywgbSk/KT87CiAgICBtLmFkZF9mdW5jdGlvbih3cmFwX3B5ZnVuY3Rpb24hKHNjYW5fc2hhcmVfc3RybV9pbmRleCwgbSk/KT87CiAgICBPaygoKSkKfQo=
+mod query;
+mod scan;
+
+use pyo3::prelude::*;
+use pyo3::wrap_pyfunction;
+use std::collections::HashMap;
+use std::path::PathBuf;
+
+#[pyfunction]
+#[pyo3(signature = (root, *, max_file_bytes=262_144u32, num_threads=None))]
+fn scan_share_strm_pairs(
+    py: Python<'_>,
+    root: PathBuf,
+    max_file_bytes: u32,
+    num_threads: Option<usize>,
+) -> PyResult<Vec<(String, String)>> {
+    let max = max_file_bytes as usize;
+    py.detach(|| {
+        scan::scan_share_strm_pairs_inner(&root, max, num_threads)
+            .map_err(|e| PyErr::new::<pyo3::exceptions::PyOSError, _>(e.to_string()))
+    })
+}
+
+#[pyfunction]
+#[pyo3(signature = (root, *, max_file_bytes=262_144u32, num_threads=None))]
+fn scan_share_strm_index(
+    py: Python<'_>,
+    root: PathBuf,
+    max_file_bytes: u32,
+    num_threads: Option<usize>,
+) -> PyResult<(
+    Vec<(String, String)>,
+    HashMap<(String, String), Vec<String>>,
+)> {
+    let max = max_file_bytes as usize;
+    py.detach(|| {
+        scan::scan_share_strm_index_inner(&root, max, num_threads)
+            .map(|(pairs, ahash_map)| {
+                let map: HashMap<_, _> = ahash_map.into_iter().collect();
+                (pairs, map)
+            })
+            .map_err(|e| PyErr::new::<pyo3::exceptions::PyOSError, _>(e.to_string()))
+    })
+}
+
+#[pymodule]
+fn _share_strm_scan(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add("__version__", env!("CARGO_PKG_VERSION"))?;
+    m.add_function(wrap_pyfunction!(scan_share_strm_pairs, m)?)?;
+    m.add_function(wrap_pyfunction!(scan_share_strm_index, m)?)?;
+    Ok(())
+}

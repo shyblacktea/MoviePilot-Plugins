@@ -1,1 +1,109 @@
-X19hbGxfXyA9IFsKICAgICJBTElZVU5fU0hBUkVfVVJMX01BVENIIiwKICAgICJIVFRQU19VUkxfVE9LRU5fUEFUVEVSTiIsCiAgICAiVTExNV9TSEFSRV9VUkxfTUFUQ0giLAogICAgImV4dHJhY3RfY2xvdWRfbGlua191cmxzX2Zyb21fdGV4dCIsCiAgICAiaXNfZGlyZWN0X3UxMTVfb3JfYWxpeXVuX3NoYXJlX3VybCIsCiAgICAiaXNfdGVsZWdyYV9waF91cmwiLAogICAgIm5vcm1hbGl6ZV9zaGFyZV91cmxfY2FuZGlkYXRlIiwKXQoKCmZyb20gcmUgaW1wb3J0IGNvbXBpbGUgYXMgcmVfY29tcGlsZSwgZmluZGFsbCwgbWF0Y2gKZnJvbSB0eXBpbmcgaW1wb3J0IExpc3QsIFR1cGxlCmZyb20gdXJsbGliLnBhcnNlIGltcG9ydCB1cmxwYXJzZQoKClUxMTVfU0hBUkVfVVJMX01BVENIID0gciJeaHR0cHM/Oi8vKC4qXC4pPzExNVteL10qXC5bYS16QS1aXXsyLH0oPzovfCQpIgpBTElZVU5fU0hBUkVfVVJMX01BVENIID0gciJeaHR0cHM/Oi8vKC4qXC4pPyhhbGlwYW58YWxpeXVuZHJpdmUpXC5bYS16QS1aXXsyLH0oPzovfCQpIgoKSFRUUFNfVVJMX1RPS0VOX1BBVFRFUk4gPSByZV9jb21waWxlKHIiaHR0cHM/Oi8vW15ccyldKyIpCgpfVFJBSUxJTkdfSlVOSyA9IGZyb3plbnNldCgiLiw777yM44CC77yb44CB77yJKeOAjeOAj1wiJyIpCgoKZGVmIG5vcm1hbGl6ZV9zaGFyZV91cmxfY2FuZGlkYXRlKHJhdzogc3RyKSAtPiBzdHI6CiAgICAiIiIKICAgIOWOu+aOiSBVUkwg5pyr5bC+5Y+v6IO96KKr5LiA5bm25Yy56YWN5Yiw55qE5qCH54K55oiW5YWo6KeS5ous5Y+3CgogICAgOnBhcmFtIHJhdyAoc3RyKTog5Y6f5aeL5a2Q5LiyCgogICAgOnJldHVybiBzdHI6IOinhOiMg+WMluWQjueahOWtl+espuS4sgogICAgIiIiCiAgICBzID0gcmF3LnN0cmlwKCkKICAgIHdoaWxlIHMgYW5kIHNbLTFdIGluIF9UUkFJTElOR19KVU5LOgogICAgICAgIHMgPSBzWzotMV0ucnN0cmlwKCkKICAgIHJldHVybiBzCgoKZGVmIGlzX3RlbGVncmFfcGhfdXJsKHVybDogc3RyKSAtPiBib29sOgogICAgIiIiCiAgICDliKTmlq0gVVJMIOaYr+WQpuaMh+WQkSB0ZWxlZ3JhLnBo77yI5ZCr5a2Q5Z+f77yJCgogICAgOnBhcmFtIHVybCAoc3RyKTog5a6M5pW0IGh0dHAocykgVVJMCgogICAgOnJldHVybiBib29sOiDmmK/lkKbkuLogVGVsZWdyYXBoIOmhtemdogogICAgIiIiCiAgICBpZiBub3QgdXJsIG9yIG5vdCBpc2luc3RhbmNlKHVybCwgc3RyKToKICAgICAgICByZXR1cm4gRmFsc2UKICAgIHRyeToKICAgICAgICBwYXJzZWQgPSB1cmxwYXJzZSh1cmwuc3RyaXAoKSkKICAgICAgICBob3N0ID0gKHBhcnNlZC5uZXRsb2Mgb3IgIiIpLmxvd2VyKCkKICAgICAgICBpZiAiQCIgaW4gaG9zdDoKICAgICAgICAgICAgaG9zdCA9IGhvc3Quc3BsaXQoIkAiKVstMV0KICAgICAgICBpZiAiOiIgaW4gaG9zdDoKICAgICAgICAgICAgaG9zdCA9IGhvc3Quc3BsaXQoIjoiLCAxKVswXQogICAgICAgIHJldHVybiBob3N0ID09ICJ0ZWxlZ3JhLnBoIiBvciBob3N0LmVuZHN3aXRoKCIudGVsZWdyYS5waCIpCiAgICBleGNlcHQgRXhjZXB0aW9uOgogICAgICAgIHJldHVybiBGYWxzZQoKCl9DTE9VRF9MSU5LX0ZJTkRBTExfUEFUVEVSTlM6IFR1cGxlW1R1cGxlW3N0ciwgc3RyXSwgLi4uXSA9ICgKICAgICgKICAgICAgICAidTExNSIsCiAgICAgICAgciIoaHR0cHM/Oi8vKD86W2EtekEtWjAtOS1dK1wuKSoxMTVbXi9ccyNdKlwuW2EtekEtWl17Mix9W15ccyNdKikiLAogICAgKSwKICAgICgKICAgICAgICAiYWxpeXVuIiwKICAgICAgICByIihodHRwcz86Ly8oPzpbYS16QS1aMC05LV0rXC4pPyg/OmFsaXBhbnxhbGl5dW5kcml2ZSlcLlthLXpBLVpdezIsfVteXHMjXSopIiwKICAgICksCikKCgpkZWYgZXh0cmFjdF9jbG91ZF9saW5rX3VybHNfZnJvbV90ZXh0KHRleHQ6IHN0cikgLT4gVHVwbGVbTGlzdFtzdHJdLCBzdHJdOgogICAgIiIiCiAgICDku47ku7vmhI/lrZfnrKbkuLLvvIjlkKsgSFRNTO+8ieS4reeUqOato+WImeaPkOWPliAxMTUg5LiO6Zi/6YeM5LqR6ZO+5o6l77yI5pegIEkvT+OAgeaXoOaXpeW/l++8iQoKICAgIDpwYXJhbSB0ZXh0IChzdHIpOiDnvZHpobXmiJbnuq/mlofmnKwKCiAgICA6cmV0dXJuIFR1cGxlOiAo5Y676YeN5ZCO55qE6ZO+5o6l5YiX6KGoLCDpppbkuKrljLnphY3liLDnmoTkupHnsbvlnosgdTExNS9hbGl5dW7vvIzml6DliJnnqbrkuLIpCiAgICAiIiIKICAgIGlmIG5vdCB0ZXh0IG9yIG5vdCBpc2luc3RhbmNlKHRleHQsIHN0cik6CiAgICAgICAgcmV0dXJuIFtdLCAiIgoKICAgIGxpbmtzOiBMaXN0W3N0cl0gPSBbXQogICAgY2xvdWRfdHlwZSA9ICIiCgogICAgZm9yIGNsb3VkX25hbWUsIHBhdHRlcm4gaW4gX0NMT1VEX0xJTktfRklOREFMTF9QQVRURVJOUzoKICAgICAgICBtYXRjaGVzID0gZmluZGFsbChwYXR0ZXJuLCB0ZXh0KQogICAgICAgIGlmIG1hdGNoZXM6CiAgICAgICAgICAgIGxpbmtzLmV4dGVuZChtYXRjaGVzKQogICAgICAgICAgICBpZiBub3QgY2xvdWRfdHlwZToKICAgICAgICAgICAgICAgIGNsb3VkX3R5cGUgPSBjbG91ZF9uYW1lCgogICAgcmV0dXJuIGxpc3Qoc2V0KGxpbmtzKSksIGNsb3VkX3R5cGUKCgpkZWYgaXNfZGlyZWN0X3UxMTVfb3JfYWxpeXVuX3NoYXJlX3VybCh1cmw6IHN0cikgLT4gYm9vbDoKICAgICIiIgogICAg5Yik5pat5piv5ZCm5Li655u06L+eIDExNSDmiJbpmL/ph4zkupHliIbkuqsgVVJM77yI5LiO5Y6G5Y+yIG1hdGNoIOinhOWImeS4gOiHtO+8iQoKICAgIDpwYXJhbSB1cmwgKHN0cik6IOW3suinhOiMg+WMlueahOWAmemAiSBVUkwKCiAgICA6cmV0dXJuIGJvb2w6IOaYr+WQpuWMuemFjQogICAgIiIiCiAgICBpZiBub3QgdXJsOgogICAgICAgIHJldHVybiBGYWxzZQogICAgcmV0dXJuIGJvb2wobWF0Y2goVTExNV9TSEFSRV9VUkxfTUFUQ0gsIHVybCkpIG9yIGJvb2woCiAgICAgICAgbWF0Y2goQUxJWVVOX1NIQVJFX1VSTF9NQVRDSCwgdXJsKQogICAgKQo=
+__all__ = [
+    "ALIYUN_SHARE_URL_MATCH",
+    "HTTPS_URL_TOKEN_PATTERN",
+    "U115_SHARE_URL_MATCH",
+    "extract_cloud_link_urls_from_text",
+    "is_direct_u115_or_aliyun_share_url",
+    "is_telegra_ph_url",
+    "normalize_share_url_candidate",
+]
+
+
+from re import compile as re_compile, findall, match
+from typing import List, Tuple
+from urllib.parse import urlparse
+
+
+U115_SHARE_URL_MATCH = r"^https?://(.*\.)?115[^/]*\.[a-zA-Z]{2,}(?:/|$)"
+ALIYUN_SHARE_URL_MATCH = r"^https?://(.*\.)?(alipan|aliyundrive)\.[a-zA-Z]{2,}(?:/|$)"
+
+HTTPS_URL_TOKEN_PATTERN = re_compile(r"https?://[^\s)]+")
+
+_TRAILING_JUNK = frozenset(".,;，。；、）)」』\"'")
+
+
+def normalize_share_url_candidate(raw: str) -> str:
+    """
+    去掉 URL 末尾可能被一并匹配到的标点或全角括号
+
+    :param raw (str): 原始子串
+
+    :return str: 规范化后的字符串
+    """
+    s = raw.strip()
+    while s and s[-1] in _TRAILING_JUNK:
+        s = s[:-1].rstrip()
+    return s
+
+
+def is_telegra_ph_url(url: str) -> bool:
+    """
+    判断 URL 是否指向 telegra.ph（含子域）
+
+    :param url (str): 完整 http(s) URL
+
+    :return bool: 是否为 Telegraph 页面
+    """
+    if not url or not isinstance(url, str):
+        return False
+    try:
+        parsed = urlparse(url.strip())
+        host = (parsed.netloc or "").lower()
+        if "@" in host:
+            host = host.split("@")[-1]
+        if ":" in host:
+            host = host.split(":", 1)[0]
+        return host == "telegra.ph" or host.endswith(".telegra.ph")
+    except Exception:
+        return False
+
+
+_CLOUD_LINK_FINDALL_PATTERNS: Tuple[Tuple[str, str], ...] = (
+    (
+        "u115",
+        r"(https?://(?:[a-zA-Z0-9-]+\.)*115[^/\s#]*\.[a-zA-Z]{2,}[^\s#]*)",
+    ),
+    (
+        "aliyun",
+        r"(https?://(?:[a-zA-Z0-9-]+\.)?(?:alipan|aliyundrive)\.[a-zA-Z]{2,}[^\s#]*)",
+    ),
+)
+
+
+def extract_cloud_link_urls_from_text(text: str) -> Tuple[List[str], str]:
+    """
+    从任意字符串（含 HTML）中用正则提取 115 与阿里云链接（无 I/O、无日志）
+
+    :param text (str): 网页或纯文本
+
+    :return Tuple: (去重后的链接列表, 首个匹配到的云类型 u115/aliyun，无则空串)
+    """
+    if not text or not isinstance(text, str):
+        return [], ""
+
+    links: List[str] = []
+    cloud_type = ""
+
+    for cloud_name, pattern in _CLOUD_LINK_FINDALL_PATTERNS:
+        matches = findall(pattern, text)
+        if matches:
+            links.extend(matches)
+            if not cloud_type:
+                cloud_type = cloud_name
+
+    return list(set(links)), cloud_type
+
+
+def is_direct_u115_or_aliyun_share_url(url: str) -> bool:
+    """
+    判断是否为直连 115 或阿里云分享 URL（与历史 match 规则一致）
+
+    :param url (str): 已规范化的候选 URL
+
+    :return bool: 是否匹配
+    """
+    if not url:
+        return False
+    return bool(match(U115_SHARE_URL_MATCH, url)) or bool(
+        match(ALIYUN_SHARE_URL_MATCH, url)
+    )

@@ -1,1 +1,33 @@
-IiIiCiR7bWVzc2FnZX0KClJldmlzaW9uIElEOiAke3VwX3JldmlzaW9ufQpSZXZpc2VzOiAke2Rvd25fcmV2aXNpb24gfCBjb21tYSxufQpCcmFuY2ggTGFiZWxzOiAke2JyYW5jaF9sYWJlbHMgfCBjb21tYSxufQpEZXBlbmRzIE9uOiAke2RlcGVuZHNfb24gfCBjb21tYSxufQpDcmVhdGUgRGF0ZTogJHtjcmVhdGVfZGF0ZX0KCiIiIgo8JQpoYXNfb3BzID0gJ29wLicgaW4gdXBncmFkZXMgb3IgJ29wLicgaW4gZG93bmdyYWRlcwolPgolIGlmIGhhc19vcHM6CmZyb20gYWxlbWJpYyBpbXBvcnQgb3AKaW1wb3J0IHNxbGFsY2hlbXkgYXMgc2EKJSBlbmRpZgoke2ltcG9ydHMgaWYgaW1wb3J0cyBlbHNlICIifQoKIyByZXZpc2lvbiBpZGVudGlmaWVycywgdXNlZCBieSBBbGVtYmljLgpkYl92ZXJzaW9uID0gJyR7Y29uZmlnLmF0dHJpYnV0ZXMuZ2V0KCJ2ZXJzaW9uIiwgIiIpfScKcmV2aXNpb24gPSAke3JlcHIodXBfcmV2aXNpb24pfQpkb3duX3JldmlzaW9uID0gJHtyZXByKGRvd25fcmV2aXNpb24pfQpicmFuY2hfbGFiZWxzID0gJHtyZXByKGJyYW5jaF9sYWJlbHMpfQpkZXBlbmRzX29uID0gJHtyZXByKGRlcGVuZHNfb24pfQoKCmRlZiB1cGdyYWRlKCkgLT4gTm9uZToKICAgICR7dXBncmFkZXMgaWYgdXBncmFkZXMgZWxzZSAicGFzcyJ9CgoKZGVmIGRvd25ncmFkZSgpIC0+IE5vbmU6CiAgICAke2Rvd25ncmFkZXMgaWYgZG93bmdyYWRlcyBlbHNlICJwYXNzIn0=
+"""
+${message}
+
+Revision ID: ${up_revision}
+Revises: ${down_revision | comma,n}
+Branch Labels: ${branch_labels | comma,n}
+Depends On: ${depends_on | comma,n}
+Create Date: ${create_date}
+
+"""
+<%
+has_ops = 'op.' in upgrades or 'op.' in downgrades
+%>
+% if has_ops:
+from alembic import op
+import sqlalchemy as sa
+% endif
+${imports if imports else ""}
+
+# revision identifiers, used by Alembic.
+db_version = '${config.attributes.get("version", "")}'
+revision = ${repr(up_revision)}
+down_revision = ${repr(down_revision)}
+branch_labels = ${repr(branch_labels)}
+depends_on = ${repr(depends_on)}
+
+
+def upgrade() -> None:
+    ${upgrades if upgrades else "pass"}
+
+
+def downgrade() -> None:
+    ${downgrades if downgrades else "pass"}

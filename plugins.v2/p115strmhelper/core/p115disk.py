@@ -1,1 +1,555 @@
-X19hbGxfXyA9IFsiUDExNURpc2tDb3JlIl0KCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lLCB0aW1lem9uZQpmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKZnJvbSB0aW1lIGltcG9ydCBwZXJmX2NvdW50ZXIsIHNsZWVwCmZyb20gdHlwaW5nIGltcG9ydCBBbnksIE9wdGlvbmFsCgpmcm9tIGNyeXB0b2dyYXBoeS5oYXptYXQucHJpbWl0aXZlcyBpbXBvcnQgaGFzaGVzCmZyb20gb3NzMiBpbXBvcnQgU3RzQXV0aCwgQnVja2V0LCBkZXRlcm1pbmVfcGFydF9zaXplCmZyb20gb3NzMi5leGNlcHRpb25zIGltcG9ydCBTZXJ2ZXJFcnJvcgpmcm9tIG9zczIubW9kZWxzIGltcG9ydCBQYXJ0SW5mbwpmcm9tIG9zczIudXRpbHMgaW1wb3J0IGI2NGVuY29kZV9hc19zdHJpbmcsIFNpemVkRmlsZUFkYXB0ZXIKZnJvbSBwMTE1Y2VudGVyIGltcG9ydCBQMTE1Q2VudGVyLCBVcGxvYWRJbmZvCmZyb20gcDExNWNsaWVudCBpbXBvcnQgUDExNUNsaWVudCwgY2hlY2tfcmVzcG9uc2UKZnJvbSBwMTE1Y2xpZW50LmNvbnN0IGltcG9ydCBfQ0FDSEVfRElSCgpmcm9tIGFwcC5jb3JlLmNvbmZpZyBpbXBvcnQgZ2xvYmFsX3ZhcnMKZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXIKZnJvbSBhcHAubW9kdWxlcy5maWxlbWFuYWdlci5zdG9yYWdlcyBpbXBvcnQgdHJhbnNmZXJfcHJvY2Vzcwpmcm9tIGFwcC5zY2hlbWFzIGltcG9ydCBGaWxlSXRlbSwgTm90aWZpY2F0aW9uVHlwZQoKZnJvbSAuLmNvcmUuY29uZmlnIGltcG9ydCBjb25maWdlcgpmcm9tIC4uY29yZS5pMThuIGltcG9ydCBpMThuCmZyb20gLi5jb3JlLm1lc3NhZ2UgaW1wb3J0IHBvc3RfbWVzc2FnZSwgdXBsb2FkX25vdGlmaWVyCgoKY2xhc3MgUDExNURpc2tDb3JlOgogICAgIiIiCiAgICDmqKHmi58gUDExNURpc2sg5o+S5Lu25o6l5Y+jCiAgICAiIiIKCiAgICBkZWYgX19pbml0X18oc2VsZiwgY2xpZW50OiBQMTE1Q2xpZW50KToKICAgICAgICB0cnk6CiAgICAgICAgICAgIGZyb20gYXBwLnBsdWdpbnMucDExNWRpc2sucDExNV9hcGkgaW1wb3J0IFAxMTVBcGkgICMgbm9xYTogRjQwMQoKICAgICAgICAgICAgUDExNV9BUElfQVZBSUxBQkxFID0gVHJ1ZQogICAgICAgIGV4Y2VwdCAoSW1wb3J0RXJyb3IsIE1vZHVsZU5vdEZvdW5kRXJyb3IpOgogICAgICAgICAgICBQMTE1X0FQSV9BVkFJTEFCTEUgPSBGYWxzZQogICAgICAgICAgICBQMTE1QXBpID0gQW55CgogICAgICAgIGlmIFAxMTVfQVBJX0FWQUlMQUJMRToKICAgICAgICAgICAgc2VsZi5fcDExNV9hcGkgPSBQMTE1QXBpKGNsaWVudD1jbGllbnQsIGRpc2tfbmFtZT0iMTE1572R55uYUGx1cyIpCgogICAgICAgIHNlbGYucDExNV9jZW50ZXIgPSBQMTE1Q2VudGVyKGNvbmZpZ2VyLmdldF9jb25maWcoIm1hY2hpbmVfaWQiKSkKCiAgICBkZWYgdXBsb2FkKAogICAgICAgIHNlbGYsCiAgICAgICAgdGFyZ2V0X2RpcjogRmlsZUl0ZW0sCiAgICAgICAgbG9jYWxfcGF0aDogUGF0aCwKICAgICAgICBuZXdfbmFtZTogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICApIC0+IE9wdGlvbmFsW0ZpbGVJdGVtXToKICAgICAgICAiIiIKICAgICAgICDkuIrkvKDmlofku7bliLDkupHnm5gKCiAgICAgICAgOnBhcmFtIHRhcmdldF9kaXI6IOS4iuS8oOebruagh+ebruW9lemhuQogICAgICAgIDpwYXJhbSBsb2NhbF9wYXRoOiDmnKzlnLDmlofku7bot6/lvoQKICAgICAgICA6cGFyYW0gbmV3X25hbWU6IOS4iuS8oOWQjueahOaWh+S7tuWQje+8jOWmguaenOS4uk5vbmXliJnkvb/nlKjmnKzlnLDmlofku7blkI0KCiAgICAgICAgOnJldHVybjog5LiK5Lyg5oiQ5Yqf6L+U5Zue5paH5Lu26aG577yM5aSx6LSl6L+U5ZueTm9uZQogICAgICAgICIiIgoKICAgICAgICBkZWYgcmVhZF9yYW5nZV9oYXNoKHJhbmdlX3N0cjogc3RyKSAtPiBzdHI6CiAgICAgICAgICAgICIiIgogICAgICAgICAgICDorqHnrpfmlofku7bmjIflrprlrZfoioLljLrpl7TnmoQgU0hBMSDlk4jluIzlgLwKCiAgICAgICAgICAgIDpwYXJhbSByYW5nZV9zdHI6IOWMuumXtOWtl+espuS4su+8jOagvOW8j+S4uiAic3RhcnQtZW5kIgogICAgICAgICAgICA6cmV0dXJuOiDljLrpl7TnmoQgU0hBMSDljYHlha3ov5vliLblpKflhpnlrZfnrKbkuLIKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIHN0YXJ0LCBlbmQgPSBtYXAoaW50LCByYW5nZV9zdHIuc3BsaXQoIi0iKSkKICAgICAgICAgICAgd2l0aCBvcGVuKGxvY2FsX3BhdGgsICJyYiIpIGFzIGY6CiAgICAgICAgICAgICAgICBmLnNlZWsoc3RhcnQpCiAgICAgICAgICAgICAgICBjaHVuayA9IGYucmVhZChlbmQgLSBzdGFydCArIDEpCiAgICAgICAgICAgICAgICBzaGExID0gaGFzaGVzLkhhc2goaGFzaGVzLlNIQTEoKSkKICAgICAgICAgICAgICAgIHNoYTEudXBkYXRlKGNodW5rKQogICAgICAgICAgICAgICAgcmV0dXJuIHNoYTEuZmluYWxpemUoKS5oZXgoKS51cHBlcigpCgogICAgICAgIGRlZiBlbmNvZGVfY2FsbGJhY2soY2I6IHN0cikgLT4gc3RyOgogICAgICAgICAgICAiIiIKICAgICAgICAgICAg5a+55Zue6LCD5a2X56ym5Liy6L+b6KGMIEJhc2U2NCDnvJbnoIEKCiAgICAgICAgICAgIDpwYXJhbSBjYjog5b6F57yW56CB55qE5Zue6LCD5a2X56ym5LiyCiAgICAgICAgICAgIDpyZXR1cm46IEJhc2U2NCDnvJbnoIHlkI7nmoTlrZfnrKbkuLIKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIHJldHVybiBiNjRlbmNvZGVfYXNfc3RyaW5nKGNiKQoKICAgICAgICBkZWYgc2VuZF91cGxvYWRfaW5mbygKICAgICAgICAgICAgZmlsZV9zaGExOiBPcHRpb25hbFtzdHJdLAogICAgICAgICAgICBmaXJzdF9zaGExOiBPcHRpb25hbFtzdHJdLAogICAgICAgICAgICBzZWNvbmRfYXV0aDogYm9vbCwKICAgICAgICAgICAgc2Vjb25kX3NoYTE6IE9wdGlvbmFsW3N0cl0sCiAgICAgICAgICAgIGZpbGVfc2l6ZTogT3B0aW9uYWxbc3RyXSwKICAgICAgICAgICAgZmlsZV9uYW1lOiBPcHRpb25hbFtzdHJdLAogICAgICAgICAgICB1cGxvYWRfdGltZTogT3B0aW9uYWxbaW50XSwKICAgICAgICApOgogICAgICAgICAgICAiIiIKICAgICAgICAgICAg5Y+R6YCB5LiK5Lyg5L+h5oGvCiAgICAgICAgICAgICIiIgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICByZXNwID0gc2VsZi5wMTE1X2NlbnRlci51cGxvYWRfaW5mbygKICAgICAgICAgICAgICAgICAgICBVcGxvYWRJbmZvKAogICAgICAgICAgICAgICAgICAgICAgICBmaWxlX3NoYTE9ZmlsZV9zaGExLAogICAgICAgICAgICAgICAgICAgICAgICBmaXJzdF9zaGExPWZpcnN0X3NoYTEsCiAgICAgICAgICAgICAgICAgICAgICAgIHNlY29uZF9hdXRoPXNlY29uZF9hdXRoLAogICAgICAgICAgICAgICAgICAgICAgICBzZWNvbmRfc2hhMT1zZWNvbmRfc2hhMSwKICAgICAgICAgICAgICAgICAgICAgICAgZmlsZV9zaXplPWZpbGVfc2l6ZSwKICAgICAgICAgICAgICAgICAgICAgICAgZmlsZV9uYW1lPWZpbGVfbmFtZSwKICAgICAgICAgICAgICAgICAgICAgICAgdGltZT11cGxvYWRfdGltZSwKICAgICAgICAgICAgICAgICAgICAgICAgcG9zdGltZT1kYXRldGltZS5ub3codGltZXpvbmUudXRjKSwKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkFAxMTVEaXNr44CR5LiK5Lyg5L+h5oGv5oql5ZGK5pyN5Yqh5Zmo5oiQ5YqfOiB7cmVzcC5tb2RlbF9kdW1wKCl9IikKICAgICAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICAgICAgbG9nZ2VyLndhcm4oZiLjgJBQMTE1RGlza+OAkeS4iuS8oOS/oeaBr+aKpeWRiuacjeWKoeWZqOWksei0pToge2V9IikKCiAgICAgICAgZGVmIHNlbmRfdXBsb2FkX3dhaXQodGFyZ2V0X25hbWUpOgogICAgICAgICAgICAiIiIKICAgICAgICAgICAg5Y+R6YCB5LiK5Lyg562J5b6FCiAgICAgICAgICAgICIiIgogICAgICAgICAgICBpZiBjb25maWdlci5ub3RpZnkgYW5kIGNvbmZpZ2VyLnVwbG9hZF9tb2R1bGVfbm90aWZ5OgogICAgICAgICAgICAgICAgcG9zdF9tZXNzYWdlKAogICAgICAgICAgICAgICAgICAgIG10eXBlPU5vdGlmaWNhdGlvblR5cGUuUGx1Z2luLAogICAgICAgICAgICAgICAgICAgIHRpdGxlPWkxOG4udHJhbnNsYXRlKCJ1cGxvYWRfbW9kdWxlX3RpdGxlIiksCiAgICAgICAgICAgICAgICAgICAgdGV4dD1mIlxue2kxOG4udHJhbnNsYXRlKCd1cGxvYWRfd2FpdF90ZXh0JywgbmFtZT10YXJnZXRfbmFtZSl9XG4iLAogICAgICAgICAgICAgICAgKQoKICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgc2VsZi5wMTE1X2NlbnRlci51cGxvYWRfd2FpdCgpCiAgICAgICAgICAgIGV4Y2VwdCBFeGNlcHRpb246CiAgICAgICAgICAgICAgICBwYXNzCgogICAgICAgIGRlZiBzZW5kX3VwbG9hZF9yZXN1bHRfbm90aWZ5KAogICAgICAgICAgICBzdWNjZXNzOiBib29sLAogICAgICAgICAgICB0YXJnZXRfbmFtZTogc3RyLAogICAgICAgICAgICBmaWxlX3NpemU6IGludCwKICAgICAgICAgICAgZWxhcHNlZF90aW1lOiBPcHRpb25hbFtmbG9hdF0gPSBOb25lLAogICAgICAgICAgICBlcnJvcl9tc2c6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgICk6CiAgICAgICAgICAgICIiIgogICAgICAgICAgICDlj5HpgIHkuIrkvKDnu5PmnpzpgJrnn6UKCiAgICAgICAgICAgIDpwYXJhbSBzdWNjZXNzOiDmmK/lkKbmiJDlip8KICAgICAgICAgICAgOnBhcmFtIHRhcmdldF9uYW1lOiDmlofku7blkI0KICAgICAgICAgICAgOnBhcmFtIGZpbGVfc2l6ZTog5paH5Lu25aSn5bCPCiAgICAgICAgICAgIDpwYXJhbSBlbGFwc2VkX3RpbWU6IOiAl+aXtu+8iOenku+8iQogICAgICAgICAgICA6cGFyYW0gZXJyb3JfbXNnOiDplJnor6/kv6Hmga8KICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIGlmIG5vdCBjb25maWdlci5ub3RpZnkgb3Igbm90IGNvbmZpZ2VyLnVwbG9hZF9vcGVuX3Jlc3VsdF9ub3RpZnk6CiAgICAgICAgICAgICAgICByZXR1cm4KCiAgICAgICAgICAgIHVwbG9hZF9ub3RpZmllci5hZGQoCiAgICAgICAgICAgICAgICBzdWNjZXNzPXN1Y2Nlc3MsCiAgICAgICAgICAgICAgICB0YXJnZXRfbmFtZT10YXJnZXRfbmFtZSwKICAgICAgICAgICAgICAgIGZpbGVfc2l6ZT1maWxlX3NpemUsCiAgICAgICAgICAgICAgICBlbGFwc2VkX3RpbWU9ZWxhcHNlZF90aW1lLAogICAgICAgICAgICAgICAgZXJyb3JfbXNnPWVycm9yX21zZywKICAgICAgICAgICAgKQoKICAgICAgICBpZiBub3QgbG9jYWxfcGF0aC5leGlzdHMoKToKICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi44CQUDExNURpc2vjgJHmnKzlnLDmlofku7bkuI3lrZjlnKg6IHtsb2NhbF9wYXRofSIpCiAgICAgICAgICAgIHJldHVybiBOb25lCgogICAgICAgIHRhcmdldF9uYW1lID0gbmV3X25hbWUgb3IgbG9jYWxfcGF0aC5uYW1lCiAgICAgICAgdGFyZ2V0X3BhdGggPSBQYXRoKHRhcmdldF9kaXIucGF0aCkgLyB0YXJnZXRfbmFtZQoKICAgICAgICAjIOiOt+WPluebruagh+ebruW9lUlECiAgICAgICAgdGFyZ2V0X3BpZCA9IHRhcmdldF9kaXIuZmlsZWlkCgogICAgICAgICMg6K6h566X5paH5Lu254m55b6B5YC8CiAgICAgICAgZmlsZV9zaXplID0gbG9jYWxfcGF0aC5zdGF0KCkuc3Rfc2l6ZQogICAgICAgIGZpbGVfc2hhMSA9IHNlbGYuX3AxMTVfYXBpLl9jYWxjX3NoYTEobG9jYWxfcGF0aCkKCiAgICAgICAgIyDmuIXnkIbnvJPlrZgKICAgICAgICBjYWNoZV9pZCA9IHNlbGYuX3AxMTVfYXBpLl9pZF9jYWNoZS5nZXRfaWRfYnlfZGlyKHRhcmdldF9wYXRoLmFzX3Bvc2l4KCkpCiAgICAgICAgaWYgY2FjaGVfaWQ6CiAgICAgICAgICAgIHNlbGYuX3AxMTVfYXBpLl9pZF9jYWNoZS5yZW1vdmUoaWQ9Y2FjaGVfaWQpCiAgICAgICAgICAgIHNlbGYuX3AxMTVfYXBpLl9pZF9pdGVtX2NhY2hlLnJlbW92ZShpZD1jYWNoZV9pZCkKCiAgICAgICAgIyDliJ3lp4vljJbov5vluqbmnaEKICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkFAxMTVEaXNr44CR5byA5aeL5LiK5LygOiB7bG9jYWxfcGF0aH0gLT4ge3RhcmdldF9wYXRofSIpCiAgICAgICAgcHJvZ3Jlc3NfY2FsbGJhY2sgPSB0cmFuc2Zlcl9wcm9jZXNzKGxvY2FsX3BhdGguYXNfcG9zaXgoKSkKCiAgICAgICAgdHJ5OgogICAgICAgICAgICB3YWl0X3N0YXJ0X3RpbWUgPSBwZXJmX2NvdW50ZXIoKQogICAgICAgICAgICBzZW5kX3dhaXQgPSBGYWxzZQogICAgICAgICAgICB3aGlsZSBUcnVlOgogICAgICAgICAgICAgICAgc3RhcnRfdGltZSA9IHBlcmZfY291bnRlcigpCiAgICAgICAgICAgICAgICAjIFN0ZXAgMTog5Yid5aeL5YyW5LiK5LygCiAgICAgICAgICAgICAgICBpbml0X3Jlc3AgPSBOb25lCiAgICAgICAgICAgICAgICBpbml0X21heF9yZXRyaWVzID0gMwogICAgICAgICAgICAgICAgaW5pdF9yZXRyeV9kZWxheSA9IDIKICAgICAgICAgICAgICAgIHNpZ19pbnZhbGlkX2hhbmRsZWQgPSBGYWxzZQogICAgICAgICAgICAgICAgZm9yIGluaXRfYXR0ZW1wdCBpbiByYW5nZShpbml0X21heF9yZXRyaWVzKToKICAgICAgICAgICAgICAgICAgICBpbml0X3Jlc3AgPSBOb25lCiAgICAgICAgICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgICAgICAgICBpbml0X3Jlc3AgPSBzZWxmLl9wMTE1X2FwaS5jbGllbnQudXBsb2FkX2ZpbGVfaW5pdCgKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZpbGVuYW1lPXRhcmdldF9uYW1lLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgZmlsZXNpemU9ZmlsZV9zaXplLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgZmlsZXNoYTE9ZmlsZV9zaGExLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgcGlkPXRhcmdldF9waWQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWFkX3JhbmdlX2J5dGVzX29yX2hhc2g9cmVhZF9yYW5nZV9oYXNoLAogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIGNoZWNrX3Jlc3BvbnNlKGluaXRfcmVzcCkKICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWsKICAgICAgICAgICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICAgICAgICAgIGlmICgKICAgICAgICAgICAgICAgICAgICAgICAgICAgIG5vdCBzaWdfaW52YWxpZF9oYW5kbGVkCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhbmQgaW5pdF9yZXNwCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhbmQgaXNpbnN0YW5jZShpbml0X3Jlc3AsIGRpY3QpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhbmQgaW5pdF9yZXNwLmdldCgic3RhdHVzbXNnIikgPT0gInNpZyBpbnZhbGlkIgogICAgICAgICAgICAgICAgICAgICAgICApOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgdXNlcmtleV9wb2ludHNfanNvbiA9ICgKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfQ0FDSEVfRElSIC8gInVzZXJrZXlfc3RhYmxlX3BvaW50cy5qc29uIgogICAgICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgdXNlcmtleV9wb2ludHNfanNvbi5leGlzdHMoKToKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1c2Vya2V5X3BvaW50c19qc29uLnVubGluayhtaXNzaW5nX29rPVRydWUpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaWdfaW52YWxpZF9oYW5kbGVkID0gVHJ1ZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGludWUKICAgICAgICAgICAgICAgICAgICAgICAgaWYgaW5pdF9hdHRlbXB0IDwgaW5pdF9tYXhfcmV0cmllcyAtIDE6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb2dnZXIud2FybigKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CR5Yid5aeL5YyW5LiK5Lyg5aSx6LSl77yMIgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGYi56ysIHtpbml0X2F0dGVtcHQgKyAxfS97aW5pdF9tYXhfcmV0cmllc30g5qyh6YeN6K+VOiB7ZX0iCiAgICAgICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzbGVlcChpbml0X3JldHJ5X2RlbGF5KQogICAgICAgICAgICAgICAgICAgICAgICAgICAgaW5pdF9yZXRyeV9kZWxheSAqPSAyCiAgICAgICAgICAgICAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBQMTE1RGlza+OAkeWIneWni+WMluS4iuS8oOmHjeivleeUqOWwvToge2V9IikKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBOb25lCiAgICAgICAgICAgICAgICBpZiBpbml0X3Jlc3AgaXMgTm9uZToKICAgICAgICAgICAgICAgICAgICByZXR1cm4gTm9uZQoKICAgICAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZyhmIuOAkFAxMTVEaXNr44CR5LiK5Lyg5Yid5aeL5YyW57uT5p6cOiB7aW5pdF9yZXNwfSIpCgogICAgICAgICAgICAgICAgaWYgbm90IGluaXRfcmVzcC5nZXQoInN0YXRlIik6CiAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmVycm9yKAogICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CR5Yid5aeL5YyW5LiK5Lyg5aSx6LSlOiB7aW5pdF9yZXNwLmdldCgnZXJyb3InKX0iCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIHJldHVybiBOb25lCgogICAgICAgICAgICAgICAgIyDmo4Dmn6XmmK/lkKbnp5LkvKDmiJDlip8KICAgICAgICAgICAgICAgIGlmIGluaXRfcmVzcC5nZXQoInJldXNlIik6CiAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmluZm8oZiLjgJBQMTE1RGlza+OAkXt0YXJnZXRfbmFtZX0g56eS5Lyg5oiQ5YqfIikKICAgICAgICAgICAgICAgICAgICBwcm9ncmVzc19jYWxsYmFjaygxMDApCiAgICAgICAgICAgICAgICAgICAgZW5kX3RpbWUgPSBwZXJmX2NvdW50ZXIoKQogICAgICAgICAgICAgICAgICAgIGVsYXBzZWRfdGltZSA9IGVuZF90aW1lIC0gc3RhcnRfdGltZQogICAgICAgICAgICAgICAgICAgIHNlbmRfdXBsb2FkX2luZm8oCiAgICAgICAgICAgICAgICAgICAgICAgIGZpbGVfc2hhMSwKICAgICAgICAgICAgICAgICAgICAgICAgIiIsCiAgICAgICAgICAgICAgICAgICAgICAgIFRydWUsCiAgICAgICAgICAgICAgICAgICAgICAgICIiLAogICAgICAgICAgICAgICAgICAgICAgICBzdHIoZmlsZV9zaXplKSwKICAgICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0X25hbWUsCiAgICAgICAgICAgICAgICAgICAgICAgIGludChlbGFwc2VkX3RpbWUpLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBzZW5kX3VwbG9hZF9yZXN1bHRfbm90aWZ5KAogICAgICAgICAgICAgICAgICAgICAgICBzdWNjZXNzPVRydWUsCiAgICAgICAgICAgICAgICAgICAgICAgIHRhcmdldF9uYW1lPXRhcmdldF9uYW1lLAogICAgICAgICAgICAgICAgICAgICAgICBmaWxlX3NpemU9ZmlsZV9zaXplLAogICAgICAgICAgICAgICAgICAgICAgICBlbGFwc2VkX3RpbWU9ZWxhcHNlZF90aW1lLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICByZXR1cm4gc2VsZi5fcDExNV9hcGkuZ2V0X2l0ZW0odGFyZ2V0X3BhdGgpCgogICAgICAgICAgICAgICAgIyDliKTmlq3mmK/nrYnlvoXnp5LkvKDov5jmmK/nm7TmjqXkuIrkvKAKICAgICAgICAgICAgICAgIHVwbG9hZF9tb2R1bGVfc2tpcF91cGxvYWRfd2FpdF9zaXplID0gaW50KAogICAgICAgICAgICAgICAgICAgIGNvbmZpZ2VyLmdldF9jb25maWcoInVwbG9hZF9tb2R1bGVfc2tpcF91cGxvYWRfd2FpdF9zaXplIikgb3IgMAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgaWYgKAogICAgICAgICAgICAgICAgICAgIHVwbG9hZF9tb2R1bGVfc2tpcF91cGxvYWRfd2FpdF9zaXplICE9IDAKICAgICAgICAgICAgICAgICAgICBhbmQgZmlsZV9zaXplIDw9IHVwbG9hZF9tb2R1bGVfc2tpcF91cGxvYWRfd2FpdF9zaXplCiAgICAgICAgICAgICAgICApOgogICAgICAgICAgICAgICAgICAgIGxvZ2dlci5pbmZvKAogICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CR5paH5Lu25aSn5bCPIHtmaWxlX3NpemV9IOWwj+S6juacgOS9jumYiOWAvO+8jOi3s+i/h+etieW+hea1geeoizoge3RhcmdldF9uYW1lfSIKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgYnJlYWsKCiAgICAgICAgICAgICAgICBpZiBwZXJmX2NvdW50ZXIoKSAtIHdhaXRfc3RhcnRfdGltZSA+IGludCgKICAgICAgICAgICAgICAgICAgICBjb25maWdlci5nZXRfY29uZmlnKCJ1cGxvYWRfbW9kdWxlX3dhaXRfdGltZW91dCIpCiAgICAgICAgICAgICAgICApOgogICAgICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuKAogICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CR562J5b6F56eS5Lyg6LaF5pe277yM6Ieq5Yqo6L+b6KGM5LiK5Lyg5rWB56iLOiB7dGFyZ2V0X25hbWV9IgogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBicmVhawoKICAgICAgICAgICAgICAgIHVwbG9hZF9tb2R1bGVfZm9yY2VfdXBsb2FkX3dhaXRfc2l6ZSA9IGludCgKICAgICAgICAgICAgICAgICAgICBjb25maWdlci5nZXRfY29uZmlnKCJ1cGxvYWRfbW9kdWxlX2ZvcmNlX3VwbG9hZF93YWl0X3NpemUiKSBvciAwCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBpZiAoCiAgICAgICAgICAgICAgICAgICAgdXBsb2FkX21vZHVsZV9mb3JjZV91cGxvYWRfd2FpdF9zaXplICE9IDAKICAgICAgICAgICAgICAgICAgICBhbmQgZmlsZV9zaXplID49IHVwbG9hZF9tb2R1bGVfZm9yY2VfdXBsb2FkX3dhaXRfc2l6ZQogICAgICAgICAgICAgICAgKToKICAgICAgICAgICAgICAgICAgICBsb2dnZXIuaW5mbygKICAgICAgICAgICAgICAgICAgICAgICAgZiLjgJBQMTE1RGlza+OAkeaWh+S7tuWkp+WwjyB7ZmlsZV9zaXplfSDlpKfkuo7mnIDpq5jpmIjlgLzvvIzlvLrliLbnrYnlvoXmtYHnqIs6IHt0YXJnZXRfbmFtZX0iCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIHNsZWVwKGludChjb25maWdlci5nZXRfY29uZmlnKCJ1cGxvYWRfbW9kdWxlX3dhaXRfdGltZSIpKSkKICAgICAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgICAgICAgICByZXNwID0gc2VsZi5wMTE1X2NlbnRlci51c2VyX3NwZWVkX3N0YXR1cygpCgogICAgICAgICAgICAgICAgICAgICAgICBpZiByZXNwLnN0YXR1cyAhPSAic2xvdyI6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb2dnZXIud2FybigKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CR5LiK5Lyg6YCf5bqm54q25oCBIHtyZXNwLnN0YXR1c33vvIzot7Pov4fnp5LkvKDnrYnlvoU6IHt0YXJnZXRfbmFtZX0iCiAgICAgICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBicmVhawoKICAgICAgICAgICAgICAgICAgICAgICAgIyDorqHnrpfnrYnlvoXml7bpl7QKICAgICAgICAgICAgICAgICAgICAgICAgZGVmYXVsdF93YWl0X3RpbWUgPSBpbnQoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25maWdlci5nZXRfY29uZmlnKCJ1cGxvYWRfbW9kdWxlX3dhaXRfdGltZSIpCiAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICAgICAgc2xlZXBfdGltZSA9IGRlZmF1bHRfd2FpdF90aW1lCiAgICAgICAgICAgICAgICAgICAgICAgIGZhc3Rlc3Rfc3BlZWQgPSByZXNwLmZhc3Rlc3RfdXNlcl9zcGVlZF9tYnBzCiAgICAgICAgICAgICAgICAgICAgICAgIHVzZXJfc3BlZWQgPSByZXNwLnVzZXJfYXZlcmFnZV9zcGVlZF9tYnBzCiAgICAgICAgICAgICAgICAgICAgICAgIGlmIGZhc3Rlc3Rfc3BlZWQgYW5kIHVzZXJfc3BlZWQ6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBicyA9IHVzZXJfc3BlZWQgKiAwLjIgKyBmYXN0ZXN0X3NwZWVkICogMC44CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB3dCA9IGZpbGVfc2l6ZSAvICgxMDI0ICogMTAyNCkgLyBicwogICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgd3QgPiAxMCAqIDYwOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHd0ID0gd3QgLyAod3QgLy8gKDEwICogNjApICsgMSkKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIHd0IDw9IGRlZmF1bHRfd2FpdF90aW1lIC8vIDI6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd3QgKz0gZGVmYXVsdF93YWl0X3RpbWUgLy8gMgogICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xlZXBfdGltZSA9IGludCh3dCkKCiAgICAgICAgICAgICAgICAgICAgICAgIGxvZ2dlci5pbmZvKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgZiLjgJBQMTE1RGlza+OAkeS8keecoCB7c2xlZXBfdGltZX0g56eS77yM562J5b6F56eS5LygOiB7dGFyZ2V0X25hbWV9IgogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIGlmIG5vdCBzZW5kX3dhaXQ6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzZW5kX3VwbG9hZF93YWl0KHRhcmdldF9uYW1lKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgc2VuZF93YWl0ID0gVHJ1ZQogICAgICAgICAgICAgICAgICAgICAgICBzbGVlcChzbGVlcF90aW1lKQogICAgICAgICAgICAgICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLndhcm4oZiLjgJBQMTE1RGlza+OAkeiOt+WPlueUqOaIt+S4iuS8oOmAn+W6pumUmeivrzoge2V9IikKICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWsKCiAgICAgICAgICAgIGlmIGNvbmZpZ2VyLnVwbG9hZF9tb2R1bGVfc2tpcF9zbG93X3VwbG9hZDoKICAgICAgICAgICAgICAgIHNraXBfdXBsb2FkX3NpemUgPSBjb25maWdlci5nZXRfY29uZmlnKAogICAgICAgICAgICAgICAgICAgICJ1cGxvYWRfbW9kdWxlX3NraXBfc2xvd191cGxvYWRfc2l6ZSIKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIGlmIHNraXBfdXBsb2FkX3NpemUgYW5kIHNraXBfdXBsb2FkX3NpemUgPiAwOgogICAgICAgICAgICAgICAgICAgIGlmIGZpbGVfc2l6ZSA+PSBza2lwX3VwbG9hZF9zaXplOgogICAgICAgICAgICAgICAgICAgICAgICBsb2dnZXIud2FybigKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGYi44CQUDExNURpc2vjgJF7dGFyZ2V0X25hbWV9IOaXoOazleenkuS8oO+8jOaWh+S7tuWkp+WwjyB7ZmlsZV9zaXplfSDlpKfkuo7nrYnkuo7pmIjlgLwge3NraXBfdXBsb2FkX3NpemV977yM6Lez6L+H5LiK5LygIgogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIHNlbmRfdXBsb2FkX3Jlc3VsdF9ub3RpZnkoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdWNjZXNzPUZhbHNlLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0X25hbWU9dGFyZ2V0X25hbWUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWxlX3NpemU9ZmlsZV9zaXplLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgZXJyb3JfbXNnPWYi56eS5Lyg5aSx6LSl77yM5paH5Lu25aSn5bCPIHtmaWxlX3NpemV9IOWkp+S6juetieS6jumYiOWAvCB7c2tpcF91cGxvYWRfc2l6ZX3vvIzlt7Lot7Pov4fkuIrkvKAiLAogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBOb25lCiAgICAgICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmluZm8oCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CRe3RhcmdldF9uYW1lfSDml6Dms5Xnp5LkvKDvvIzkvYbmlofku7blpKflsI8ge2ZpbGVfc2l6ZX0g5bCP5LqO6ZiI5YC8IHtza2lwX3VwbG9hZF9zaXplfe+8jOe7p+e7reaJp+ihjOS4iuS8oCIKICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgICAgICBsb2dnZXIud2FybihmIuOAkFAxMTVEaXNr44CRe3RhcmdldF9uYW1lfSDml6Dms5Xnp5LkvKDvvIzot7Pov4fkuIrkvKAiKQogICAgICAgICAgICAgICAgICAgIHNlbmRfdXBsb2FkX3Jlc3VsdF9ub3RpZnkoCiAgICAgICAgICAgICAgICAgICAgICAgIHN1Y2Nlc3M9RmFsc2UsCiAgICAgICAgICAgICAgICAgICAgICAgIHRhcmdldF9uYW1lPXRhcmdldF9uYW1lLAogICAgICAgICAgICAgICAgICAgICAgICBmaWxlX3NpemU9ZmlsZV9zaXplLAogICAgICAgICAgICAgICAgICAgICAgICBlcnJvcl9tc2c9IuenkuS8oOWksei0pe+8jOW3sui3s+i/h+S4iuS8oCIsCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIHJldHVybiBOb25lCgogICAgICAgICAgICAjIOiOt+WPluS4iuS8oOS/oeaBrwogICAgICAgICAgICBidWNrZXRfbmFtZSA9IGluaXRfcmVzcC5nZXQoImJ1Y2tldCIpCiAgICAgICAgICAgIG9iamVjdF9uYW1lID0gaW5pdF9yZXNwLmdldCgib2JqZWN0IikKICAgICAgICAgICAgY2FsbGJhY2tfaW5mbyA9IGluaXRfcmVzcC5nZXQoImNhbGxiYWNrIikKCiAgICAgICAgICAgIGlmIG5vdCBhbGwoW2J1Y2tldF9uYW1lLCBvYmplY3RfbmFtZSwgY2FsbGJhY2tfaW5mb10pOgogICAgICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi44CQUDExNURpc2vjgJHkuIrkvKDkv6Hmga/kuI3lrozmlbQ6IHtpbml0X3Jlc3B9IikKICAgICAgICAgICAgICAgIHJldHVybiBOb25lCgogICAgICAgICAgICAjIFN0ZXAgMjog6I635Y+WT1NT5LiK5Lyg5Yet6K+BCiAgICAgICAgICAgICgKICAgICAgICAgICAgICAgIGVuZHBvaW50LAogICAgICAgICAgICAgICAgYWNjZXNzX2tleV9pZCwKICAgICAgICAgICAgICAgIGFjY2Vzc19rZXlfc2VjcmV0LAogICAgICAgICAgICAgICAgc2VjdXJpdHlfdG9rZW4sCiAgICAgICAgICAgICAgICB0b2tlbl9leHBpcmF0aW9uLAogICAgICAgICAgICApID0gc2VsZi5fcDExNV9hcGkuX2dldF9vc3NfdG9rZW4oKQogICAgICAgICAgICBsb2dnZXIuaW5mbygKICAgICAgICAgICAgICAgIGYi44CQUDExNURpc2vjgJFPU1MgVG9rZW4g6L+H5pyf5pe26Ze0OiB7dG9rZW5fZXhwaXJhdGlvbi5zdHJmdGltZSgnJVktJW0tJWQgJUg6JU06JVMgVVRDJyl9IgogICAgICAgICAgICApCgogICAgICAgICAgICAjIFN0ZXAgMzogT1NT5YiG54mH5LiK5LygCiAgICAgICAgICAgIGF1dGggPSBTdHNBdXRoKAogICAgICAgICAgICAgICAgYWNjZXNzX2tleV9pZD1hY2Nlc3Nfa2V5X2lkLAogICAgICAgICAgICAgICAgYWNjZXNzX2tleV9zZWNyZXQ9YWNjZXNzX2tleV9zZWNyZXQsCiAgICAgICAgICAgICAgICBzZWN1cml0eV90b2tlbj1zZWN1cml0eV90b2tlbiwKICAgICAgICAgICAgKQogICAgICAgICAgICBidWNrZXQgPSBCdWNrZXQoYXV0aCwgZW5kcG9pbnQsIGJ1Y2tldF9uYW1lKSAgIyBub3FhCiAgICAgICAgICAgIHBhcnRfc2l6ZSA9IGRldGVybWluZV9wYXJ0X3NpemUoZmlsZV9zaXplLCBwcmVmZXJyZWRfc2l6ZT0xMCAqIDEwMjQgKiAxMDI0KQoKICAgICAgICAgICAgbG9nZ2VyLmluZm8oCiAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CR5byA5aeL5YiG54mH5LiK5Lyg77yM5YiG54mH5aSn5bCPOiB7cGFydF9zaXplIC8vIDEwMjQgLy8gMTAyNH1NQiIKICAgICAgICAgICAgKQoKICAgICAgICAgICAgIyDliJ3lp4vljJbliIbniYfkuIrkvKAKICAgICAgICAgICAgdXBsb2FkX2lkID0gYnVja2V0LmluaXRfbXVsdGlwYXJ0X3VwbG9hZCgKICAgICAgICAgICAgICAgIG9iamVjdF9uYW1lLCBwYXJhbXM9eyJlbmNvZGluZy10eXBlIjogInVybCIsICJzZXF1ZW50aWFsIjogIiJ9CiAgICAgICAgICAgICkudXBsb2FkX2lkCiAgICAgICAgICAgIHBhcnRzID0gW10KCiAgICAgICAgICAgICMg6YCQ5Liq5LiK5Lyg5YiG54mH5bm25pu05paw6L+b5bqmCiAgICAgICAgICAgIHdpdGggb3Blbihsb2NhbF9wYXRoLCAicmIiKSBhcyBmaWxlb2JqOgogICAgICAgICAgICAgICAgcGFydF9udW1iZXIgPSAxCiAgICAgICAgICAgICAgICBvZmZzZXQgPSAwCiAgICAgICAgICAgICAgICB3aGlsZSBvZmZzZXQgPCBmaWxlX3NpemU6CiAgICAgICAgICAgICAgICAgICAgIyDmo4Dmn6XmmK/lkKblj5bmtojkuIrkvKAKICAgICAgICAgICAgICAgICAgICBpZiBnbG9iYWxfdmFycy5pc190cmFuc2Zlcl9zdG9wcGVkKGxvY2FsX3BhdGguYXNfcG9zaXgoKSk6CiAgICAgICAgICAgICAgICAgICAgICAgIGxvZ2dlci5pbmZvKGYi44CQUDExNURpc2vjgJF7bG9jYWxfcGF0aH0g5LiK5Lyg5bey5Y+W5raI77yBIikKICAgICAgICAgICAgICAgICAgICAgICAgYnVja2V0LmFib3J0X211bHRpcGFydF91cGxvYWQob2JqZWN0X25hbWUsIHVwbG9hZF9pZCkKICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIE5vbmUKCiAgICAgICAgICAgICAgICAgICAgIyDmo4Dmn6UgdG9rZW4g5piv5ZCm5Y2z5bCG6L+H5pyf77yI5o+Q5YmNIDUg5YiG6ZKf5Yi35paw77yJCiAgICAgICAgICAgICAgICAgICAgaWYgc2VsZi5fcDExNV9hcGkuX2lzX3Rva2VuX2V4cGlyaW5nKAogICAgICAgICAgICAgICAgICAgICAgICB0b2tlbl9leHBpcmF0aW9uLCB0aHJlc2hvbGRfbWludXRlcz01CiAgICAgICAgICAgICAgICAgICAgKToKICAgICAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmluZm8oIuOAkFAxMTVEaXNr44CRVG9rZW4g5Y2z5bCG6L+H5pyf77yM5q2j5Zyo5Yi35pawLi4uIikKICAgICAgICAgICAgICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgICAgICAgICAgICAgKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVuZHBvaW50LAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFjY2Vzc19rZXlfaWQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWNjZXNzX2tleV9zZWNyZXQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2VjdXJpdHlfdG9rZW4sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdG9rZW5fZXhwaXJhdGlvbiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICkgPSBzZWxmLl9wMTE1X2FwaS5fZ2V0X29zc190b2tlbigpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIOmHjeaWsOWIm+W7uuiupOivgeWSjCBidWNrZXQg5a+56LGhCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdXRoID0gU3RzQXV0aCgKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Nfa2V5X2lkPWFjY2Vzc19rZXlfaWQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWNjZXNzX2tleV9zZWNyZXQ9YWNjZXNzX2tleV9zZWNyZXQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2VjdXJpdHlfdG9rZW49c2VjdXJpdHlfdG9rZW4sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBidWNrZXQgPSBCdWNrZXQoYXV0aCwgZW5kcG9pbnQsIGJ1Y2tldF9uYW1lKSAgIyBub3FhCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb2dnZXIuaW5mbygKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CRVG9rZW4g5Yi35paw5oiQ5Yqf77yM5paw55qE6L+H5pyf5pe26Ze0OiAiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZiJ7dG9rZW5fZXhwaXJhdGlvbi5zdHJmdGltZSgnJVktJW0tJWQgJUg6JU06JVMgVVRDJyl9IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBQMTE1RGlza+OAkeWIt+aWsCBUb2tlbiDlpLHotKU6IHtzdHIoZSl9IikKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2tldC5hYm9ydF9tdWx0aXBhcnRfdXBsb2FkKG9iamVjdF9uYW1lLCB1cGxvYWRfaWQpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gTm9uZQoKICAgICAgICAgICAgICAgICAgICBudW1fdG9fdXBsb2FkID0gbWluKHBhcnRfc2l6ZSwgZmlsZV9zaXplIC0gb2Zmc2V0KQoKICAgICAgICAgICAgICAgICAgICAjIOS4iuS8oOWIhueJh++8jOW4pumHjeivleacuuWItuWkhOeQhiB0b2tlbiDov4fmnJ/plJnor68KICAgICAgICAgICAgICAgICAgICBtYXhfcmV0cmllcyA9IDIKICAgICAgICAgICAgICAgICAgICBmb3IgcmV0cnkgaW4gcmFuZ2UobWF4X3JldHJpZXMpOgogICAgICAgICAgICAgICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXN1bHQgPSBidWNrZXQudXBsb2FkX3BhcnQoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb2JqZWN0X25hbWUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdXBsb2FkX2lkLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBhcnRfbnVtYmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGE9U2l6ZWRGaWxlQWRhcHRlcihmaWxlb2JqLCBudW1fdG9fdXBsb2FkKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBhcnRzLmFwcGVuZChQYXJ0SW5mbyhwYXJ0X251bWJlciwgcmVzdWx0LmV0YWcpKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWsgICMg5LiK5Lyg5oiQ5Yqf77yM6Lez5Ye66YeN6K+V5b6q546vCiAgICAgICAgICAgICAgICAgICAgICAgIGV4Y2VwdCBTZXJ2ZXJFcnJvciBhcyBlOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgIyDmo4Dmn6XmmK/lkKbmmK8gdG9rZW4g6L+H5pyf6ZSZ6K+vCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBlcnJvcl9jb2RlID0gZ2V0YXR0cihlLCAiY29kZSIsICIiKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVycm9yX2NvZGUKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbiAoIkludmFsaWRBY2Nlc3NLZXlJZCIsICJTZWN1cml0eVRva2VuRXhwaXJlZCIpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYW5kIHJldHJ5IDwgbWF4X3JldHJpZXMgLSAxCiAgICAgICAgICAgICAgICAgICAgICAgICAgICApOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmIuOAkFAxMTVEaXNr44CR5qOA5rWL5YiwIFRva2VuIOi/h+acn+mUmeivryAoe2Vycm9yX2NvZGV9Ke+8jCIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZiLmraPlnKjliLfmlrDlubbph43or5UuLi4iCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMg5Yi35pawIHRva2VuCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbmRwb2ludCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWNjZXNzX2tleV9pZCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWNjZXNzX2tleV9zZWNyZXQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNlY3VyaXR5X3Rva2VuLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0b2tlbl9leHBpcmF0aW9uLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICkgPSBzZWxmLl9wMTE1X2FwaS5fZ2V0X29zc190b2tlbigpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXV0aCA9IFN0c0F1dGgoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFjY2Vzc19rZXlfaWQ9YWNjZXNzX2tleV9pZCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWNjZXNzX2tleV9zZWNyZXQ9YWNjZXNzX2tleV9zZWNyZXQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNlY3VyaXR5X3Rva2VuPXNlY3VyaXR5X3Rva2VuLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBidWNrZXQgPSBCdWNrZXQoYXV0aCwgZW5kcG9pbnQsIGJ1Y2tldF9uYW1lKSAgIyBub3FhCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyDpnIDopoHph43mlrDlrprkvY3mlofku7bmjIfpkogKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWxlb2JqLnNlZWsob2Zmc2V0KQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMg5YW25LuW6ZSZ6K+v5oiW6YeN6K+V5qyh5pWw55So5bC977yM5pS+5byD5LiK5LygCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi44CQUDExNURpc2vjgJHkuIrkvKDliIbniYflpLHotKU6IHtzdHIoZSl9IikKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBidWNrZXQuYWJvcnRfbXVsdGlwYXJ0X3VwbG9hZChvYmplY3RfbmFtZSwgdXBsb2FkX2lkKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJhaXNlCgogICAgICAgICAgICAgICAgICAgICMg5pu05paw5YGP56e75ZKM5YiG54mH5Y+3CiAgICAgICAgICAgICAgICAgICAgb2Zmc2V0ICs9IG51bV90b191cGxvYWQKICAgICAgICAgICAgICAgICAgICBwYXJ0X251bWJlciArPSAxCgogICAgICAgICAgICAgICAgICAgICMg5a6e5pe25pu05paw6L+b5bqmCiAgICAgICAgICAgICAgICAgICAgcHJvZ3Jlc3MgPSAob2Zmc2V0ICogMTAwKSAvIGZpbGVfc2l6ZQogICAgICAgICAgICAgICAgICAgIHByb2dyZXNzX2NhbGxiYWNrKHByb2dyZXNzKQogICAgICAgICAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZyhmIuOAkFAxMTVEaXNr44CR5LiK5Lyg6L+b5bqmOiB7cHJvZ3Jlc3M6LjFmfSUiKQoKICAgICAgICAgICAgIyDlrozmiJDkuIrkvKAKICAgICAgICAgICAgcHJvZ3Jlc3NfY2FsbGJhY2soMTAwKQoKICAgICAgICAgICAgIyBTdGVwIDQ6IOWujOaIkE9TU+S4iuS8oOW5tuWbnuiwgzExNeacjeWKoeWZqAogICAgICAgICAgICBoZWFkZXJzID0gewogICAgICAgICAgICAgICAgIlgtb3NzLWNhbGxiYWNrIjogZW5jb2RlX2NhbGxiYWNrKGNhbGxiYWNrX2luZm9bImNhbGxiYWNrIl0pLAogICAgICAgICAgICAgICAgIngtb3NzLWNhbGxiYWNrLXZhciI6IGVuY29kZV9jYWxsYmFjayhjYWxsYmFja19pbmZvWyJjYWxsYmFja192YXIiXSksCiAgICAgICAgICAgICAgICAieC1vc3MtZm9yYmlkLW92ZXJ3cml0ZSI6ICJmYWxzZSIsCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHJlc3VsdCA9IGJ1Y2tldC5jb21wbGV0ZV9tdWx0aXBhcnRfdXBsb2FkKAogICAgICAgICAgICAgICAgb2JqZWN0X25hbWUsIHVwbG9hZF9pZCwgcGFydHMsIGhlYWRlcnM9aGVhZGVycwogICAgICAgICAgICApCgogICAgICAgICAgICBpZiByZXN1bHQuc3RhdHVzID09IDIwMDoKICAgICAgICAgICAgICAgIGxvZ2dlci5pbmZvKGYi44CQUDExNURpc2vjgJF7dGFyZ2V0X25hbWV9IOS4iuS8oOaIkOWKnyIpCiAgICAgICAgICAgICAgICBlbmRfdGltZSA9IHBlcmZfY291bnRlcigpCiAgICAgICAgICAgICAgICBlbGFwc2VkX3RpbWUgPSBlbmRfdGltZSAtIHN0YXJ0X3RpbWUKICAgICAgICAgICAgICAgIHNlbmRfdXBsb2FkX3Jlc3VsdF9ub3RpZnkoCiAgICAgICAgICAgICAgICAgICAgc3VjY2Vzcz1UcnVlLAogICAgICAgICAgICAgICAgICAgIHRhcmdldF9uYW1lPXRhcmdldF9uYW1lLAogICAgICAgICAgICAgICAgICAgIGZpbGVfc2l6ZT1maWxlX3NpemUsCiAgICAgICAgICAgICAgICAgICAgZWxhcHNlZF90aW1lPWVsYXBzZWRfdGltZSwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIGVuZF90aW1lID0gcGVyZl9jb3VudGVyKCkKICAgICAgICAgICAgICAgIGVsYXBzZWRfdGltZSA9IGVuZF90aW1lIC0gc3RhcnRfdGltZQogICAgICAgICAgICAgICAgc2VuZF91cGxvYWRfaW5mbygKICAgICAgICAgICAgICAgICAgICBmaWxlX3NoYTEsCiAgICAgICAgICAgICAgICAgICAgIiIsCiAgICAgICAgICAgICAgICAgICAgRmFsc2UsCiAgICAgICAgICAgICAgICAgICAgIiIsCiAgICAgICAgICAgICAgICAgICAgc3RyKGZpbGVfc2l6ZSksCiAgICAgICAgICAgICAgICAgICAgdGFyZ2V0X25hbWUsCiAgICAgICAgICAgICAgICAgICAgaW50KGVsYXBzZWRfdGltZSksCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICByZXR1cm4gc2VsZi5fcDExNV9hcGkuZ2V0X2l0ZW0odGFyZ2V0X3BhdGgpCiAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoCiAgICAgICAgICAgICAgICAgICAgZiLjgJBQMTE1RGlza+OAkXt0YXJnZXRfbmFtZX0g5LiK5Lyg5aSx6LSl77yM54q25oCB56CBOiB7cmVzdWx0LnN0YXR1c30iCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBzZW5kX3VwbG9hZF9yZXN1bHRfbm90aWZ5KAogICAgICAgICAgICAgICAgICAgIHN1Y2Nlc3M9RmFsc2UsCiAgICAgICAgICAgICAgICAgICAgdGFyZ2V0X25hbWU9dGFyZ2V0X25hbWUsCiAgICAgICAgICAgICAgICAgICAgZmlsZV9zaXplPWZpbGVfc2l6ZSwKICAgICAgICAgICAgICAgICAgICBlcnJvcl9tc2c9ZiLplJnor6/noIE6IHtyZXN1bHQuc3RhdHVzfSIsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICByZXR1cm4gTm9uZQoKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgIGxvZ2dlci5lcnJvcihmIuOAkFAxMTVEaXNr44CR5LiK5Lyg5aSx6LSlOiB7bG9jYWxfcGF0aH0gLSB7c3RyKGUpfSIpCiAgICAgICAgICAgIHNlbmRfdXBsb2FkX3Jlc3VsdF9ub3RpZnkoCiAgICAgICAgICAgICAgICBzdWNjZXNzPUZhbHNlLAogICAgICAgICAgICAgICAgdGFyZ2V0X25hbWU9dGFyZ2V0X25hbWUsCiAgICAgICAgICAgICAgICBmaWxlX3NpemU9ZmlsZV9zaXplLAogICAgICAgICAgICAgICAgZXJyb3JfbXNnPWYi5pyq55+l6ZSZ6K+vOiB7c3RyKGUpfSIsCiAgICAgICAgICAgICkKICAgICAgICAgICAgcmV0dXJuIE5vbmUK
+__all__ = ["P115DiskCore"]
+
+from datetime import datetime, timezone
+from pathlib import Path
+from time import perf_counter, sleep
+from typing import Any, Optional
+
+from cryptography.hazmat.primitives import hashes
+from oss2 import StsAuth, Bucket, determine_part_size
+from oss2.exceptions import ServerError
+from oss2.models import PartInfo
+from oss2.utils import b64encode_as_string, SizedFileAdapter
+from p115center import P115Center, UploadInfo
+from p115client import P115Client, check_response
+from p115client.const import _CACHE_DIR
+
+from app.core.config import global_vars
+from app.log import logger
+from app.modules.filemanager.storages import transfer_process
+from app.schemas import FileItem, NotificationType
+
+from ..core.config import configer
+from ..core.i18n import i18n
+from ..core.message import post_message, upload_notifier
+
+
+class P115DiskCore:
+    """
+    模拟 P115Disk 插件接口
+    """
+
+    def __init__(self, client: P115Client):
+        try:
+            from app.plugins.p115disk.p115_api import P115Api  # noqa: F401
+
+            P115_API_AVAILABLE = True
+        except (ImportError, ModuleNotFoundError):
+            P115_API_AVAILABLE = False
+            P115Api = Any
+
+        if P115_API_AVAILABLE:
+            self._p115_api = P115Api(client=client, disk_name="115网盘Plus")
+
+        self.p115_center = P115Center(configer.get_config("machine_id"))
+
+    def upload(
+        self,
+        target_dir: FileItem,
+        local_path: Path,
+        new_name: Optional[str] = None,
+    ) -> Optional[FileItem]:
+        """
+        上传文件到云盘
+
+        :param target_dir: 上传目标目录项
+        :param local_path: 本地文件路径
+        :param new_name: 上传后的文件名，如果为None则使用本地文件名
+
+        :return: 上传成功返回文件项，失败返回None
+        """
+
+        def read_range_hash(range_str: str) -> str:
+            """
+            计算文件指定字节区间的 SHA1 哈希值
+
+            :param range_str: 区间字符串，格式为 "start-end"
+            :return: 区间的 SHA1 十六进制大写字符串
+            """
+            start, end = map(int, range_str.split("-"))
+            with open(local_path, "rb") as f:
+                f.seek(start)
+                chunk = f.read(end - start + 1)
+                sha1 = hashes.Hash(hashes.SHA1())
+                sha1.update(chunk)
+                return sha1.finalize().hex().upper()
+
+        def encode_callback(cb: str) -> str:
+            """
+            对回调字符串进行 Base64 编码
+
+            :param cb: 待编码的回调字符串
+            :return: Base64 编码后的字符串
+            """
+            return b64encode_as_string(cb)
+
+        def send_upload_info(
+            file_sha1: Optional[str],
+            first_sha1: Optional[str],
+            second_auth: bool,
+            second_sha1: Optional[str],
+            file_size: Optional[str],
+            file_name: Optional[str],
+            upload_time: Optional[int],
+        ):
+            """
+            发送上传信息
+            """
+            try:
+                resp = self.p115_center.upload_info(
+                    UploadInfo(
+                        file_sha1=file_sha1,
+                        first_sha1=first_sha1,
+                        second_auth=second_auth,
+                        second_sha1=second_sha1,
+                        file_size=file_size,
+                        file_name=file_name,
+                        time=upload_time,
+                        postime=datetime.now(timezone.utc),
+                    )
+                )
+                logger.info(f"【P115Disk】上传信息报告服务器成功: {resp.model_dump()}")
+            except Exception as e:
+                logger.warn(f"【P115Disk】上传信息报告服务器失败: {e}")
+
+        def send_upload_wait(target_name):
+            """
+            发送上传等待
+            """
+            if configer.notify and configer.upload_module_notify:
+                post_message(
+                    mtype=NotificationType.Plugin,
+                    title=i18n.translate("upload_module_title"),
+                    text=f"\n{i18n.translate('upload_wait_text', name=target_name)}\n",
+                )
+
+            try:
+                self.p115_center.upload_wait()
+            except Exception:
+                pass
+
+        def send_upload_result_notify(
+            success: bool,
+            target_name: str,
+            file_size: int,
+            elapsed_time: Optional[float] = None,
+            error_msg: Optional[str] = None,
+        ):
+            """
+            发送上传结果通知
+
+            :param success: 是否成功
+            :param target_name: 文件名
+            :param file_size: 文件大小
+            :param elapsed_time: 耗时（秒）
+            :param error_msg: 错误信息
+            """
+            if not configer.notify or not configer.upload_open_result_notify:
+                return
+
+            upload_notifier.add(
+                success=success,
+                target_name=target_name,
+                file_size=file_size,
+                elapsed_time=elapsed_time,
+                error_msg=error_msg,
+            )
+
+        if not local_path.exists():
+            logger.error(f"【P115Disk】本地文件不存在: {local_path}")
+            return None
+
+        target_name = new_name or local_path.name
+        target_path = Path(target_dir.path) / target_name
+
+        # 获取目标目录ID
+        target_pid = target_dir.fileid
+
+        # 计算文件特征值
+        file_size = local_path.stat().st_size
+        file_sha1 = self._p115_api._calc_sha1(local_path)
+
+        # 清理缓存
+        cache_id = self._p115_api._id_cache.get_id_by_dir(target_path.as_posix())
+        if cache_id:
+            self._p115_api._id_cache.remove(id=cache_id)
+            self._p115_api._id_item_cache.remove(id=cache_id)
+
+        # 初始化进度条
+        logger.info(f"【P115Disk】开始上传: {local_path} -> {target_path}")
+        progress_callback = transfer_process(local_path.as_posix())
+
+        try:
+            wait_start_time = perf_counter()
+            send_wait = False
+            while True:
+                start_time = perf_counter()
+                # Step 1: 初始化上传
+                init_resp = None
+                init_max_retries = 3
+                init_retry_delay = 2
+                sig_invalid_handled = False
+                for init_attempt in range(init_max_retries):
+                    init_resp = None
+                    try:
+                        init_resp = self._p115_api.client.upload_file_init(
+                            filename=target_name,
+                            filesize=file_size,
+                            filesha1=file_sha1,
+                            pid=target_pid,
+                            read_range_bytes_or_hash=read_range_hash,
+                        )
+                        check_response(init_resp)
+                        break
+                    except Exception as e:
+                        if (
+                            not sig_invalid_handled
+                            and init_resp
+                            and isinstance(init_resp, dict)
+                            and init_resp.get("statusmsg") == "sig invalid"
+                        ):
+                            userkey_points_json = (
+                                _CACHE_DIR / "userkey_stable_points.json"
+                            )
+                            if userkey_points_json.exists():
+                                userkey_points_json.unlink(missing_ok=True)
+                            sig_invalid_handled = True
+                            continue
+                        if init_attempt < init_max_retries - 1:
+                            logger.warn(
+                                f"【P115Disk】初始化上传失败，"
+                                f"第 {init_attempt + 1}/{init_max_retries} 次重试: {e}"
+                            )
+                            sleep(init_retry_delay)
+                            init_retry_delay *= 2
+                        else:
+                            logger.error(f"【P115Disk】初始化上传重试用尽: {e}")
+                            return None
+                if init_resp is None:
+                    return None
+
+                logger.debug(f"【P115Disk】上传初始化结果: {init_resp}")
+
+                if not init_resp.get("state"):
+                    logger.error(
+                        f"【P115Disk】初始化上传失败: {init_resp.get('error')}"
+                    )
+                    return None
+
+                # 检查是否秒传成功
+                if init_resp.get("reuse"):
+                    logger.info(f"【P115Disk】{target_name} 秒传成功")
+                    progress_callback(100)
+                    end_time = perf_counter()
+                    elapsed_time = end_time - start_time
+                    send_upload_info(
+                        file_sha1,
+                        "",
+                        True,
+                        "",
+                        str(file_size),
+                        target_name,
+                        int(elapsed_time),
+                    )
+                    send_upload_result_notify(
+                        success=True,
+                        target_name=target_name,
+                        file_size=file_size,
+                        elapsed_time=elapsed_time,
+                    )
+                    return self._p115_api.get_item(target_path)
+
+                # 判断是等待秒传还是直接上传
+                upload_module_skip_upload_wait_size = int(
+                    configer.get_config("upload_module_skip_upload_wait_size") or 0
+                )
+                if (
+                    upload_module_skip_upload_wait_size != 0
+                    and file_size <= upload_module_skip_upload_wait_size
+                ):
+                    logger.info(
+                        f"【P115Disk】文件大小 {file_size} 小于最低阈值，跳过等待流程: {target_name}"
+                    )
+                    break
+
+                if perf_counter() - wait_start_time > int(
+                    configer.get_config("upload_module_wait_timeout")
+                ):
+                    logger.warn(
+                        f"【P115Disk】等待秒传超时，自动进行上传流程: {target_name}"
+                    )
+                    break
+
+                upload_module_force_upload_wait_size = int(
+                    configer.get_config("upload_module_force_upload_wait_size") or 0
+                )
+                if (
+                    upload_module_force_upload_wait_size != 0
+                    and file_size >= upload_module_force_upload_wait_size
+                ):
+                    logger.info(
+                        f"【P115Disk】文件大小 {file_size} 大于最高阈值，强制等待流程: {target_name}"
+                    )
+                    sleep(int(configer.get_config("upload_module_wait_time")))
+                else:
+                    try:
+                        resp = self.p115_center.user_speed_status()
+
+                        if resp.status != "slow":
+                            logger.warn(
+                                f"【P115Disk】上传速度状态 {resp.status}，跳过秒传等待: {target_name}"
+                            )
+                            break
+
+                        # 计算等待时间
+                        default_wait_time = int(
+                            configer.get_config("upload_module_wait_time")
+                        )
+                        sleep_time = default_wait_time
+                        fastest_speed = resp.fastest_user_speed_mbps
+                        user_speed = resp.user_average_speed_mbps
+                        if fastest_speed and user_speed:
+                            bs = user_speed * 0.2 + fastest_speed * 0.8
+                            wt = file_size / (1024 * 1024) / bs
+                            if wt > 10 * 60:
+                                wt = wt / (wt // (10 * 60) + 1)
+                            if wt <= default_wait_time // 2:
+                                wt += default_wait_time // 2
+                            sleep_time = int(wt)
+
+                        logger.info(
+                            f"【P115Disk】休眠 {sleep_time} 秒，等待秒传: {target_name}"
+                        )
+                        if not send_wait:
+                            send_upload_wait(target_name)
+                            send_wait = True
+                        sleep(sleep_time)
+                    except Exception as e:
+                        logger.warn(f"【P115Disk】获取用户上传速度错误: {e}")
+                        break
+
+            if configer.upload_module_skip_slow_upload:
+                skip_upload_size = configer.get_config(
+                    "upload_module_skip_slow_upload_size"
+                )
+                if skip_upload_size and skip_upload_size > 0:
+                    if file_size >= skip_upload_size:
+                        logger.warn(
+                            f"【P115Disk】{target_name} 无法秒传，文件大小 {file_size} 大于等于阈值 {skip_upload_size}，跳过上传"
+                        )
+                        send_upload_result_notify(
+                            success=False,
+                            target_name=target_name,
+                            file_size=file_size,
+                            error_msg=f"秒传失败，文件大小 {file_size} 大于等于阈值 {skip_upload_size}，已跳过上传",
+                        )
+                        return None
+                    else:
+                        logger.info(
+                            f"【P115Disk】{target_name} 无法秒传，但文件大小 {file_size} 小于阈值 {skip_upload_size}，继续执行上传"
+                        )
+                else:
+                    logger.warn(f"【P115Disk】{target_name} 无法秒传，跳过上传")
+                    send_upload_result_notify(
+                        success=False,
+                        target_name=target_name,
+                        file_size=file_size,
+                        error_msg="秒传失败，已跳过上传",
+                    )
+                    return None
+
+            # 获取上传信息
+            bucket_name = init_resp.get("bucket")
+            object_name = init_resp.get("object")
+            callback_info = init_resp.get("callback")
+
+            if not all([bucket_name, object_name, callback_info]):
+                logger.error(f"【P115Disk】上传信息不完整: {init_resp}")
+                return None
+
+            # Step 2: 获取OSS上传凭证
+            (
+                endpoint,
+                access_key_id,
+                access_key_secret,
+                security_token,
+                token_expiration,
+            ) = self._p115_api._get_oss_token()
+            logger.info(
+                f"【P115Disk】OSS Token 过期时间: {token_expiration.strftime('%Y-%m-%d %H:%M:%S UTC')}"
+            )
+
+            # Step 3: OSS分片上传
+            auth = StsAuth(
+                access_key_id=access_key_id,
+                access_key_secret=access_key_secret,
+                security_token=security_token,
+            )
+            bucket = Bucket(auth, endpoint, bucket_name)  # noqa
+            part_size = determine_part_size(file_size, preferred_size=10 * 1024 * 1024)
+
+            logger.info(
+                f"【P115Disk】开始分片上传，分片大小: {part_size // 1024 // 1024}MB"
+            )
+
+            # 初始化分片上传
+            upload_id = bucket.init_multipart_upload(
+                object_name, params={"encoding-type": "url", "sequential": ""}
+            ).upload_id
+            parts = []
+
+            # 逐个上传分片并更新进度
+            with open(local_path, "rb") as fileobj:
+                part_number = 1
+                offset = 0
+                while offset < file_size:
+                    # 检查是否取消上传
+                    if global_vars.is_transfer_stopped(local_path.as_posix()):
+                        logger.info(f"【P115Disk】{local_path} 上传已取消！")
+                        bucket.abort_multipart_upload(object_name, upload_id)
+                        return None
+
+                    # 检查 token 是否即将过期（提前 5 分钟刷新）
+                    if self._p115_api._is_token_expiring(
+                        token_expiration, threshold_minutes=5
+                    ):
+                        logger.info("【P115Disk】Token 即将过期，正在刷新...")
+                        try:
+                            (
+                                endpoint,
+                                access_key_id,
+                                access_key_secret,
+                                security_token,
+                                token_expiration,
+                            ) = self._p115_api._get_oss_token()
+                            # 重新创建认证和 bucket 对象
+                            auth = StsAuth(
+                                access_key_id=access_key_id,
+                                access_key_secret=access_key_secret,
+                                security_token=security_token,
+                            )
+                            bucket = Bucket(auth, endpoint, bucket_name)  # noqa
+                            logger.info(
+                                f"【P115Disk】Token 刷新成功，新的过期时间: "
+                                f"{token_expiration.strftime('%Y-%m-%d %H:%M:%S UTC')}"
+                            )
+                        except Exception as e:
+                            logger.error(f"【P115Disk】刷新 Token 失败: {str(e)}")
+                            bucket.abort_multipart_upload(object_name, upload_id)
+                            return None
+
+                    num_to_upload = min(part_size, file_size - offset)
+
+                    # 上传分片，带重试机制处理 token 过期错误
+                    max_retries = 2
+                    for retry in range(max_retries):
+                        try:
+                            result = bucket.upload_part(
+                                object_name,
+                                upload_id,
+                                part_number,
+                                data=SizedFileAdapter(fileobj, num_to_upload),
+                            )
+                            parts.append(PartInfo(part_number, result.etag))
+                            break  # 上传成功，跳出重试循环
+                        except ServerError as e:
+                            # 检查是否是 token 过期错误
+                            error_code = getattr(e, "code", "")
+                            if (
+                                error_code
+                                in ("InvalidAccessKeyId", "SecurityTokenExpired")
+                                and retry < max_retries - 1
+                            ):
+                                logger.warn(
+                                    f"【P115Disk】检测到 Token 过期错误 ({error_code})，"
+                                    f"正在刷新并重试..."
+                                )
+                                # 刷新 token
+                                (
+                                    endpoint,
+                                    access_key_id,
+                                    access_key_secret,
+                                    security_token,
+                                    token_expiration,
+                                ) = self._p115_api._get_oss_token()
+                                auth = StsAuth(
+                                    access_key_id=access_key_id,
+                                    access_key_secret=access_key_secret,
+                                    security_token=security_token,
+                                )
+                                bucket = Bucket(auth, endpoint, bucket_name)  # noqa
+                                # 需要重新定位文件指针
+                                fileobj.seek(offset)
+                                continue
+                            else:
+                                # 其他错误或重试次数用尽，放弃上传
+                                logger.error(f"【P115Disk】上传分片失败: {str(e)}")
+                                bucket.abort_multipart_upload(object_name, upload_id)
+                                raise
+
+                    # 更新偏移和分片号
+                    offset += num_to_upload
+                    part_number += 1
+
+                    # 实时更新进度
+                    progress = (offset * 100) / file_size
+                    progress_callback(progress)
+                    logger.debug(f"【P115Disk】上传进度: {progress:.1f}%")
+
+            # 完成上传
+            progress_callback(100)
+
+            # Step 4: 完成OSS上传并回调115服务器
+            headers = {
+                "X-oss-callback": encode_callback(callback_info["callback"]),
+                "x-oss-callback-var": encode_callback(callback_info["callback_var"]),
+                "x-oss-forbid-overwrite": "false",
+            }
+
+            result = bucket.complete_multipart_upload(
+                object_name, upload_id, parts, headers=headers
+            )
+
+            if result.status == 200:
+                logger.info(f"【P115Disk】{target_name} 上传成功")
+                end_time = perf_counter()
+                elapsed_time = end_time - start_time
+                send_upload_result_notify(
+                    success=True,
+                    target_name=target_name,
+                    file_size=file_size,
+                    elapsed_time=elapsed_time,
+                )
+                end_time = perf_counter()
+                elapsed_time = end_time - start_time
+                send_upload_info(
+                    file_sha1,
+                    "",
+                    False,
+                    "",
+                    str(file_size),
+                    target_name,
+                    int(elapsed_time),
+                )
+                return self._p115_api.get_item(target_path)
+            else:
+                logger.error(
+                    f"【P115Disk】{target_name} 上传失败，状态码: {result.status}"
+                )
+                send_upload_result_notify(
+                    success=False,
+                    target_name=target_name,
+                    file_size=file_size,
+                    error_msg=f"错误码: {result.status}",
+                )
+                return None
+
+        except Exception as e:
+            logger.error(f"【P115Disk】上传失败: {local_path} - {str(e)}")
+            send_upload_result_notify(
+                success=False,
+                target_name=target_name,
+                file_size=file_size,
+                error_msg=f"未知错误: {str(e)}",
+            )
+            return None

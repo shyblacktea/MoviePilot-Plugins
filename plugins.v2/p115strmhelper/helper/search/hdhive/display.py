@@ -1,1 +1,57 @@
-ZnJvbSByZSBpbXBvcnQgc3ViIGFzIHJlX3N1Ygpmcm9tIHR5cGluZyBpbXBvcnQgQW55LCBEaWN0CgpfUE9JTlRTX1BSRUZJWF9SRSA9IHIiXlxkK1xzKuenr+WIhlxzKiIKCgpkZWYgc3RyaXBfaGRoaXZlX3RpdGxlX3BvaW50c19wcmVmaXgodGl0bGU6IHN0cikgLT4gc3RyOgogICAgIiIiCiAgICDljrvmjonmoIfpopjooYzpppbnmoTjgIxOIOenr+WIhuOAjeWJjee8gO+8jOenr+WIhuS7heWcqOWFg+aVsOaNruihjOWxleekugoKICAgIDpwYXJhbSB0aXRsZSAoc3RyKTog5Y6f5aeL5qCH6aKYCiAgICA6cmV0dXJuIHN0cjog5riF55CG5ZCO55qE5qCH6aKY77yb6Iul5riF55CG5ZCO5Li656m65YiZ6L+U5Zue5Y6f5qCH6aKYCiAgICAiIiIKICAgIHQgPSAodGl0bGUgb3IgIiIpLnN0cmlwKCkKICAgIGlmIG5vdCB0OgogICAgICAgIHJldHVybiB0CiAgICBjbGVhbmVkID0gcmVfc3ViKF9QT0lOVFNfUFJFRklYX1JFLCAiIiwgdCkuc3RyaXAoKQogICAgcmV0dXJuIGNsZWFuZWQgb3IgdAoKCmRlZiBmb3JtYXRfbGlzdF9ibG9ja19pbXBsKGRhdGE6IERpY3Rbc3RyLCBBbnldLCBsaW5lX3ByZWZpeDogc3RyKSAtPiBzdHI6CiAgICAiIiIKICAgIEhESGl2ZSDljZXooYzluo/lj7fliY3nvIAgKyDkuIDooYzlhYPmlbDmja7vvIhNYXJrZG93bu+8ie+8jOS4jeiwg+eUqOino+mUgeaOpeWPowogICAgIiIiCiAgICByb3cgPSBkYXRhLmdldCgiaGRoaXZlX3JhdyIpIG9yIHt9CiAgICB0aXRsZSA9IHN0cmlwX2hkaGl2ZV90aXRsZV9wb2ludHNfcHJlZml4KAogICAgICAgIChkYXRhLmdldCgidGFza25hbWUiKSBvciAi5pyq55+l5ZCN56ewIikuc3RyaXAoKQogICAgKQogICAgbGluZXM6IGxpc3Rbc3RyXSA9IFtmIntsaW5lX3ByZWZpeH3jgJBIREhpdmXjgJF7dGl0bGV9Il0KICAgIHB0cyA9IHJvdy5nZXQoInVubG9ja19wb2ludHMiKQogICAgaWYgcHRzIGlzIE5vbmU6CiAgICAgICAgcHRzX3N0ciA9ICIiCiAgICBlbHNlOgogICAgICAgIHB0c19zdHIgPSBmIuenr+WIhjoge3B0c30iCiAgICBiaXRzOiBsaXN0W3N0cl0gPSBbXQogICAgaWYgcHRzX3N0cjoKICAgICAgICBiaXRzLmFwcGVuZChwdHNfc3RyKQogICAgc3MgPSByb3cuZ2V0KCJzaGFyZV9zaXplIikKICAgIGlmIHNzOgogICAgICAgIGJpdHMuYXBwZW5kKGYi5aSn5bCPOiB7c3N9IikKICAgIHZyID0gcm93LmdldCgidmlkZW9fcmVzb2x1dGlvbiIpCiAgICBpZiBpc2luc3RhbmNlKHZyLCBsaXN0KSBhbmQgdnI6CiAgICAgICAgYml0cy5hcHBlbmQoZiLliIbovqjnjoc6IHsnLCAnLmpvaW4oc3RyKHgpIGZvciB4IGluIHZyKX0iKQogICAgc3JjID0gcm93LmdldCgic291cmNlIikKICAgIGlmIGlzaW5zdGFuY2Uoc3JjLCBsaXN0KSBhbmQgc3JjOgogICAgICAgIGJpdHMuYXBwZW5kKGYi54mH5rqQOiB7JywgJy5qb2luKHN0cih4KSBmb3IgeCBpbiBzcmMpfSIpCiAgICBzdWJfbCA9IHJvdy5nZXQoInN1YnRpdGxlX2xhbmd1YWdlIikKICAgIGlmIGlzaW5zdGFuY2Uoc3ViX2wsIGxpc3QpIGFuZCBzdWJfbDoKICAgICAgICBiaXRzLmFwcGVuZChmIuWtl+W5lTogeycsICcuam9pbihzdHIoeCkgZm9yIHggaW4gc3ViX2wpfSIpCiAgICBzdCA9IHJvdy5nZXQoInN1YnRpdGxlX3R5cGUiKQogICAgaWYgaXNpbnN0YW5jZShzdCwgbGlzdCkgYW5kIHN0OgogICAgICAgIGJpdHMuYXBwZW5kKGYi5a2X5bmV57G75Z6LOiB7JywgJy5qb2luKHN0cih4KSBmb3IgeCBpbiBzdCl9IikKICAgIGlmICJpc19vZmZpY2lhbCIgaW4gcm93IGFuZCByb3cuZ2V0KCJpc19vZmZpY2lhbCIpIGlzIG5vdCBOb25lOgogICAgICAgIGJpdHMuYXBwZW5kKGYi5a6Y5pa5OiB7J+aYrycgaWYgcm93LmdldCgnaXNfb2ZmaWNpYWwnKSBlbHNlICflkKYnfSIpCiAgICBpZiBiaXRzOgogICAgICAgIGxpbmVzLmFwcGVuZChmIiAgeycg772cICcuam9pbihiaXRzKX0iKQogICAgcmV0dXJuICJcbiIuam9pbihsaW5lcykK
+from re import sub as re_sub
+from typing import Any, Dict
+
+_POINTS_PREFIX_RE = r"^\d+\s*积分\s*"
+
+
+def strip_hdhive_title_points_prefix(title: str) -> str:
+    """
+    去掉标题行首的「N 积分」前缀，积分仅在元数据行展示
+
+    :param title (str): 原始标题
+    :return str: 清理后的标题；若清理后为空则返回原标题
+    """
+    t = (title or "").strip()
+    if not t:
+        return t
+    cleaned = re_sub(_POINTS_PREFIX_RE, "", t).strip()
+    return cleaned or t
+
+
+def format_list_block_impl(data: Dict[str, Any], line_prefix: str) -> str:
+    """
+    HDHive 单行序号前缀 + 一行元数据（Markdown），不调用解锁接口
+    """
+    row = data.get("hdhive_raw") or {}
+    title = strip_hdhive_title_points_prefix(
+        (data.get("taskname") or "未知名称").strip()
+    )
+    lines: list[str] = [f"{line_prefix}【HDHive】{title}"]
+    pts = row.get("unlock_points")
+    if pts is None:
+        pts_str = ""
+    else:
+        pts_str = f"积分: {pts}"
+    bits: list[str] = []
+    if pts_str:
+        bits.append(pts_str)
+    ss = row.get("share_size")
+    if ss:
+        bits.append(f"大小: {ss}")
+    vr = row.get("video_resolution")
+    if isinstance(vr, list) and vr:
+        bits.append(f"分辨率: {', '.join(str(x) for x in vr)}")
+    src = row.get("source")
+    if isinstance(src, list) and src:
+        bits.append(f"片源: {', '.join(str(x) for x in src)}")
+    sub_l = row.get("subtitle_language")
+    if isinstance(sub_l, list) and sub_l:
+        bits.append(f"字幕: {', '.join(str(x) for x in sub_l)}")
+    st = row.get("subtitle_type")
+    if isinstance(st, list) and st:
+        bits.append(f"字幕类型: {', '.join(str(x) for x in st)}")
+    if "is_official" in row and row.get("is_official") is not None:
+        bits.append(f"官方: {'是' if row.get('is_official') else '否'}")
+    if bits:
+        lines.append(f"  {' ｜ '.join(bits)}")
+    return "\n".join(lines)

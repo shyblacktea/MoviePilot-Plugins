@@ -1,1 +1,145 @@
-ZnJvbSBkYXRhY2xhc3NlcyBpbXBvcnQgZGF0YWNsYXNzCmZyb20gcXVldWUgaW1wb3J0IFF1ZXVlCmZyb20gdGhyZWFkaW5nIGltcG9ydCBMb2NrLCBUaHJlYWQKZnJvbSB0eXBpbmcgaW1wb3J0IE9wdGlvbmFsCgpmcm9tIGFwcC5sb2cgaW1wb3J0IGxvZ2dlcgpmcm9tIGFwcC5zY2hlbWFzLm1lZGlhc2VydmVyIGltcG9ydCBXZWJob29rRXZlbnRJbmZvCgoKQGRhdGFjbGFzcwpjbGFzcyBTeW5jRGVsV2ViaG9va1Rhc2s6CiAgICAiIiIKICAgIOWNleadoSBXZWJob29rIOWQjOatpeWIoOmZpOS7u+WKoeW/q+eFpwoKICAgIDpwYXJhbSBldmVudF9kYXRhIChXZWJob29rRXZlbnRJbmZvKTog5beyIGRlZXBjb3B5IOeahCBXZWJob29rIOS6i+S7tuaVsOaNrgogICAgOnBhcmFtIGVuYWJsZWQgKGJvb2wpOiDmmK/lkKblkK/nlKjlkIzmraXliKDpmaTvvIjlhaXpmJ/ml7blv6vnhafvvIkKICAgIDpwYXJhbSBub3RpZnkgKGJvb2wpOiDmmK/lkKbpgJrnn6UKICAgIDpwYXJhbSBkZWxfc291cmNlIChib29sKTog5piv5ZCm5Yig6Zmk5rqQ5paH5Lu2CiAgICA6cGFyYW0gcDExNV9saWJyYXJ5X3BhdGggKHN0cik6IDExNSDlqpLkvZPlupPot6/lvoTmmKDlsIQKICAgIDpwYXJhbSBwMTE1X2ZvcmNlX2RlbGV0ZV9maWxlcyAoYm9vbCk6IOaYr+WQpuW8uuWItuWIoOmZpOaXoCBUTURCIOeahOaWh+S7tgogICAgIiIiCgogICAgZXZlbnRfZGF0YTogV2ViaG9va0V2ZW50SW5mbwogICAgZW5hYmxlZDogYm9vbAogICAgbm90aWZ5OiBib29sCiAgICBkZWxfc291cmNlOiBib29sCiAgICBwMTE1X2xpYnJhcnlfcGF0aDogT3B0aW9uYWxbc3RyXQogICAgcDExNV9mb3JjZV9kZWxldGVfZmlsZXM6IGJvb2wKCgpjbGFzcyBTeW5jRGVsV2ViaG9va1F1ZXVlOgogICAgIiIiCiAgICBXZWJob29rIOWQjOatpeWIoOmZpOWFqOWxgOmYn+WIlwogICAgIiIiCgogICAgX1NFTlRJTkVMID0gb2JqZWN0KCkKCiAgICBkZWYgX19pbml0X18oc2VsZikgLT4gTm9uZToKICAgICAgICBzZWxmLl9xdWV1ZTogT3B0aW9uYWxbUXVldWVdID0gTm9uZQogICAgICAgIHNlbGYuX3dvcmtlcl90aHJlYWQ6IE9wdGlvbmFsW1RocmVhZF0gPSBOb25lCiAgICAgICAgc2VsZi5fbG9jayA9IExvY2soKQoKICAgIGRlZiBfd29ya2VyKHNlbGYpIC0+IE5vbmU6CiAgICAgICAgIiIiCiAgICAgICAg5LuO6Zif5YiX5Y+W5Ye65Lu75Yqh5bm26LCD55SoIE1lZGlhU3luY0RlbEhlbHBlci5zeW5jX2RlbF9ieV93ZWJob29rCiAgICAgICAgIiIiCiAgICAgICAgcSA9IHNlbGYuX3F1ZXVlCiAgICAgICAgaWYgcSBpcyBOb25lOgogICAgICAgICAgICByZXR1cm4KICAgICAgICB3aGlsZSBUcnVlOgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICB0YXNrID0gcS5nZXQoKQogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIuZXJyb3IoCiAgICAgICAgICAgICAgICAgICAgZiLjgJDlkIzmraXliKDpmaQgV2ViaG9vayDpmJ/liJfjgJF3b3JrZXIg5Y+W5Lu75Yqh5byC5bi4OiB7ZX0iLAogICAgICAgICAgICAgICAgICAgIGV4Y19pbmZvPVRydWUsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAgICBpZiB0YXNrIGlzIHNlbGYuX1NFTlRJTkVMOgogICAgICAgICAgICAgICAgcS50YXNrX2RvbmUoKQogICAgICAgICAgICAgICAgYnJlYWsKICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgIyDlu7bov5/lr7zlhaXvvIzpgb/lhY0gbWVkaWFzeW5jZGVsIOWMheWIneWni+WMluW+queOr+S+nei1lgogICAgICAgICAgICAgICAgZnJvbSAuIGltcG9ydCBNZWRpYVN5bmNEZWxIZWxwZXIKCiAgICAgICAgICAgICAgICBNZWRpYVN5bmNEZWxIZWxwZXIoKS5zeW5jX2RlbF9ieV93ZWJob29rKAogICAgICAgICAgICAgICAgICAgIGV2ZW50X2RhdGE9dGFzay5ldmVudF9kYXRhLAogICAgICAgICAgICAgICAgICAgIGVuYWJsZWQ9dGFzay5lbmFibGVkLAogICAgICAgICAgICAgICAgICAgIG5vdGlmeT10YXNrLm5vdGlmeSwKICAgICAgICAgICAgICAgICAgICBkZWxfc291cmNlPXRhc2suZGVsX3NvdXJjZSwKICAgICAgICAgICAgICAgICAgICBwMTE1X2xpYnJhcnlfcGF0aD10YXNrLnAxMTVfbGlicmFyeV9wYXRoLAogICAgICAgICAgICAgICAgICAgIHAxMTVfZm9yY2VfZGVsZXRlX2ZpbGVzPXRhc2sucDExNV9mb3JjZV9kZWxldGVfZmlsZXMsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgICAgICAgICBmIuOAkOWQjOatpeWIoOmZpCBXZWJob29rIOmYn+WIl+OAkeWkhOeQhuS7u+WKoeWksei0pToge2V9IiwKICAgICAgICAgICAgICAgICAgICBleGNfaW5mbz1UcnVlLAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICBmaW5hbGx5OgogICAgICAgICAgICAgICAgcS50YXNrX2RvbmUoKQoKICAgIGRlZiBfZW5zdXJlX3N0YXJ0ZWQoc2VsZikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDmh5LlkK/liqggd29ya2Vy77yI6aaW5qyh5YWl6Zif5pe26LCD55So77yJCiAgICAgICAgIiIiCiAgICAgICAgd2l0aCBzZWxmLl9sb2NrOgogICAgICAgICAgICBpZiBzZWxmLl93b3JrZXJfdGhyZWFkIGlzIG5vdCBOb25lIGFuZCBzZWxmLl93b3JrZXJfdGhyZWFkLmlzX2FsaXZlKCk6CiAgICAgICAgICAgICAgICByZXR1cm4KICAgICAgICAgICAgc2VsZi5fcXVldWUgPSBRdWV1ZSgpCiAgICAgICAgICAgIHNlbGYuX3dvcmtlcl90aHJlYWQgPSBUaHJlYWQoCiAgICAgICAgICAgICAgICB0YXJnZXQ9c2VsZi5fd29ya2VyLAogICAgICAgICAgICAgICAgbmFtZT0iUDExNVN0cm1IZWxwZXItU3luY0RlbFdlYmhvb2tRdWV1ZSIsCiAgICAgICAgICAgICAgICBkYWVtb249RmFsc2UsCiAgICAgICAgICAgICkKICAgICAgICAgICAgc2VsZi5fd29ya2VyX3RocmVhZC5zdGFydCgpCiAgICAgICAgICAgIGxvZ2dlci5kZWJ1Zygi44CQ5ZCM5q2l5Yig6ZmkIFdlYmhvb2sg6Zif5YiX44CRd29ya2VyIOW3suWQr+WKqCIpCgogICAgZGVmIHN0b3Aoc2VsZikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDlgZzmraIgd29ya2Vy77ya5Y+R6YCB5ZOo5YW15bm2IGpvaW7vvIzlsL3ph4/mjpLnqbrlt7LlhaXpmJ/ku7vliqHliY3nmoTlpITnkIYKICAgICAgICAiIiIKICAgICAgICB3aXRoIHNlbGYuX2xvY2s6CiAgICAgICAgICAgIHEgPSBzZWxmLl9xdWV1ZQogICAgICAgICAgICB0aCA9IHNlbGYuX3dvcmtlcl90aHJlYWQKICAgICAgICAgICAgaWYgcSBpcyBOb25lIG9yIHRoIGlzIE5vbmU6CiAgICAgICAgICAgICAgICByZXR1cm4KICAgICAgICAgICAgaWYgbm90IHRoLmlzX2FsaXZlKCk6CiAgICAgICAgICAgICAgICBzZWxmLl9xdWV1ZSA9IE5vbmUKICAgICAgICAgICAgICAgIHNlbGYuX3dvcmtlcl90aHJlYWQgPSBOb25lCiAgICAgICAgICAgICAgICByZXR1cm4KICAgICAgICB0cnk6CiAgICAgICAgICAgIHEucHV0KHNlbGYuX1NFTlRJTkVMKQogICAgICAgICAgICB0aC5qb2luKHRpbWVvdXQ9MzApCiAgICAgICAgICAgIGlmIHRoLmlzX2FsaXZlKCk6CiAgICAgICAgICAgICAgICBsb2dnZXIud2FybmluZygi44CQ5ZCM5q2l5Yig6ZmkIFdlYmhvb2sg6Zif5YiX44CRd29ya2VyIOacquWcqCAzMCDnp5LlhoXpgIDlh7oiKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgbG9nZ2VyLmVycm9yKAogICAgICAgICAgICAgICAgZiLjgJDlkIzmraXliKDpmaQgV2ViaG9vayDpmJ/liJfjgJHlgZzmraIgd29ya2VyIOW8guW4uDoge2V9IiwKICAgICAgICAgICAgICAgIGV4Y19pbmZvPVRydWUsCiAgICAgICAgICAgICkKICAgICAgICBmaW5hbGx5OgogICAgICAgICAgICB3aXRoIHNlbGYuX2xvY2s6CiAgICAgICAgICAgICAgICBpZiBzZWxmLl93b3JrZXJfdGhyZWFkIGlzIHRoIGFuZCBzZWxmLl9xdWV1ZSBpcyBxOgogICAgICAgICAgICAgICAgICAgIHNlbGYuX3dvcmtlcl90aHJlYWQgPSBOb25lCiAgICAgICAgICAgICAgICAgICAgc2VsZi5fcXVldWUgPSBOb25lCgogICAgZGVmIGVucXVldWUoc2VsZiwgdGFzazogU3luY0RlbFdlYmhvb2tUYXNrKSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIOWwhuS4gOadoeWQjOatpeWIoOmZpOS7u+WKoeWKoOWFpemYn+WIl++8iOaXoOeVjO+8jHB1dF9ub3dhaXQg5LiN6Zi75aGe5LqL5Lu257q/56iL77yJCgogICAgICAgIDpwYXJhbSB0YXNrIChTeW5jRGVsV2ViaG9va1Rhc2spOiDku7vliqHlv6vnhafvvIhldmVudF9kYXRhIOmhu+W3suWcqOiwg+eUqOaWuSBkZWVwY29wee+8iQogICAgICAgICIiIgogICAgICAgIHNlbGYuX2Vuc3VyZV9zdGFydGVkKCkKICAgICAgICB3aXRoIHNlbGYuX2xvY2s6CiAgICAgICAgICAgIHEgPSBzZWxmLl9xdWV1ZQogICAgICAgIGlmIHEgaXMgTm9uZToKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoIuOAkOWQjOatpeWIoOmZpCBXZWJob29rIOmYn+WIl+OAkemYn+WIl+acquWwsee7qu+8jOi3s+i/h+WFpemYnyIpCiAgICAgICAgICAgIHJldHVybgogICAgICAgIHRyeToKICAgICAgICAgICAgcS5wdXRfbm93YWl0KHRhc2spCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJDlkIzmraXliKDpmaQgV2ViaG9vayDpmJ/liJfjgJHlhaXpmJ/lpLHotKU6IHtlfSIsIGV4Y19pbmZvPVRydWUpCgoKc3luY19kZWxfd2ViaG9va19xdWV1ZSA9IFN5bmNEZWxXZWJob29rUXVldWUoKQo=
+from dataclasses import dataclass
+from queue import Queue
+from threading import Lock, Thread
+from typing import Optional
+
+from app.log import logger
+from app.schemas.mediaserver import WebhookEventInfo
+
+
+@dataclass
+class SyncDelWebhookTask:
+    """
+    单条 Webhook 同步删除任务快照
+
+    :param event_data (WebhookEventInfo): 已 deepcopy 的 Webhook 事件数据
+    :param enabled (bool): 是否启用同步删除（入队时快照）
+    :param notify (bool): 是否通知
+    :param del_source (bool): 是否删除源文件
+    :param p115_library_path (str): 115 媒体库路径映射
+    :param p115_force_delete_files (bool): 是否强制删除无 TMDB 的文件
+    """
+
+    event_data: WebhookEventInfo
+    enabled: bool
+    notify: bool
+    del_source: bool
+    p115_library_path: Optional[str]
+    p115_force_delete_files: bool
+
+
+class SyncDelWebhookQueue:
+    """
+    Webhook 同步删除全局队列
+    """
+
+    _SENTINEL = object()
+
+    def __init__(self) -> None:
+        self._queue: Optional[Queue] = None
+        self._worker_thread: Optional[Thread] = None
+        self._lock = Lock()
+
+    def _worker(self) -> None:
+        """
+        从队列取出任务并调用 MediaSyncDelHelper.sync_del_by_webhook
+        """
+        q = self._queue
+        if q is None:
+            return
+        while True:
+            try:
+                task = q.get()
+            except Exception as e:
+                logger.error(
+                    f"【同步删除 Webhook 队列】worker 取任务异常: {e}",
+                    exc_info=True,
+                )
+                continue
+            if task is self._SENTINEL:
+                q.task_done()
+                break
+            try:
+                # 延迟导入，避免 mediasyncdel 包初始化循环依赖
+                from . import MediaSyncDelHelper
+
+                MediaSyncDelHelper().sync_del_by_webhook(
+                    event_data=task.event_data,
+                    enabled=task.enabled,
+                    notify=task.notify,
+                    del_source=task.del_source,
+                    p115_library_path=task.p115_library_path,
+                    p115_force_delete_files=task.p115_force_delete_files,
+                )
+            except Exception as e:
+                logger.error(
+                    f"【同步删除 Webhook 队列】处理任务失败: {e}",
+                    exc_info=True,
+                )
+            finally:
+                q.task_done()
+
+    def _ensure_started(self) -> None:
+        """
+        懒启动 worker（首次入队时调用）
+        """
+        with self._lock:
+            if self._worker_thread is not None and self._worker_thread.is_alive():
+                return
+            self._queue = Queue()
+            self._worker_thread = Thread(
+                target=self._worker,
+                name="P115StrmHelper-SyncDelWebhookQueue",
+                daemon=False,
+            )
+            self._worker_thread.start()
+            logger.debug("【同步删除 Webhook 队列】worker 已启动")
+
+    def stop(self) -> None:
+        """
+        停止 worker：发送哨兵并 join，尽量排空已入队任务前的处理
+        """
+        with self._lock:
+            q = self._queue
+            th = self._worker_thread
+            if q is None or th is None:
+                return
+            if not th.is_alive():
+                self._queue = None
+                self._worker_thread = None
+                return
+        try:
+            q.put(self._SENTINEL)
+            th.join(timeout=30)
+            if th.is_alive():
+                logger.warning("【同步删除 Webhook 队列】worker 未在 30 秒内退出")
+        except Exception as e:
+            logger.error(
+                f"【同步删除 Webhook 队列】停止 worker 异常: {e}",
+                exc_info=True,
+            )
+        finally:
+            with self._lock:
+                if self._worker_thread is th and self._queue is q:
+                    self._worker_thread = None
+                    self._queue = None
+
+    def enqueue(self, task: SyncDelWebhookTask) -> None:
+        """
+        将一条同步删除任务加入队列（无界，put_nowait 不阻塞事件线程）
+
+        :param task (SyncDelWebhookTask): 任务快照（event_data 须已在调用方 deepcopy）
+        """
+        self._ensure_started()
+        with self._lock:
+            q = self._queue
+        if q is None:
+            logger.warning("【同步删除 Webhook 队列】队列未就绪，跳过入队")
+            return
+        try:
+            q.put_nowait(task)
+        except Exception as e:
+            logger.error(f"【同步删除 Webhook 队列】入队失败: {e}", exc_info=True)
+
+
+sync_del_webhook_queue = SyncDelWebhookQueue()

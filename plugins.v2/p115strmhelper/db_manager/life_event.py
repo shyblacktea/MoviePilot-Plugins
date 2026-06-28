@@ -1,1 +1,38 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IExpc3QsIERpY3QKCmZyb20gLiBpbXBvcnQgRGJPcGVyCmZyb20gLm1vZGVscy5saWZlX2V2ZW50IGltcG9ydCBMaWZlRXZlbnQKCgpjbGFzcyBMaWZlRXZlbnREYkhlbHBlcihEYk9wZXIpOgogICAgIiIiCiAgICDnlJ/mtLvkuovku7bmk43kvZwKICAgICIiIgoKICAgIGRlZiB1cHNlcnRfYmF0Y2hfYnlfbGlzdChzZWxmLCBiYXRjaDogTGlzdFtEaWN0XSk6CiAgICAgICAgIiIiCiAgICAgICAg6YCa6L+H5YiX6KGo5om56YeP5YaZ5YWl5oiW5pu05paw5pWw5o2uCgogICAgICAgIDpwYXJhbSBiYXRjaCAoTGlzdCk6IOW+heWGmeWFpeeahOaVsOaNruWIl+ihqAogICAgICAgICIiIgogICAgICAgIGRhdGEgPSBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgIGtleTogaXRlbVtrZXldCiAgICAgICAgICAgICAgICBmb3Iga2V5IGluIFsKICAgICAgICAgICAgICAgICAgICAiaWQiLAogICAgICAgICAgICAgICAgICAgICJ0eXBlIiwKICAgICAgICAgICAgICAgICAgICAiZmlsZV9pZCIsCiAgICAgICAgICAgICAgICAgICAgInBhcmVudF9pZCIsCiAgICAgICAgICAgICAgICAgICAgImZpbGVfbmFtZSIsCiAgICAgICAgICAgICAgICAgICAgImZpbGVfY2F0ZWdvcnkiLAogICAgICAgICAgICAgICAgICAgICJmaWxlX3R5cGUiLAogICAgICAgICAgICAgICAgICAgICJmaWxlX3NpemUiLAogICAgICAgICAgICAgICAgICAgICJzaGExIiwKICAgICAgICAgICAgICAgICAgICAicGlja19jb2RlIiwKICAgICAgICAgICAgICAgICAgICAidXBkYXRlX3RpbWUiLAogICAgICAgICAgICAgICAgICAgICJjcmVhdGVfdGltZSIsCiAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZm9yIGl0ZW0gaW4gYmF0Y2gKICAgICAgICBdCiAgICAgICAgTGlmZUV2ZW50LnVwc2VydF9iYXRjaF9ieV9saXN0KHNlbGYuX2RiLCBkYXRhKQo=
+from typing import List, Dict
+
+from . import DbOper
+from .models.life_event import LifeEvent
+
+
+class LifeEventDbHelper(DbOper):
+    """
+    生活事件操作
+    """
+
+    def upsert_batch_by_list(self, batch: List[Dict]):
+        """
+        通过列表批量写入或更新数据
+
+        :param batch (List): 待写入的数据列表
+        """
+        data = [
+            {
+                key: item[key]
+                for key in [
+                    "id",
+                    "type",
+                    "file_id",
+                    "parent_id",
+                    "file_name",
+                    "file_category",
+                    "file_type",
+                    "file_size",
+                    "sha1",
+                    "pick_code",
+                    "update_time",
+                    "create_time",
+                ]
+            }
+            for item in batch
+        ]
+        LifeEvent.upsert_batch_by_list(self._db, data)

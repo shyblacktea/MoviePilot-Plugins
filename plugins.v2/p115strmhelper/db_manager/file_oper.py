@@ -1,1 +1,478 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IERpY3QsIE9wdGlvbmFsLCBMaXN0LCBTZXQKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgpmcm9tIC4gaW1wb3J0IERiT3Blcgpmcm9tIC5tb2RlbHMuZm9sZGVyIGltcG9ydCBGb2xkZXIKZnJvbSAubW9kZWxzLmZpbGUgaW1wb3J0IEZpbGUKZnJvbSAuLnV0aWxzLmV4Y2VwdGlvbiBpbXBvcnQgUGF0aE5vdEluS2V5Cgpmcm9tIGFwcC5zY2hlbWFzIGltcG9ydCBGaWxlSXRlbQoKCmNsYXNzIEZpbGVEYkhlbHBlcihEYk9wZXIpOgogICAgIiIiCiAgICDmlofku7bnsbvmlbDmja7lupPmk43kvZwKICAgICIiIgoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBwcm9jZXNzX2l0ZW0oaXRlbTogRGljdCkgLT4gTGlzdFtEaWN0XToKICAgICAgICAiIiIKICAgICAgICDlpITnkIbljZXkuKrpobnnm67vvIzliIbnprvmlofku7blpLnlkozmlofku7bmlbDmja4KCiAgICAgICAgOnBhcmFtIGl0ZW0gKERpY3QpOiDljIXlkKvmlofku7bkv6Hmga/nmoTlrZflhbjvvIzlv4XpobvljIXlkKsgcGF0aCDplK4KCiAgICAgICAgOnJldHVybiBMaXN0OiDlpITnkIblkI7nmoTmlbDmja7liJfooajvvIzmr4/pobnljIXlkKsgdGFibGUg5ZKMIGRhdGEg5a2X5q61CgogICAgICAgIDpyYWlzZXMgUGF0aE5vdEluS2V5OiDlvZMgaXRlbSDkuK3nvLrlsJEgcGF0aCDplK7ml7bmipvlh7oKICAgICAgICAiIiIKICAgICAgICBpZiBub3QgaXRlbS5nZXQoInBhdGgiKToKICAgICAgICAgICAgcmFpc2UgUGF0aE5vdEluS2V5KCLplK7kuK3kuI3ljIXlkKsgcGF0aCDpobkiKQoKICAgICAgICByZXN1bHRzID0gW10KICAgICAgICBhbmNlc3RvcnMgPSBpdGVtLmdldCgiYW5jZXN0b3JzIiwgW10pCgogICAgICAgICMg5aSE55CG56WW5YWI5paH5Lu25aS5CiAgICAgICAgZm9yIGksIGFuY2VzdG9yIGluIGVudW1lcmF0ZShhbmNlc3RvcnNbMTotMV0sIHN0YXJ0PTEpOgogICAgICAgICAgICBwYXRoID0gIi8iICsgIi8iLmpvaW4oYVsibmFtZSJdIGZvciBhIGluIGFuY2VzdG9yc1sxIDogaSArIDFdKQogICAgICAgICAgICByZXN1bHRzLmFwcGVuZCgKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAidGFibGUiOiAiZm9sZGVycyIsCiAgICAgICAgICAgICAgICAgICAgImRhdGEiOiB7CiAgICAgICAgICAgICAgICAgICAgICAgICJpZCI6IGFuY2VzdG9yWyJpZCJdLAogICAgICAgICAgICAgICAgICAgICAgICAicGFyZW50X2lkIjogYW5jZXN0b3JbInBhcmVudF9pZCJdLAogICAgICAgICAgICAgICAgICAgICAgICAibmFtZSI6IGFuY2VzdG9yWyJuYW1lIl0sCiAgICAgICAgICAgICAgICAgICAgICAgICJwYXRoIjogcGF0aCwKICAgICAgICAgICAgICAgICAgICB9LAogICAgICAgICAgICAgICAgfQogICAgICAgICAgICApCgogICAgICAgICMg5aSE55CG5paH5Lu25pys6LqrCiAgICAgICAgcmVzdWx0cy5hcHBlbmQoCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICJ0YWJsZSI6ICJmaWxlcyIsCiAgICAgICAgICAgICAgICAiZGF0YSI6IHsKICAgICAgICAgICAgICAgICAgICAiaWQiOiBpdGVtWyJpZCJdLAogICAgICAgICAgICAgICAgICAgICJwYXJlbnRfaWQiOiBpdGVtWyJwYXJlbnRfaWQiXSwKICAgICAgICAgICAgICAgICAgICAibmFtZSI6IGl0ZW1bIm5hbWUiXSwKICAgICAgICAgICAgICAgICAgICAic2hhMSI6IGl0ZW0uZ2V0KCJzaGExIiwgIiIpLAogICAgICAgICAgICAgICAgICAgICJzaXplIjogaXRlbS5nZXQoInNpemUiLCAwKSwKICAgICAgICAgICAgICAgICAgICAicGlja2NvZGUiOiBpdGVtLmdldCgicGlja2NvZGUiLCBpdGVtLmdldCgicGlja19jb2RlIiwgIiIpKSwKICAgICAgICAgICAgICAgICAgICAiY3RpbWUiOiBpdGVtLmdldCgiY3RpbWUiLCAwKSwKICAgICAgICAgICAgICAgICAgICAibXRpbWUiOiBpdGVtLmdldCgibXRpbWUiLCAwKSwKICAgICAgICAgICAgICAgICAgICAicGF0aCI6IGl0ZW0uZ2V0KCJwYXRoIiksCiAgICAgICAgICAgICAgICAgICAgImV4dHJhIjogc3RyKGl0ZW0pIGlmIGl0ZW0gZWxzZSBOb25lLAogICAgICAgICAgICAgICAgfSwKICAgICAgICAgICAgfQogICAgICAgICkKCiAgICAgICAgcmV0dXJuIHJlc3VsdHMKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgcHJvY2Vzc19saWZlX2ZpbGVfaXRlbShldmVudCwgZmlsZV9wYXRoOiBzdHIpIC0+IExpc3RbRGljdF06CiAgICAgICAgIiIiCiAgICAgICAg5aSE55CGMTE155Sf5rS75LqL5Lu25paH5Lu2IGV2ZW50CgogICAgICAgIDpwYXJhbSBldmVudCAoRGljdCk6IDExNSDnlJ/mtLvkuovku7bkuK3nmoTmlofku7bmlbDmja4KICAgICAgICA6cGFyYW0gZmlsZV9wYXRoIChzdHIpOiDmlofku7bot6/lvoQKCiAgICAgICAgOnJldHVybiBMaXN0OiDlpITnkIblkI7nmoTmlbDmja7liJfooagKICAgICAgICAiIiIKICAgICAgICByZXR1cm4gWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAidGFibGUiOiAiZmlsZXMiLAogICAgICAgICAgICAgICAgImRhdGEiOiB7CiAgICAgICAgICAgICAgICAgICAgImlkIjogZXZlbnRbImZpbGVfaWQiXSwKICAgICAgICAgICAgICAgICAgICAicGFyZW50X2lkIjogZXZlbnRbInBhcmVudF9pZCJdLAogICAgICAgICAgICAgICAgICAgICJuYW1lIjogZXZlbnRbImZpbGVfbmFtZSJdLAogICAgICAgICAgICAgICAgICAgICJzaGExIjogZXZlbnQuZ2V0KCJzaGExIiwgIiIpLAogICAgICAgICAgICAgICAgICAgICJzaXplIjogZXZlbnQuZ2V0KCJmaWxlX3NpemUiLCAwKSwKICAgICAgICAgICAgICAgICAgICAicGlja2NvZGUiOiBldmVudC5nZXQoInBpY2tfY29kZSIsICIiKSwKICAgICAgICAgICAgICAgICAgICAiY3RpbWUiOiBldmVudC5nZXQoImNyZWF0ZV90aW1lIiwgMCksCiAgICAgICAgICAgICAgICAgICAgIm10aW1lIjogZXZlbnQuZ2V0KCJ1cGRhdGVfdGltZSIsIDApLAogICAgICAgICAgICAgICAgICAgICJwYXRoIjogc3RyKGZpbGVfcGF0aCksCiAgICAgICAgICAgICAgICAgICAgImV4dHJhIjogc3RyKGV2ZW50KSwKICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgIH0KICAgICAgICBdCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIHByb2Nlc3NfbGlmZV9kaXJfaXRlbShldmVudCwgZmlsZV9wYXRoOiBzdHIpIC0+IExpc3RbRGljdF06CiAgICAgICAgIiIiCiAgICAgICAg5aSE55CGMTE155Sf5rS75LqL5Lu25paH5Lu25aS5IGV2ZW50CgogICAgICAgIDpwYXJhbSBldmVudCAoRGljdCk6IDExNSDnlJ/mtLvkuovku7bkuK3nmoTmlofku7blpLnmlbDmja4KICAgICAgICA6cGFyYW0gZmlsZV9wYXRoIChzdHIpOiDmlofku7blpLnot6/lvoQKCiAgICAgICAgOnJldHVybiBMaXN0OiDlpITnkIblkI7nmoTmlbDmja7liJfooagKICAgICAgICAiIiIKICAgICAgICByZXR1cm4gWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAidGFibGUiOiAiZm9sZGVycyIsCiAgICAgICAgICAgICAgICAiZGF0YSI6IHsKICAgICAgICAgICAgICAgICAgICAiaWQiOiBldmVudFsiZmlsZV9pZCJdLAogICAgICAgICAgICAgICAgICAgICJwYXJlbnRfaWQiOiBldmVudFsicGFyZW50X2lkIl0sCiAgICAgICAgICAgICAgICAgICAgIm5hbWUiOiBldmVudFsiZmlsZV9uYW1lIl0sCiAgICAgICAgICAgICAgICAgICAgInBhdGgiOiBzdHIoZmlsZV9wYXRoKSwKICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgIH0KICAgICAgICBdCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIHByb2Nlc3NfZnNfZmlsZXNfaXRlbShpdGVtKSAtPiBMaXN0W0RpY3RdOgogICAgICAgICIiIgogICAgICAgIOWkhOeQhjExNeWOn+Wni+i/lOWbnuaVsOaNrgoKICAgICAgICA6cGFyYW0gaXRlbSAoRGljdCk6IDExNSDljp/lp4sgQVBJIOi/lOWbnueahOaWh+S7tuaIluaWh+S7tuWkueaVsOaNrgoKICAgICAgICA6cmV0dXJuIExpc3Q6IOWkhOeQhuWQjueahOaVsOaNruWIl+ihqAoKICAgICAgICA6cmFpc2VzIFBhdGhOb3RJbktleTog5b2TIGl0ZW0g5Lit57y65bCRIHBhdGgg6ZSu5pe25oqb5Ye6CiAgICAgICAgIiIiCiAgICAgICAgaWYgbm90IGl0ZW0uZ2V0KCJwYXRoIik6CiAgICAgICAgICAgIHJhaXNlIFBhdGhOb3RJbktleSgi6ZSu5Lit5LiN5YyF5ZCrIHBhdGgg6aG5IikKCiAgICAgICAgaWYgImZpZCIgbm90IGluIGl0ZW06CiAgICAgICAgICAgIHJldHVybiBbCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgInRhYmxlIjogImZvbGRlcnMiLAogICAgICAgICAgICAgICAgICAgICJkYXRhIjogewogICAgICAgICAgICAgICAgICAgICAgICAiaWQiOiBpbnQoaXRlbS5nZXQoImNpZCIpKSwKICAgICAgICAgICAgICAgICAgICAgICAgInBhcmVudF9pZCI6IGludChpdGVtLmdldCgicGlkIikpLAogICAgICAgICAgICAgICAgICAgICAgICAibmFtZSI6IGl0ZW0uZ2V0KCJuIiksCiAgICAgICAgICAgICAgICAgICAgICAgICJwYXRoIjogaXRlbS5nZXQoInBhdGgiKSwKICAgICAgICAgICAgICAgICAgICB9LAogICAgICAgICAgICAgICAgfQogICAgICAgICAgICBdCiAgICAgICAgZWxzZToKICAgICAgICAgICAgcmV0dXJuIFsKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAidGFibGUiOiAiZmlsZXMiLAogICAgICAgICAgICAgICAgICAgICJkYXRhIjogewogICAgICAgICAgICAgICAgICAgICAgICAiaWQiOiBpbnQoaXRlbS5nZXQoImZpZCIpKSwKICAgICAgICAgICAgICAgICAgICAgICAgInBhcmVudF9pZCI6IGludChpdGVtLmdldCgiY2lkIikpLAogICAgICAgICAgICAgICAgICAgICAgICAibmFtZSI6IGl0ZW0uZ2V0KCJuIiksCiAgICAgICAgICAgICAgICAgICAgICAgICJzaGExIjogaXRlbS5nZXQoInNoYSIpLAogICAgICAgICAgICAgICAgICAgICAgICAic2l6ZSI6IGl0ZW0uZ2V0KCJzIiksCiAgICAgICAgICAgICAgICAgICAgICAgICJwaWNrY29kZSI6IGl0ZW0uZ2V0KCJwYyIpLAogICAgICAgICAgICAgICAgICAgICAgICAiY3RpbWUiOiBpdGVtLmdldCgidHAiLCAwKSwKICAgICAgICAgICAgICAgICAgICAgICAgIm10aW1lIjogaXRlbS5nZXQoInR1IiwgMCksCiAgICAgICAgICAgICAgICAgICAgICAgICJwYXRoIjogaXRlbS5nZXQoInBhdGgiKSwKICAgICAgICAgICAgICAgICAgICAgICAgImV4dHJhIjogc3RyKGl0ZW0pLAogICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIF0KCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgcHJvY2Vzc19maWxlaXRlbShmaWxlaXRlbTogT3B0aW9uYWxbRmlsZUl0ZW1dKSAtPiBMaXN0W0RpY3RdOgogICAgICAgICIiIgogICAgICAgIOWkhOeQhk1QIGZpbGVpdGVtIOexu+Wei+aVsOaNrgoKICAgICAgICA6cGFyYW0gZmlsZWl0ZW0gKEZpbGVJdGVtKTogTW92aWVQaWxvdCDnmoTmlofku7bpobnlr7nosaEKCiAgICAgICAgOnJldHVybiBMaXN0OiDlpITnkIblkI7nmoTmlbDmja7liJfooajvvIxmaWxlaXRlbSDkuLrnqbrml7bov5Tlm57nqbrliJfooagKICAgICAgICAiIiIKICAgICAgICBpZiBub3QgZmlsZWl0ZW06CiAgICAgICAgICAgIHJldHVybiBbXQogICAgICAgIGlmIGZpbGVpdGVtLnR5cGUgPT0gImZpbGUiOgogICAgICAgICAgICByZXR1cm4gWwogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICJ0YWJsZSI6ICJmaWxlcyIsCiAgICAgICAgICAgICAgICAgICAgImRhdGEiOiB7CiAgICAgICAgICAgICAgICAgICAgICAgICJpZCI6IGludChmaWxlaXRlbS5maWxlaWQpLAogICAgICAgICAgICAgICAgICAgICAgICAicGFyZW50X2lkIjogaW50KGZpbGVpdGVtLnBhcmVudF9maWxlaWQpCiAgICAgICAgICAgICAgICAgICAgICAgIGlmIGZpbGVpdGVtLnBhcmVudF9maWxlaWQgaXMgbm90IE5vbmUKICAgICAgICAgICAgICAgICAgICAgICAgZWxzZSAtMSwKICAgICAgICAgICAgICAgICAgICAgICAgIm5hbWUiOiBmaWxlaXRlbS5uYW1lLAogICAgICAgICAgICAgICAgICAgICAgICAic2hhMSI6ICIiLAogICAgICAgICAgICAgICAgICAgICAgICAic2l6ZSI6IGZpbGVpdGVtLnNpemUgaWYgZmlsZWl0ZW0uc2l6ZSBpcyBub3QgTm9uZSBlbHNlIC0xLAogICAgICAgICAgICAgICAgICAgICAgICAicGlja2NvZGUiOiBmaWxlaXRlbS5waWNrY29kZSwKICAgICAgICAgICAgICAgICAgICAgICAgImN0aW1lIjogMCwKICAgICAgICAgICAgICAgICAgICAgICAgIm10aW1lIjogaW50KGZpbGVpdGVtLm1vZGlmeV90aW1lKSwKICAgICAgICAgICAgICAgICAgICAgICAgInBhdGgiOiBzdHIoUGF0aChmaWxlaXRlbS5wYXRoKSksCiAgICAgICAgICAgICAgICAgICAgICAgICJleHRyYSI6ICIiLAogICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIF0KICAgICAgICBlbHNlOgogICAgICAgICAgICByZXR1cm4gWwogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICJ0YWJsZSI6ICJmb2xkZXJzIiwKICAgICAgICAgICAgICAgICAgICAiZGF0YSI6IHsKICAgICAgICAgICAgICAgICAgICAgICAgImlkIjogaW50KGZpbGVpdGVtLmZpbGVpZCksCiAgICAgICAgICAgICAgICAgICAgICAgICJwYXJlbnRfaWQiOiBpbnQoZmlsZWl0ZW0ucGFyZW50X2ZpbGVpZCkKICAgICAgICAgICAgICAgICAgICAgICAgaWYgZmlsZWl0ZW0ucGFyZW50X2ZpbGVpZCBpcyBub3QgTm9uZQogICAgICAgICAgICAgICAgICAgICAgICBlbHNlIC0xLAogICAgICAgICAgICAgICAgICAgICAgICAibmFtZSI6IGZpbGVpdGVtLm5hbWUsCiAgICAgICAgICAgICAgICAgICAgICAgICJwYXRoIjogc3RyKFBhdGgoZmlsZWl0ZW0ucGF0aCkpLAogICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIF0KCiAgICBkZWYgdXBzZXJ0X2JhdGNoKHNlbGYsIGJhdGNoOiBMaXN0W0RpY3RdKToKICAgICAgICAiIiIKICAgICAgICDmibnph4/lhpnlhaXmiJbmm7TmlrDmlbDmja4KCiAgICAgICAgOnBhcmFtIGJhdGNoIChMaXN0KTog5b6F5aSE55CG55qE5pWw5o2u5YiX6KGo77yM5q+P6aG55YyF5ZCrIHRhYmxlIOWSjCBkYXRhIOWtl+autQoKICAgICAgICA6cmV0dXJuIGJvb2w6IOaTjeS9nOaIkOWKn+i/lOWbniBUcnVlCiAgICAgICAgIiIiCiAgICAgICAgZmlsZXNfZGF0YV9tYXAgPSB7CiAgICAgICAgICAgIGVudHJ5WyJkYXRhIl1bImlkIl06IGVudHJ5WyJkYXRhIl0KICAgICAgICAgICAgZm9yIGVudHJ5IGluIGJhdGNoCiAgICAgICAgICAgIGlmIGVudHJ5LmdldCgidGFibGUiKSA9PSAiZmlsZXMiIGFuZCAiaWQiIGluIGVudHJ5LmdldCgiZGF0YSIsIHt9KQogICAgICAgIH0KCiAgICAgICAgaWYgZmlsZXNfZGF0YV9tYXA6CiAgICAgICAgICAgIGZpbGVzX2RhdGEgPSBsaXN0KGZpbGVzX2RhdGFfbWFwLnZhbHVlcygpKQogICAgICAgICAgICBzZWxmLnVwc2VydF9iYXRjaF9ieV9saXN0KCJmaWxlcyIsIGZpbGVzX2RhdGEpCgogICAgICAgIGZvbGRlcnNfZGF0YV9tYXAgPSB7CiAgICAgICAgICAgIGVudHJ5WyJkYXRhIl1bImlkIl06IGVudHJ5WyJkYXRhIl0KICAgICAgICAgICAgZm9yIGVudHJ5IGluIGJhdGNoCiAgICAgICAgICAgIGlmIGVudHJ5LmdldCgidGFibGUiKSA9PSAiZm9sZGVycyIgYW5kICJpZCIgaW4gZW50cnkuZ2V0KCJkYXRhIiwge30pCiAgICAgICAgfQoKICAgICAgICBpZiBmb2xkZXJzX2RhdGFfbWFwOgogICAgICAgICAgICBmb2xkZXJzX2RhdGEgPSBsaXN0KGZvbGRlcnNfZGF0YV9tYXAudmFsdWVzKCkpCiAgICAgICAgICAgIHNlbGYudXBzZXJ0X2JhdGNoX2J5X2xpc3QoImZvbGRlcnMiLCBmb2xkZXJzX2RhdGEpCgogICAgICAgIHJldHVybiBUcnVlCgogICAgZGVmIHVwc2VydF9iYXRjaF9ieV9saXN0KHNlbGYsIGxpc3RfdHlwZTogc3RyLCBiYXRjaDogTGlzdFtEaWN0XSk6CiAgICAgICAgIiIiCiAgICAgICAg6YCa6L+H5YiX6KGo5om56YeP5YaZ5YWl5oiW5pu05paw5pWw5o2uCgogICAgICAgIDpwYXJhbSBsaXN0X3R5cGUgKHN0cik6IOaVsOaNruexu+Wei++8jGZpbGVzIOaIliBmb2xkZXJzCiAgICAgICAgOnBhcmFtIGJhdGNoIChMaXN0KTog5b6F5YaZ5YWl55qE5pWw5o2u5YiX6KGoCgogICAgICAgIDpyZXR1cm4gYm9vbDog5pON5L2c5oiQ5Yqf6L+U5ZueIFRydWUKICAgICAgICAiIiIKICAgICAgICBpZiBsaXN0X3R5cGUgPT0gImZpbGVzIjoKICAgICAgICAgICAgRmlsZS51cHNlcnRfYmF0Y2hfYnlfbGlzdChzZWxmLl9kYiwgYmF0Y2gpCiAgICAgICAgZWxzZToKICAgICAgICAgICAgRm9sZGVyLnVwc2VydF9iYXRjaF9ieV9saXN0KHNlbGYuX2RiLCBiYXRjaCkKICAgICAgICByZXR1cm4gVHJ1ZQoKICAgIGRlZiBnZXRfYnlfcGF0aChzZWxmLCBwYXRoOiBzdHIpIC0+IE9wdGlvbmFsW0RpY3RdOgogICAgICAgICIiIgogICAgICAgIOmAmui/h+i3r+W+hOiOt+WPlumhueebrgoKICAgICAgICA6cGFyYW0gcGF0aCAoc3RyKTog5paH5Lu25oiW5paH5Lu25aS56Lev5b6ECgogICAgICAgIDpyZXR1cm4gRGljdDog5Yy56YWN55qE5paH5Lu25oiW5paH5Lu25aS55L+h5oGv5a2X5YW477yM5pyq5om+5Yiw6L+U5ZueIE5vbmUKICAgICAgICAiIiIKICAgICAgICBmaWxlID0gRmlsZS5nZXRfYnlfcGF0aChzZWxmLl9kYiwgcGF0aCkKICAgICAgICBpZiBmaWxlOgogICAgICAgICAgICByZXR1cm4gewogICAgICAgICAgICAgICAgKipmaWxlLl9fZGljdF9fLAogICAgICAgICAgICAgICAgInR5cGUiOiAiZmlsZSIsCiAgICAgICAgICAgICAgICAiX3NhX2luc3RhbmNlX3N0YXRlIjogTm9uZSwKICAgICAgICAgICAgfQogICAgICAgIGZvbGRlciA9IEZvbGRlci5nZXRfYnlfcGF0aChzZWxmLl9kYiwgcGF0aCkKICAgICAgICBpZiBmb2xkZXI6CiAgICAgICAgICAgIHJldHVybiB7Kipmb2xkZXIuX19kaWN0X18sICJ0eXBlIjogImZvbGRlciIsICJfc2FfaW5zdGFuY2Vfc3RhdGUiOiBOb25lfQogICAgICAgIHJldHVybiBOb25lCgogICAgZGVmIGdldF9ieV9pZChzZWxmLCBpZDogaW50KSAtPiBPcHRpb25hbFtEaWN0XToKICAgICAgICAiIiIKICAgICAgICDpgJrov4dJROiOt+WPlumhueebrgoKICAgICAgICA6cGFyYW0gaWQgKGludCk6IOaWh+S7tuaIluaWh+S7tuWkuSBJRAoKICAgICAgICA6cmV0dXJuIERpY3Q6IOWMuemFjeeahOaWh+S7tuaIluaWh+S7tuWkueS/oeaBr+Wtl+WFuO+8jOacquaJvuWIsOi/lOWbniBOb25lCiAgICAgICAgIiIiCiAgICAgICAgZmlsZSA9IEZpbGUuZ2V0X2J5X2lkKHNlbGYuX2RiLCBpZCkKICAgICAgICBpZiBmaWxlOgogICAgICAgICAgICByZXR1cm4gewogICAgICAgICAgICAgICAgKipmaWxlLl9fZGljdF9fLAogICAgICAgICAgICAgICAgInR5cGUiOiAiZmlsZSIsCiAgICAgICAgICAgICAgICAiX3NhX2luc3RhbmNlX3N0YXRlIjogTm9uZSwKICAgICAgICAgICAgfQogICAgICAgIGZvbGRlciA9IEZvbGRlci5nZXRfYnlfaWQoc2VsZi5fZGIsIGlkKQogICAgICAgIGlmIGZvbGRlcjoKICAgICAgICAgICAgcmV0dXJuIHsqKmZvbGRlci5fX2RpY3RfXywgInR5cGUiOiAiZm9sZGVyIiwgIl9zYV9pbnN0YW5jZV9zdGF0ZSI6IE5vbmV9CiAgICAgICAgcmV0dXJuIE5vbmUKCiAgICBkZWYgZ2V0X2NoaWxkcmVuKHNlbGYsIHBhdGg6IHN0cikgLT4gRGljdDoKICAgICAgICAiIiIKICAgICAgICDojrflj5bot6/lvoTkuIvnmoTmiYDmnInlrZDpobkKCiAgICAgICAgOnBhcmFtIHBhdGggKHN0cik6IOeItuebruW9lei3r+W+hAoKICAgICAgICA6cmV0dXJuIERpY3Q6IOWMheWQqyBmaWxlc+OAgXN1YmZvbGRlcnMg5ZKMIG1ldGEg5L+h5oGv55qE5a2X5YW4CiAgICAgICAgIiIiCiAgICAgICAgcGFyZW50ID0gRm9sZGVyLmdldF9ieV9wYXRoKHNlbGYuX2RiLCBwYXRoKQogICAgICAgIGlmIG5vdCBwYXJlbnQ6CiAgICAgICAgICAgIHJldHVybiB7ImZpbGVzIjogW10sICJzdWJmb2xkZXJzIjogW119CiAgICAgICAgcGFyZW50X2lkID0gcGFyZW50LmlkCgogICAgICAgIGZpbGVzID0gRmlsZS5nZXRfYnlfcGFyZW50X2lkKHNlbGYuX2RiLCBwYXJlbnRfaWQpCiAgICAgICAgc3ViZm9sZGVycyA9IEZvbGRlci5nZXRfYnlfcGFyZW50X2lkKHNlbGYuX2RiLCBwYXJlbnRfaWQpCgogICAgICAgIGRlZiBjbGVhbl9yZWNvcmQocmVjb3JkKToKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIOa4hea0l+aVsOaNruW6k+iusOW9le+8jOenu+mZpOWGhemDqOeKtuaAgeW5tua3u+WKoOexu+Wei+agh+iusAoKICAgICAgICAgICAgOnBhcmFtIHJlY29yZDogRmlsZSDmiJYgRm9sZGVyIOeahCBPUk0g5a6e5L6LCgogICAgICAgICAgICA6cmV0dXJuIGRpY3Q6IOa4heeQhuWQjueahOWtl+WFuAogICAgICAgICAgICAiIiIKICAgICAgICAgICAgZCA9IHJlY29yZC5fX2RpY3RfXwogICAgICAgICAgICBkLnBvcCgiX3NhX2luc3RhbmNlX3N0YXRlIiwgTm9uZSkKICAgICAgICAgICAgZFsidHlwZSJdID0gImZpbGUiIGlmIGlzaW5zdGFuY2UocmVjb3JkLCBGaWxlKSBlbHNlICJmb2xkZXIiCiAgICAgICAgICAgIHJldHVybiBkCgogICAgICAgIHJldHVybiB7CiAgICAgICAgICAgICJmaWxlcyI6IFtjbGVhbl9yZWNvcmQoZikgZm9yIGYgaW4gZmlsZXNdLAogICAgICAgICAgICAic3ViZm9sZGVycyI6IFtjbGVhbl9yZWNvcmQoc2YpIGZvciBzZiBpbiBzdWJmb2xkZXJzXSwKICAgICAgICAgICAgIm1ldGEiOiB7CiAgICAgICAgICAgICAgICAicGFyZW50X3BhdGgiOiBwYXRoLAogICAgICAgICAgICAgICAgInBhcmVudF9pZCI6IHBhcmVudF9pZCwKICAgICAgICAgICAgICAgICJ0b3RhbF9jb3VudCI6IGxlbihmaWxlcykgKyBsZW4oc3ViZm9sZGVycyksCiAgICAgICAgICAgIH0sCiAgICAgICAgfQoKICAgIGRlZiByZW1vdmVfYnlfcGF0aF9iYXRjaChzZWxmLCBwYXRoOiBzdHIsIG9ubHlfZmlsZTogYm9vbCA9IEZhbHNlKToKICAgICAgICAiIiIKICAgICAgICDpgJrov4fot6/lvoTmibnph4/liKDpmaQKCiAgICAgICAgOnBhcmFtIHBhdGggKHN0cik6IOimgeWIoOmZpOeahOi3r+W+hOWJjee8gAogICAgICAgIDpwYXJhbSBvbmx5X2ZpbGUgKGJvb2wpOiDku4XliKDpmaTmlofku7bogIzkuI3liKDpmaTmlofku7blpLkKCiAgICAgICAgOnJldHVybiBib29sOiDmk43kvZzmiJDlip/ov5Tlm54gVHJ1ZQogICAgICAgICIiIgogICAgICAgIEZpbGUucmVtb3ZlX2J5X3BhdGhfYmF0Y2goc2VsZi5fZGIsIHBhdGgpCiAgICAgICAgaWYgbm90IG9ubHlfZmlsZToKICAgICAgICAgICAgRm9sZGVyLnJlbW92ZV9ieV9wYXRoX2JhdGNoKHNlbGYuX2RiLCBwYXRoKQogICAgICAgIHJldHVybiBUcnVlCgogICAgZGVmIHJlbW92ZV9ieV9pZF9iYXRjaChzZWxmLCBpZDogaW50LCBvbmx5X2ZpbGU6IGJvb2wgPSBGYWxzZSk6CiAgICAgICAgIiIiCiAgICAgICAg6YCa6L+H5paH5Lu25aS5IElEIOaJuemHj+WIoOmZpAoKICAgICAgICA6cGFyYW0gaWQgKGludCk6IOaWh+S7tuWkuSBJRAogICAgICAgIDpwYXJhbSBvbmx5X2ZpbGUgKGJvb2wpOiDku4XliKDpmaTmlofku7bogIzkuI3liKDpmaTmlofku7blpLkKCiAgICAgICAgOnJldHVybiBib29sOiDmk43kvZzmiJDlip/ov5Tlm54gVHJ1ZQogICAgICAgICIiIgogICAgICAgIGZvbGRlciA9IEZvbGRlci5nZXRfYnlfaWQoc2VsZi5fZGIsIGlkKQogICAgICAgIGlmIG5vdCBmb2xkZXI6CiAgICAgICAgICAgIHJldHVybiBUcnVlCiAgICAgICAgcGF0aCA9IGZvbGRlci5wYXRoCiAgICAgICAgRmlsZS5yZW1vdmVfYnlfcGF0aF9iYXRjaChzZWxmLl9kYiwgcGF0aCkKICAgICAgICBpZiBub3Qgb25seV9maWxlOgogICAgICAgICAgICBGb2xkZXIucmVtb3ZlX2J5X3BhdGhfYmF0Y2goc2VsZi5fZGIsIHBhdGgpCiAgICAgICAgcmV0dXJuIFRydWUKCiAgICBkZWYgcmVtb3ZlX2J5X3BhdGgoc2VsZiwgcGF0aF90eXBlOiBzdHIsIHBhdGg6IHN0cik6CiAgICAgICAgIiIiCiAgICAgICAg5Yig6Zmk5oyH5a6a6Lev5b6E55qE6K6w5b2VCgogICAgICAgIDpwYXJhbSBwYXRoX3R5cGUgKHN0cik6IOi3r+W+hOexu+Wei++8jGZpbGUg5oiWIGZvbGRlcgogICAgICAgIDpwYXJhbSBwYXRoIChzdHIpOiDopoHliKDpmaTnmoTot6/lvoQKICAgICAgICAiIiIKICAgICAgICBpZiBwYXRoX3R5cGUgPT0gImZpbGUiOgogICAgICAgICAgICBGaWxlLmRlbGV0ZV9ieV9wYXRoKHNlbGYuX2RiLCBwYXRoKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIEZvbGRlci5kZWxldGVfYnlfcGF0aChzZWxmLl9kYiwgcGF0aCkKCiAgICBkZWYgcmVtb3ZlX2J5X2lkKHNlbGYsIGlkX3R5cGU6IHN0ciwgaWQ6IGludCk6CiAgICAgICAgIiIiCiAgICAgICAg6YCa6L+HIElEIOWIoOmZpOiusOW9lQoKICAgICAgICA6cGFyYW0gaWRfdHlwZSAoc3RyKTogSUQg57G75Z6L77yMZmlsZSDmiJYgZm9sZGVyCiAgICAgICAgOnBhcmFtIGlkIChpbnQpOiDopoHliKDpmaTnmoTorrDlvZUgSUQKICAgICAgICAiIiIKICAgICAgICBpZiBpZF90eXBlID09ICJmaWxlIjoKICAgICAgICAgICAgRmlsZS5kZWxldGVfYnlfaWQoc2VsZi5fZGIsIGlkKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIEZvbGRlci5kZWxldGVfYnlfaWQoc2VsZi5fZGIsIGlkKQoKICAgIGRlZiB1cGRhdGVfcGF0aF9ieV9pZChzZWxmLCBpZDogaW50LCBuZXdfcGF0aDogc3RyKSAtPiBib29sOgogICAgICAgICIiIgogICAgICAgIOmAmui/h0lE5Yy56YWN5pWw5o2u5bm25L+u5pS5cGF0aAoKICAgICAgICA6cGFyYW0gaWQgKGludCk6IOaWh+S7tiBJRAogICAgICAgIDpwYXJhbSBuZXdfcGF0aCAoc3RyKTog5paw55qE6Lev5b6ECgogICAgICAgIDpyZXR1cm4gYm9vbDog5pu05paw5oiQ5Yqf6L+U5ZueIFRydWXvvIzpobnnm67kuI3lrZjlnKjmiJbnsbvlnovkuI3ljLnphY3ov5Tlm54gRmFsc2UKICAgICAgICAiIiIKICAgICAgICBpdGVtID0gc2VsZi5nZXRfYnlfaWQoaWQpCiAgICAgICAgaWYgbm90IGl0ZW06CiAgICAgICAgICAgIHJldHVybiBGYWxzZQoKICAgICAgICBpZiBpdGVtWyJ0eXBlIl0gPT0gImZpbGUiOgogICAgICAgICAgICBGaWxlLnVwZGF0ZV9wYXRoKHNlbGYuX2RiLCBpZCwgbmV3X3BhdGgpCiAgICAgICAgZWxzZToKICAgICAgICAgICAgcmV0dXJuIEZhbHNlCgogICAgICAgIHJldHVybiBUcnVlCgogICAgZGVmIHVwZGF0ZV9uYW1lX2J5X2lkKHNlbGYsIGlkOiBpbnQsIG5ld19uYW1lOiBzdHIpIC0+IGJvb2w6CiAgICAgICAgIiIiCiAgICAgICAg6YCa6L+HSUTljLnphY3mlbDmja7lubbkv67mlLluYW1lCgogICAgICAgIDpwYXJhbSBpZCAoaW50KTog5paH5Lu2IElECiAgICAgICAgOnBhcmFtIG5ld19uYW1lIChzdHIpOiDmlrDnmoTlkI3np7AKCiAgICAgICAgOnJldHVybiBib29sOiDmm7TmlrDmiJDlip/ov5Tlm54gVHJ1Ze+8jOmhueebruS4jeWtmOWcqOaIluexu+Wei+S4jeWMuemFjei/lOWbniBGYWxzZQogICAgICAgICIiIgogICAgICAgIGl0ZW0gPSBzZWxmLmdldF9ieV9pZChpZCkKICAgICAgICBpZiBub3QgaXRlbToKICAgICAgICAgICAgcmV0dXJuIEZhbHNlCgogICAgICAgIGlmIGl0ZW1bInR5cGUiXSA9PSAiZmlsZSI6CiAgICAgICAgICAgIEZpbGUudXBkYXRlX25hbWUoc2VsZi5fZGIsIGlkLCBuZXdfbmFtZSkKICAgICAgICBlbHNlOgogICAgICAgICAgICByZXR1cm4gRmFsc2UKCiAgICAgICAgcmV0dXJuIFRydWUKCiAgICBkZWYgdXBkYXRlX3BhdGhfcHJlZml4X2JhdGNoKAogICAgICAgIHNlbGYsIG9sZF9wcmVmaXg6IHN0ciwgbmV3X3ByZWZpeDogc3RyLCBvbmx5X2ZpbGU6IGJvb2wgPSBGYWxzZQogICAgKSAtPiBib29sOgogICAgICAgICIiIgogICAgICAgIOaJuemHj+abtOaWsOS7peaXp+WJjee8gOW8gOWktOeahOi3r+W+hAoKICAgICAgICA6cGFyYW0gb2xkX3ByZWZpeCAoc3RyKTog5pen55qE6Lev5b6E5YmN57yACiAgICAgICAgOnBhcmFtIG5ld19wcmVmaXggKHN0cik6IOaWsOeahOi3r+W+hOWJjee8gAogICAgICAgIDpwYXJhbSBvbmx5X2ZpbGUgKGJvb2wpOiDku4Xmm7TmlrDmlofku7bogIzkuI3mm7TmlrDmlofku7blpLkKCiAgICAgICAgOnJldHVybiBib29sOiDmk43kvZzmiJDlip/ov5Tlm54gVHJ1ZQogICAgICAgICIiIgogICAgICAgIEZpbGUudXBkYXRlX3BhdGhfcHJlZml4KHNlbGYuX2RiLCBvbGRfcHJlZml4LCBuZXdfcHJlZml4KQogICAgICAgIGlmIG5vdCBvbmx5X2ZpbGU6CiAgICAgICAgICAgIEZvbGRlci51cGRhdGVfcGF0aF9wcmVmaXgoc2VsZi5fZGIsIG9sZF9wcmVmaXgsIG5ld19wcmVmaXgpCiAgICAgICAgcmV0dXJuIFRydWUKCiAgICBkZWYgcmVtb3ZlX2dob3N0X3JlY29yZHMoCiAgICAgICAgc2VsZiwgcGF0aF9wcmVmaXg6IHN0ciwgc2Vlbl9maWxlX2lkczogU2V0W2ludF0sIHNlZW5fZm9sZGVyX2lkczogU2V0W2ludF0KICAgICkgLT4gaW50OgogICAgICAgICIiIgogICAgICAgIOa4hemZpOaMh+Wumui3r+W+hOWJjee8gOS4i+OAgeacquWHuueOsOWcqOacrOasoeaJq+aPj+S4reeahOW5veeBteaVsOaNruW6k+iusOW9le+8jOi/lOWbnuWunumZheWIoOmZpOaAu+ihjOaVsAoKICAgICAgICA6cGFyYW0gcGF0aF9wcmVmaXggKHN0cik6IOe9keebmOi3r+W+hOWJjee8gO+8iOacq+WwvuW4piAv77yJCiAgICAgICAgOnBhcmFtIHNlZW5fZmlsZV9pZHMgKFNldCk6IOacrOasoeaJq+aPj+WIsOeahOaWh+S7tiBJRCDpm4blkIgKICAgICAgICA6cGFyYW0gc2Vlbl9mb2xkZXJfaWRzIChTZXQpOiDmnKzmrKHmiavmj4/liLDnmoTnm67lvZUgSUQg6ZuG5ZCICgogICAgICAgIDpyZXR1cm4gaW50OiDlrp7pmYXliKDpmaTnmoTmgLvooYzmlbAKICAgICAgICAiIiIKICAgICAgICBmaWxlX2NvdW50ID0gRmlsZS5yZW1vdmVfYnlfcGF0aF9wcmVmaXhfbm90X2luX2lkcygKICAgICAgICAgICAgc2VsZi5fZGIsIHBhdGhfcHJlZml4LCBzZWVuX2ZpbGVfaWRzCiAgICAgICAgKQogICAgICAgIGZvbGRlcl9jb3VudCA9IEZvbGRlci5yZW1vdmVfYnlfcGF0aF9wcmVmaXhfbm90X2luX2lkcygKICAgICAgICAgICAgc2VsZi5fZGIsIHBhdGhfcHJlZml4LCBzZWVuX2ZvbGRlcl9pZHMKICAgICAgICApCiAgICAgICAgcmV0dXJuIChmaWxlX2NvdW50IG9yIDApICsgKGZvbGRlcl9jb3VudCBvciAwKQoKICAgIGRlZiBnZXRfYW55X3BpY2tjb2RlKHNlbGYpIC0+IE9wdGlvbmFsW3N0cl06CiAgICAgICAgIiIiCiAgICAgICAg5LuO5paH5Lu26KGo5Lit5Lu75oSP6I635Y+W5LiA5p2hIHBpY2tjb2RlIOS4jeS4uuepuueahOaVsOaNrueahCBwaWNrY29kZQoKICAgICAgICA6cmV0dXJuIHN0cjogcGlja2NvZGUg5a2X56ym5Liy77yM5pyq5om+5Yiw6L+U5ZueIE5vbmUKICAgICAgICAiIiIKICAgICAgICBwaWNrY29kZSA9IEZpbGUuZ2V0X2FueV9waWNrY29kZShzZWxmLl9kYikKICAgICAgICBpZiBwaWNrY29kZToKICAgICAgICAgICAgcmV0dXJuIHBpY2tjb2RlCgogICAgICAgIHJldHVybiBOb25lCg==
+from typing import Dict, Optional, List, Set
+from pathlib import Path
+
+from . import DbOper
+from .models.folder import Folder
+from .models.file import File
+from ..utils.exception import PathNotInKey
+
+from app.schemas import FileItem
+
+
+class FileDbHelper(DbOper):
+    """
+    文件类数据库操作
+    """
+
+    @staticmethod
+    def process_item(item: Dict) -> List[Dict]:
+        """
+        处理单个项目，分离文件夹和文件数据
+
+        :param item (Dict): 包含文件信息的字典，必须包含 path 键
+
+        :return List: 处理后的数据列表，每项包含 table 和 data 字段
+
+        :raises PathNotInKey: 当 item 中缺少 path 键时抛出
+        """
+        if not item.get("path"):
+            raise PathNotInKey("键中不包含 path 项")
+
+        results = []
+        ancestors = item.get("ancestors", [])
+
+        # 处理祖先文件夹
+        for i, ancestor in enumerate(ancestors[1:-1], start=1):
+            path = "/" + "/".join(a["name"] for a in ancestors[1 : i + 1])
+            results.append(
+                {
+                    "table": "folders",
+                    "data": {
+                        "id": ancestor["id"],
+                        "parent_id": ancestor["parent_id"],
+                        "name": ancestor["name"],
+                        "path": path,
+                    },
+                }
+            )
+
+        # 处理文件本身
+        results.append(
+            {
+                "table": "files",
+                "data": {
+                    "id": item["id"],
+                    "parent_id": item["parent_id"],
+                    "name": item["name"],
+                    "sha1": item.get("sha1", ""),
+                    "size": item.get("size", 0),
+                    "pickcode": item.get("pickcode", item.get("pick_code", "")),
+                    "ctime": item.get("ctime", 0),
+                    "mtime": item.get("mtime", 0),
+                    "path": item.get("path"),
+                    "extra": str(item) if item else None,
+                },
+            }
+        )
+
+        return results
+
+    @staticmethod
+    def process_life_file_item(event, file_path: str) -> List[Dict]:
+        """
+        处理115生活事件文件 event
+
+        :param event (Dict): 115 生活事件中的文件数据
+        :param file_path (str): 文件路径
+
+        :return List: 处理后的数据列表
+        """
+        return [
+            {
+                "table": "files",
+                "data": {
+                    "id": event["file_id"],
+                    "parent_id": event["parent_id"],
+                    "name": event["file_name"],
+                    "sha1": event.get("sha1", ""),
+                    "size": event.get("file_size", 0),
+                    "pickcode": event.get("pick_code", ""),
+                    "ctime": event.get("create_time", 0),
+                    "mtime": event.get("update_time", 0),
+                    "path": str(file_path),
+                    "extra": str(event),
+                },
+            }
+        ]
+
+    @staticmethod
+    def process_life_dir_item(event, file_path: str) -> List[Dict]:
+        """
+        处理115生活事件文件夹 event
+
+        :param event (Dict): 115 生活事件中的文件夹数据
+        :param file_path (str): 文件夹路径
+
+        :return List: 处理后的数据列表
+        """
+        return [
+            {
+                "table": "folders",
+                "data": {
+                    "id": event["file_id"],
+                    "parent_id": event["parent_id"],
+                    "name": event["file_name"],
+                    "path": str(file_path),
+                },
+            }
+        ]
+
+    @staticmethod
+    def process_fs_files_item(item) -> List[Dict]:
+        """
+        处理115原始返回数据
+
+        :param item (Dict): 115 原始 API 返回的文件或文件夹数据
+
+        :return List: 处理后的数据列表
+
+        :raises PathNotInKey: 当 item 中缺少 path 键时抛出
+        """
+        if not item.get("path"):
+            raise PathNotInKey("键中不包含 path 项")
+
+        if "fid" not in item:
+            return [
+                {
+                    "table": "folders",
+                    "data": {
+                        "id": int(item.get("cid")),
+                        "parent_id": int(item.get("pid")),
+                        "name": item.get("n"),
+                        "path": item.get("path"),
+                    },
+                }
+            ]
+        else:
+            return [
+                {
+                    "table": "files",
+                    "data": {
+                        "id": int(item.get("fid")),
+                        "parent_id": int(item.get("cid")),
+                        "name": item.get("n"),
+                        "sha1": item.get("sha"),
+                        "size": item.get("s"),
+                        "pickcode": item.get("pc"),
+                        "ctime": item.get("tp", 0),
+                        "mtime": item.get("tu", 0),
+                        "path": item.get("path"),
+                        "extra": str(item),
+                    },
+                }
+            ]
+
+    @staticmethod
+    def process_fileitem(fileitem: Optional[FileItem]) -> List[Dict]:
+        """
+        处理MP fileitem 类型数据
+
+        :param fileitem (FileItem): MoviePilot 的文件项对象
+
+        :return List: 处理后的数据列表，fileitem 为空时返回空列表
+        """
+        if not fileitem:
+            return []
+        if fileitem.type == "file":
+            return [
+                {
+                    "table": "files",
+                    "data": {
+                        "id": int(fileitem.fileid),
+                        "parent_id": int(fileitem.parent_fileid)
+                        if fileitem.parent_fileid is not None
+                        else -1,
+                        "name": fileitem.name,
+                        "sha1": "",
+                        "size": fileitem.size if fileitem.size is not None else -1,
+                        "pickcode": fileitem.pickcode,
+                        "ctime": 0,
+                        "mtime": int(fileitem.modify_time),
+                        "path": str(Path(fileitem.path)),
+                        "extra": "",
+                    },
+                }
+            ]
+        else:
+            return [
+                {
+                    "table": "folders",
+                    "data": {
+                        "id": int(fileitem.fileid),
+                        "parent_id": int(fileitem.parent_fileid)
+                        if fileitem.parent_fileid is not None
+                        else -1,
+                        "name": fileitem.name,
+                        "path": str(Path(fileitem.path)),
+                    },
+                }
+            ]
+
+    def upsert_batch(self, batch: List[Dict]):
+        """
+        批量写入或更新数据
+
+        :param batch (List): 待处理的数据列表，每项包含 table 和 data 字段
+
+        :return bool: 操作成功返回 True
+        """
+        files_data_map = {
+            entry["data"]["id"]: entry["data"]
+            for entry in batch
+            if entry.get("table") == "files" and "id" in entry.get("data", {})
+        }
+
+        if files_data_map:
+            files_data = list(files_data_map.values())
+            self.upsert_batch_by_list("files", files_data)
+
+        folders_data_map = {
+            entry["data"]["id"]: entry["data"]
+            for entry in batch
+            if entry.get("table") == "folders" and "id" in entry.get("data", {})
+        }
+
+        if folders_data_map:
+            folders_data = list(folders_data_map.values())
+            self.upsert_batch_by_list("folders", folders_data)
+
+        return True
+
+    def upsert_batch_by_list(self, list_type: str, batch: List[Dict]):
+        """
+        通过列表批量写入或更新数据
+
+        :param list_type (str): 数据类型，files 或 folders
+        :param batch (List): 待写入的数据列表
+
+        :return bool: 操作成功返回 True
+        """
+        if list_type == "files":
+            File.upsert_batch_by_list(self._db, batch)
+        else:
+            Folder.upsert_batch_by_list(self._db, batch)
+        return True
+
+    def get_by_path(self, path: str) -> Optional[Dict]:
+        """
+        通过路径获取项目
+
+        :param path (str): 文件或文件夹路径
+
+        :return Dict: 匹配的文件或文件夹信息字典，未找到返回 None
+        """
+        file = File.get_by_path(self._db, path)
+        if file:
+            return {
+                **file.__dict__,
+                "type": "file",
+                "_sa_instance_state": None,
+            }
+        folder = Folder.get_by_path(self._db, path)
+        if folder:
+            return {**folder.__dict__, "type": "folder", "_sa_instance_state": None}
+        return None
+
+    def get_by_id(self, id: int) -> Optional[Dict]:
+        """
+        通过ID获取项目
+
+        :param id (int): 文件或文件夹 ID
+
+        :return Dict: 匹配的文件或文件夹信息字典，未找到返回 None
+        """
+        file = File.get_by_id(self._db, id)
+        if file:
+            return {
+                **file.__dict__,
+                "type": "file",
+                "_sa_instance_state": None,
+            }
+        folder = Folder.get_by_id(self._db, id)
+        if folder:
+            return {**folder.__dict__, "type": "folder", "_sa_instance_state": None}
+        return None
+
+    def get_children(self, path: str) -> Dict:
+        """
+        获取路径下的所有子项
+
+        :param path (str): 父目录路径
+
+        :return Dict: 包含 files、subfolders 和 meta 信息的字典
+        """
+        parent = Folder.get_by_path(self._db, path)
+        if not parent:
+            return {"files": [], "subfolders": []}
+        parent_id = parent.id
+
+        files = File.get_by_parent_id(self._db, parent_id)
+        subfolders = Folder.get_by_parent_id(self._db, parent_id)
+
+        def clean_record(record):
+            """
+            清洗数据库记录，移除内部状态并添加类型标记
+
+            :param record: File 或 Folder 的 ORM 实例
+
+            :return dict: 清理后的字典
+            """
+            d = record.__dict__
+            d.pop("_sa_instance_state", None)
+            d["type"] = "file" if isinstance(record, File) else "folder"
+            return d
+
+        return {
+            "files": [clean_record(f) for f in files],
+            "subfolders": [clean_record(sf) for sf in subfolders],
+            "meta": {
+                "parent_path": path,
+                "parent_id": parent_id,
+                "total_count": len(files) + len(subfolders),
+            },
+        }
+
+    def remove_by_path_batch(self, path: str, only_file: bool = False):
+        """
+        通过路径批量删除
+
+        :param path (str): 要删除的路径前缀
+        :param only_file (bool): 仅删除文件而不删除文件夹
+
+        :return bool: 操作成功返回 True
+        """
+        File.remove_by_path_batch(self._db, path)
+        if not only_file:
+            Folder.remove_by_path_batch(self._db, path)
+        return True
+
+    def remove_by_id_batch(self, id: int, only_file: bool = False):
+        """
+        通过文件夹 ID 批量删除
+
+        :param id (int): 文件夹 ID
+        :param only_file (bool): 仅删除文件而不删除文件夹
+
+        :return bool: 操作成功返回 True
+        """
+        folder = Folder.get_by_id(self._db, id)
+        if not folder:
+            return True
+        path = folder.path
+        File.remove_by_path_batch(self._db, path)
+        if not only_file:
+            Folder.remove_by_path_batch(self._db, path)
+        return True
+
+    def remove_by_path(self, path_type: str, path: str):
+        """
+        删除指定路径的记录
+
+        :param path_type (str): 路径类型，file 或 folder
+        :param path (str): 要删除的路径
+        """
+        if path_type == "file":
+            File.delete_by_path(self._db, path)
+        else:
+            Folder.delete_by_path(self._db, path)
+
+    def remove_by_id(self, id_type: str, id: int):
+        """
+        通过 ID 删除记录
+
+        :param id_type (str): ID 类型，file 或 folder
+        :param id (int): 要删除的记录 ID
+        """
+        if id_type == "file":
+            File.delete_by_id(self._db, id)
+        else:
+            Folder.delete_by_id(self._db, id)
+
+    def update_path_by_id(self, id: int, new_path: str) -> bool:
+        """
+        通过ID匹配数据并修改path
+
+        :param id (int): 文件 ID
+        :param new_path (str): 新的路径
+
+        :return bool: 更新成功返回 True，项目不存在或类型不匹配返回 False
+        """
+        item = self.get_by_id(id)
+        if not item:
+            return False
+
+        if item["type"] == "file":
+            File.update_path(self._db, id, new_path)
+        else:
+            return False
+
+        return True
+
+    def update_name_by_id(self, id: int, new_name: str) -> bool:
+        """
+        通过ID匹配数据并修改name
+
+        :param id (int): 文件 ID
+        :param new_name (str): 新的名称
+
+        :return bool: 更新成功返回 True，项目不存在或类型不匹配返回 False
+        """
+        item = self.get_by_id(id)
+        if not item:
+            return False
+
+        if item["type"] == "file":
+            File.update_name(self._db, id, new_name)
+        else:
+            return False
+
+        return True
+
+    def update_path_prefix_batch(
+        self, old_prefix: str, new_prefix: str, only_file: bool = False
+    ) -> bool:
+        """
+        批量更新以旧前缀开头的路径
+
+        :param old_prefix (str): 旧的路径前缀
+        :param new_prefix (str): 新的路径前缀
+        :param only_file (bool): 仅更新文件而不更新文件夹
+
+        :return bool: 操作成功返回 True
+        """
+        File.update_path_prefix(self._db, old_prefix, new_prefix)
+        if not only_file:
+            Folder.update_path_prefix(self._db, old_prefix, new_prefix)
+        return True
+
+    def remove_ghost_records(
+        self, path_prefix: str, seen_file_ids: Set[int], seen_folder_ids: Set[int]
+    ) -> int:
+        """
+        清除指定路径前缀下、未出现在本次扫描中的幽灵数据库记录，返回实际删除总行数
+
+        :param path_prefix (str): 网盘路径前缀（末尾带 /）
+        :param seen_file_ids (Set): 本次扫描到的文件 ID 集合
+        :param seen_folder_ids (Set): 本次扫描到的目录 ID 集合
+
+        :return int: 实际删除的总行数
+        """
+        file_count = File.remove_by_path_prefix_not_in_ids(
+            self._db, path_prefix, seen_file_ids
+        )
+        folder_count = Folder.remove_by_path_prefix_not_in_ids(
+            self._db, path_prefix, seen_folder_ids
+        )
+        return (file_count or 0) + (folder_count or 0)
+
+    def get_any_pickcode(self) -> Optional[str]:
+        """
+        从文件表中任意获取一条 pickcode 不为空的数据的 pickcode
+
+        :return str: pickcode 字符串，未找到返回 None
+        """
+        pickcode = File.get_any_pickcode(self._db)
+        if pickcode:
+            return pickcode
+
+        return None

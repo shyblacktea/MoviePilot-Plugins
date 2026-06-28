@@ -1,1 +1,52 @@
-bW9kIHByb2Nlc3NvcjsKbW9kIHR5cGVzOwoKdXNlIHByb2Nlc3Nvcjo6UHJvY2Vzc29yOwp1c2UgcHlvMzo6cHJlbHVkZTo6KjsKdXNlIHR5cGVzOjoqOwoKI1tweWNsYXNzKG5hbWUgPSAiUHJvY2Vzc29yIildCnN0cnVjdCBQeVByb2Nlc3NvciB7CiAgICBwcm9jZXNzb3I6IFByb2Nlc3NvciwKfQoKI1tweW1ldGhvZHNdCmltcGwgUHlQcm9jZXNzb3IgewogICAgI1tuZXddCiAgICBmbiBuZXcoY29uZmlnX2pzb246IFN0cmluZykgLT4gUHlSZXN1bHQ8U2VsZj4gewogICAgICAgIGxldCBjb25maWc6IENvbmZpZyA9IHNlcmRlX2pzb246OmZyb21fc3RyKCZjb25maWdfanNvbikubWFwX2Vycih8ZXwgewogICAgICAgICAgICBQeUVycjo6bmV3Ojo8cHlvMzo6ZXhjZXB0aW9uczo6UHlWYWx1ZUVycm9yLCBfPihmb3JtYXQhKCLop6PmnpAgSlNPTiDlpLHotKU6IHt9IiwgZSkpCiAgICAgICAgfSk/OwogICAgICAgIGxldCBwcm9jZXNzb3IgPSBQcm9jZXNzb3I6Om5ldyhjb25maWcpLm1hcF9lcnIofGV8IHsKICAgICAgICAgICAgUHlFcnI6Om5ldzo6PHB5bzM6OmV4Y2VwdGlvbnM6OlB5VmFsdWVFcnJvciwgXz4oZm9ybWF0ISgKICAgICAgICAgICAgICAgICLmnoTlu7ogQWhvLUNvcmFzaWNrIOiHquWKqOacuuWksei0pe+8jOivt+ajgOafpem7keeZveWQjeWNlemFjee9rjoge30iLAogICAgICAgICAgICAgICAgZQogICAgICAgICAgICApKQogICAgICAgIH0pPzsKCiAgICAgICAgT2soUHlQcm9jZXNzb3IgeyBwcm9jZXNzb3IgfSkKICAgIH0KCiAgICBmbiBwcm9jZXNzX2JhdGNoKCZzZWxmLCBfcHk6IFB5dGhvbiwgYmF0Y2hfanNvbjogU3RyaW5nKSAtPiBQeVJlc3VsdDxQYWNrZWRSZXN1bHQ+IHsKICAgICAgICBsZXQgYmF0Y2g6IFZlYzxGaWxlSW5wdXQ+ID0gc2VyZGVfanNvbjo6ZnJvbV9zdHIoJmJhdGNoX2pzb24pLm1hcF9lcnIofGV8IHsKICAgICAgICAgICAgUHlFcnI6Om5ldzo6PHB5bzM6OmV4Y2VwdGlvbnM6OlB5VmFsdWVFcnJvciwgXz4oZm9ybWF0ISgKICAgICAgICAgICAgICAgICLop6PmnpDmibnmrKEgSlNPTiDlpLHotKU6IHt9IiwKICAgICAgICAgICAgICAgIGUKICAgICAgICAgICAgKSkKICAgICAgICB9KT87CiAgICAgICAgT2soc2VsZi5wcm9jZXNzb3IucHJvY2Vzc19iYXRjaF9ydXN0KGJhdGNoKSkKICAgIH0KfQoKI1tweW1vZHVsZV0KZm4gZnVsbF9zdHJtX3N5bmMobTogJkJvdW5kPCdfLCBQeU1vZHVsZT4pIC0+IFB5UmVzdWx0PCgpPiB7CiAgICBtLmFkZCgiX192ZXJzaW9uX18iLCBlbnYhKCJDQVJHT19QS0dfVkVSU0lPTiIpKT87CiAgICAKICAgIG0uYWRkX2NsYXNzOjo8UHlQcm9jZXNzb3I+KCk/OwogICAgbS5hZGRfY2xhc3M6OjxTdHJtSW5mbz4oKT87CiAgICBtLmFkZF9jbGFzczo6PERvd25sb2FkSW5mbz4oKT87CiAgICBtLmFkZF9jbGFzczo6PFNraXBJbmZvPigpPzsKICAgIG0uYWRkX2NsYXNzOjo8RmFpbEluZm8+KCk/OwogICAgbS5hZGRfY2xhc3M6OjxQYWNrZWRSZXN1bHQ+KCk/OwogICAgT2soKCkpCn0K
+mod processor;
+mod types;
+
+use processor::Processor;
+use pyo3::prelude::*;
+use types::*;
+
+#[pyclass(name = "Processor")]
+struct PyProcessor {
+    processor: Processor,
+}
+
+#[pymethods]
+impl PyProcessor {
+    #[new]
+    fn new(config_json: String) -> PyResult<Self> {
+        let config: Config = serde_json::from_str(&config_json).map_err(|e| {
+            PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("解析 JSON 失败: {}", e))
+        })?;
+        let processor = Processor::new(config).map_err(|e| {
+            PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+                "构建 Aho-Corasick 自动机失败，请检查黑白名单配置: {}",
+                e
+            ))
+        })?;
+
+        Ok(PyProcessor { processor })
+    }
+
+    fn process_batch(&self, _py: Python, batch_json: String) -> PyResult<PackedResult> {
+        let batch: Vec<FileInput> = serde_json::from_str(&batch_json).map_err(|e| {
+            PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+                "解析批次 JSON 失败: {}",
+                e
+            ))
+        })?;
+        Ok(self.processor.process_batch_rust(batch))
+    }
+}
+
+#[pymodule]
+fn full_strm_sync(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add("__version__", env!("CARGO_PKG_VERSION"))?;
+    
+    m.add_class::<PyProcessor>()?;
+    m.add_class::<StrmInfo>()?;
+    m.add_class::<DownloadInfo>()?;
+    m.add_class::<SkipInfo>()?;
+    m.add_class::<FailInfo>()?;
+    m.add_class::<PackedResult>()?;
+    Ok(())
+}

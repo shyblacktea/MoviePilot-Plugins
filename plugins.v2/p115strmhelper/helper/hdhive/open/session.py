@@ -1,1 +1,147 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IEFueSwgRGljdCwgTGl0ZXJhbCwgT3B0aW9uYWwKCmZyb20gYXBwLmxvZyBpbXBvcnQgbG9nZ2VyCgpmcm9tIC5icm9rZXJfaHR0cCBpbXBvcnQgYnJva2VyX2h0dHBfY2xpZW50LCBicm9rZXJfcmVxdWVzdF9oZWFkZXJzCmZyb20gLmNsaWVudCBpbXBvcnQgSERIaXZlT3BlbkNsaWVudApmcm9tIC5lcnJvcnMgaW1wb3J0ICgKICAgIEhESGl2ZUFQSUVycm9yLAogICAgSERIaXZlUmVhdXRoUmVxdWlyZWRFcnJvciwKICAgIEhESGl2ZVJlZnJlc2hSZXF1aXJlZEVycm9yLAogICAgcmFpc2VfZm9yX3Jlc3BvbnNlLAopCmZyb20gLm9hdXRoIGltcG9ydCBicm9rZXJfcmVmcmVzaApmcm9tIC50b2tlbl9zdG9yZSBpbXBvcnQgKAogICAgaXNfYWNjZXNzX3ZhbGlkLAogICAgaXNfcmVmcmVzaF92YWxpZCwKICAgIGxvYWRfb2F1dGhfYnVuZGxlLAopCgpBdXRoTW9kZSA9IExpdGVyYWxbIm9hdXRoIiwgIm5vbmUiXQoKCmRlZiBfcmVzb2x2ZV9hdXRoX21vZGUoKSAtPiBBdXRoTW9kZToKICAgICIiIgogICAg6Kej5p6Q5b2T5YmN6Ym05p2D5qih5byPCgogICAgOnJldHVybiBzdHI6IGBgb2F1dGhgYCDmiJYgYGBub25lYGAKICAgICIiIgogICAgYnVuZGxlID0gbG9hZF9vYXV0aF9idW5kbGUoKQogICAgaWYgKGJ1bmRsZS5nZXQoImFjY2Vzc190b2tlbiIpIG9yICIiKS5zdHJpcCgpOgogICAgICAgIGlmIGlzX2FjY2Vzc192YWxpZChidW5kbGUpIG9yIGlzX3JlZnJlc2hfdmFsaWQoYnVuZGxlKToKICAgICAgICAgICAgcmV0dXJuICJvYXV0aCIKICAgIHJldHVybiAibm9uZSIKCgpjbGFzcyBIREhpdmVTZXNzaW9uKEhESGl2ZU9wZW5DbGllbnQpOgogICAgIiIiCiAgICDnu5/kuIAgSERIaXZlIE9wZW4gQVBJIOS8muivne+8mk9BdXRoIOe7j+S4rei9rOS7o+eQhu+8jOaOpeWPo+S4jiBgYEhESGl2ZU9wZW5DbGllbnRgYCDkuIDoh7QKICAgICIiIgoKICAgIGRlZiBfX2luaXRfXyhzZWxmKSAtPiBOb25lOgogICAgICAgIHN1cGVyKCkuX19pbml0X18oZGVmZXJfY2xpZW50PVRydWUpCiAgICAgICAgc2VsZi5fYXV0aF9tb2RlOiBBdXRoTW9kZSA9ICJub25lIgoKICAgIEBwcm9wZXJ0eQogICAgZGVmIGF1dGhfbW9kZShzZWxmKSAtPiBBdXRoTW9kZToKICAgICAgICAiIiIKICAgICAgICDmnIDov5HkuIDmrKHor7fmsYLkvb/nlKjnmoTpibTmnYPmqKHlvI8KICAgICAgICAiIiIKICAgICAgICByZXR1cm4gc2VsZi5fYXV0aF9tb2RlCgogICAgZGVmIF9lbnN1cmVfb2F1dGhfYWNjZXNzKHNlbGYpIC0+IE9wdGlvbmFsW3N0cl06CiAgICAgICAgYnVuZGxlID0gbG9hZF9vYXV0aF9idW5kbGUoKQogICAgICAgIGlmIGlzX2FjY2Vzc192YWxpZChidW5kbGUpOgogICAgICAgICAgICByZXR1cm4gc3RyKGJ1bmRsZVsiYWNjZXNzX3Rva2VuIl0pCiAgICAgICAgaWYgaXNfcmVmcmVzaF92YWxpZChidW5kbGUpOgogICAgICAgICAgICBpZiBicm9rZXJfcmVmcmVzaCgpOgogICAgICAgICAgICAgICAgYnVuZGxlID0gbG9hZF9vYXV0aF9idW5kbGUoKQogICAgICAgICAgICAgICAgaWYgaXNfYWNjZXNzX3ZhbGlkKGJ1bmRsZSk6CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHN0cihidW5kbGVbImFjY2Vzc190b2tlbiJdKQogICAgICAgIHJldHVybiBOb25lCgogICAgZGVmIF9wcm94eV9vcGVuX3JlcXVlc3QoCiAgICAgICAgc2VsZiwKICAgICAgICBtZXRob2Q6IHN0ciwKICAgICAgICBwYXRoOiBzdHIsCiAgICAgICAgKiwKICAgICAgICBwYXJhbXM6IE9wdGlvbmFsW0RpY3Rbc3RyLCBBbnldXSA9IE5vbmUsCiAgICAgICAganNvbjogQW55ID0gTm9uZSwKICAgICAgICBhY2Nlc3NfdG9rZW46IHN0ciwKICAgICAgICBpbnN0YW5jZV9rZXk6IHN0ciwKICAgICkgLT4gdHVwbGVbQW55LCBBbnldOgogICAgICAgIHVybF9wYXRoID0gcGF0aCBpZiBwYXRoLnN0YXJ0c3dpdGgoIi8iKSBlbHNlIGYiL3twYXRofSIKICAgICAgICBoZWFkZXJzID0gewogICAgICAgICAgICAiQXV0aG9yaXphdGlvbiI6IGYiQmVhcmVyIHthY2Nlc3NfdG9rZW59IiwKICAgICAgICAgICAgKipicm9rZXJfcmVxdWVzdF9oZWFkZXJzKGluc3RhbmNlX2tleSksCiAgICAgICAgfQogICAgICAgIHdpdGggYnJva2VyX2h0dHBfY2xpZW50KCkgYXMgY2xpZW50OgogICAgICAgICAgICByZXNwID0gY2xpZW50LnJlcXVlc3QoCiAgICAgICAgICAgICAgICBtZXRob2QsCiAgICAgICAgICAgICAgICBmIi9wcm94eS9vcGVue3VybF9wYXRofSIsCiAgICAgICAgICAgICAgICBwYXJhbXM9cGFyYW1zLAogICAgICAgICAgICAgICAganNvbj1qc29uLAogICAgICAgICAgICAgICAgaGVhZGVycz1oZWFkZXJzLAogICAgICAgICAgICApCiAgICAgICAgcmFpc2VfZm9yX3Jlc3BvbnNlKHJlc3ApCiAgICAgICAgYm9keTogRGljdFtzdHIsIEFueV0gPSByZXNwLmpzb24oKQogICAgICAgIHJldHVybiBib2R5LmdldCgiZGF0YSIpLCBib2R5LmdldCgibWV0YSIpCgogICAgZGVmIF9yZXF1ZXN0KAogICAgICAgIHNlbGYsCiAgICAgICAgbWV0aG9kOiBzdHIsCiAgICAgICAgcGF0aDogc3RyLAogICAgICAgICosCiAgICAgICAgcGFyYW1zOiBkaWN0W3N0ciwgQW55XSB8IE5vbmUgPSBOb25lLAogICAgICAgIGpzb246IEFueSA9IE5vbmUsCiAgICAgICAgYWNjZXNzX3Rva2VuOiBzdHIgfCBOb25lID0gTm9uZSwKICAgICAgICBfcmV0cnlfcmVmcmVzaDogYm9vbCA9IFRydWUsCiAgICApIC0+IEFueToKICAgICAgICAiIiIKICAgICAgICDnu48gT0F1dGgg5Lit6L2s5Luj55CG5Y+R6LW3IE9wZW4gQVBJIOivt+axggoKICAgICAgICA6cGFyYW0gYWNjZXNzX3Rva2VuIChzdHIpOiDmnKrkvb/nlKjvvIjnlLEgdG9rZW5fc3RvcmUg5o+Q5L6b77yJCiAgICAgICAgOnBhcmFtIF9yZXRyeV9yZWZyZXNoIChib29sKTog5YaF6YOo55So77yM5piv5ZCm5ZyoIFJFRlJFU0hfUkVRVUlSRUQg5pe26Ieq5Yqo5Yi35paw5LiA5qyhCiAgICAgICAgIiIiCiAgICAgICAgZGVsIGFjY2Vzc190b2tlbgogICAgICAgIGlmIF9yZXNvbHZlX2F1dGhfbW9kZSgpICE9ICJvYXV0aCI6CiAgICAgICAgICAgIHNlbGYuX2F1dGhfbW9kZSA9ICJub25lIgogICAgICAgICAgICByYWlzZSBIREhpdmVBUElFcnJvcigKICAgICAgICAgICAgICAgICJPUEVOQVBJX1VTRVJfUkVRVUlSRUQiLAogICAgICAgICAgICAgICAgIuacqumFjee9riBIREhpdmUgT0F1dGjvvIzor7flnKjmj5Lku7borr7nva7kuK3lrozmiJDmjojmnYMiLAogICAgICAgICAgICApCgogICAgICAgIHRva2VuID0gc2VsZi5fZW5zdXJlX29hdXRoX2FjY2VzcygpCiAgICAgICAgaWYgbm90IHRva2VuOgogICAgICAgICAgICBzZWxmLl9hdXRoX21vZGUgPSAibm9uZSIKICAgICAgICAgICAgcmFpc2UgSERIaXZlUmVhdXRoUmVxdWlyZWRFcnJvcigKICAgICAgICAgICAgICAgICJPUEVOQVBJX1JFQVVUSF9SRVFVSVJFRCIsCiAgICAgICAgICAgICAgICAiSERIaXZlIE9BdXRoIOW3suWkseaViO+8jOivt+mHjeaWsOaOiOadgyIsCiAgICAgICAgICAgICkKCiAgICAgICAgYnVuZGxlID0gbG9hZF9vYXV0aF9idW5kbGUoKQogICAgICAgIGlrID0gc3RyKGJ1bmRsZS5nZXQoImluc3RhbmNlX2tleSIpIG9yICIiKQogICAgICAgIHRyeToKICAgICAgICAgICAgc2VsZi5fYXV0aF9tb2RlID0gIm9hdXRoIgogICAgICAgICAgICByZXR1cm4gc2VsZi5fcHJveHlfb3Blbl9yZXF1ZXN0KAogICAgICAgICAgICAgICAgbWV0aG9kLAogICAgICAgICAgICAgICAgcGF0aCwKICAgICAgICAgICAgICAgIHBhcmFtcz1wYXJhbXMsCiAgICAgICAgICAgICAgICBqc29uPWpzb24sCiAgICAgICAgICAgICAgICBhY2Nlc3NfdG9rZW49dG9rZW4sCiAgICAgICAgICAgICAgICBpbnN0YW5jZV9rZXk9aWssCiAgICAgICAgICAgICkKICAgICAgICBleGNlcHQgSERIaXZlUmVmcmVzaFJlcXVpcmVkRXJyb3I6CiAgICAgICAgICAgIGlmIF9yZXRyeV9yZWZyZXNoIGFuZCBicm9rZXJfcmVmcmVzaCgpOgogICAgICAgICAgICAgICAgcmV0dXJuIHNlbGYuX3JlcXVlc3QoCiAgICAgICAgICAgICAgICAgICAgbWV0aG9kLAogICAgICAgICAgICAgICAgICAgIHBhdGgsCiAgICAgICAgICAgICAgICAgICAgcGFyYW1zPXBhcmFtcywKICAgICAgICAgICAgICAgICAgICBqc29uPWpzb24sCiAgICAgICAgICAgICAgICAgICAgX3JldHJ5X3JlZnJlc2g9RmFsc2UsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIHJhaXNlCiAgICAgICAgZXhjZXB0IEhESGl2ZVJlYXV0aFJlcXVpcmVkRXJyb3I6CiAgICAgICAgICAgIHNlbGYuX2F1dGhfbW9kZSA9ICJub25lIgogICAgICAgICAgICBsb2dnZXIud2FybmluZygi44CQSERIaXZl44CRT0F1dGgg6ZyA6YeN5paw5o6I5p2DIikKICAgICAgICAgICAgcmFpc2UK
+from typing import Any, Dict, Literal, Optional
+
+from app.log import logger
+
+from .broker_http import broker_http_client, broker_request_headers
+from .client import HDHiveOpenClient
+from .errors import (
+    HDHiveAPIError,
+    HDHiveReauthRequiredError,
+    HDHiveRefreshRequiredError,
+    raise_for_response,
+)
+from .oauth import broker_refresh
+from .token_store import (
+    is_access_valid,
+    is_refresh_valid,
+    load_oauth_bundle,
+)
+
+AuthMode = Literal["oauth", "none"]
+
+
+def _resolve_auth_mode() -> AuthMode:
+    """
+    解析当前鉴权模式
+
+    :return str: ``oauth`` 或 ``none``
+    """
+    bundle = load_oauth_bundle()
+    if (bundle.get("access_token") or "").strip():
+        if is_access_valid(bundle) or is_refresh_valid(bundle):
+            return "oauth"
+    return "none"
+
+
+class HDHiveSession(HDHiveOpenClient):
+    """
+    统一 HDHive Open API 会话：OAuth 经中转代理，接口与 ``HDHiveOpenClient`` 一致
+    """
+
+    def __init__(self) -> None:
+        super().__init__(defer_client=True)
+        self._auth_mode: AuthMode = "none"
+
+    @property
+    def auth_mode(self) -> AuthMode:
+        """
+        最近一次请求使用的鉴权模式
+        """
+        return self._auth_mode
+
+    def _ensure_oauth_access(self) -> Optional[str]:
+        bundle = load_oauth_bundle()
+        if is_access_valid(bundle):
+            return str(bundle["access_token"])
+        if is_refresh_valid(bundle):
+            if broker_refresh():
+                bundle = load_oauth_bundle()
+                if is_access_valid(bundle):
+                    return str(bundle["access_token"])
+        return None
+
+    def _proxy_open_request(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        json: Any = None,
+        access_token: str,
+        instance_key: str,
+    ) -> tuple[Any, Any]:
+        url_path = path if path.startswith("/") else f"/{path}"
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            **broker_request_headers(instance_key),
+        }
+        with broker_http_client() as client:
+            resp = client.request(
+                method,
+                f"/proxy/open{url_path}",
+                params=params,
+                json=json,
+                headers=headers,
+            )
+        raise_for_response(resp)
+        body: Dict[str, Any] = resp.json()
+        return body.get("data"), body.get("meta")
+
+    def _request(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: dict[str, Any] | None = None,
+        json: Any = None,
+        access_token: str | None = None,
+        _retry_refresh: bool = True,
+    ) -> Any:
+        """
+        经 OAuth 中转代理发起 Open API 请求
+
+        :param access_token (str): 未使用（由 token_store 提供）
+        :param _retry_refresh (bool): 内部用，是否在 REFRESH_REQUIRED 时自动刷新一次
+        """
+        del access_token
+        if _resolve_auth_mode() != "oauth":
+            self._auth_mode = "none"
+            raise HDHiveAPIError(
+                "OPENAPI_USER_REQUIRED",
+                "未配置 HDHive OAuth，请在插件设置中完成授权",
+            )
+
+        token = self._ensure_oauth_access()
+        if not token:
+            self._auth_mode = "none"
+            raise HDHiveReauthRequiredError(
+                "OPENAPI_REAUTH_REQUIRED",
+                "HDHive OAuth 已失效，请重新授权",
+            )
+
+        bundle = load_oauth_bundle()
+        ik = str(bundle.get("instance_key") or "")
+        try:
+            self._auth_mode = "oauth"
+            return self._proxy_open_request(
+                method,
+                path,
+                params=params,
+                json=json,
+                access_token=token,
+                instance_key=ik,
+            )
+        except HDHiveRefreshRequiredError:
+            if _retry_refresh and broker_refresh():
+                return self._request(
+                    method,
+                    path,
+                    params=params,
+                    json=json,
+                    _retry_refresh=False,
+                )
+            raise
+        except HDHiveReauthRequiredError:
+            self._auth_mode = "none"
+            logger.warning("【HDHive】OAuth 需重新授权")
+            raise

@@ -1,1 +1,160 @@
-ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gdHlwaW5nIGltcG9ydCBPcHRpb25hbCwgVFlQRV9DSEVDS0lORywgQW55Cgpmcm9tIGFwcC5sb2cgaW1wb3J0IGxvZ2dlcgpmcm9tIGFwcC5zY2hlbWFzIGltcG9ydCBGaWxlSXRlbQoKaWYgVFlQRV9DSEVDS0lORzoKICAgIGZyb20gLi4uLnAxMTVkaXNrLnAxMTVfYXBpIGltcG9ydCBQMTE1QXBpCmVsc2U6CiAgICBQMTE1QXBpID0gQW55Cgp0cnk6CiAgICBmcm9tIGFwcC5wbHVnaW5zLnAxMTVkaXNrLnAxMTVfYXBpIGltcG9ydCBQMTE1QXBpICAjIG5vcWEKCiAgICBQMTE1X0FQSV9BVkFJTEFCTEUgPSBUcnVlCmV4Y2VwdCAoSW1wb3J0RXJyb3IsIEV4Y2VwdGlvbik6CiAgICBQMTE1X0FQSV9BVkFJTEFCTEUgPSBGYWxzZQoKCmNsYXNzIENhY2hlVXBkYXRlcjoKICAgICIiIgogICAgMTE1IOe9keebmOe8k+WtmOabtOaWsOWZqAogICAgIiIiCgogICAgZGVmIF9faW5pdF9fKHNlbGYsIHAxMTVfYXBpOiBPcHRpb25hbFsiUDExNUFwaSJdID0gTm9uZSk6CiAgICAgICAgIiIiCiAgICAgICAg5Yid5aeL5YyW57yT5a2Y5pu05paw5ZmoCgogICAgICAgIDpwYXJhbSBwMTE1X2FwaSAoUDExNUFwaSk6IFAxMTVBcGkg5a6e5L6LCiAgICAgICAgIiIiCiAgICAgICAgc2VsZi5fcDExNV9hcGkgPSBwMTE1X2FwaQoKICAgIEBjbGFzc21ldGhvZAogICAgZGVmIGNyZWF0ZShjbHMsIGNsaWVudCwgc3RvcmFnZV9uYW1lOiBzdHIgPSAiMTE1572R55uYUGx1cyIpIC0+ICJDYWNoZVVwZGF0ZXIiOgogICAgICAgICIiIgogICAgICAgIOWIm+W7uue8k+WtmOabtOaWsOWZqOWunuS+iwoKICAgICAgICA6cGFyYW0gY2xpZW50IChQMTE1Q2xpZW50KTogMTE1IOWuouaIt+err+WunuS+iwogICAgICAgIDpwYXJhbSBzdG9yYWdlX25hbWUgKHN0cik6IOWtmOWCqOWQjeensAogICAgICAgIDpyZXR1cm46IENhY2hlVXBkYXRlciDlrp7kvosKICAgICAgICAiIiIKICAgICAgICBwMTE1X2FwaSA9IE5vbmUKICAgICAgICBpZiBQMTE1X0FQSV9BVkFJTEFCTEU6CiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHAxMTVfYXBpID0gUDExNUFwaShjbGllbnQ9Y2xpZW50LCBkaXNrX25hbWU9c3RvcmFnZV9uYW1lKQogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgICAgICBsb2dnZXIud2FybihmIuOAkOaVtOeQhuaOpeeuoeOAkeaXoOazleWIm+W7uiBQMTE1QXBpIOWunuS+i++8jOe8k+WtmOabtOaWsOWwhui3s+i/hzoge2V9IikKCiAgICAgICAgcmV0dXJuIGNscyhwMTE1X2FwaT1wMTE1X2FwaSkKCiAgICBkZWYgdXBkYXRlX2ZvbGRlcl9jYWNoZShzZWxmLCBmb2xkZXJfaXRlbTogRmlsZUl0ZW0pIC0+IE5vbmU6CiAgICAgICAgIiIiCiAgICAgICAg5pu05paw55uu5b2V57yT5a2YCgogICAgICAgIDpwYXJhbSBmb2xkZXJfaXRlbSAoRmlsZUl0ZW0pOiDnm67lvZXmlofku7bpobkKICAgICAgICAiIiIKICAgICAgICBpZiBub3Qgc2VsZi5fcDExNV9hcGkgb3Igbm90IGZvbGRlcl9pdGVtIG9yIG5vdCBmb2xkZXJfaXRlbS5maWxlaWQ6CiAgICAgICAgICAgIHJldHVybgogICAgICAgIHRyeToKICAgICAgICAgICAgaWYgaGFzYXR0cihzZWxmLl9wMTE1X2FwaSwgIl9pZF9jYWNoZSIpOgogICAgICAgICAgICAgICAgc2VsZi5fcDExNV9hcGkuX2lkX2NhY2hlLmFkZF9jYWNoZSgKICAgICAgICAgICAgICAgICAgICBpZD1pbnQoZm9sZGVyX2l0ZW0uZmlsZWlkKSwKICAgICAgICAgICAgICAgICAgICBkaXJlY3Rvcnk9Zm9sZGVyX2l0ZW0ucGF0aC5yc3RyaXAoIi8iKSwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgaWYgaGFzYXR0cihzZWxmLl9wMTE1X2FwaSwgIl9pZF9pdGVtX2NhY2hlIik6CiAgICAgICAgICAgICAgICBzZWxmLl9wMTE1X2FwaS5faWRfaXRlbV9jYWNoZS5hZGRfY2FjaGUoCiAgICAgICAgICAgICAgICAgICAgaWQ9aW50KGZvbGRlcl9pdGVtLmZpbGVpZCksCiAgICAgICAgICAgICAgICAgICAgaXRlbT17CiAgICAgICAgICAgICAgICAgICAgICAgICJwYXRoIjogZm9sZGVyX2l0ZW0ucGF0aC5yc3RyaXAoIi8iKSwKICAgICAgICAgICAgICAgICAgICAgICAgImlkIjogZm9sZGVyX2l0ZW0uZmlsZWlkLAogICAgICAgICAgICAgICAgICAgICAgICAic2l6ZSI6IE5vbmUsCiAgICAgICAgICAgICAgICAgICAgICAgICJtb2RpZnlfdGltZSI6IGZvbGRlcl9pdGVtLm1vZGlmeV90aW1lIG9yIDAsCiAgICAgICAgICAgICAgICAgICAgICAgICJwaWNrY29kZSI6IGZvbGRlcl9pdGVtLnBpY2tjb2RlIG9yICIiLAogICAgICAgICAgICAgICAgICAgICAgICAiaXNfZGlyIjogVHJ1ZSwKICAgICAgICAgICAgICAgICAgICB9LAogICAgICAgICAgICAgICAgKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKGYi44CQ5pW055CG5o6l566h44CR5pu05paw55uu5b2V57yT5a2Y5aSx6LSlOiB7ZX0iKQoKICAgIGRlZiB1cGRhdGVfZmlsZV9jYWNoZShzZWxmLCBmaWxlX2l0ZW06IEZpbGVJdGVtKSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIOabtOaWsOaWh+S7tue8k+WtmAoKICAgICAgICA6cGFyYW0gZmlsZV9pdGVtIChGaWxlSXRlbSk6IOaWh+S7tumhuQogICAgICAgICIiIgogICAgICAgIGlmIG5vdCBzZWxmLl9wMTE1X2FwaSBvciBub3QgZmlsZV9pdGVtIG9yIG5vdCBmaWxlX2l0ZW0uZmlsZWlkOgogICAgICAgICAgICByZXR1cm4KICAgICAgICB0cnk6CiAgICAgICAgICAgIGlmIGhhc2F0dHIoc2VsZi5fcDExNV9hcGksICJfaWRfY2FjaGUiKToKICAgICAgICAgICAgICAgIHNlbGYuX3AxMTVfYXBpLl9pZF9jYWNoZS5hZGRfY2FjaGUoCiAgICAgICAgICAgICAgICAgICAgaWQ9aW50KGZpbGVfaXRlbS5maWxlaWQpLAogICAgICAgICAgICAgICAgICAgIGRpcmVjdG9yeT1maWxlX2l0ZW0ucGF0aCwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgaWYgaGFzYXR0cihzZWxmLl9wMTE1X2FwaSwgIl9pZF9pdGVtX2NhY2hlIik6CiAgICAgICAgICAgICAgICBzZWxmLl9wMTE1X2FwaS5faWRfaXRlbV9jYWNoZS5hZGRfY2FjaGUoCiAgICAgICAgICAgICAgICAgICAgaWQ9aW50KGZpbGVfaXRlbS5maWxlaWQpLAogICAgICAgICAgICAgICAgICAgIGl0ZW09ewogICAgICAgICAgICAgICAgICAgICAgICAicGF0aCI6IGZpbGVfaXRlbS5wYXRoLAogICAgICAgICAgICAgICAgICAgICAgICAiaWQiOiBmaWxlX2l0ZW0uZmlsZWlkLAogICAgICAgICAgICAgICAgICAgICAgICAic2l6ZSI6IGZpbGVfaXRlbS5zaXplIG9yIDAsCiAgICAgICAgICAgICAgICAgICAgICAgICJtb2RpZnlfdGltZSI6IGZpbGVfaXRlbS5tb2RpZnlfdGltZSBvciAwLAogICAgICAgICAgICAgICAgICAgICAgICAicGlja2NvZGUiOiBmaWxlX2l0ZW0ucGlja2NvZGUgb3IgIiIsCiAgICAgICAgICAgICAgICAgICAgICAgICJpc19kaXIiOiBGYWxzZSwKICAgICAgICAgICAgICAgICAgICB9LAogICAgICAgICAgICAgICAgKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKGYi44CQ5pW055CG5o6l566h44CR5pu05paw5paH5Lu257yT5a2Y5aSx6LSlOiB7ZX0iKQoKICAgIGRlZiByZW1vdmVfY2FjaGUoc2VsZiwgZmlsZV9pZDogaW50KSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIOWIoOmZpOe8k+WtmAoKICAgICAgICA6cGFyYW0gZmlsZV9pZCAoaW50KTog5paH5Lu2SUQKICAgICAgICAiIiIKICAgICAgICBpZiBub3Qgc2VsZi5fcDExNV9hcGk6CiAgICAgICAgICAgIHJldHVybgogICAgICAgIHRyeToKICAgICAgICAgICAgaWYgaGFzYXR0cihzZWxmLl9wMTE1X2FwaSwgIl9pZF9jYWNoZSIpOgogICAgICAgICAgICAgICAgc2VsZi5fcDExNV9hcGkuX2lkX2NhY2hlLnJlbW92ZShpZD1maWxlX2lkKQogICAgICAgICAgICBpZiBoYXNhdHRyKHNlbGYuX3AxMTVfYXBpLCAiX2lkX2l0ZW1fY2FjaGUiKToKICAgICAgICAgICAgICAgIHNlbGYuX3AxMTVfYXBpLl9pZF9pdGVtX2NhY2hlLnJlbW92ZShmaWxlX2lkKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKGYi44CQ5pW055CG5o6l566h44CR5Yig6Zmk57yT5a2Y5aSx6LSlOiB7ZX0iKQoKICAgIGRlZiB1cGRhdGVfcmVuYW1lX2NhY2hlKHNlbGYsIGZpbGVfaWQ6IGludCwgbmV3X25hbWU6IHN0cikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDmm7TmlrDph43lkb3lkI3lkI7nmoTnvJPlrZgKCiAgICAgICAgOnBhcmFtIGZpbGVfaWQgKGludCk6IOaWh+S7tklECiAgICAgICAgOnBhcmFtIG5ld19uYW1lIChzdHIpOiDmlrDmlofku7blkI0KICAgICAgICAiIiIKICAgICAgICBpZiBub3Qgc2VsZi5fcDExNV9hcGk6CiAgICAgICAgICAgIHJldHVybgogICAgICAgIHRyeToKICAgICAgICAgICAgaWYgaGFzYXR0cihzZWxmLl9wMTE1X2FwaSwgIl9pZF9jYWNoZSIpOgogICAgICAgICAgICAgICAgb2xkX3BhdGggPSBzZWxmLl9wMTE1X2FwaS5faWRfY2FjaGUuZ2V0X2Rpcl9ieV9pZChmaWxlX2lkKQogICAgICAgICAgICAgICAgaWYgb2xkX3BhdGg6CiAgICAgICAgICAgICAgICAgICAgc2VsZi5fcDExNV9hcGkuX2lkX2NhY2hlLnJlbW92ZShpZD1maWxlX2lkKQogICAgICAgICAgICAgICAgICAgIG5ld19wYXRoID0gUGF0aChvbGRfcGF0aCkucGFyZW50IC8gbmV3X25hbWUKICAgICAgICAgICAgICAgICAgICBzZWxmLl9wMTE1X2FwaS5faWRfY2FjaGUuYWRkX2NhY2hlKAogICAgICAgICAgICAgICAgICAgICAgICBpZD1maWxlX2lkLAogICAgICAgICAgICAgICAgICAgICAgICBkaXJlY3Rvcnk9c3RyKG5ld19wYXRoKSwKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIGlmIGhhc2F0dHIoc2VsZi5fcDExNV9hcGksICJfaWRfaXRlbV9jYWNoZSIpOgogICAgICAgICAgICAgICAgb2xkX2l0ZW0gPSBzZWxmLl9wMTE1X2FwaS5faWRfaXRlbV9jYWNoZS5nZXRfaXRlbShmaWxlX2lkKQogICAgICAgICAgICAgICAgaWYgb2xkX2l0ZW06CiAgICAgICAgICAgICAgICAgICAgbmV3X3BhdGggPSBQYXRoKG9sZF9pdGVtWyJwYXRoIl0pLnBhcmVudCAvIG5ld19uYW1lCiAgICAgICAgICAgICAgICAgICAgc2VsZi5fcDExNV9hcGkuX2lkX2l0ZW1fY2FjaGUuYWRkX2NhY2hlKAogICAgICAgICAgICAgICAgICAgICAgICBpZD1maWxlX2lkLAogICAgICAgICAgICAgICAgICAgICAgICBpdGVtPXsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJwYXRoIjogc3RyKG5ld19wYXRoKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJpZCI6IG9sZF9pdGVtWyJpZCJdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgInNpemUiOiBvbGRfaXRlbVsic2l6ZSJdLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIm1vZGlmeV90aW1lIjogb2xkX2l0ZW1bIm1vZGlmeV90aW1lIl0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAicGlja2NvZGUiOiBvbGRfaXRlbVsicGlja2NvZGUiXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJpc19kaXIiOiBvbGRfaXRlbVsiaXNfZGlyIl0sCiAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKGYi44CQ5pW055CG5o6l566h44CR5pu05paw6YeN5ZG95ZCN57yT5a2Y5aSx6LSlIChmaWxlX2lkOiB7ZmlsZV9pZH0pOiB7ZX0iKQo=
+from pathlib import Path
+from typing import Optional, TYPE_CHECKING, Any
+
+from app.log import logger
+from app.schemas import FileItem
+
+if TYPE_CHECKING:
+    from ....p115disk.p115_api import P115Api
+else:
+    P115Api = Any
+
+try:
+    from app.plugins.p115disk.p115_api import P115Api  # noqa
+
+    P115_API_AVAILABLE = True
+except (ImportError, Exception):
+    P115_API_AVAILABLE = False
+
+
+class CacheUpdater:
+    """
+    115 网盘缓存更新器
+    """
+
+    def __init__(self, p115_api: Optional["P115Api"] = None):
+        """
+        初始化缓存更新器
+
+        :param p115_api (P115Api): P115Api 实例
+        """
+        self._p115_api = p115_api
+
+    @classmethod
+    def create(cls, client, storage_name: str = "115网盘Plus") -> "CacheUpdater":
+        """
+        创建缓存更新器实例
+
+        :param client (P115Client): 115 客户端实例
+        :param storage_name (str): 存储名称
+        :return: CacheUpdater 实例
+        """
+        p115_api = None
+        if P115_API_AVAILABLE:
+            try:
+                p115_api = P115Api(client=client, disk_name=storage_name)
+            except Exception as e:
+                logger.warn(f"【整理接管】无法创建 P115Api 实例，缓存更新将跳过: {e}")
+
+        return cls(p115_api=p115_api)
+
+    def update_folder_cache(self, folder_item: FileItem) -> None:
+        """
+        更新目录缓存
+
+        :param folder_item (FileItem): 目录文件项
+        """
+        if not self._p115_api or not folder_item or not folder_item.fileid:
+            return
+        try:
+            if hasattr(self._p115_api, "_id_cache"):
+                self._p115_api._id_cache.add_cache(
+                    id=int(folder_item.fileid),
+                    directory=folder_item.path.rstrip("/"),
+                )
+            if hasattr(self._p115_api, "_id_item_cache"):
+                self._p115_api._id_item_cache.add_cache(
+                    id=int(folder_item.fileid),
+                    item={
+                        "path": folder_item.path.rstrip("/"),
+                        "id": folder_item.fileid,
+                        "size": None,
+                        "modify_time": folder_item.modify_time or 0,
+                        "pickcode": folder_item.pickcode or "",
+                        "is_dir": True,
+                    },
+                )
+        except Exception as e:
+            logger.debug(f"【整理接管】更新目录缓存失败: {e}")
+
+    def update_file_cache(self, file_item: FileItem) -> None:
+        """
+        更新文件缓存
+
+        :param file_item (FileItem): 文件项
+        """
+        if not self._p115_api or not file_item or not file_item.fileid:
+            return
+        try:
+            if hasattr(self._p115_api, "_id_cache"):
+                self._p115_api._id_cache.add_cache(
+                    id=int(file_item.fileid),
+                    directory=file_item.path,
+                )
+            if hasattr(self._p115_api, "_id_item_cache"):
+                self._p115_api._id_item_cache.add_cache(
+                    id=int(file_item.fileid),
+                    item={
+                        "path": file_item.path,
+                        "id": file_item.fileid,
+                        "size": file_item.size or 0,
+                        "modify_time": file_item.modify_time or 0,
+                        "pickcode": file_item.pickcode or "",
+                        "is_dir": False,
+                    },
+                )
+        except Exception as e:
+            logger.debug(f"【整理接管】更新文件缓存失败: {e}")
+
+    def remove_cache(self, file_id: int) -> None:
+        """
+        删除缓存
+
+        :param file_id (int): 文件ID
+        """
+        if not self._p115_api:
+            return
+        try:
+            if hasattr(self._p115_api, "_id_cache"):
+                self._p115_api._id_cache.remove(id=file_id)
+            if hasattr(self._p115_api, "_id_item_cache"):
+                self._p115_api._id_item_cache.remove(file_id)
+        except Exception as e:
+            logger.debug(f"【整理接管】删除缓存失败: {e}")
+
+    def update_rename_cache(self, file_id: int, new_name: str) -> None:
+        """
+        更新重命名后的缓存
+
+        :param file_id (int): 文件ID
+        :param new_name (str): 新文件名
+        """
+        if not self._p115_api:
+            return
+        try:
+            if hasattr(self._p115_api, "_id_cache"):
+                old_path = self._p115_api._id_cache.get_dir_by_id(file_id)
+                if old_path:
+                    self._p115_api._id_cache.remove(id=file_id)
+                    new_path = Path(old_path).parent / new_name
+                    self._p115_api._id_cache.add_cache(
+                        id=file_id,
+                        directory=str(new_path),
+                    )
+            if hasattr(self._p115_api, "_id_item_cache"):
+                old_item = self._p115_api._id_item_cache.get_item(file_id)
+                if old_item:
+                    new_path = Path(old_item["path"]).parent / new_name
+                    self._p115_api._id_item_cache.add_cache(
+                        id=file_id,
+                        item={
+                            "path": str(new_path),
+                            "id": old_item["id"],
+                            "size": old_item["size"],
+                            "modify_time": old_item["modify_time"],
+                            "pickcode": old_item["pickcode"],
+                            "is_dir": old_item["is_dir"],
+                        },
+                    )
+        except Exception as e:
+            logger.debug(f"【整理接管】更新重命名缓存失败 (file_id: {file_id}): {e}")

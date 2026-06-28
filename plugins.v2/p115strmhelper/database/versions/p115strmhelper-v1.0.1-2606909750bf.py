@@ -1,1 +1,51 @@
-IiIiMS4wLjEKClJldmlzaW9uIElEOiAyNjA2OTA5NzUwYmYKUmV2aXNlczogMjk0YjAwNzkzNTdlCkNyZWF0ZSBEYXRlOiAyMDI1LTA4LTI5IDE1OjA1OjQ5LjI1NDU0OAoKIiIiCgpmcm9tIGFsZW1iaWMgaW1wb3J0IG9wCgoKIyByZXZpc2lvbiBpZGVudGlmaWVycywgdXNlZCBieSBBbGVtYmljCnZlcnNpb24gPSAiMS4wLjEiCnJldmlzaW9uID0gIjI2MDY5MDk3NTBiZiIKZG93bl9yZXZpc2lvbiA9ICIyOTRiMDA3OTM1N2UiCmJyYW5jaF9sYWJlbHMgPSBOb25lCmRlcGVuZHNfb24gPSBOb25lCgoKZGVmIHVwZ3JhZGUoKSAtPiBOb25lOgogICAgb3AuZXhlY3V0ZSgiIiIKICAgICAgICBERUxFVEUgRlJPTSBmaWxlcwogICAgICAgIFdIRVJFIHJvd2lkIE5PVCBJTiAoCiAgICAgICAgICAgIFNFTEVDVCBNSU4ocm93aWQpCiAgICAgICAgICAgIEZST00gZmlsZXMKICAgICAgICAgICAgR1JPVVAgQlkgcGF0aAogICAgICAgICk7CiAgICAiIiIpCgogICAgb3AuZXhlY3V0ZSgiIiIKICAgICAgICBERUxFVEUgRlJPTSBmb2xkZXJzCiAgICAgICAgV0hFUkUgcm93aWQgTk9UIElOICgKICAgICAgICAgICAgU0VMRUNUIE1JTihyb3dpZCkKICAgICAgICAgICAgRlJPTSBmb2xkZXJzCiAgICAgICAgICAgIEdST1VQIEJZIHBhdGgKICAgICAgICApOwogICAgIiIiKQoKICAgIHdpdGggb3AuYmF0Y2hfYWx0ZXJfdGFibGUoImZpbGVzIiwgc2NoZW1hPU5vbmUpIGFzIGJhdGNoX29wOgogICAgICAgIGJhdGNoX29wLmNyZWF0ZV91bmlxdWVfY29uc3RyYWludChiYXRjaF9vcC5mKCJ1cV9maWxlc19wYXRoIiksIFsicGF0aCJdKQoKICAgIHdpdGggb3AuYmF0Y2hfYWx0ZXJfdGFibGUoImZvbGRlcnMiLCBzY2hlbWE9Tm9uZSkgYXMgYmF0Y2hfb3A6CiAgICAgICAgYmF0Y2hfb3AuY3JlYXRlX3VuaXF1ZV9jb25zdHJhaW50KGJhdGNoX29wLmYoInVxX2ZvbGRlcnNfcGF0aCIpLCBbInBhdGgiXSkKCgpkZWYgZG93bmdyYWRlKCkgLT4gTm9uZToKICAgIHdpdGggb3AuYmF0Y2hfYWx0ZXJfdGFibGUoImZpbGVzIiwgc2NoZW1hPU5vbmUpIGFzIGJhdGNoX29wOgogICAgICAgIGJhdGNoX29wLmRyb3BfY29uc3RyYWludChiYXRjaF9vcC5mKCJ1cV9maWxlc19wYXRoIiksIHR5cGVfPSJ1bmlxdWUiKQoKICAgIHdpdGggb3AuYmF0Y2hfYWx0ZXJfdGFibGUoImZvbGRlcnMiLCBzY2hlbWE9Tm9uZSkgYXMgYmF0Y2hfb3A6CiAgICAgICAgYmF0Y2hfb3AuZHJvcF9jb25zdHJhaW50KGJhdGNoX29wLmYoInVxX2ZvbGRlcnNfcGF0aCIpLCB0eXBlXz0idW5pcXVlIikK
+"""1.0.1
+
+Revision ID: 2606909750bf
+Revises: 294b0079357e
+Create Date: 2025-08-29 15:05:49.254548
+
+"""
+
+from alembic import op
+
+
+# revision identifiers, used by Alembic
+version = "1.0.1"
+revision = "2606909750bf"
+down_revision = "294b0079357e"
+branch_labels = None
+depends_on = None
+
+
+def upgrade() -> None:
+    op.execute("""
+        DELETE FROM files
+        WHERE rowid NOT IN (
+            SELECT MIN(rowid)
+            FROM files
+            GROUP BY path
+        );
+    """)
+
+    op.execute("""
+        DELETE FROM folders
+        WHERE rowid NOT IN (
+            SELECT MIN(rowid)
+            FROM folders
+            GROUP BY path
+        );
+    """)
+
+    with op.batch_alter_table("files", schema=None) as batch_op:
+        batch_op.create_unique_constraint(batch_op.f("uq_files_path"), ["path"])
+
+    with op.batch_alter_table("folders", schema=None) as batch_op:
+        batch_op.create_unique_constraint(batch_op.f("uq_folders_path"), ["path"])
+
+
+def downgrade() -> None:
+    with op.batch_alter_table("files", schema=None) as batch_op:
+        batch_op.drop_constraint(batch_op.f("uq_files_path"), type_="unique")
+
+    with op.batch_alter_table("folders", schema=None) as batch_op:
+        batch_op.drop_constraint(batch_op.f("uq_folders_path"), type_="unique")

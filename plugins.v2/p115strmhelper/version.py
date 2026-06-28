@@ -1,1 +1,1 @@
-VkVSU0lPTiA9ICIyLjguNDkiCg==
+VERSION = "2.8.49"

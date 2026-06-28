@@ -1,1 +1,170 @@
-ZnJvbSBkYXRldGltZSBpbXBvcnQgZGF0ZXRpbWUKZnJvbSB0eXBpbmcgaW1wb3J0IERpY3QsIExpc3QsIExpdGVyYWwsIE9wdGlvbmFsCgpmcm9tIHB5ZGFudGljIGltcG9ydCBCYXNlTW9kZWwsIEZpZWxkLCBmaWVsZF92YWxpZGF0b3IsIG1vZGVsX3ZhbGlkYXRvcgoKZnJvbSAuLnV0aWxzLmNyb24gaW1wb3J0IENyb25VdGlscwoKCmNsYXNzIFNoYXJlU3RybUNsZWFudXBDb25maWcoQmFzZU1vZGVsKToKICAgICIiIgogICAg5peg5pWI5YiG5LqrIFNUUk0g5riF55CG77yI5omr5o+P5qC555uu5b2V44CB5a6a5pe25LiO5Yig6Zmk562W55Wl77yJCiAgICAiIiIKCiAgICBjbGVhbnVwX3BhdGhzOiBMaXN0W3N0cl0gPSBGaWVsZCgKICAgICAgICBkZWZhdWx0X2ZhY3Rvcnk9bGlzdCwKICAgICAgICBkZXNjcmlwdGlvbj0i5Y+C5LiO5omr5o+P55qE5pys5Zyw5qC555uu5b2V5YiX6KGo77yM5LuF5Zyo6L+Z5Lqb55uu5b2V5LiL5omr5o+P5YiG5LqrIFNUUk0iLAogICAgKQogICAgdGltaW5nX3NoYXJlX3N0cm1fY2xlYW51cDogYm9vbCA9IEZpZWxkKAogICAgICAgIGRlZmF1bHQ9RmFsc2UsCiAgICAgICAgZGVzY3JpcHRpb249IuaYr+WQpuaMiSBjcm9uIOWumuaXtuaJp+ihjOa4heeQhuaJq+aPjyIsCiAgICApCiAgICBjcm9uX3NoYXJlX3N0cm1fY2xlYW51cDogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKAogICAgICAgIGRlZmF1bHQ9IjAgKi8xMiAqICogKiIsCiAgICAgICAgZGVzY3JpcHRpb249IuWumuaXtua4heeQhueahCBjcm9uIOihqOi+vuW8jyIsCiAgICApCiAgICBkZWxldGVfbW9kZTogTGl0ZXJhbFsiaW1tZWRpYXRlIiwgInBsdWdpbl91aSJdID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD0icGx1Z2luX3VpIiwKICAgICAgICBkZXNjcmlwdGlvbj0iaW1tZWRpYXRlPeaJq+WIsOWQjueri+WNs+WIoOmZpO+8m3BsdWdpbl91aT3lhYjlhaXpmJ/lvoXmj5Lku7blhoXnoa7orqQiLAogICAgKQogICAgcmVtb3ZlX3JlbGF0ZWRfbWVkaWFpbmZvOiBib29sID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1UcnVlLAogICAgICAgIGRlc2NyaXB0aW9uPSLmmK/lkKbov57luKbliKDpmaQgbmZvL2pwZyDnrYnlhbPogZTmlofku7YiLAogICAgKQogICAgcmVtb3ZlX2VtcHR5X3BhcmVudF9kaXJzOiBib29sID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1UcnVlLAogICAgICAgIGRlc2NyaXB0aW9uPSLmmK/lkKbmuIXnkIbnqbrniLbnm67lvZXvvIhzdHJtIOaooeW8j++8iSIsCiAgICApCiAgICByZW1vdmVfc3RhbGVfdHJhbnNmZXJfaGlzdG9yeTogYm9vbCA9IEZpZWxkKAogICAgICAgIGRlZmF1bHQ9RmFsc2UsCiAgICAgICAgZGVzY3JpcHRpb249IuWIoOmZpCBTVFJNIOaXtuaYr+WQpua4heeQhuWMuemFjeeahCBNUCDmlbTnkIborrDlvZUiLAogICAgKQogICAgcmVjb3JkX21pc3NpbmdfbWVkaWFfZnJvbV9oaXN0b3J5OiBib29sID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1UcnVlLAogICAgICAgIGRlc2NyaXB0aW9uPSLmmK/lkKbku47mlbTnkIborrDlvZXop6PmnpDlubblhpnlhaXjgIznvLrlpLHlqpLkvZPjgI3liJfooagiLAogICAgKQoKICAgIEBmaWVsZF92YWxpZGF0b3IoImNyb25fc2hhcmVfc3RybV9jbGVhbnVwIiwgbW9kZT0iYmVmb3JlIikKICAgIEBjbGFzc21ldGhvZAogICAgZGVmIF92YWxpZGF0ZV9jcm9uX3NoYXJlX3N0cm1fY2xlYW51cChjbHMsIHY6IE9wdGlvbmFsW3N0cl0pIC0+IE9wdGlvbmFsW3N0cl06CiAgICAgICAgIiIiCiAgICAgICAg5qCh6aqM5bm25b+F6KaB5pe25L+u5aSNIGNyb24g6KGo6L6+5byPCiAgICAgICAgIiIiCiAgICAgICAgaWYgbm90IHY6CiAgICAgICAgICAgIHJldHVybiB2CiAgICAgICAgc3RhdHVzLCBtc2cgPSBDcm9uVXRpbHMudmFsaWRhdGVfY3Jvbl9leHByZXNzaW9uKHYpCiAgICAgICAgaWYgc3RhdHVzOgogICAgICAgICAgICByZXR1cm4gdgogICAgICAgIGZyb20gYXBwLmxvZyBpbXBvcnQgbG9nZ2VyCgogICAgICAgIGxvZ2dlci53YXJuaW5nKG1zZykKICAgICAgICBmaXhlZCA9IENyb25VdGlscy5maXhfY3Jvbl9leHByZXNzaW9uKHYpCiAgICAgICAgaWYgQ3JvblV0aWxzLmlzX3ZhbGlkX2Nyb24oZml4ZWQpOgogICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuiHquWKqOS/ruWkjSBjcm9uX3NoYXJlX3N0cm1fY2xlYW51cDogJ3t2fScgLT4gJ3tmaXhlZH0nIikKICAgICAgICAgICAgcmV0dXJuIGZpeGVkCiAgICAgICAgbG9nZ2VyLmVycm9yKAogICAgICAgICAgICBmIuaXoOazleS/ruWkjeaXoOaViOeahCBjcm9uX3NoYXJlX3N0cm1fY2xlYW51cDogJ3t2fSfvvIwiCiAgICAgICAgICAgIGYi5oGi5aSN6buY6K6k5YC8ICd7Q3JvblV0aWxzLmdldF9kZWZhdWx0X2Nyb24oKX0nIgogICAgICAgICkKICAgICAgICByZXR1cm4gQ3JvblV0aWxzLmdldF9kZWZhdWx0X2Nyb24oKQoKCmNsYXNzIFNoYXJlU2F2ZVBhcmVudChCYXNlTW9kZWwpOgogICAgIiIiCiAgICDliIbkuqvovazlrZjnm67lvZXkv6Hmga8KICAgICIiIgoKICAgIHBhdGg6IHN0ciA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249Iui3r+W+hCIpCiAgICBpZDogaW50IHwgc3RyID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i55uu5b2VSUQiKQoKCmNsYXNzIFNoYXJlUmVzcG9uc2VEYXRhKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOWIhuS6q+i9rOWtmOi/lOWbnuS/oeaBrwogICAgIiIiCgogICAgbWVkaWFfaW5mbzogT3B0aW9uYWxbRGljdF0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLlqpLkvZPkv6Hmga8iKQogICAgc2F2ZV9wYXJlbnQ6IFNoYXJlU2F2ZVBhcmVudCA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuS/neWtmOeItuebruW9lSIpCgoKY2xhc3MgU2hhcmVBcGlEYXRhKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOWIhuS6q+i9rOWtmCBBUEkg6L+U5Zue5pWw5o2uCiAgICAiIiIKCiAgICBjb2RlOiBpbnQgPSBGaWVsZChkZWZhdWx0PTAsIGRlc2NyaXB0aW9uPSLlk43lupTnoIEiKQogICAgbXNnOiBzdHIgPSBGaWVsZChkZWZhdWx0PSJzdWNjZXNzIiwgZGVzY3JpcHRpb249IuWTjeW6lOa2iOaBryIpCiAgICBkYXRhOiBPcHRpb25hbFtTaGFyZVJlc3BvbnNlRGF0YV0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLlk43lupTmlbDmja4iKQogICAgdGltZXN0YW1wOiBPcHRpb25hbFtkYXRldGltZV0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLml7bpl7TmiLMiKQoKCmNsYXNzIFNoYXJlSW50ZXJhY3RpdmVHZW5TdHJtQ29uZmlnKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOWIhuS6q+S6pOS6kueUn+aIkCBTVFJNIOS4k+eUqOmFjee9rgogICAgIiIiCgogICAgbWluX2ZpbGVfc2l6ZTogT3B0aW9uYWxbaW50XSA9IEZpZWxkKAogICAgICAgIGRlZmF1bHQ9Tm9uZSwgZ2U9MCwgZGVzY3JpcHRpb249IuWIhuS6q+eUn+aIkOacgOWwj+aWh+S7tuWkp+WwjyIKICAgICkKICAgIGF1dG9fZG93bmxvYWRfbWVkaWFpbmZvOiBib29sID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1GYWxzZSwgZGVzY3JpcHRpb249IuiHquWKqOS4i+i9vee9keebmOWFg+aVsOaNriIKICAgICkKICAgIGxvY2FsX3BhdGg6IE9wdGlvbmFsW3N0cl0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLmnKzlnLDnlJ/miJDnm67lvZUiKQogICAgbW92aWVwaWxvdF90cmFuc2ZlcjogYm9vbCA9IEZpZWxkKGRlZmF1bHQ9RmFsc2UsIGRlc2NyaXB0aW9uPSLkuqTnlLEgTW92aWVQaWxvdCDmlbTnkIYiKQogICAgbW92aWVwaWxvdF90cmFuc2Zlcl9kb3dubG9hZF9ybXRfYXVkaW9fc3ViOiBib29sID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1GYWxzZSwKICAgICAgICBkZXNjcmlwdGlvbj0iTVAg5pW055CG5pe25piv5ZCm5LiL6L29IE1vdmllUGlsb3Qg6K6+5a6a5LitIFJNVCDpn7PovajkuI7lrZfluZXlkI7nvIDmlofku7YiLAogICAgKQogICAgc3BlZWRfbW9kZTogTGl0ZXJhbFswLCAxLCAyLCAzXSA9IEZpZWxkKGRlZmF1bHQ9MywgZGVzY3JpcHRpb249Iui/kOihjOmAn+W6puaooeW8jyIpCgogICAgQG1vZGVsX3ZhbGlkYXRvcihtb2RlPSJhZnRlciIpCiAgICBkZWYgZW5mb3JjZV9tb3ZpZXBpbG90X2NvbnN0cmFpbnRzKHNlbGYpOgogICAgICAgICIiIgogICAgICAgIOW9kyBtb3ZpZXBpbG90X3RyYW5zZmVyIOS4uiBUcnVlIOaXtu+8jOW8uuWItuWFs+mXreiHquWKqOS4i+i9vee9keebmOWFg+aVsOaNrgogICAgICAgICIiIgogICAgICAgIGlmIG5vdCBzZWxmLm1vdmllcGlsb3RfdHJhbnNmZXI6CiAgICAgICAgICAgIHNlbGYubW92aWVwaWxvdF90cmFuc2Zlcl9kb3dubG9hZF9ybXRfYXVkaW9fc3ViID0gRmFsc2UKICAgICAgICBpZiBzZWxmLm1vdmllcGlsb3RfdHJhbnNmZXI6CiAgICAgICAgICAgIHNlbGYuYXV0b19kb3dubG9hZF9tZWRpYWluZm8gPSBGYWxzZQogICAgICAgIHJldHVybiBzZWxmCgoKY2xhc3MgU2hhcmVTdHJtQ29uZmlnKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOWIhuS6qyBTVFJNIOeUn+aIkOmFjee9rgogICAgIiIiCgogICAgY29tbWVudDogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249IuWkh+azqCIpCiAgICBlbmFibGVkOiBib29sID0gRmllbGQoZGVmYXVsdD1UcnVlLCBkZXNjcmlwdGlvbj0i5piv5ZCm5ZCv55SoIikKICAgIHNoYXJlX2xpbms6IE9wdGlvbmFsW3N0cl0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLliIbkuqvpk77mjqUiKQogICAgc2hhcmVfY29kZTogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249IuWIhuS6q+eggSIpCiAgICBzaGFyZV9yZWNlaXZlOiBPcHRpb25hbFtzdHJdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5YiG5Lqr5a+G56CBIikKICAgIHNoYXJlX3BhdGg6IE9wdGlvbmFsW3N0cl0gPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLliIbkuqvot6/lvoQiKQogICAgbG9jYWxfcGF0aDogT3B0aW9uYWxbc3RyXSA9IEZpZWxkKGRlZmF1bHQ9Tm9uZSwgZGVzY3JpcHRpb249IuacrOWcsOi3r+W+hCIpCiAgICBtaW5fZmlsZV9zaXplOiBPcHRpb25hbFtpbnRdID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5YiG5Lqr55Sf5oiQ5pyA5bCP5paH5Lu25aSn5bCPIgogICAgKQogICAgbW92aWVwaWxvdF90cmFuc2ZlcjogYm9vbCA9IEZpZWxkKGRlZmF1bHQ9RmFsc2UsIGRlc2NyaXB0aW9uPSLkuqTnlLEgTW92aWVQaWxvdCDmlbTnkIYiKQogICAgbW92aWVwaWxvdF90cmFuc2Zlcl9kb3dubG9hZF9ybXRfYXVkaW9fc3ViOiBib29sID0gRmllbGQoCiAgICAgICAgZGVmYXVsdD1GYWxzZSwKICAgICAgICBkZXNjcmlwdGlvbj0iTVAg5pW055CG5pe25piv5ZCm5LiL6L29IE1vdmllUGlsb3Qg6K6+5a6a5LitIFJNVCDpn7PovajkuI7lrZfluZXlkI7nvIDmlofku7YiLAogICAgKQogICAgYXV0b19kb3dubG9hZF9tZWRpYWluZm86IGJvb2wgPSBGaWVsZCgKICAgICAgICBkZWZhdWx0PUZhbHNlLCBkZXNjcmlwdGlvbj0i6Ieq5Yqo5LiL6L29572R55uY5YWD5pWw5o2uIgogICAgKQogICAgbWVkaWFfc2VydmVyX3JlZnJlc2g6IGJvb2wgPSBGaWVsZChkZWZhdWx0PUZhbHNlLCBkZXNjcmlwdGlvbj0i5Yi35paw5aqS5L2T5pyN5Yqh5ZmoIikKICAgIHNjcmFwZV9tZXRhZGF0YTogYm9vbCA9IEZpZWxkKGRlZmF1bHQ9RmFsc2UsIGRlc2NyaXB0aW9uPSLmmK/lkKbliK7liYrlhYPmlbDmja4iKQogICAgc3BlZWRfbW9kZTogTGl0ZXJhbFswLCAxLCAyLCAzXSA9IEZpZWxkKGRlZmF1bHQ9MywgZGVzY3JpcHRpb249Iui/kOihjOmAn+W6puaooeW8jyIpCgogICAgQG1vZGVsX3ZhbGlkYXRvcihtb2RlPSJhZnRlciIpCiAgICBkZWYgZW5mb3JjZV9tb3ZpZXBpbG90X2NvbnN0cmFpbnRzKHNlbGYpOgogICAgICAgICIiIgogICAgICAgIOW9kyBtb3ZpZXBpbG90X3RyYW5zZmVyIOS4uiBUcnVlIOaXtu+8jOW8uuWItuWFs+mXreWFtuS7luebuOWFs+mAiemhuQogICAgICAgICIiIgogICAgICAgIGlmIG5vdCBzZWxmLm1vdmllcGlsb3RfdHJhbnNmZXI6CiAgICAgICAgICAgIHNlbGYubW92aWVwaWxvdF90cmFuc2Zlcl9kb3dubG9hZF9ybXRfYXVkaW9fc3ViID0gRmFsc2UKICAgICAgICBpZiBzZWxmLm1vdmllcGlsb3RfdHJhbnNmZXI6CiAgICAgICAgICAgIHNlbGYuYXV0b19kb3dubG9hZF9tZWRpYWluZm8gPSBGYWxzZQogICAgICAgICAgICBzZWxmLm1lZGlhX3NlcnZlcl9yZWZyZXNoID0gRmFsc2UKICAgICAgICAgICAgc2VsZi5zY3JhcGVfbWV0YWRhdGEgPSBGYWxzZQogICAgICAgIHJldHVybiBzZWxmCg==
+from datetime import datetime
+from typing import Dict, List, Literal, Optional
+
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+from ..utils.cron import CronUtils
+
+
+class ShareStrmCleanupConfig(BaseModel):
+    """
+    无效分享 STRM 清理（扫描根目录、定时与删除策略）
+    """
+
+    cleanup_paths: List[str] = Field(
+        default_factory=list,
+        description="参与扫描的本地根目录列表，仅在这些目录下扫描分享 STRM",
+    )
+    timing_share_strm_cleanup: bool = Field(
+        default=False,
+        description="是否按 cron 定时执行清理扫描",
+    )
+    cron_share_strm_cleanup: Optional[str] = Field(
+        default="0 */12 * * *",
+        description="定时清理的 cron 表达式",
+    )
+    delete_mode: Literal["immediate", "plugin_ui"] = Field(
+        default="plugin_ui",
+        description="immediate=扫到后立即删除；plugin_ui=先入队待插件内确认",
+    )
+    remove_related_mediainfo: bool = Field(
+        default=True,
+        description="是否连带删除 nfo/jpg 等关联文件",
+    )
+    remove_empty_parent_dirs: bool = Field(
+        default=True,
+        description="是否清理空父目录（strm 模式）",
+    )
+    remove_stale_transfer_history: bool = Field(
+        default=False,
+        description="删除 STRM 时是否清理匹配的 MP 整理记录",
+    )
+    record_missing_media_from_history: bool = Field(
+        default=True,
+        description="是否从整理记录解析并写入「缺失媒体」列表",
+    )
+
+    @field_validator("cron_share_strm_cleanup", mode="before")
+    @classmethod
+    def _validate_cron_share_strm_cleanup(cls, v: Optional[str]) -> Optional[str]:
+        """
+        校验并必要时修复 cron 表达式
+        """
+        if not v:
+            return v
+        status, msg = CronUtils.validate_cron_expression(v)
+        if status:
+            return v
+        from app.log import logger
+
+        logger.warning(msg)
+        fixed = CronUtils.fix_cron_expression(v)
+        if CronUtils.is_valid_cron(fixed):
+            logger.info(f"自动修复 cron_share_strm_cleanup: '{v}' -> '{fixed}'")
+            return fixed
+        logger.error(
+            f"无法修复无效的 cron_share_strm_cleanup: '{v}'，"
+            f"恢复默认值 '{CronUtils.get_default_cron()}'"
+        )
+        return CronUtils.get_default_cron()
+
+
+class ShareSaveParent(BaseModel):
+    """
+    分享转存目录信息
+    """
+
+    path: str = Field(..., description="路径")
+    id: int | str = Field(..., description="目录ID")
+
+
+class ShareResponseData(BaseModel):
+    """
+    分享转存返回信息
+    """
+
+    media_info: Optional[Dict] = Field(default=None, description="媒体信息")
+    save_parent: ShareSaveParent = Field(..., description="保存父目录")
+
+
+class ShareApiData(BaseModel):
+    """
+    分享转存 API 返回数据
+    """
+
+    code: int = Field(default=0, description="响应码")
+    msg: str = Field(default="success", description="响应消息")
+    data: Optional[ShareResponseData] = Field(default=None, description="响应数据")
+    timestamp: Optional[datetime] = Field(default=None, description="时间戳")
+
+
+class ShareInteractiveGenStrmConfig(BaseModel):
+    """
+    分享交互生成 STRM 专用配置
+    """
+
+    min_file_size: Optional[int] = Field(
+        default=None, ge=0, description="分享生成最小文件大小"
+    )
+    auto_download_mediainfo: bool = Field(
+        default=False, description="自动下载网盘元数据"
+    )
+    local_path: Optional[str] = Field(default=None, description="本地生成目录")
+    moviepilot_transfer: bool = Field(default=False, description="交由 MoviePilot 整理")
+    moviepilot_transfer_download_rmt_audio_sub: bool = Field(
+        default=False,
+        description="MP 整理时是否下载 MoviePilot 设定中 RMT 音轨与字幕后缀文件",
+    )
+    speed_mode: Literal[0, 1, 2, 3] = Field(default=3, description="运行速度模式")
+
+    @model_validator(mode="after")
+    def enforce_moviepilot_constraints(self):
+        """
+        当 moviepilot_transfer 为 True 时，强制关闭自动下载网盘元数据
+        """
+        if not self.moviepilot_transfer:
+            self.moviepilot_transfer_download_rmt_audio_sub = False
+        if self.moviepilot_transfer:
+            self.auto_download_mediainfo = False
+        return self
+
+
+class ShareStrmConfig(BaseModel):
+    """
+    分享 STRM 生成配置
+    """
+
+    comment: Optional[str] = Field(default=None, description="备注")
+    enabled: bool = Field(default=True, description="是否启用")
+    share_link: Optional[str] = Field(default=None, description="分享链接")
+    share_code: Optional[str] = Field(default=None, description="分享码")
+    share_receive: Optional[str] = Field(default=None, description="分享密码")
+    share_path: Optional[str] = Field(default=None, description="分享路径")
+    local_path: Optional[str] = Field(default=None, description="本地路径")
+    min_file_size: Optional[int] = Field(
+        default=None, description="分享生成最小文件大小"
+    )
+    moviepilot_transfer: bool = Field(default=False, description="交由 MoviePilot 整理")
+    moviepilot_transfer_download_rmt_audio_sub: bool = Field(
+        default=False,
+        description="MP 整理时是否下载 MoviePilot 设定中 RMT 音轨与字幕后缀文件",
+    )
+    auto_download_mediainfo: bool = Field(
+        default=False, description="自动下载网盘元数据"
+    )
+    media_server_refresh: bool = Field(default=False, description="刷新媒体服务器")
+    scrape_metadata: bool = Field(default=False, description="是否刮削元数据")
+    speed_mode: Literal[0, 1, 2, 3] = Field(default=3, description="运行速度模式")
+
+    @model_validator(mode="after")
+    def enforce_moviepilot_constraints(self):
+        """
+        当 moviepilot_transfer 为 True 时，强制关闭其他相关选项
+        """
+        if not self.moviepilot_transfer:
+            self.moviepilot_transfer_download_rmt_audio_sub = False
+        if self.moviepilot_transfer:
+            self.auto_download_mediainfo = False
+            self.media_server_refresh = False
+            self.scrape_metadata = False
+        return self

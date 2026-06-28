@@ -1,1 +1,29 @@
-X19hbGxfXyA9IFsiQXV0b21hdG9uVXRpbHMiXQoKCmZyb20gYWhvY29yYXNpY2sgaW1wb3J0IEF1dG9tYXRvbgoKCmNsYXNzIEF1dG9tYXRvblV0aWxzOgogICAgIiIiCiAgICBBaG8tQ29yYXNpY2sg5bel5YW3CiAgICAiIiIKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgYnVpbGRfYXV0b21hdG9uKHZhbHVlKSAtPiBBdXRvbWF0b246CiAgICAgICAgIiIiCiAgICAgICAg5p6E5bu65bm26L+U5ZueIEFoby1Db3Jhc2ljayDoh6rliqjmnLoKCiAgICAgICAgOnBhcmFtIHZhbHVlIChMaXN0KTog5YWz6ZSu6K+N5YiX6KGoCgogICAgICAgIDpyZXR1cm4gQXV0b21hdG9uOiDmnoTlu7rlrozmiJDnmoToh6rliqjmnLrlrp7kvosKICAgICAgICAiIiIKICAgICAgICBhID0gQXV0b21hdG9uKCkKICAgICAgICBpZiBub3QgdmFsdWU6CiAgICAgICAgICAgIGEubWFrZV9hdXRvbWF0b24oKQogICAgICAgICAgICByZXR1cm4gYQogICAgICAgIGZvciBrZXl3b3JkIGluIHZhbHVlOgogICAgICAgICAgICBpZiBrZXl3b3JkOgogICAgICAgICAgICAgICAgYS5hZGRfd29yZChrZXl3b3JkLmxvd2VyKCksIChrZXl3b3JkLCBrZXl3b3JkLmxvd2VyKCkpKQogICAgICAgIGEubWFrZV9hdXRvbWF0b24oKQogICAgICAgIHJldHVybiBhCg==
+__all__ = ["AutomatonUtils"]
+
+
+from ahocorasick import Automaton
+
+
+class AutomatonUtils:
+    """
+    Aho-Corasick 工具
+    """
+
+    @staticmethod
+    def build_automaton(value) -> Automaton:
+        """
+        构建并返回 Aho-Corasick 自动机
+
+        :param value (List): 关键词列表
+
+        :return Automaton: 构建完成的自动机实例
+        """
+        a = Automaton()
+        if not value:
+            a.make_automaton()
+            return a
+        for keyword in value:
+            if keyword:
+                a.add_word(keyword.lower(), (keyword, keyword.lower()))
+        a.make_automaton()
+        return a

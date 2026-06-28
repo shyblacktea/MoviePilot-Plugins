@@ -1,1 +1,492 @@
-ZnJvbSBkYXRldGltZSBpbXBvcnQgZGF0ZXRpbWUsIHRpbWV6b25lCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aApmcm9tIHF1ZXVlIGltcG9ydCBFbXB0eSwgUXVldWUKZnJvbSByZSBpbXBvcnQgbWF0Y2gKZnJvbSB0aHJlYWRpbmcgaW1wb3J0IExvY2ssIFRocmVhZApmcm9tIHRpbWUgaW1wb3J0IHNsZWVwCmZyb20gdHlwaW5nIGltcG9ydCBMaXRlcmFsLCBPcHRpb25hbAoKZnJvbSBwMTE1Y2VudGVyIGltcG9ydCBQMTE1Q2VudGVyCmZyb20gcDExNWNlbnRlci5zY2hlbWFzIGltcG9ydCBTaGFyZUluZm8KZnJvbSBwMTE1Y2xpZW50IGltcG9ydCBQMTE1Q2xpZW50CmZyb20gcDExNWNsaWVudC50b29sLml0ZXJkaXIgaW1wb3J0IHNoYXJlX2l0ZXJkaXIKZnJvbSBwMTE1Y2xpZW50LnV0aWwgaW1wb3J0IHNoYXJlX2V4dHJhY3RfcGF5bG9hZAoKZnJvbSBhcHAuY2hhaW4ubWVkaWEgaW1wb3J0IE1lZGlhQ2hhaW4KZnJvbSBhcHAuY29yZS5jb250ZXh0IGltcG9ydCBNZWRpYUluZm8KZnJvbSBhcHAuY29yZS5tZXRhaW5mbyBpbXBvcnQgTWV0YUluZm8KZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXIKZnJvbSBhcHAudXRpbHMuc3RyaW5nIGltcG9ydCBTdHJpbmdVdGlscwoKZnJvbSAuLi5jb3JlLmFsaXl1bnBhbiBpbXBvcnQgQkFsaWdvCmZyb20gLi4uY29yZS5jb25maWcgaW1wb3J0IGNvbmZpZ2VyCmZyb20gLi4uY29yZS5pMThuIGltcG9ydCBpMThuCmZyb20gLi4uY29yZS5tZXNzYWdlIGltcG9ydCBwb3N0X21lc3NhZ2UKZnJvbSAuLi5jb3JlLnAxMTUgaW1wb3J0IGdldF9waWRfYnlfcGF0aApmcm9tIC4uLmhlbHBlci5hbGkyMTE1IGltcG9ydCBBbGkyMTE1SGVscGVyCmZyb20gLi4udXRpbHMuc2VudHJ5IGltcG9ydCBzZW50cnlfbWFuYWdlcgpmcm9tIC4uLnV0aWxzLnNoYXJlX3VybF9wYXR0ZXJucyBpbXBvcnQgQUxJWVVOX1NIQVJFX1VSTF9NQVRDSAoKCkBzZW50cnlfbWFuYWdlci5jYXB0dXJlX2FsbF9jbGFzc19leGNlcHRpb25zCmNsYXNzIFNoYXJlVHJhbnNmZXJIZWxwZXI6CiAgICAiIiIKICAgIOWIhuS6q+mTvuaOpei9rOWtmAogICAgIiIiCgogICAgZGVmIF9faW5pdF9fKHNlbGYsIGNsaWVudDogUDExNUNsaWVudCwgYWxpZ286IE9wdGlvbmFsW0JBbGlnb10pOgogICAgICAgIHNlbGYuY2xpZW50ID0gY2xpZW50CiAgICAgICAgc2VsZi5hbGlnbyA9IGFsaWdvCiAgICAgICAgc2VsZi5fYWRkX3NoYXJlX3F1ZXVlID0gUXVldWUoKQogICAgICAgIHNlbGYuX2FkZF9zaGFyZV93b3JrZXJfdGhyZWFkID0gTm9uZQogICAgICAgIHNlbGYuX2FkZF9zaGFyZV93b3JrZXJfbG9jayA9IExvY2soKQoKICAgIGRlZiBfZW5zdXJlX2FkZF9zaGFyZV93b3JrZXJfcnVubmluZyhzZWxmKToKICAgICAgICAiIiIKICAgICAgICDnoa7kv53lt6XkvZznur/nqIvmraPlnKjov5DooYwKICAgICAgICAiIiIKICAgICAgICB3aXRoIHNlbGYuX2FkZF9zaGFyZV93b3JrZXJfbG9jazoKICAgICAgICAgICAgaWYgKAogICAgICAgICAgICAgICAgc2VsZi5fYWRkX3NoYXJlX3dvcmtlcl90aHJlYWQgaXMgTm9uZQogICAgICAgICAgICAgICAgb3Igbm90IHNlbGYuX2FkZF9zaGFyZV93b3JrZXJfdGhyZWFkLmlzX2FsaXZlKCkKICAgICAgICAgICAgKToKICAgICAgICAgICAgICAgIHNlbGYuX2FkZF9zaGFyZV93b3JrZXJfdGhyZWFkID0gVGhyZWFkKAogICAgICAgICAgICAgICAgICAgIHRhcmdldD1zZWxmLl9wcm9jZXNzX2FkZF9zaGFyZV9xdWV1ZSwgZGFlbW9uPVRydWUKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIHNlbGYuX2FkZF9zaGFyZV93b3JrZXJfdGhyZWFkLnN0YXJ0KCkKCiAgICBkZWYgX3Byb2Nlc3NfYWRkX3NoYXJlX3F1ZXVlKHNlbGYpOgogICAgICAgICIiIgogICAgICAgIOWkhOeQhumYn+WIl+S4reeahOS7u+WKoQogICAgICAgICIiIgogICAgICAgIHdoaWxlIFRydWU6CiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHRhc2sgPSBzZWxmLl9hZGRfc2hhcmVfcXVldWUuZ2V0KHRpbWVvdXQ9NjApCiAgICAgICAgICAgIGV4Y2VwdCBFbXB0eToKICAgICAgICAgICAgICAgIGxvZ2dlci5kZWJ1Zygi44CQ5YiG5Lqr6L2s5a2Y44CR6YeK5pS+5YiG5Lqr6L2s5a2Y6Zif5YiX5Lu75YqhIikKICAgICAgICAgICAgICAgIGJyZWFrCgogICAgICAgICAgICB1cmwsIGNoYW5uZWwsIHNvdXJjZSwgdXNlcmlkLCBwYW5fcGF0aCA9IHRhc2sKICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgc2VsZi5fX2FkZF9zaGFyZSh1cmwsIGNoYW5uZWwsIHNvdXJjZSwgdXNlcmlkLCBwYW5fcGF0aCkKICAgICAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi44CQ5YiG5Lqr6L2s5a2Y44CR5Lu75Yqh5aSE55CG5byC5bi4OiB7ZX0iLCBleGNfaW5mbz1UcnVlKQogICAgICAgICAgICBmaW5hbGx5OgogICAgICAgICAgICAgICAgc2VsZi5fYWRkX3NoYXJlX3F1ZXVlLnRhc2tfZG9uZSgpCiAgICAgICAgICAgICAgICBzbGVlcCgzKQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBzZW5kX25vdGlmeSgKICAgICAgICB0aXRsZTogc3RyLAogICAgICAgIHRleHQ6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIGltYWdlOiBPcHRpb25hbFtzdHJdID0gTm9uZSwKICAgICAgICBjaGFubmVsOiBPcHRpb25hbFtzdHIgfCBpbnRdID0gTm9uZSwKICAgICAgICBzb3VyY2U6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIHVzZXJpZDogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICApOgogICAgICAgICIiIgogICAgICAgIOe7n+S4gOa2iOaBr+WPkemAgeaOpeWPo++8jOiHquWKqOmAieaLqeWFqOWxgOaIluiAheaMh+WumueUqOaIt+WPkemAgQogICAgICAgICIiIgogICAgICAgIGlmIGNoYW5uZWwgYW5kIHVzZXJpZDoKICAgICAgICAgICAgcG9zdF9tZXNzYWdlKAogICAgICAgICAgICAgICAgY2hhbm5lbD1jaGFubmVsLCAgIyBub3FhCiAgICAgICAgICAgICAgICBzb3VyY2U9c291cmNlLAogICAgICAgICAgICAgICAgdGl0bGU9dGl0bGUsCiAgICAgICAgICAgICAgICBpbWFnZT1pbWFnZSwKICAgICAgICAgICAgICAgIHRleHQ9dGV4dCwKICAgICAgICAgICAgICAgIHVzZXJpZD11c2VyaWQsCiAgICAgICAgICAgICkKCiAgICBkZWYgYWRkX3NoYXJlX3JlY29nbml6ZV9tZWRpYWluZm8oCiAgICAgICAgc2VsZiwgc2hhcmVfY29kZTogc3RyLCByZWNlaXZlX2NvZGU6IHN0cgogICAgKSAtPiBPcHRpb25hbFtNZWRpYUluZm9dOgogICAgICAgICIiIgogICAgICAgIOWIhuS6q+i9rOWtmOivhuWIq+WqkuS9k+S/oeaBrwoKICAgICAgICA6cGFyYW0gc2hhcmVfY29kZSAoc3RyKTog5YiG5Lqr56CBCiAgICAgICAgOnBhcmFtIHJlY2VpdmVfY29kZSAoc3RyKTog5o6l5pS256CBCgogICAgICAgIDpyZXR1cm4gTWVkaWFJbmZvOiDor4bliKvmiJDlip/ov5Tlm57lqpLkvZPkv6Hmga/vvIzlpLHotKXov5Tlm54gTm9uZQogICAgICAgICIiIgogICAgICAgIGZpbGVfbnVtID0gMAogICAgICAgIGZpbGVfbWVkaWFpbmZvID0gTm9uZQogICAgICAgIGl0ZW1fbmFtZSA9IE5vbmUKICAgICAgICB0cnk6CiAgICAgICAgICAgIGZvciBpdGVtIGluIHNoYXJlX2l0ZXJkaXIoCiAgICAgICAgICAgICAgICBzZWxmLmNsaWVudCwKICAgICAgICAgICAgICAgIHJlY2VpdmVfY29kZT1yZWNlaXZlX2NvZGUsCiAgICAgICAgICAgICAgICBzaGFyZV9jb2RlPXNoYXJlX2NvZGUsCiAgICAgICAgICAgICAgICBjaWQ9MCwKICAgICAgICAgICAgICAgIGFwcD0id2ViIiwKICAgICAgICAgICAgICAgICoqY29uZmlnZXIuZ2V0X2lvc191YV9hcHAoYXBwPUZhbHNlKSwKICAgICAgICAgICAgKToKICAgICAgICAgICAgICAgIGlmIGZpbGVfbnVtID09IDE6CiAgICAgICAgICAgICAgICAgICAgZmlsZV9udW0gPSAyCiAgICAgICAgICAgICAgICAgICAgYnJlYWsKICAgICAgICAgICAgICAgIGl0ZW1fbmFtZSA9IGl0ZW1bIm5hbWUiXQogICAgICAgICAgICAgICAgZmlsZV9udW0gKz0gMQogICAgICAgICAgICBpZiBmaWxlX251bSA9PSAxOgogICAgICAgICAgICAgICAgbWVkaWFjaGFpbiA9IE1lZGlhQ2hhaW4oKQogICAgICAgICAgICAgICAgZmlsZV9tZXRhID0gTWV0YUluZm8odGl0bGU9aXRlbV9uYW1lKQogICAgICAgICAgICAgICAgZmlsZV9tZWRpYWluZm8gPSBtZWRpYWNoYWluLnJlY29nbml6ZV9ieV9tZXRhKGZpbGVfbWV0YSkKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKAogICAgICAgICAgICAgICAgZiLjgJDliIbkuqvovazlrZjjgJHor4bliKvlqpLkvZPkv6Hmga/lpLHotKXvvIznu6fnu63ovazlrZg6IHtlfSIsCiAgICAgICAgICAgICAgICBleGNfaW5mbz1UcnVlLAogICAgICAgICAgICApCiAgICAgICAgICAgIHJldHVybiBOb25lCiAgICAgICAgcmV0dXJuIGZpbGVfbWVkaWFpbmZvCgogICAgQHN0YXRpY21ldGhvZAogICAgZGVmIHNoYXJlX3VybF9leHRyYWN0KHVybDogc3RyKToKICAgICAgICAiIiIKICAgICAgICDop6PmnpDliIbkuqvpk77mjqUKICAgICAgICAiIiIKICAgICAgICByZXR1cm4gc2hhcmVfZXh0cmFjdF9wYXlsb2FkKHVybCkKCiAgICBkZWYgYWRkX3NoYXJlX2FsaXl1bnBhbigKICAgICAgICBzZWxmLAogICAgICAgIHVybCwKICAgICAgICBjaGFubmVsOiBPcHRpb25hbFtzdHIgfCBpbnRdID0gTm9uZSwKICAgICAgICBzb3VyY2U6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIHVzZXJpZDogT3B0aW9uYWxbc3RyXSA9IE5vbmUsCiAgICAgICAgcGFuX3BhdGg6IE9wdGlvbmFsW3N0ciB8IFBhdGhdID0gTm9uZSwKICAgICk6CiAgICAgICAgIiIiCiAgICAgICAg5re75Yqg6Zi/6YeM5LqR55uY5YiG5Lqr5Lu75YqhCiAgICAgICAgIiIiCiAgICAgICAgYWxpMjExNSA9IEFsaTIxMTVIZWxwZXIoc2VsZi5jbGllbnQsIHNlbGYuYWxpZ28pCiAgICAgICAgc2hhcmVfaWQgPSBhbGkyMTE1LmV4dHJhY3Rfc2hhcmVfY29kZV9mcm9tX3VybCh1cmwpCiAgICAgICAgbG9nZ2VyLmluZm8oZiLjgJBBbGkyMTE144CR6Kej5p6Q5YiG5Lqr6ZO+5o6lIHNoYXJlX2lkPXtzaGFyZV9pZH0iKQogICAgICAgIGlmIG5vdCBzaGFyZV9pZDoKICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi44CQQWxpMjExNeOAkeino+aekOWIhuS6q+mTvuaOpeWksei0pe+8mnt1cmx9IikKICAgICAgICAgICAgc2VsZi5zZW5kX25vdGlmeSgKICAgICAgICAgICAgICAgIGNoYW5uZWw9Y2hhbm5lbCwKICAgICAgICAgICAgICAgIHNvdXJjZT1zb3VyY2UsCiAgICAgICAgICAgICAgICB0aXRsZT1mIntpMThuLnRyYW5zbGF0ZSgnc2hhcmVfdXJsX2V4dHJhY3RfZXJyb3InLCB1cmw9dXJsKX0iLAogICAgICAgICAgICAgICAgdXNlcmlkPXVzZXJpZCwKICAgICAgICAgICAgKQogICAgICAgICAgICByZXR1cm4KICAgICAgICBpZiBub3QgcGFuX3BhdGg6CiAgICAgICAgICAgIHBhcmVudF9wYXRoID0gY29uZmlnZXIuc2hhcmVfcmVjaWV2ZV9wYXRoc1swXQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHBhcmVudF9wYXRoID0gcGFuX3BhdGgKICAgICAgICBwYXJlbnRfaWQgPSBnZXRfcGlkX2J5X3BhdGgoCiAgICAgICAgICAgIGNsaWVudD1zZWxmLmNsaWVudCwKICAgICAgICAgICAgcGF0aD1wYXJlbnRfcGF0aCwKICAgICAgICAgICAgbWtkaXI9VHJ1ZSwKICAgICAgICAgICAgdXBkYXRlX2NhY2hlPVRydWUsCiAgICAgICAgICAgIGJ5X2NhY2hlPVRydWUsCiAgICAgICAgKQogICAgICAgIGxvZ2dlci5pbmZvKGYi44CQQWxpMjExNeOAkeiOt+WPluWIsOi9rOWtmOebruW9lSB7cGFyZW50X3BhdGh9IElE77yae3BhcmVudF9pZH0iKQoKICAgICAgICB1bnJlY29nbml6ZWRfcGF0aCA9IGNvbmZpZ2VyLnBhbl90cmFuc2Zlcl91bnJlY29nbml6ZWRfcGF0aAogICAgICAgIHVucmVjb2duaXplZF9pZCA9IGdldF9waWRfYnlfcGF0aCgKICAgICAgICAgICAgY2xpZW50PXNlbGYuY2xpZW50LAogICAgICAgICAgICBwYXRoPXVucmVjb2duaXplZF9wYXRoLAogICAgICAgICAgICBta2Rpcj1UcnVlLAogICAgICAgICAgICB1cGRhdGVfY2FjaGU9VHJ1ZSwKICAgICAgICAgICAgYnlfY2FjaGU9VHJ1ZSwKICAgICAgICApCiAgICAgICAgbG9nZ2VyLmluZm8oCiAgICAgICAgICAgIGYi44CQQWxpMjExNeOAkeiOt+WPluWIsOacquivhuWIq+ebruW9lSB7dW5yZWNvZ25pemVkX3BhdGh9IElE77yae3VucmVjb2duaXplZF9pZH0iCiAgICAgICAgKQoKICAgICAgICBzaGFyZV90b2tlbiA9IGFsaTIxMTUuZ2V0X2FsaV9zaGFyZV90b2tlbihzaGFyZV9pZCkKCiAgICAgICAgIyDlsJ3or5Xor4bliKvlqpLkvZPkv6Hmga8KICAgICAgICBmaWxlX21lZGlhaW5mbyA9IGFsaTIxMTUuc2hhcmVfcmVjb2duaXplX21lZGlhaW5mbyhzaGFyZV90b2tlbikKCiAgICAgICAgIyDlqpLkvZPmlofku7blkozlqpLkvZPkv6Hmga/mlofku7bkuIDotbfnp5LkvKAKICAgICAgICBybXRfbWVkaWFleHQgPSBjb25maWdlci5nZXRfY29uZmlnKCJ1c2VyX3JtdF9tZWRpYWV4dCIpLnJlcGxhY2UoCiAgICAgICAgICAgICLvvIwiLCAiLCIKICAgICAgICApLnNwbGl0KCIsIikgKyBjb25maWdlci5nZXRfY29uZmlnKCJ1c2VyX2Rvd25sb2FkX21lZGlhZXh0IikucmVwbGFjZSgKICAgICAgICAgICAgIu+8jCIsICIsIgogICAgICAgICkuc3BsaXQoIiwiKQogICAgICAgIHN0YXR1cywgbXNnLCBzdWNjZXNzX3VwbG9hZCwgZmFpbF91cGxvYWQgPSBhbGkyMTE1LnNoYXJlX3VwbG9hZCgKICAgICAgICAgICAgc2hhcmVfdG9rZW49c2hhcmVfdG9rZW4sCiAgICAgICAgICAgIHBhcmVudF9pZD1pbnQocGFyZW50X2lkKSwKICAgICAgICAgICAgdW5yZWNvZ25pemVkX2lkPWludCh1bnJlY29nbml6ZWRfaWQpLAogICAgICAgICAgICB1bnJlY29nbml6ZWRfcGF0aD11bnJlY29nbml6ZWRfcGF0aCwKICAgICAgICAgICAgcm10X21lZGlhZXh0PVtmIi57ZXh0LnN0cmlwKCl9IiBmb3IgZXh0IGluIHJtdF9tZWRpYWV4dF0sCiAgICAgICAgICAgIGZpbGVfbWVkaWFpbmZvPWZpbGVfbWVkaWFpbmZvLAogICAgICAgICkKCiAgICAgICAgaWYgc3RhdHVzOgogICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkEFsaTIxMTXjgJHnp5LkvKAge3NoYXJlX2lkfSDlrozmiJAiKQogICAgICAgICAgICBpZiBub3QgZmlsZV9tZWRpYWluZm86CiAgICAgICAgICAgICAgICBzZWxmLnNlbmRfbm90aWZ5KAogICAgICAgICAgICAgICAgICAgIGNoYW5uZWw9Y2hhbm5lbCwKICAgICAgICAgICAgICAgICAgICBzb3VyY2U9c291cmNlLAogICAgICAgICAgICAgICAgICAgIHRpdGxlPWkxOG4udHJhbnNsYXRlKCJzaGFyZV9hZGRfc3VjY2VzcyIpLAogICAgICAgICAgICAgICAgICAgIHRleHQ9ZiIiIgrliIbkuqvpk77mjqXvvJpodHRwczovL3d3dy5hbGlwYW4uY29tL3Mve3NoYXJlX2lkfQrnp5LkvKDnm67lvZXvvJp7dW5yZWNvZ25pemVkX3BhdGh9CuenkuS8oOS/oeaBr++8muaIkOWKnyB7c3VjY2Vzc191cGxvYWR9IOS4qu+8jOWksei0pSB7ZmFpbF91cGxvYWR9IOS4qgoK5rOo5oSP77ya5peg5rOV6K+G5Yir5aqS5L2T5L+h5oGv77yM6K+35omL5Yqo5pW055CGCiIiIiwKICAgICAgICAgICAgICAgICAgICB1c2VyaWQ9dXNlcmlkLAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgc2VsZi5zZW5kX25vdGlmeSgKICAgICAgICAgICAgICAgICAgICBjaGFubmVsPWNoYW5uZWwsCiAgICAgICAgICAgICAgICAgICAgc291cmNlPXNvdXJjZSwKICAgICAgICAgICAgICAgICAgICB0aXRsZT1pMThuLnRyYW5zbGF0ZSgKICAgICAgICAgICAgICAgICAgICAgICAgInNoYXJlX2FkZF9zdWNjZXNzXzIiLAogICAgICAgICAgICAgICAgICAgICAgICB0aXRsZT1maWxlX21lZGlhaW5mby50aXRsZSwKICAgICAgICAgICAgICAgICAgICAgICAgeWVhcj1maWxlX21lZGlhaW5mby55ZWFyLAogICAgICAgICAgICAgICAgICAgICksCiAgICAgICAgICAgICAgICAgICAgdGV4dD1mIiIiCumTvuaOpe+8mmh0dHBzOi8vd3d3LmFsaXBhbi5jb20vcy97c2hhcmVfaWR9CuS/oeaBr++8muenkuS8oOaIkOWKnyB7c3VjY2Vzc191cGxvYWR9IOS4qu+8jOWksei0pSB7ZmFpbF91cGxvYWR9IOS4qgrnroDku4vvvJp7ZmlsZV9tZWRpYWluZm8ub3ZlcnZpZXd9CiIiIiwKICAgICAgICAgICAgICAgICAgICBpbWFnZT1maWxlX21lZGlhaW5mby5wb3N0ZXJfcGF0aCwKICAgICAgICAgICAgICAgICAgICB1c2VyaWQ9dXNlcmlkLAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICBzZWxmLnBvc3Rfc2hhcmVfaW5mbygiYWxpeXVuIiwgc2hhcmVfaWQsIE5vbmUsIGZpbGVfbWVkaWFpbmZvKQoKICAgICAgICBlbHNlOgogICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkOWIhuS6q+i9rOWtmOOAkeenkuS8oOWksei0pe+8mnttc2d9IikKICAgICAgICAgICAgc2VsZi5zZW5kX25vdGlmeSgKICAgICAgICAgICAgICAgIGNoYW5uZWw9Y2hhbm5lbCwKICAgICAgICAgICAgICAgIHNvdXJjZT1zb3VyY2UsCiAgICAgICAgICAgICAgICB0aXRsZT1pMThuLnRyYW5zbGF0ZSgic2hhcmVfYWRkX2ZhaWwiKSwKICAgICAgICAgICAgICAgIHRleHQ9ZiIiIgrliIbkuqvpk77mjqXvvJpodHRwczovL3d3dy5hbGlwYW4uY29tL3Mve3NoYXJlX2lkfQrlpLHotKXljp/lm6DvvJp7bXNnfQoiIiIsCiAgICAgICAgICAgICAgICB1c2VyaWQ9dXNlcmlkLAogICAgICAgICAgICApCgogICAgZGVmIGFkZF9zaGFyZV8xMTUoCiAgICAgICAgc2VsZiwKICAgICAgICB1cmwsCiAgICAgICAgY2hhbm5lbDogT3B0aW9uYWxbc3RyIHwgaW50XSA9IE5vbmUsCiAgICAgICAgc291cmNlOiBPcHRpb25hbFtzdHJdID0gTm9uZSwKICAgICAgICB1c2VyaWQ6IE9wdGlvbmFsW3N0cl0gPSBOb25lLAogICAgICAgIG5vdGlmeTogYm9vbCA9IFRydWUsCiAgICAgICAgcGFuX3BhdGg6IE9wdGlvbmFsW3N0ciB8IFBhdGhdID0gTm9uZSwKICAgICk6CiAgICAgICAgIiIiCiAgICAgICAg5re75YqgMTE15YiG5Lqr5Lu75YqhCiAgICAgICAgIiIiCiAgICAgICAgZGF0YSA9IHNlbGYuc2hhcmVfdXJsX2V4dHJhY3QodXJsKQogICAgICAgIHNoYXJlX2NvZGUgPSBkYXRhWyJzaGFyZV9jb2RlIl0KICAgICAgICByZWNlaXZlX2NvZGUgPSBkYXRhWyJyZWNlaXZlX2NvZGUiXQogICAgICAgIGxvZ2dlci5pbmZvKAogICAgICAgICAgICBmIuOAkOWIhuS6q+i9rOWtmOOAkeino+aekOWIhuS6q+mTvuaOpSBzaGFyZV9jb2RlPXtzaGFyZV9jb2RlfSByZWNlaXZlX2NvZGU9e3JlY2VpdmVfY29kZX0iCiAgICAgICAgKQogICAgICAgIGlmIG5vdCBzaGFyZV9jb2RlIG9yIG5vdCByZWNlaXZlX2NvZGU6CiAgICAgICAgICAgIGxvZ2dlci5lcnJvcihmIuOAkOWIhuS6q+i9rOWtmOOAkeino+aekOWIhuS6q+mTvuaOpeWksei0pe+8mnt1cmx9IikKICAgICAgICAgICAgaWYgbm90aWZ5OgogICAgICAgICAgICAgICAgc2VsZi5zZW5kX25vdGlmeSgKICAgICAgICAgICAgICAgICAgICBjaGFubmVsPWNoYW5uZWwsCiAgICAgICAgICAgICAgICAgICAgc291cmNlPXNvdXJjZSwKICAgICAgICAgICAgICAgICAgICB0aXRsZT1mIntpMThuLnRyYW5zbGF0ZSgnc2hhcmVfdXJsX2V4dHJhY3RfZXJyb3InLCB1cmw9dXJsKX0iLAogICAgICAgICAgICAgICAgICAgIHVzZXJpZD11c2VyaWQsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIHJldHVybiBGYWxzZSwgIuino+aekOWIhuS6q+mTvuaOpeWksei0pSIKCiAgICAgICAgaWYgbm90IHBhbl9wYXRoOgogICAgICAgICAgICBwYXJlbnRfcGF0aCA9IGNvbmZpZ2VyLnNoYXJlX3JlY2lldmVfcGF0aHNbMF0KICAgICAgICBlbHNlOgogICAgICAgICAgICBwYXJlbnRfcGF0aCA9IHBhbl9wYXRoCiAgICAgICAgcGFyZW50X2lkID0gZ2V0X3BpZF9ieV9wYXRoKAogICAgICAgICAgICBjbGllbnQ9c2VsZi5jbGllbnQsCiAgICAgICAgICAgIHBhdGg9cGFyZW50X3BhdGgsCiAgICAgICAgICAgIG1rZGlyPVRydWUsCiAgICAgICAgICAgIHVwZGF0ZV9jYWNoZT1UcnVlLAogICAgICAgICAgICBieV9jYWNoZT1UcnVlLAogICAgICAgICkKICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkOWIhuS6q+i9rOWtmOOAkeiOt+WPluWIsOi9rOWtmOebruW9lSB7cGFyZW50X3BhdGh9IElE77yae3BhcmVudF9pZH0iKQoKICAgICAgICAjIOWwneivleivhuWIq+WqkuS9k+S/oeaBrwogICAgICAgIGZpbGVfbWVkaWFpbmZvID0gc2VsZi5hZGRfc2hhcmVfcmVjb2duaXplX21lZGlhaW5mbygKICAgICAgICAgICAgc2hhcmVfY29kZT1zaGFyZV9jb2RlLCByZWNlaXZlX2NvZGU9cmVjZWl2ZV9jb2RlCiAgICAgICAgKQoKICAgICAgICAjIOiOt+WPluaWh+S7tuWkp+WwjwogICAgICAgIHNsZWVwKDIpCiAgICAgICAgcGF5bG9hZCA9IHsKICAgICAgICAgICAgInNoYXJlX2NvZGUiOiBzaGFyZV9jb2RlLAogICAgICAgICAgICAicmVjZWl2ZV9jb2RlIjogcmVjZWl2ZV9jb2RlLAogICAgICAgICAgICAibGltaXQiOiAxLAogICAgICAgICAgICAib2Zmc2V0IjogMCwKICAgICAgICAgICAgImNpZCI6IDAsCiAgICAgICAgfQogICAgICAgIHNpemUgPSAi5pyq55+lIgogICAgICAgIHRyeToKICAgICAgICAgICAgcmVzcCA9IHNlbGYuY2xpZW50LnNoYXJlX3NuYXAocGF5bG9hZCwgKipjb25maWdlci5nZXRfaW9zX3VhX2FwcChhcHA9RmFsc2UpKQogICAgICAgICAgICBpZiByZXNwWyJzdGF0ZSJdOgogICAgICAgICAgICAgICAgc2l6ZSA9IFN0cmluZ1V0aWxzLnN0cl9maWxlc2l6ZShyZXNwWyJkYXRhIl1bInNoYXJlaW5mbyJdWyJmaWxlX3NpemUiXSkKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKAogICAgICAgICAgICAgICAgZiLjgJDliIbkuqvovazlrZjjgJHojrflj5bliIbkuqvlpKflsI/lpLHotKXvvIznu6fnu63ovazlrZg6IHtlfSIsIGV4Y19pbmZvPVRydWUKICAgICAgICAgICAgKQoKICAgICAgICBwYXlsb2FkID0gewogICAgICAgICAgICAic2hhcmVfY29kZSI6IHNoYXJlX2NvZGUsCiAgICAgICAgICAgICJyZWNlaXZlX2NvZGUiOiByZWNlaXZlX2NvZGUsCiAgICAgICAgICAgICJmaWxlX2lkIjogMCwKICAgICAgICAgICAgImNpZCI6IGludChwYXJlbnRfaWQpLAogICAgICAgICAgICAiaXNfY2hlY2siOiAwLAogICAgICAgIH0KICAgICAgICByZXNwID0gc2VsZi5jbGllbnQuc2hhcmVfcmVjZWl2ZShwYXlsb2FkLCAqKmNvbmZpZ2VyLmdldF9pb3NfdWFfYXBwKGFwcD1GYWxzZSkpCiAgICAgICAgaWYgcmVzcFsic3RhdGUiXToKICAgICAgICAgICAgbG9nZ2VyLmluZm8oZiLjgJDliIbkuqvovazlrZjjgJHovazlrZgge3NoYXJlX2NvZGV9IOWIsCB7cGFyZW50X3BhdGh9IOaIkOWKn++8gSIpCiAgICAgICAgICAgIGlmIG5vdCBmaWxlX21lZGlhaW5mbzoKICAgICAgICAgICAgICAgIGlmIG5vdGlmeToKICAgICAgICAgICAgICAgICAgICBzZWxmLnNlbmRfbm90aWZ5KAogICAgICAgICAgICAgICAgICAgICAgICBjaGFubmVsPWNoYW5uZWwsCiAgICAgICAgICAgICAgICAgICAgICAgIHNvdXJjZT1zb3VyY2UsCiAgICAgICAgICAgICAgICAgICAgICAgIHRpdGxlPWkxOG4udHJhbnNsYXRlKCJzaGFyZV9hZGRfc3VjY2VzcyIpLAogICAgICAgICAgICAgICAgICAgICAgICB0ZXh0PWYiIiIK5YiG5Lqr6ZO+5o6l77yaaHR0cHM6Ly8xMTVjZG4uY29tL3Mve3NoYXJlX2NvZGV9P3Bhc3N3b3JkPXtyZWNlaXZlX2NvZGV9Cui9rOWtmOebruW9le+8mntwYXJlbnRfcGF0aH0K5paH5Lu25aSn5bCPOiB7c2l6ZX0KIiIiLAogICAgICAgICAgICAgICAgICAgICAgICB1c2VyaWQ9dXNlcmlkLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgIGlmIG5vdGlmeToKICAgICAgICAgICAgICAgICAgICBzZWxmLnNlbmRfbm90aWZ5KAogICAgICAgICAgICAgICAgICAgICAgICBjaGFubmVsPWNoYW5uZWwsCiAgICAgICAgICAgICAgICAgICAgICAgIHNvdXJjZT1zb3VyY2UsCiAgICAgICAgICAgICAgICAgICAgICAgIHRpdGxlPWkxOG4udHJhbnNsYXRlKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgInNoYXJlX2FkZF9zdWNjZXNzXzIiLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgdGl0bGU9ZmlsZV9tZWRpYWluZm8udGl0bGUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB5ZWFyPWZpbGVfbWVkaWFpbmZvLnllYXIsCiAgICAgICAgICAgICAgICAgICAgICAgICksCiAgICAgICAgICAgICAgICAgICAgICAgIHRleHQ9ZiIiIgrpk77mjqXvvJpodHRwczovLzExNWNkbi5jb20vcy97c2hhcmVfY29kZX0/cGFzc3dvcmQ9e3JlY2VpdmVfY29kZX0K5aSn5bCPOiB7c2l6ZX0K566A5LuL77yae2ZpbGVfbWVkaWFpbmZvLm92ZXJ2aWV3fQoiIiIsCiAgICAgICAgICAgICAgICAgICAgICAgIGltYWdlPWZpbGVfbWVkaWFpbmZvLnBvc3Rlcl9wYXRoLAogICAgICAgICAgICAgICAgICAgICAgICB1c2VyaWQ9dXNlcmlkLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgc2VsZi5wb3N0X3NoYXJlX2luZm8oIjExNSIsIHNoYXJlX2NvZGUsIHJlY2VpdmVfY29kZSwgZmlsZV9tZWRpYWluZm8pCiAgICAgICAgICAgIHJldHVybiBUcnVlLCBmaWxlX21lZGlhaW5mbywgcGFyZW50X3BhdGgsIHBhcmVudF9pZAoKICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkOWIhuS6q+i9rOWtmOOAkei9rOWtmCB7c2hhcmVfY29kZX0g5aSx6LSl77yae3Jlc3BbJ2Vycm9yJ119IikKICAgICAgICBpZiBub3RpZnk6CiAgICAgICAgICAgIHNlbGYuc2VuZF9ub3RpZnkoCiAgICAgICAgICAgICAgICBjaGFubmVsPWNoYW5uZWwsCiAgICAgICAgICAgICAgICBzb3VyY2U9c291cmNlLAogICAgICAgICAgICAgICAgdGl0bGU9aTE4bi50cmFuc2xhdGUoInNoYXJlX2FkZF9mYWlsIiksCiAgICAgICAgICAgICAgICB0ZXh0PWYiIiIK5YiG5Lqr6ZO+5o6l77yaaHR0cHM6Ly8xMTVjZG4uY29tL3Mve3NoYXJlX2NvZGV9P3Bhc3N3b3JkPXtyZWNlaXZlX2NvZGV9Cui9rOWtmOebruW9le+8mntwYXJlbnRfcGF0aH0K5aSx6LSl5Y6f5Zug77yae3Jlc3BbImVycm9yIl19CiIiIiwKICAgICAgICAgICAgICAgIHVzZXJpZD11c2VyaWQsCiAgICAgICAgICAgICkKICAgICAgICByZXR1cm4gRmFsc2UsICLovazlrZjlpLHotKUiLCByZXNwWyJlcnJvciJdCgogICAgZGVmIF9fYWRkX3NoYXJlKHNlbGYsIHVybCwgY2hhbm5lbCwgc291cmNlLCB1c2VyaWQsIHBhbl9wYXRoKToKICAgICAgICAiIiIKICAgICAgICDliIbkuqvovazlrZgKICAgICAgICAiIiIKICAgICAgICBpZiBub3QgY29uZmlnZXIuc2hhcmVfcmVjaWV2ZV9wYXRoczoKICAgICAgICAgICAgc2VsZi5zZW5kX25vdGlmeSgKICAgICAgICAgICAgICAgIGNoYW5uZWw9Y2hhbm5lbCwKICAgICAgICAgICAgICAgIHNvdXJjZT1zb3VyY2UsCiAgICAgICAgICAgICAgICB0aXRsZT1pMThuLnRyYW5zbGF0ZSgiYWRkX3NoYXJlX2NvbmZpZ19lcnJvciIpLAogICAgICAgICAgICAgICAgdXNlcmlkPXVzZXJpZCwKICAgICAgICAgICAgKQogICAgICAgICAgICByZXR1cm4KICAgICAgICB0cnk6CiAgICAgICAgICAgIGlmIGJvb2wobWF0Y2goQUxJWVVOX1NIQVJFX1VSTF9NQVRDSCwgdXJsKSk6CiAgICAgICAgICAgICAgICBpZiBub3QgY29uZmlnZXIucGFuX3RyYW5zZmVyX3VucmVjb2duaXplZF9wYXRoOgogICAgICAgICAgICAgICAgICAgIHNlbGYuc2VuZF9ub3RpZnkoCiAgICAgICAgICAgICAgICAgICAgICAgIGNoYW5uZWw9Y2hhbm5lbCwKICAgICAgICAgICAgICAgICAgICAgICAgc291cmNlPXNvdXJjZSwKICAgICAgICAgICAgICAgICAgICAgICAgdGl0bGU9aTE4bi50cmFuc2xhdGUoImFkZF9zaGFyZV9jb25maWdfZXJyb3IiKSwKICAgICAgICAgICAgICAgICAgICAgICAgdXNlcmlkPXVzZXJpZCwKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgICAgICBpZiBub3Qgc2VsZi5hbGlnbzoKICAgICAgICAgICAgICAgICAgICBzZWxmLnNlbmRfbm90aWZ5KAogICAgICAgICAgICAgICAgICAgICAgICBjaGFubmVsPWNoYW5uZWwsCiAgICAgICAgICAgICAgICAgICAgICAgIHNvdXJjZT1zb3VyY2UsCiAgICAgICAgICAgICAgICAgICAgICAgIHRpdGxlPWYie2kxOG4udHJhbnNsYXRlKCdzaGFyZV91cmxfYWxpZ29fZXJyb3InLCB1cmw9dXJsKX0iLAogICAgICAgICAgICAgICAgICAgICAgICB1c2VyaWQ9dXNlcmlkLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICByZXR1cm4KICAgICAgICAgICAgICAgIHNlbGYuYWRkX3NoYXJlX2FsaXl1bnBhbih1cmwsIGNoYW5uZWwsIHNvdXJjZSwgdXNlcmlkLCBwYW5fcGF0aCkKICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgIHNlbGYuYWRkX3NoYXJlXzExNSh1cmwsIGNoYW5uZWwsIHNvdXJjZSwgdXNlcmlkLCBUcnVlLCBwYW5fcGF0aCkKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgIGxvZ2dlci5lcnJvcihmIuOAkOWIhuS6q+i9rOWtmOOAkei/kOihjOWksei0pToge2V9IiwgZXhjX2luZm89VHJ1ZSkKICAgICAgICAgICAgc2VsZi5zZW5kX25vdGlmeSgKICAgICAgICAgICAgICAgIGNoYW5uZWw9Y2hhbm5lbCwKICAgICAgICAgICAgICAgIHNvdXJjZT1zb3VyY2UsCiAgICAgICAgICAgICAgICB0aXRsZT1pMThuLnRyYW5zbGF0ZSgic2hhcmVfYWRkX2ZhaWxfMiIsIGU9ZSksCiAgICAgICAgICAgICAgICB1c2VyaWQ9dXNlcmlkLAogICAgICAgICAgICApCiAgICAgICAgICAgIHJldHVybgoKICAgIGRlZiBhZGRfc2hhcmUoCiAgICAgICAgc2VsZiwgdXJsLCBjaGFubmVsLCB1c2VyaWQsIHBhbl9wYXRoPU5vbmUsIHNvdXJjZTogT3B0aW9uYWxbc3RyXSA9IE5vbmUKICAgICk6CiAgICAgICAgIiIiCiAgICAgICAg5bCG5YiG5Lqr5Lu75Yqh5Yqg5YWl6Zif5YiXCiAgICAgICAgIiIiCiAgICAgICAgc2VsZi5fYWRkX3NoYXJlX3F1ZXVlLnB1dCgodXJsLCBjaGFubmVsLCBzb3VyY2UsIHVzZXJpZCwgcGFuX3BhdGgpKQogICAgICAgIGxvZ2dlci5pbmZvKAogICAgICAgICAgICBmIuOAkOWIhuS6q+i9rOWtmOOAkXt1cmx9IOS7u+WKoeW3suWKoOWFpeWIhuS6q+i9rOWtmOmYn+WIl++8jOW9k+WJjemYn+WIl+Wkp+Wwj++8mntzZWxmLl9hZGRfc2hhcmVfcXVldWUucXNpemUoKX0iCiAgICAgICAgKQogICAgICAgIHNlbGYuX2Vuc3VyZV9hZGRfc2hhcmVfd29ya2VyX3J1bm5pbmcoKQoKICAgIEBzdGF0aWNtZXRob2QKICAgIGRlZiBwb3N0X3NoYXJlX2luZm8oCiAgICAgICAgdHlwZTogc3RyLAogICAgICAgIHNoYXJlX2NvZGU6IHN0ciwKICAgICAgICByZWNlaXZlX2NvZGU6IE9wdGlvbmFsW3N0cl0sCiAgICAgICAgZmlsZV9tZWRpYWluZm86IE9wdGlvbmFsW01lZGlhSW5mb10gPSBOb25lLAogICAgKToKICAgICAgICAiIiIKICAgICAgICDkuIrkvKDliIbkuqvkv6Hmga8KICAgICAgICAiIiIKICAgICAgICBpZiBub3QgY29uZmlnZXIuZ2V0X2NvbmZpZygidXBsb2FkX3NoYXJlX2luZm8iKToKICAgICAgICAgICAgcmV0dXJuCgogICAgICAgIGlmIHR5cGUgPT0gIjExNSI6CiAgICAgICAgICAgIHVybCA9IGYiaHR0cHM6Ly8xMTVjZG4uY29tL3Mve3NoYXJlX2NvZGV9P3Bhc3N3b3JkPXtyZWNlaXZlX2NvZGV9IgogICAgICAgICAgICBtdHlwZTogTGl0ZXJhbFsiMTE1IiwgImFsaSJdID0gIjExNSIKICAgICAgICBlbHNlOgogICAgICAgICAgICB1cmwgPSBmImh0dHBzOi8vd3d3LmFsaXBhbi5jb20vcy97c2hhcmVfY29kZX0iCiAgICAgICAgICAgIG10eXBlOiBMaXRlcmFsWyIxMTUiLCAiYWxpIl0gPSAiYWxpIgoKICAgICAgICBtaSA9IGZpbGVfbWVkaWFpbmZvCiAgICAgICAgcGF5bG9hZCA9IFNoYXJlSW5mbygKICAgICAgICAgICAgdXJsPXVybCwKICAgICAgICAgICAgcG9zdGltZT1kYXRldGltZS5ub3codGltZXpvbmUudXRjKSwKICAgICAgICAgICAgc291cmNlPW1pLnNvdXJjZSBpZiBtaSBlbHNlIE5vbmUsCiAgICAgICAgICAgIHR5cGU9bWkudHlwZS52YWx1ZSBpZiBtaSBhbmQgbWkudHlwZSBpcyBub3QgTm9uZSBlbHNlIE5vbmUsICAjIG5vcWEKICAgICAgICAgICAgdGl0bGU9bWkudGl0bGUgaWYgbWkgZWxzZSBOb25lLAogICAgICAgICAgICBlbl90aXRsZT1taS5lbl90aXRsZSBpZiBtaSBlbHNlIE5vbmUsCiAgICAgICAgICAgIGhrX3RpdGxlPW1pLmhrX3RpdGxlIGlmIG1pIGVsc2UgTm9uZSwKICAgICAgICAgICAgdHdfdGl0bGU9bWkudHdfdGl0bGUgaWYgbWkgZWxzZSBOb25lLAogICAgICAgICAgICBzZ190aXRsZT1taS5zZ190aXRsZSBpZiBtaSBlbHNlIE5vbmUsCiAgICAgICAgICAgIHllYXI9bWkueWVhciBpZiBtaSBlbHNlIE5vbmUsCiAgICAgICAgICAgIHNlYXNvbj1taS5zZWFzb24gaWYgbWkgZWxzZSBOb25lLAogICAgICAgICAgICB0bWRiX2lkPW1pLnRtZGJfaWQgaWYgbWkgZWxzZSBOb25lLAogICAgICAgICAgICBpbWRiX2lkPW1pLmltZGJfaWQgaWYgbWkgZWxzZSBOb25lLAogICAgICAgICAgICB0dmRiX2lkPW1pLnR2ZGJfaWQgaWYgbWkgZWxzZSBOb25lLAogICAgICAgICAgICBkb3ViYW5faWQ9bWkuZG91YmFuX2lkIGlmIG1pIGVsc2UgTm9uZSwKICAgICAgICAgICAgYmFuZ3VtaV9pZD1taS5iYW5ndW1pX2lkIGlmIG1pIGVsc2UgTm9uZSwKICAgICAgICAgICAgY29sbGVjdGlvbl9pZD1taS5jb2xsZWN0aW9uX2lkIGlmIG1pIGVsc2UgTm9uZSwKICAgICAgICApCgogICAgICAgIHRyeToKICAgICAgICAgICAgY2xpZW50ID0gUDExNUNlbnRlcihjb25maWdlci5nZXRfY29uZmlnKCJtYWNoaW5lX2lkIikpCiAgICAgICAgICAgIHJlc3AgPSBjbGllbnQudXBsb2FkX3NoYXJlX2luZm8oCiAgICAgICAgICAgICAgICBtdHlwZT1tdHlwZSwKICAgICAgICAgICAgICAgIHBheWxvYWQ9cGF5bG9hZCwKICAgICAgICAgICAgKQogICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkOWIhuS6q+i9rOWtmOOAkeWIhuS6q+i9rOWtmOS/oeaBr+aKpeWRiuacjeWKoeWZqOaIkOWKnzoge3Jlc3AubW9kZWxfZHVtcCgpfSIpCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICBsb2dnZXIuZGVidWcoZiLjgJDliIbkuqvovazlrZjjgJHliIbkuqvovazlrZjmiqXlkYrmnI3liqHlmajlpLHotKU6IHtlfSIpCg==
+from datetime import datetime, timezone
+from pathlib import Path
+from queue import Empty, Queue
+from re import match
+from threading import Lock, Thread
+from time import sleep
+from typing import Literal, Optional
+
+from p115center import P115Center
+from p115center.schemas import ShareInfo
+from p115client import P115Client
+from p115client.tool.iterdir import share_iterdir
+from p115client.util import share_extract_payload
+
+from app.chain.media import MediaChain
+from app.core.context import MediaInfo
+from app.core.metainfo import MetaInfo
+from app.log import logger
+from app.utils.string import StringUtils
+
+from ...core.aliyunpan import BAligo
+from ...core.config import configer
+from ...core.i18n import i18n
+from ...core.message import post_message
+from ...core.p115 import get_pid_by_path
+from ...helper.ali2115 import Ali2115Helper
+from ...utils.sentry import sentry_manager
+from ...utils.share_url_patterns import ALIYUN_SHARE_URL_MATCH
+
+
+@sentry_manager.capture_all_class_exceptions
+class ShareTransferHelper:
+    """
+    分享链接转存
+    """
+
+    def __init__(self, client: P115Client, aligo: Optional[BAligo]):
+        self.client = client
+        self.aligo = aligo
+        self._add_share_queue = Queue()
+        self._add_share_worker_thread = None
+        self._add_share_worker_lock = Lock()
+
+    def _ensure_add_share_worker_running(self):
+        """
+        确保工作线程正在运行
+        """
+        with self._add_share_worker_lock:
+            if (
+                self._add_share_worker_thread is None
+                or not self._add_share_worker_thread.is_alive()
+            ):
+                self._add_share_worker_thread = Thread(
+                    target=self._process_add_share_queue, daemon=True
+                )
+                self._add_share_worker_thread.start()
+
+    def _process_add_share_queue(self):
+        """
+        处理队列中的任务
+        """
+        while True:
+            try:
+                task = self._add_share_queue.get(timeout=60)
+            except Empty:
+                logger.debug("【分享转存】释放分享转存队列任务")
+                break
+
+            url, channel, source, userid, pan_path = task
+            try:
+                self.__add_share(url, channel, source, userid, pan_path)
+            except Exception as e:
+                logger.error(f"【分享转存】任务处理异常: {e}", exc_info=True)
+            finally:
+                self._add_share_queue.task_done()
+                sleep(3)
+
+    @staticmethod
+    def send_notify(
+        title: str,
+        text: Optional[str] = None,
+        image: Optional[str] = None,
+        channel: Optional[str | int] = None,
+        source: Optional[str] = None,
+        userid: Optional[str] = None,
+    ):
+        """
+        统一消息发送接口，自动选择全局或者指定用户发送
+        """
+        if channel and userid:
+            post_message(
+                channel=channel,  # noqa
+                source=source,
+                title=title,
+                image=image,
+                text=text,
+                userid=userid,
+            )
+
+    def add_share_recognize_mediainfo(
+        self, share_code: str, receive_code: str
+    ) -> Optional[MediaInfo]:
+        """
+        分享转存识别媒体信息
+
+        :param share_code (str): 分享码
+        :param receive_code (str): 接收码
+
+        :return MediaInfo: 识别成功返回媒体信息，失败返回 None
+        """
+        file_num = 0
+        file_mediainfo = None
+        item_name = None
+        try:
+            for item in share_iterdir(
+                self.client,
+                receive_code=receive_code,
+                share_code=share_code,
+                cid=0,
+                app="web",
+                **configer.get_ios_ua_app(app=False),
+            ):
+                if file_num == 1:
+                    file_num = 2
+                    break
+                item_name = item["name"]
+                file_num += 1
+            if file_num == 1:
+                mediachain = MediaChain()
+                file_meta = MetaInfo(title=item_name)
+                file_mediainfo = mediachain.recognize_by_meta(file_meta)
+        except Exception as e:
+            logger.warning(
+                f"【分享转存】识别媒体信息失败，继续转存: {e}",
+                exc_info=True,
+            )
+            return None
+        return file_mediainfo
+
+    @staticmethod
+    def share_url_extract(url: str):
+        """
+        解析分享链接
+        """
+        return share_extract_payload(url)
+
+    def add_share_aliyunpan(
+        self,
+        url,
+        channel: Optional[str | int] = None,
+        source: Optional[str] = None,
+        userid: Optional[str] = None,
+        pan_path: Optional[str | Path] = None,
+    ):
+        """
+        添加阿里云盘分享任务
+        """
+        ali2115 = Ali2115Helper(self.client, self.aligo)
+        share_id = ali2115.extract_share_code_from_url(url)
+        logger.info(f"【Ali2115】解析分享链接 share_id={share_id}")
+        if not share_id:
+            logger.error(f"【Ali2115】解析分享链接失败：{url}")
+            self.send_notify(
+                channel=channel,
+                source=source,
+                title=f"{i18n.translate('share_url_extract_error', url=url)}",
+                userid=userid,
+            )
+            return
+        if not pan_path:
+            parent_path = configer.share_recieve_paths[0]
+        else:
+            parent_path = pan_path
+        parent_id = get_pid_by_path(
+            client=self.client,
+            path=parent_path,
+            mkdir=True,
+            update_cache=True,
+            by_cache=True,
+        )
+        logger.info(f"【Ali2115】获取到转存目录 {parent_path} ID：{parent_id}")
+
+        unrecognized_path = configer.pan_transfer_unrecognized_path
+        unrecognized_id = get_pid_by_path(
+            client=self.client,
+            path=unrecognized_path,
+            mkdir=True,
+            update_cache=True,
+            by_cache=True,
+        )
+        logger.info(
+            f"【Ali2115】获取到未识别目录 {unrecognized_path} ID：{unrecognized_id}"
+        )
+
+        share_token = ali2115.get_ali_share_token(share_id)
+
+        # 尝试识别媒体信息
+        file_mediainfo = ali2115.share_recognize_mediainfo(share_token)
+
+        # 媒体文件和媒体信息文件一起秒传
+        rmt_mediaext = configer.get_config("user_rmt_mediaext").replace(
+            "，", ","
+        ).split(",") + configer.get_config("user_download_mediaext").replace(
+            "，", ","
+        ).split(",")
+        status, msg, success_upload, fail_upload = ali2115.share_upload(
+            share_token=share_token,
+            parent_id=int(parent_id),
+            unrecognized_id=int(unrecognized_id),
+            unrecognized_path=unrecognized_path,
+            rmt_mediaext=[f".{ext.strip()}" for ext in rmt_mediaext],
+            file_mediainfo=file_mediainfo,
+        )
+
+        if status:
+            logger.info(f"【Ali2115】秒传 {share_id} 完成")
+            if not file_mediainfo:
+                self.send_notify(
+                    channel=channel,
+                    source=source,
+                    title=i18n.translate("share_add_success"),
+                    text=f"""
+分享链接：https://www.alipan.com/s/{share_id}
+秒传目录：{unrecognized_path}
+秒传信息：成功 {success_upload} 个，失败 {fail_upload} 个
+
+注意：无法识别媒体信息，请手动整理
+""",
+                    userid=userid,
+                )
+            else:
+                self.send_notify(
+                    channel=channel,
+                    source=source,
+                    title=i18n.translate(
+                        "share_add_success_2",
+                        title=file_mediainfo.title,
+                        year=file_mediainfo.year,
+                    ),
+                    text=f"""
+链接：https://www.alipan.com/s/{share_id}
+信息：秒传成功 {success_upload} 个，失败 {fail_upload} 个
+简介：{file_mediainfo.overview}
+""",
+                    image=file_mediainfo.poster_path,
+                    userid=userid,
+                )
+            self.post_share_info("aliyun", share_id, None, file_mediainfo)
+
+        else:
+            logger.info(f"【分享转存】秒传失败：{msg}")
+            self.send_notify(
+                channel=channel,
+                source=source,
+                title=i18n.translate("share_add_fail"),
+                text=f"""
+分享链接：https://www.alipan.com/s/{share_id}
+失败原因：{msg}
+""",
+                userid=userid,
+            )
+
+    def add_share_115(
+        self,
+        url,
+        channel: Optional[str | int] = None,
+        source: Optional[str] = None,
+        userid: Optional[str] = None,
+        notify: bool = True,
+        pan_path: Optional[str | Path] = None,
+    ):
+        """
+        添加115分享任务
+        """
+        data = self.share_url_extract(url)
+        share_code = data["share_code"]
+        receive_code = data["receive_code"]
+        logger.info(
+            f"【分享转存】解析分享链接 share_code={share_code} receive_code={receive_code}"
+        )
+        if not share_code or not receive_code:
+            logger.error(f"【分享转存】解析分享链接失败：{url}")
+            if notify:
+                self.send_notify(
+                    channel=channel,
+                    source=source,
+                    title=f"{i18n.translate('share_url_extract_error', url=url)}",
+                    userid=userid,
+                )
+            return False, "解析分享链接失败"
+
+        if not pan_path:
+            parent_path = configer.share_recieve_paths[0]
+        else:
+            parent_path = pan_path
+        parent_id = get_pid_by_path(
+            client=self.client,
+            path=parent_path,
+            mkdir=True,
+            update_cache=True,
+            by_cache=True,
+        )
+        logger.info(f"【分享转存】获取到转存目录 {parent_path} ID：{parent_id}")
+
+        # 尝试识别媒体信息
+        file_mediainfo = self.add_share_recognize_mediainfo(
+            share_code=share_code, receive_code=receive_code
+        )
+
+        # 获取文件大小
+        sleep(2)
+        payload = {
+            "share_code": share_code,
+            "receive_code": receive_code,
+            "limit": 1,
+            "offset": 0,
+            "cid": 0,
+        }
+        size = "未知"
+        try:
+            resp = self.client.share_snap(payload, **configer.get_ios_ua_app(app=False))
+            if resp["state"]:
+                size = StringUtils.str_filesize(resp["data"]["shareinfo"]["file_size"])
+        except Exception as e:
+            logger.warning(
+                f"【分享转存】获取分享大小失败，继续转存: {e}", exc_info=True
+            )
+
+        payload = {
+            "share_code": share_code,
+            "receive_code": receive_code,
+            "file_id": 0,
+            "cid": int(parent_id),
+            "is_check": 0,
+        }
+        resp = self.client.share_receive(payload, **configer.get_ios_ua_app(app=False))
+        if resp["state"]:
+            logger.info(f"【分享转存】转存 {share_code} 到 {parent_path} 成功！")
+            if not file_mediainfo:
+                if notify:
+                    self.send_notify(
+                        channel=channel,
+                        source=source,
+                        title=i18n.translate("share_add_success"),
+                        text=f"""
+分享链接：https://115cdn.com/s/{share_code}?password={receive_code}
+转存目录：{parent_path}
+文件大小: {size}
+""",
+                        userid=userid,
+                    )
+            else:
+                if notify:
+                    self.send_notify(
+                        channel=channel,
+                        source=source,
+                        title=i18n.translate(
+                            "share_add_success_2",
+                            title=file_mediainfo.title,
+                            year=file_mediainfo.year,
+                        ),
+                        text=f"""
+链接：https://115cdn.com/s/{share_code}?password={receive_code}
+大小: {size}
+简介：{file_mediainfo.overview}
+""",
+                        image=file_mediainfo.poster_path,
+                        userid=userid,
+                    )
+            self.post_share_info("115", share_code, receive_code, file_mediainfo)
+            return True, file_mediainfo, parent_path, parent_id
+
+        logger.info(f"【分享转存】转存 {share_code} 失败：{resp['error']}")
+        if notify:
+            self.send_notify(
+                channel=channel,
+                source=source,
+                title=i18n.translate("share_add_fail"),
+                text=f"""
+分享链接：https://115cdn.com/s/{share_code}?password={receive_code}
+转存目录：{parent_path}
+失败原因：{resp["error"]}
+""",
+                userid=userid,
+            )
+        return False, "转存失败", resp["error"]
+
+    def __add_share(self, url, channel, source, userid, pan_path):
+        """
+        分享转存
+        """
+        if not configer.share_recieve_paths:
+            self.send_notify(
+                channel=channel,
+                source=source,
+                title=i18n.translate("add_share_config_error"),
+                userid=userid,
+            )
+            return
+        try:
+            if bool(match(ALIYUN_SHARE_URL_MATCH, url)):
+                if not configer.pan_transfer_unrecognized_path:
+                    self.send_notify(
+                        channel=channel,
+                        source=source,
+                        title=i18n.translate("add_share_config_error"),
+                        userid=userid,
+                    )
+                    return
+                if not self.aligo:
+                    self.send_notify(
+                        channel=channel,
+                        source=source,
+                        title=f"{i18n.translate('share_url_aligo_error', url=url)}",
+                        userid=userid,
+                    )
+                    return
+                self.add_share_aliyunpan(url, channel, source, userid, pan_path)
+            else:
+                self.add_share_115(url, channel, source, userid, True, pan_path)
+        except Exception as e:
+            logger.error(f"【分享转存】运行失败: {e}", exc_info=True)
+            self.send_notify(
+                channel=channel,
+                source=source,
+                title=i18n.translate("share_add_fail_2", e=e),
+                userid=userid,
+            )
+            return
+
+    def add_share(
+        self, url, channel, userid, pan_path=None, source: Optional[str] = None
+    ):
+        """
+        将分享任务加入队列
+        """
+        self._add_share_queue.put((url, channel, source, userid, pan_path))
+        logger.info(
+            f"【分享转存】{url} 任务已加入分享转存队列，当前队列大小：{self._add_share_queue.qsize()}"
+        )
+        self._ensure_add_share_worker_running()
+
+    @staticmethod
+    def post_share_info(
+        type: str,
+        share_code: str,
+        receive_code: Optional[str],
+        file_mediainfo: Optional[MediaInfo] = None,
+    ):
+        """
+        上传分享信息
+        """
+        if not configer.get_config("upload_share_info"):
+            return
+
+        if type == "115":
+            url = f"https://115cdn.com/s/{share_code}?password={receive_code}"
+            mtype: Literal["115", "ali"] = "115"
+        else:
+            url = f"https://www.alipan.com/s/{share_code}"
+            mtype: Literal["115", "ali"] = "ali"
+
+        mi = file_mediainfo
+        payload = ShareInfo(
+            url=url,
+            postime=datetime.now(timezone.utc),
+            source=mi.source if mi else None,
+            type=mi.type.value if mi and mi.type is not None else None,  # noqa
+            title=mi.title if mi else None,
+            en_title=mi.en_title if mi else None,
+            hk_title=mi.hk_title if mi else None,
+            tw_title=mi.tw_title if mi else None,
+            sg_title=mi.sg_title if mi else None,
+            year=mi.year if mi else None,
+            season=mi.season if mi else None,
+            tmdb_id=mi.tmdb_id if mi else None,
+            imdb_id=mi.imdb_id if mi else None,
+            tvdb_id=mi.tvdb_id if mi else None,
+            douban_id=mi.douban_id if mi else None,
+            bangumi_id=mi.bangumi_id if mi else None,
+            collection_id=mi.collection_id if mi else None,
+        )
+
+        try:
+            client = P115Center(configer.get_config("machine_id"))
+            resp = client.upload_share_info(
+                mtype=mtype,
+                payload=payload,
+            )
+            logger.info(f"【分享转存】分享转存信息报告服务器成功: {resp.model_dump()}")
+        except Exception as e:
+            logger.debug(f"【分享转存】分享转存报告服务器失败: {e}")

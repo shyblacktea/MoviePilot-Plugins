@@ -1,1 +1,341 @@
-ZnJvbSB0aHJlYWRpbmcgaW1wb3J0IExvY2ssIFRocmVhZApmcm9tIHRpbWUgaW1wb3J0IHNsZWVwCmZyb20gdHlwaW5nIGltcG9ydCBDYWxsYWJsZSwgT3B0aW9uYWwsIFNldAoKZnJvbSBwMTE1Y2xpZW50IGltcG9ydCBQMTE1Q2xpZW50Cgpmcm9tIGFwcC5sb2cgaW1wb3J0IGxvZ2dlcgpmcm9tIGFwcC5zY2hlZHVsZXIgaW1wb3J0IFNjaGVkdWxlcgoKZnJvbSAuLi5jb3JlLmNvbmZpZyBpbXBvcnQgY29uZmlnZXIKZnJvbSAuLi5oZWxwZXIuYmFja3VwIGltcG9ydCBCYWNrdXBTdHJtSGVscGVyLCBiYWNrdXBfaGVscGVyCmZyb20gLi4uc2NoZW1hcy5iYWNrdXAgaW1wb3J0IFN0cm1CYWNrdXBJdGVtCmZyb20gLi4uc2VydmljZS5vbmVfc2hvdCBpbXBvcnQgc2NoZWR1bGVfcGx1Z2luX29uZV9zaG90CmZyb20gLi4udXRpbHMuc2VudHJ5IGltcG9ydCBzZW50cnlfbWFuYWdlcgoKCkBzZW50cnlfbWFuYWdlci5jYXB0dXJlX2FsbF9jbGFzc19leGNlcHRpb25zCmNsYXNzIEJhY2t1cFNlcnZpY2U6CiAgICAiIiIKICAgIFNUUk0g5aSH5Lu95LiO5oGi5aSN6LCD5bqm5pyN5YqhCiAgICAiIiIKCiAgICBkZWYgX19pbml0X18oc2VsZiwgY2xpZW50OiBPcHRpb25hbFtQMTE1Q2xpZW50XSA9IE5vbmUpIC0+IE5vbmU6CiAgICAgICAgc2VsZi5jbGllbnQgPSBjbGllbnQKICAgICAgICBzZWxmLl9iYWNrdXBfdGFza19sb2NrID0gTG9jaygpCiAgICAgICAgc2VsZi5fYmFja3VwX3J1bm5pbmdfdGFza3M6IFNldFtzdHJdID0gc2V0KCkKICAgICAgICBzZWxmLl9yZXNlcnZlZF90YXNrX3N0YXJ0ZWQ6IFNldFtzdHJdID0gc2V0KCkKCiAgICBkZWYgX3RyeV9hY3F1aXJlX2JhY2t1cF90YXNrKHNlbGYsIHRhc2tfbmFtZTogc3RyKSAtPiBib29sOgogICAgICAgICIiIgogICAgICAgIOWwneivleWNoOeUqOWkh+S7veS7u+WKoei/kOihjOanve+8iOWkh+S7veS4juaBouWkjeWFseeUqO+8iQoKICAgICAgICA6cGFyYW0gdGFza19uYW1lIChzdHIpOiDlpIfku73ku7vliqHlkI3np7AKCiAgICAgICAgOnJldHVybiBib29sOiDljaDnlKjmiJDlip/ov5Tlm54gVHJ1Ze+8jOW3suWcqOi/kOihjOi/lOWbniBGYWxzZQogICAgICAgICIiIgogICAgICAgIHdpdGggc2VsZi5fYmFja3VwX3Rhc2tfbG9jazoKICAgICAgICAgICAgaWYgdGFza19uYW1lIGluIHNlbGYuX2JhY2t1cF9ydW5uaW5nX3Rhc2tzOgogICAgICAgICAgICAgICAgcmV0dXJuIEZhbHNlCiAgICAgICAgICAgIHNlbGYuX2JhY2t1cF9ydW5uaW5nX3Rhc2tzLmFkZCh0YXNrX25hbWUpCiAgICAgICAgICAgIHJldHVybiBUcnVlCgogICAgZGVmIF9yZWxlYXNlX2JhY2t1cF90YXNrKHNlbGYsIHRhc2tfbmFtZTogc3RyKSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIOmHiuaUvuWkh+S7veS7u+WKoei/kOihjOanvQoKICAgICAgICA6cGFyYW0gdGFza19uYW1lIChzdHIpOiDlpIfku73ku7vliqHlkI3np7AKICAgICAgICAiIiIKICAgICAgICB3aXRoIHNlbGYuX2JhY2t1cF90YXNrX2xvY2s6CiAgICAgICAgICAgIHNlbGYuX2JhY2t1cF9ydW5uaW5nX3Rhc2tzLmRpc2NhcmQodGFza19uYW1lKQogICAgICAgICAgICBzZWxmLl9yZXNlcnZlZF90YXNrX3N0YXJ0ZWQuZGlzY2FyZCh0YXNrX25hbWUpCgogICAgZGVmIF9tYXJrX3Jlc2VydmVkX3Rhc2tfc3RhcnRlZChzZWxmLCB0YXNrX25hbWU6IHN0cikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDmoIforrDlt7LljaDkvY3ku7vliqHlt7LlvIDlp4vmiafooYwKCiAgICAgICAgOnBhcmFtIHRhc2tfbmFtZSAoc3RyKTog5aSH5Lu95Lu75Yqh5ZCN56ewCiAgICAgICAgIiIiCiAgICAgICAgd2l0aCBzZWxmLl9iYWNrdXBfdGFza19sb2NrOgogICAgICAgICAgICBzZWxmLl9yZXNlcnZlZF90YXNrX3N0YXJ0ZWQuYWRkKHRhc2tfbmFtZSkKCiAgICBkZWYgaXNfYmFja3VwX3Rhc2tfcnVubmluZyhzZWxmLCB0YXNrX25hbWU6IHN0cikgLT4gYm9vbDoKICAgICAgICAiIiIKICAgICAgICDlpIfku73ku7vliqHmmK/lkKbmraPlnKjov5DooYwKCiAgICAgICAgOnBhcmFtIHRhc2tfbmFtZSAoc3RyKTog5aSH5Lu95Lu75Yqh5ZCN56ewCgogICAgICAgIDpyZXR1cm4gYm9vbDog5q2j5Zyo6L+Q6KGM6L+U5ZueIFRydWUKICAgICAgICAiIiIKICAgICAgICB3aXRoIHNlbGYuX2JhY2t1cF90YXNrX2xvY2s6CiAgICAgICAgICAgIHJldHVybiB0YXNrX25hbWUgaW4gc2VsZi5fYmFja3VwX3J1bm5pbmdfdGFza3MKCiAgICBAc3RhdGljbWV0aG9kCiAgICBkZWYgX2ZpbmRfYmFja3VwX3Rhc2sodGFza19uYW1lOiBzdHIpIC0+IE9wdGlvbmFsW1N0cm1CYWNrdXBJdGVtXToKICAgICAgICAiIiIKICAgICAgICDmjInlkI3np7Dmn6Xmib7lpIfku73ku7vliqHphY3nva4KCiAgICAgICAgOnBhcmFtIHRhc2tfbmFtZSAoc3RyKTog5aSH5Lu95Lu75Yqh5ZCN56ewCgogICAgICAgIDpyZXR1cm4gU3RybUJhY2t1cEl0ZW06IOWMuemFjeeahOmFjee9ru+8jOacquaJvuWIsOi/lOWbniBOb25lCiAgICAgICAgIiIiCiAgICAgICAgZm9yIGl0ZW0gaW4gY29uZmlnZXIuc3RybV9iYWNrdXBfaXRlbXM6CiAgICAgICAgICAgIGlmIGl0ZW0ubmFtZSA9PSB0YXNrX25hbWU6CiAgICAgICAgICAgICAgICByZXR1cm4gaXRlbQogICAgICAgIHJldHVybiBOb25lCgogICAgZGVmIF9leGVjdXRlX2JhY2t1cF9pbXBsKHNlbGYsIHRhc2tfbmFtZTogc3RyKSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIOaJp+ihjOWkh+S7veS7u+WKoeaguOW/g+mAu+i+kQoKICAgICAgICA6cGFyYW0gdGFza19uYW1lIChzdHIpOiDlpIfku73ku7vliqHlkI3np7AKICAgICAgICAiIiIKICAgICAgICBpZiBub3QgY29uZmlnZXIuc3RybV9iYWNrdXBfZW5hYmxlZDoKICAgICAgICAgICAgcmV0dXJuCgogICAgICAgIHRhc2sgPSBzZWxmLl9maW5kX2JhY2t1cF90YXNrKHRhc2tfbmFtZSkKICAgICAgICBpZiBub3QgdGFzazoKICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi44CQU1RSTeWkh+S7veOAkeWkh+S7veS7u+WKoeS4jeWtmOWcqDoge3Rhc2tfbmFtZX0iKQogICAgICAgICAgICByZXR1cm4KCiAgICAgICAgbG9nZ2VyLmluZm8oZiLjgJBTVFJN5aSH5Lu944CR5byA5aeL5omn6KGM5aSH5Lu95Lu75YqhOiB7dGFza19uYW1lfSIpCiAgICAgICAgaGlzdG9yeSA9IGJhY2t1cF9oZWxwZXIuZXhlY3V0ZV9iYWNrdXAodGFzaywgY2xpZW50PXNlbGYuY2xpZW50KQoKICAgICAgICBpZiBoaXN0b3J5LnN0YXR1cyA9PSAic3VjY2VzcyI6CiAgICAgICAgICAgIGxvZ2dlci5pbmZvKAogICAgICAgICAgICAgICAgZiLjgJBTVFJN5aSH5Lu944CR5aSH5Lu95oiQ5YqfOiB7dGFza19uYW1lfSwgIgogICAgICAgICAgICAgICAgZiLmlofku7Y6IHtoaXN0b3J5LmZpbGVuYW1lfSwg5aSn5bCPOiB7aGlzdG9yeS5maWxlX3NpemV9IOWtl+iKgiIKICAgICAgICAgICAgKQogICAgICAgIGVsaWYgaGlzdG9yeS5zdGF0dXMgPT0gInNraXBwZWQiOgogICAgICAgICAgICBsb2dnZXIuaW5mbygKICAgICAgICAgICAgICAgIGYi44CQU1RSTeWkh+S7veOAkeWkh+S7veS7u+WKoeW3sui3s+i/hzoge3Rhc2tfbmFtZX0sIOWOn+WboDoge2hpc3RvcnkuZXJyb3JfbXNnfSIKICAgICAgICAgICAgKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGxvZ2dlci5lcnJvcigKICAgICAgICAgICAgICAgIGYi44CQU1RSTeWkh+S7veOAkeWkh+S7veWksei0pToge3Rhc2tfbmFtZX0sIOmUmeivrzoge2hpc3RvcnkuZXJyb3JfbXNnfSIKICAgICAgICAgICAgKQoKICAgIGRlZiBydW5fYmFja3VwX3Rhc2soc2VsZiwgdGFza19uYW1lOiBzdHIpIC0+IE5vbmU6CiAgICAgICAgIiIiCiAgICAgICAg5omn6KGM5aSH5Lu95Lu75YqhCgogICAgICAgIDpwYXJhbSB0YXNrX25hbWUgKHN0cik6IOWkh+S7veS7u+WKoeWQjeensAogICAgICAgICIiIgogICAgICAgIGlmIG5vdCBjb25maWdlci5zdHJtX2JhY2t1cF9lbmFibGVkOgogICAgICAgICAgICByZXR1cm4KCiAgICAgICAgaWYgbm90IHNlbGYuX3RyeV9hY3F1aXJlX2JhY2t1cF90YXNrKHRhc2tfbmFtZSk6CiAgICAgICAgICAgIGxvZ2dlci5pbmZvKGYi44CQU1RSTeWkh+S7veOAkeS7u+WKoeW3suWcqOi/kOihjO+8jOi3s+i/hzoge3Rhc2tfbmFtZX0iKQogICAgICAgICAgICByZXR1cm4KCiAgICAgICAgdHJ5OgogICAgICAgICAgICBzZWxmLl9leGVjdXRlX2JhY2t1cF9pbXBsKHRhc2tfbmFtZSkKICAgICAgICBmaW5hbGx5OgogICAgICAgICAgICBzZWxmLl9yZWxlYXNlX2JhY2t1cF90YXNrKHRhc2tfbmFtZSkKCiAgICBkZWYgX3J1bl9iYWNrdXBfdGFza19yZXNlcnZlZChzZWxmLCB0YXNrX25hbWU6IHN0cikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDmiafooYzlt7LljaDkvY3nmoTlpIfku73ku7vliqEKCiAgICAgICAg55So5LqOIHN0YXJ0X2JhY2t1cF90YXNrIOazqOWGjOeahOS4gOasoeaAp+iwg+W6puS7u+WKoe+8jOmBv+WFjSBUT0NUT1Ug5LiL6YeN5aSN6LCD5bqmCiAgICAgICAg6LCD5bqm5YmN5bey5bCGIHRhc2tfbmFtZSDlhpnlhaXov5DooYzmp73vvIzlm6DmraTmraTlpITkuI3lho3kuozmrKEgYWNxdWlyZQoKICAgICAgICA6cGFyYW0gdGFza19uYW1lIChzdHIpOiDlpIfku73ku7vliqHlkI3np7AKICAgICAgICAiIiIKICAgICAgICBzZWxmLl9tYXJrX3Jlc2VydmVkX3Rhc2tfc3RhcnRlZCh0YXNrX25hbWUpCiAgICAgICAgdHJ5OgogICAgICAgICAgICBzZWxmLl9leGVjdXRlX2JhY2t1cF9pbXBsKHRhc2tfbmFtZSkKICAgICAgICBmaW5hbGx5OgogICAgICAgICAgICBzZWxmLl9yZWxlYXNlX2JhY2t1cF90YXNrKHRhc2tfbmFtZSkKCiAgICBkZWYgX3dhdGNoX29ycGhhbmVkX3Jlc2VydmVkX3Nsb3QoCiAgICAgICAgc2VsZiwKICAgICAgICB0YXNrX25hbWU6IHN0ciwKICAgICAgICBqb2JfaWQ6IHN0ciwKICAgICAgICBncmFjZV9zZWM6IGludCA9IDEwLAogICAgKSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIOajgOa1i+iwg+W6puS7u+WKoeiiq+S4u+iwg+W6puWZqOa4heepuuWQjumHiuaUvuWtpOeri+i/kOihjOanvQoKICAgICAgICA6cGFyYW0gdGFza19uYW1lIChzdHIpOiDlpIfku73ku7vliqHlkI3np7AKICAgICAgICA6cGFyYW0gam9iX2lkIChzdHIpOiDkuLvosIPluqblmaggam9iX2lkCiAgICAgICAgOnBhcmFtIGdyYWNlX3NlYyAoaW50KTog562J5b6F5Lu75Yqh5ZCv5Yqo55qE5a696ZmQ56eS5pWwCiAgICAgICAgIiIiCgogICAgICAgIGRlZiBfd2F0Y2goKSAtPiBOb25lOgogICAgICAgICAgICBzbGVlcChncmFjZV9zZWMpCiAgICAgICAgICAgIHdpdGggc2VsZi5fYmFja3VwX3Rhc2tfbG9jazoKICAgICAgICAgICAgICAgIGlmIHRhc2tfbmFtZSBub3QgaW4gc2VsZi5fYmFja3VwX3J1bm5pbmdfdGFza3M6CiAgICAgICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgICAgICBpZiB0YXNrX25hbWUgaW4gc2VsZi5fcmVzZXJ2ZWRfdGFza19zdGFydGVkOgogICAgICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAgICBzY2hlZHVsZXIgPSBTY2hlZHVsZXIoKQogICAgICAgICAgICB3aXRoIHNjaGVkdWxlci5fbG9jazoKICAgICAgICAgICAgICAgIGpvYnMgPSBnZXRhdHRyKHNjaGVkdWxlciwgIl9qb2JzIiwgTm9uZSkgb3Ige30KICAgICAgICAgICAgICAgIGpvYl9leGlzdHMgPSBqb2JfaWQgaW4gam9icwogICAgICAgICAgICBpZiBqb2JfZXhpc3RzOgogICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgIHNlbGYuX3JlbGVhc2VfYmFja3VwX3Rhc2sodGFza19uYW1lKQogICAgICAgICAgICBsb2dnZXIud2FybmluZygKICAgICAgICAgICAgICAgIGYi44CQU1RSTeWkh+S7veOAkeiwg+W6puS7u+WKoeacquaJp+ihjOS4lOW3suiiq+enu+mZpO+8jOW3sumHiuaUvui/kOihjOanvToge3Rhc2tfbmFtZX0iCiAgICAgICAgICAgICkKCiAgICAgICAgVGhyZWFkKAogICAgICAgICAgICB0YXJnZXQ9X3dhdGNoLAogICAgICAgICAgICBuYW1lPWYiUDExNVN0cm1IZWxwZXIt5aSH5Lu95qe95L2N5a6I5oqkLXt0YXNrX25hbWV9IiwKICAgICAgICAgICAgZGFlbW9uPVRydWUsCiAgICAgICAgKS5zdGFydCgpCgogICAgZGVmIF9zY2hlZHVsZV9vbmVfc2hvdF9vcl9yZWxlYXNlKAogICAgICAgIHNlbGYsCiAgICAgICAgdGFza19uYW1lOiBzdHIsCiAgICAgICAgc2VydmljZV9pZDogc3RyLAogICAgICAgIGpvYl9uYW1lOiBzdHIsCiAgICAgICAgZnVuYzogQ2FsbGFibGUsCiAgICAgICAgZnVuY19rd2FyZ3M6IE9wdGlvbmFsW2RpY3RdID0gTm9uZSwKICAgICkgLT4gYm9vbDoKICAgICAgICAiIiIKICAgICAgICDms6jlhozkuIDmrKHmgKfku7vliqHvvIzlpLHotKXml7bph4rmlL7lt7LljaDnlKjnmoTov5DooYzmp70KCiAgICAgICAgOnBhcmFtIHRhc2tfbmFtZSAoc3RyKTog5aSH5Lu95Lu75Yqh5ZCN56ew77yI55So5LqO6YeK5pS+6L+Q6KGM5qe977yJCiAgICAgICAgOnBhcmFtIHNlcnZpY2VfaWQgKHN0cik6IOaPkuS7tuWGheacjeWKoSBJRAogICAgICAgIDpwYXJhbSBqb2JfbmFtZSAoc3RyKTog6LCD5bqm5Lu75Yqh5pi+56S65ZCN56ewCiAgICAgICAgOnBhcmFtIGZ1bmMgKENhbGxhYmxlKTog5omn6KGM5Ye95pWwCiAgICAgICAgOnBhcmFtIGZ1bmNfa3dhcmdzIChkaWN0KTog5Lyg5YWlIGZ1bmMg55qE5YWz6ZSu5a2X5Y+C5pWwCgogICAgICAgIDpyZXR1cm4gYm9vbDog6LCD5bqm5rOo5YaM5oiQ5Yqf6L+U5ZueIFRydWUKICAgICAgICAiIiIKICAgICAgICBqb2JfaWQgPSBmIlAxMTVTdHJtSGVscGVyX3tzZXJ2aWNlX2lkfSIKICAgICAgICBpZiBzY2hlZHVsZV9wbHVnaW5fb25lX3Nob3QoCiAgICAgICAgICAgIHNlcnZpY2VfaWQ9c2VydmljZV9pZCwKICAgICAgICAgICAgbmFtZT1qb2JfbmFtZSwKICAgICAgICAgICAgZnVuYz1mdW5jLAogICAgICAgICAgICBmdW5jX2t3YXJncz1mdW5jX2t3YXJncywKICAgICAgICAgICAgZGVsYXlfc2VjPTAsCiAgICAgICAgKToKICAgICAgICAgICAgc2VsZi5fd2F0Y2hfb3JwaGFuZWRfcmVzZXJ2ZWRfc2xvdCh0YXNrX25hbWUsIGpvYl9pZCkKICAgICAgICAgICAgcmV0dXJuIFRydWUKICAgICAgICBzZWxmLl9yZWxlYXNlX2JhY2t1cF90YXNrKHRhc2tfbmFtZSkKICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJN5aSH5Lu944CR6LCD5bqm5aSx6LSl77yM5bey6YeK5pS+6L+Q6KGM5qe9OiB7dGFza19uYW1lfSIpCiAgICAgICAgcmV0dXJuIEZhbHNlCgogICAgZGVmIHN0YXJ0X2JhY2t1cF90YXNrKHNlbGYsIHRhc2s6IFN0cm1CYWNrdXBJdGVtKSAtPiBib29sOgogICAgICAgICIiIgogICAgICAgIOWQr+WKqOWkh+S7veS7u+WKoe+8iOmAmui/h+S4u+iwg+W6puWZqOeri+WNs+aJp+ihjO+8iQoKICAgICAgICA6cGFyYW0gdGFzayAoU3RybUJhY2t1cEl0ZW0pOiDlpIfku73ku7vliqHphY3nva4KCiAgICAgICAgOnJldHVybiBib29sOiDosIPluqbms6jlhozmiJDlip/ov5Tlm54gVHJ1ZQogICAgICAgICIiIgogICAgICAgIGlmIG5vdCBzZWxmLl90cnlfYWNxdWlyZV9iYWNrdXBfdGFzayh0YXNrLm5hbWUpOgogICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkFNUUk3lpIfku73jgJHku7vliqHlt7LlnKjov5DooYzvvIzot7Pov4fosIPluqY6IHt0YXNrLm5hbWV9IikKICAgICAgICAgICAgcmV0dXJuIEZhbHNlCgogICAgICAgIHNhZmVfbmFtZSA9IEJhY2t1cFN0cm1IZWxwZXIuX3NhZmVfdGFza19uYW1lKHRhc2submFtZSkKICAgICAgICByZXR1cm4gc2VsZi5fc2NoZWR1bGVfb25lX3Nob3Rfb3JfcmVsZWFzZSgKICAgICAgICAgICAgdGFza19uYW1lPXRhc2submFtZSwKICAgICAgICAgICAgc2VydmljZV9pZD1mInN0cm1fYmFja3VwX3tzYWZlX25hbWV9IiwKICAgICAgICAgICAgam9iX25hbWU9ZiJTVFJN5aSH5Lu9LXt0YXNrLm5hbWV9IiwKICAgICAgICAgICAgZnVuYz1zZWxmLl9ydW5fYmFja3VwX3Rhc2tfcmVzZXJ2ZWQsCiAgICAgICAgICAgIGZ1bmNfa3dhcmdzPXsidGFza19uYW1lIjogdGFzay5uYW1lfSwKICAgICAgICApCgogICAgZGVmIF9leGVjdXRlX3Jlc3RvcmVfaW1wbChzZWxmLCB0YXNrX25hbWU6IHN0ciwgYmFja3VwX3BhdGg6IHN0cikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDmiafooYzmgaLlpI3ku7vliqHmoLjlv4PpgLvovpEKCiAgICAgICAgOnBhcmFtIHRhc2tfbmFtZSAoc3RyKTog5aSH5Lu95Lu75Yqh5ZCN56ewCiAgICAgICAgOnBhcmFtIGJhY2t1cF9wYXRoIChzdHIpOiDlpIfku73mlofku7bot6/lvoQKICAgICAgICAiIiIKICAgICAgICBpZiBub3QgY29uZmlnZXIuc3RybV9iYWNrdXBfZW5hYmxlZDoKICAgICAgICAgICAgcmV0dXJuCgogICAgICAgIHRhc2sgPSBzZWxmLl9maW5kX2JhY2t1cF90YXNrKHRhc2tfbmFtZSkKICAgICAgICBpZiBub3QgdGFzazoKICAgICAgICAgICAgbG9nZ2VyLmVycm9yKGYi44CQU1RSTeaBouWkjeOAkeWkh+S7veS7u+WKoeS4jeWtmOWcqDoge3Rhc2tfbmFtZX0iKQogICAgICAgICAgICByZXR1cm4KCiAgICAgICAgbG9nZ2VyLmluZm8oZiLjgJBTVFJN5oGi5aSN44CR5byA5aeL5omn6KGM5oGi5aSN5Lu75YqhOiB7dGFza19uYW1lfSwg6Lev5b6EOiB7YmFja3VwX3BhdGh9IikKCiAgICAgICAgaWYgdGFzay50YXJnZXRfdHlwZS52YWx1ZSA9PSAibG9jYWwiOgogICAgICAgICAgICBzdWNjZXNzLCBlcnJvcl9tc2cgPSBiYWNrdXBfaGVscGVyLnJlc3RvcmVfZnJvbV9sb2NhbCgKICAgICAgICAgICAgICAgIGJhY2t1cF9wYXRoPWJhY2t1cF9wYXRoLAogICAgICAgICAgICAgICAgc291cmNlX3BhdGhzPXRhc2suc291cmNlX3BhdGhzLAogICAgICAgICAgICApCiAgICAgICAgZWxpZiB0YXNrLnRhcmdldF90eXBlLnZhbHVlID09ICJjbG91ZCI6CiAgICAgICAgICAgIHN1Y2Nlc3MsIGVycm9yX21zZyA9IGJhY2t1cF9oZWxwZXIucmVzdG9yZV9mcm9tX2Nsb3VkKAogICAgICAgICAgICAgICAgY2xvdWRfcGF0aD1iYWNrdXBfcGF0aCwKICAgICAgICAgICAgICAgIHNvdXJjZV9wYXRocz10YXNrLnNvdXJjZV9wYXRocywKICAgICAgICAgICAgICAgIGNsaWVudD1zZWxmLmNsaWVudCwKICAgICAgICAgICAgKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHN1Y2Nlc3MsIGVycm9yX21zZyA9IEZhbHNlLCBmIuS4jeaUr+aMgeeahOWkh+S7veebruagh+exu+Weizoge3Rhc2sudGFyZ2V0X3R5cGV9IgoKICAgICAgICBpZiBzdWNjZXNzOgogICAgICAgICAgICBsb2dnZXIuaW5mbyhmIuOAkFNUUk3mgaLlpI3jgJHmgaLlpI3miJDlip86IHt0YXNrX25hbWV9IikKICAgICAgICBlbHNlOgogICAgICAgICAgICBsb2dnZXIuZXJyb3IoZiLjgJBTVFJN5oGi5aSN44CR5oGi5aSN5aSx6LSlOiB7dGFza19uYW1lfSwg6ZSZ6K+vOiB7ZXJyb3JfbXNnfSIpCgogICAgZGVmIHJ1bl9yZXN0b3JlX3Rhc2soc2VsZiwgdGFza19uYW1lOiBzdHIsIGJhY2t1cF9wYXRoOiBzdHIpIC0+IE5vbmU6CiAgICAgICAgIiIiCiAgICAgICAg5omn6KGM5oGi5aSN5Lu75YqhCgogICAgICAgIDpwYXJhbSB0YXNrX25hbWUgKHN0cik6IOWkh+S7veS7u+WKoeWQjeensAogICAgICAgIDpwYXJhbSBiYWNrdXBfcGF0aCAoc3RyKTog5aSH5Lu95paH5Lu26Lev5b6ECiAgICAgICAgIiIiCiAgICAgICAgaWYgbm90IGNvbmZpZ2VyLnN0cm1fYmFja3VwX2VuYWJsZWQ6CiAgICAgICAgICAgIHJldHVybgoKICAgICAgICBpZiBub3Qgc2VsZi5fdHJ5X2FjcXVpcmVfYmFja3VwX3Rhc2sodGFza19uYW1lKToKICAgICAgICAgICAgbG9nZ2VyLmluZm8oZiLjgJBTVFJN5oGi5aSN44CR5Lu75Yqh5bey5Zyo6L+Q6KGM77yM6Lez6L+HOiB7dGFza19uYW1lfSIpCiAgICAgICAgICAgIHJldHVybgoKICAgICAgICB0cnk6CiAgICAgICAgICAgIHNlbGYuX2V4ZWN1dGVfcmVzdG9yZV9pbXBsKHRhc2tfbmFtZSwgYmFja3VwX3BhdGgpCiAgICAgICAgZmluYWxseToKICAgICAgICAgICAgc2VsZi5fcmVsZWFzZV9iYWNrdXBfdGFzayh0YXNrX25hbWUpCgogICAgZGVmIF9ydW5fcmVzdG9yZV90YXNrX3Jlc2VydmVkKAogICAgICAgIHNlbGYsCiAgICAgICAgdGFza19uYW1lOiBzdHIsCiAgICAgICAgYmFja3VwX3BhdGg6IHN0ciwKICAgICkgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDmiafooYzlt7LljaDkvY3nmoTmgaLlpI3ku7vliqEKCiAgICAgICAg55So5LqOIHN0YXJ0X3Jlc3RvcmVfdGFzayDms6jlhoznmoTkuIDmrKHmgKfosIPluqbku7vliqHvvIzpgb/lhY0gVE9DVE9VIOS4i+mHjeWkjeiwg+W6pgogICAgICAgIOiwg+W6puWJjeW3suWwhiB0YXNrX25hbWUg5YaZ5YWl6L+Q6KGM5qe977yM5Zug5q2k5q2k5aSE5LiN5YaN5LqM5qyhIGFjcXVpcmUKCiAgICAgICAgOnBhcmFtIHRhc2tfbmFtZSAoc3RyKTog5aSH5Lu95Lu75Yqh5ZCN56ewCiAgICAgICAgOnBhcmFtIGJhY2t1cF9wYXRoIChzdHIpOiDlpIfku73mlofku7bot6/lvoQKICAgICAgICAiIiIKICAgICAgICBzZWxmLl9tYXJrX3Jlc2VydmVkX3Rhc2tfc3RhcnRlZCh0YXNrX25hbWUpCiAgICAgICAgdHJ5OgogICAgICAgICAgICBzZWxmLl9leGVjdXRlX3Jlc3RvcmVfaW1wbCh0YXNrX25hbWUsIGJhY2t1cF9wYXRoKQogICAgICAgIGZpbmFsbHk6CiAgICAgICAgICAgIHNlbGYuX3JlbGVhc2VfYmFja3VwX3Rhc2sodGFza19uYW1lKQoKICAgIGRlZiBzdGFydF9yZXN0b3JlX3Rhc2soc2VsZiwgdGFza19uYW1lOiBzdHIsIGJhY2t1cF9wYXRoOiBzdHIpIC0+IGJvb2w6CiAgICAgICAgIiIiCiAgICAgICAg5ZCv5Yqo5oGi5aSN5Lu75Yqh77yI6YCa6L+H5Li76LCD5bqm5Zmo56uL5Y2z5omn6KGM77yJCgogICAgICAgIDpwYXJhbSB0YXNrX25hbWUgKHN0cik6IOWkh+S7veS7u+WKoeWQjeensAogICAgICAgIDpwYXJhbSBiYWNrdXBfcGF0aCAoc3RyKTog5aSH5Lu95paH5Lu26Lev5b6ECgogICAgICAgIDpyZXR1cm4gYm9vbDog6LCD5bqm5rOo5YaM5oiQ5Yqf6L+U5ZueIFRydWUKICAgICAgICAiIiIKICAgICAgICBpZiBub3Qgc2VsZi5fdHJ5X2FjcXVpcmVfYmFja3VwX3Rhc2sodGFza19uYW1lKToKICAgICAgICAgICAgbG9nZ2VyLmluZm8oZiLjgJBTVFJN5oGi5aSN44CR5Lu75Yqh5bey5Zyo6L+Q6KGM77yM6Lez6L+H6LCD5bqmOiB7dGFza19uYW1lfSIpCiAgICAgICAgICAgIHJldHVybiBGYWxzZQoKICAgICAgICBzYWZlX25hbWUgPSBCYWNrdXBTdHJtSGVscGVyLl9zYWZlX3Rhc2tfbmFtZSh0YXNrX25hbWUpCiAgICAgICAgcmV0dXJuIHNlbGYuX3NjaGVkdWxlX29uZV9zaG90X29yX3JlbGVhc2UoCiAgICAgICAgICAgIHRhc2tfbmFtZT10YXNrX25hbWUsCiAgICAgICAgICAgIHNlcnZpY2VfaWQ9ZiJzdHJtX3Jlc3RvcmVfe3NhZmVfbmFtZX0iLAogICAgICAgICAgICBqb2JfbmFtZT1mIlNUUk3mgaLlpI0te3Rhc2tfbmFtZX0iLAogICAgICAgICAgICBmdW5jPXNlbGYuX3J1bl9yZXN0b3JlX3Rhc2tfcmVzZXJ2ZWQsCiAgICAgICAgICAgIGZ1bmNfa3dhcmdzPXsKICAgICAgICAgICAgICAgICJ0YXNrX25hbWUiOiB0YXNrX25hbWUsCiAgICAgICAgICAgICAgICAiYmFja3VwX3BhdGgiOiBiYWNrdXBfcGF0aCwKICAgICAgICAgICAgfSwKICAgICAgICApCg==
+from threading import Lock, Thread
+from time import sleep
+from typing import Callable, Optional, Set
+
+from p115client import P115Client
+
+from app.log import logger
+from app.scheduler import Scheduler
+
+from ...core.config import configer
+from ...helper.backup import BackupStrmHelper, backup_helper
+from ...schemas.backup import StrmBackupItem
+from ...service.one_shot import schedule_plugin_one_shot
+from ...utils.sentry import sentry_manager
+
+
+@sentry_manager.capture_all_class_exceptions
+class BackupService:
+    """
+    STRM 备份与恢复调度服务
+    """
+
+    def __init__(self, client: Optional[P115Client] = None) -> None:
+        self.client = client
+        self._backup_task_lock = Lock()
+        self._backup_running_tasks: Set[str] = set()
+        self._reserved_task_started: Set[str] = set()
+
+    def _try_acquire_backup_task(self, task_name: str) -> bool:
+        """
+        尝试占用备份任务运行槽（备份与恢复共用）
+
+        :param task_name (str): 备份任务名称
+
+        :return bool: 占用成功返回 True，已在运行返回 False
+        """
+        with self._backup_task_lock:
+            if task_name in self._backup_running_tasks:
+                return False
+            self._backup_running_tasks.add(task_name)
+            return True
+
+    def _release_backup_task(self, task_name: str) -> None:
+        """
+        释放备份任务运行槽
+
+        :param task_name (str): 备份任务名称
+        """
+        with self._backup_task_lock:
+            self._backup_running_tasks.discard(task_name)
+            self._reserved_task_started.discard(task_name)
+
+    def _mark_reserved_task_started(self, task_name: str) -> None:
+        """
+        标记已占位任务已开始执行
+
+        :param task_name (str): 备份任务名称
+        """
+        with self._backup_task_lock:
+            self._reserved_task_started.add(task_name)
+
+    def is_backup_task_running(self, task_name: str) -> bool:
+        """
+        备份任务是否正在运行
+
+        :param task_name (str): 备份任务名称
+
+        :return bool: 正在运行返回 True
+        """
+        with self._backup_task_lock:
+            return task_name in self._backup_running_tasks
+
+    @staticmethod
+    def _find_backup_task(task_name: str) -> Optional[StrmBackupItem]:
+        """
+        按名称查找备份任务配置
+
+        :param task_name (str): 备份任务名称
+
+        :return StrmBackupItem: 匹配的配置，未找到返回 None
+        """
+        for item in configer.strm_backup_items:
+            if item.name == task_name:
+                return item
+        return None
+
+    def _execute_backup_impl(self, task_name: str) -> None:
+        """
+        执行备份任务核心逻辑
+
+        :param task_name (str): 备份任务名称
+        """
+        if not configer.strm_backup_enabled:
+            return
+
+        task = self._find_backup_task(task_name)
+        if not task:
+            logger.error(f"【STRM备份】备份任务不存在: {task_name}")
+            return
+
+        logger.info(f"【STRM备份】开始执行备份任务: {task_name}")
+        history = backup_helper.execute_backup(task, client=self.client)
+
+        if history.status == "success":
+            logger.info(
+                f"【STRM备份】备份成功: {task_name}, "
+                f"文件: {history.filename}, 大小: {history.file_size} 字节"
+            )
+        elif history.status == "skipped":
+            logger.info(
+                f"【STRM备份】备份任务已跳过: {task_name}, 原因: {history.error_msg}"
+            )
+        else:
+            logger.error(
+                f"【STRM备份】备份失败: {task_name}, 错误: {history.error_msg}"
+            )
+
+    def run_backup_task(self, task_name: str) -> None:
+        """
+        执行备份任务
+
+        :param task_name (str): 备份任务名称
+        """
+        if not configer.strm_backup_enabled:
+            return
+
+        if not self._try_acquire_backup_task(task_name):
+            logger.info(f"【STRM备份】任务已在运行，跳过: {task_name}")
+            return
+
+        try:
+            self._execute_backup_impl(task_name)
+        finally:
+            self._release_backup_task(task_name)
+
+    def _run_backup_task_reserved(self, task_name: str) -> None:
+        """
+        执行已占位的备份任务
+
+        用于 start_backup_task 注册的一次性调度任务，避免 TOCTOU 下重复调度
+        调度前已将 task_name 写入运行槽，因此此处不再二次 acquire
+
+        :param task_name (str): 备份任务名称
+        """
+        self._mark_reserved_task_started(task_name)
+        try:
+            self._execute_backup_impl(task_name)
+        finally:
+            self._release_backup_task(task_name)
+
+    def _watch_orphaned_reserved_slot(
+        self,
+        task_name: str,
+        job_id: str,
+        grace_sec: int = 10,
+    ) -> None:
+        """
+        检测调度任务被主调度器清空后释放孤立运行槽
+
+        :param task_name (str): 备份任务名称
+        :param job_id (str): 主调度器 job_id
+        :param grace_sec (int): 等待任务启动的宽限秒数
+        """
+
+        def _watch() -> None:
+            sleep(grace_sec)
+            with self._backup_task_lock:
+                if task_name not in self._backup_running_tasks:
+                    return
+                if task_name in self._reserved_task_started:
+                    return
+            scheduler = Scheduler()
+            with scheduler._lock:
+                jobs = getattr(scheduler, "_jobs", None) or {}
+                job_exists = job_id in jobs
+            if job_exists:
+                return
+            self._release_backup_task(task_name)
+            logger.warning(
+                f"【STRM备份】调度任务未执行且已被移除，已释放运行槽: {task_name}"
+            )
+
+        Thread(
+            target=_watch,
+            name=f"P115StrmHelper-备份槽位守护-{task_name}",
+            daemon=True,
+        ).start()
+
+    def _schedule_one_shot_or_release(
+        self,
+        task_name: str,
+        service_id: str,
+        job_name: str,
+        func: Callable,
+        func_kwargs: Optional[dict] = None,
+    ) -> bool:
+        """
+        注册一次性任务，失败时释放已占用的运行槽
+
+        :param task_name (str): 备份任务名称（用于释放运行槽）
+        :param service_id (str): 插件内服务 ID
+        :param job_name (str): 调度任务显示名称
+        :param func (Callable): 执行函数
+        :param func_kwargs (dict): 传入 func 的关键字参数
+
+        :return bool: 调度注册成功返回 True
+        """
+        job_id = f"P115StrmHelper_{service_id}"
+        if schedule_plugin_one_shot(
+            service_id=service_id,
+            name=job_name,
+            func=func,
+            func_kwargs=func_kwargs,
+            delay_sec=0,
+        ):
+            self._watch_orphaned_reserved_slot(task_name, job_id)
+            return True
+        self._release_backup_task(task_name)
+        logger.error(f"【STRM备份】调度失败，已释放运行槽: {task_name}")
+        return False
+
+    def start_backup_task(self, task: StrmBackupItem) -> bool:
+        """
+        启动备份任务（通过主调度器立即执行）
+
+        :param task (StrmBackupItem): 备份任务配置
+
+        :return bool: 调度注册成功返回 True
+        """
+        if not self._try_acquire_backup_task(task.name):
+            logger.info(f"【STRM备份】任务已在运行，跳过调度: {task.name}")
+            return False
+
+        safe_name = BackupStrmHelper._safe_task_name(task.name)
+        return self._schedule_one_shot_or_release(
+            task_name=task.name,
+            service_id=f"strm_backup_{safe_name}",
+            job_name=f"STRM备份-{task.name}",
+            func=self._run_backup_task_reserved,
+            func_kwargs={"task_name": task.name},
+        )
+
+    def _execute_restore_impl(self, task_name: str, backup_path: str) -> None:
+        """
+        执行恢复任务核心逻辑
+
+        :param task_name (str): 备份任务名称
+        :param backup_path (str): 备份文件路径
+        """
+        if not configer.strm_backup_enabled:
+            return
+
+        task = self._find_backup_task(task_name)
+        if not task:
+            logger.error(f"【STRM恢复】备份任务不存在: {task_name}")
+            return
+
+        logger.info(f"【STRM恢复】开始执行恢复任务: {task_name}, 路径: {backup_path}")
+
+        if task.target_type.value == "local":
+            success, error_msg = backup_helper.restore_from_local(
+                backup_path=backup_path,
+                source_paths=task.source_paths,
+            )
+        elif task.target_type.value == "cloud":
+            success, error_msg = backup_helper.restore_from_cloud(
+                cloud_path=backup_path,
+                source_paths=task.source_paths,
+                client=self.client,
+            )
+        else:
+            success, error_msg = False, f"不支持的备份目标类型: {task.target_type}"
+
+        if success:
+            logger.info(f"【STRM恢复】恢复成功: {task_name}")
+        else:
+            logger.error(f"【STRM恢复】恢复失败: {task_name}, 错误: {error_msg}")
+
+    def run_restore_task(self, task_name: str, backup_path: str) -> None:
+        """
+        执行恢复任务
+
+        :param task_name (str): 备份任务名称
+        :param backup_path (str): 备份文件路径
+        """
+        if not configer.strm_backup_enabled:
+            return
+
+        if not self._try_acquire_backup_task(task_name):
+            logger.info(f"【STRM恢复】任务已在运行，跳过: {task_name}")
+            return
+
+        try:
+            self._execute_restore_impl(task_name, backup_path)
+        finally:
+            self._release_backup_task(task_name)
+
+    def _run_restore_task_reserved(
+        self,
+        task_name: str,
+        backup_path: str,
+    ) -> None:
+        """
+        执行已占位的恢复任务
+
+        用于 start_restore_task 注册的一次性调度任务，避免 TOCTOU 下重复调度
+        调度前已将 task_name 写入运行槽，因此此处不再二次 acquire
+
+        :param task_name (str): 备份任务名称
+        :param backup_path (str): 备份文件路径
+        """
+        self._mark_reserved_task_started(task_name)
+        try:
+            self._execute_restore_impl(task_name, backup_path)
+        finally:
+            self._release_backup_task(task_name)
+
+    def start_restore_task(self, task_name: str, backup_path: str) -> bool:
+        """
+        启动恢复任务（通过主调度器立即执行）
+
+        :param task_name (str): 备份任务名称
+        :param backup_path (str): 备份文件路径
+
+        :return bool: 调度注册成功返回 True
+        """
+        if not self._try_acquire_backup_task(task_name):
+            logger.info(f"【STRM恢复】任务已在运行，跳过调度: {task_name}")
+            return False
+
+        safe_name = BackupStrmHelper._safe_task_name(task_name)
+        return self._schedule_one_shot_or_release(
+            task_name=task_name,
+            service_id=f"strm_restore_{safe_name}",
+            job_name=f"STRM恢复-{task_name}",
+            func=self._run_restore_task_reserved,
+            func_kwargs={
+                "task_name": task_name,
+                "backup_path": backup_path,
+            },
+        )

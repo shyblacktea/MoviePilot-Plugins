@@ -1,1 +1,31 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IExpc3QKCmZyb20gcHlkYW50aWMgaW1wb3J0IEJhc2VNb2RlbCwgRmllbGQKCgpjbGFzcyBCcm93c2VEaXJQYXJhbXMoQmFzZU1vZGVsKToKICAgICIiIgogICAg5rWP6KeI55uu5b2V6K+35rGC5Y+C5pWwCiAgICAiIiIKCiAgICBwYXRoOiBzdHIgPSBGaWVsZChkZWZhdWx0PSIvIiwgZGVzY3JpcHRpb249IuebruW9lei3r+W+hCIpCiAgICBpc19sb2NhbDogYm9vbCA9IEZpZWxkKGRlZmF1bHQ9RmFsc2UsIGRlc2NyaXB0aW9uPSLmmK/lkKbmnKzlnLDnm67lvZUiKQoKCmNsYXNzIERpcmVjdG9yeUl0ZW0oQmFzZU1vZGVsKToKICAgICIiIgogICAg55uu5b2V5p2h55uuCiAgICAiIiIKCiAgICBuYW1lOiBzdHIgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLmlofku7Yv55uu5b2V5ZCNIikKICAgIHBhdGg6IHN0ciA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249Iui3r+W+hCIpCiAgICBpc19kaXI6IGJvb2wgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLmmK/lkKbkuLrnm67lvZUiKQoKCmNsYXNzIEJyb3dzZURpckRhdGEoQmFzZU1vZGVsKToKICAgICIiIgogICAg5rWP6KeI55uu5b2V5ZON5bqU5pWw5o2uCiAgICAiIiIKCiAgICBwYXRoOiBzdHIgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLlvZPliY3ot6/lvoQiKQogICAgaXRlbXM6IExpc3RbRGlyZWN0b3J5SXRlbV0gPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSLnm67lvZXlhoXlrrnliJfooagiKQo=
+from typing import List
+
+from pydantic import BaseModel, Field
+
+
+class BrowseDirParams(BaseModel):
+    """
+    浏览目录请求参数
+    """
+
+    path: str = Field(default="/", description="目录路径")
+    is_local: bool = Field(default=False, description="是否本地目录")
+
+
+class DirectoryItem(BaseModel):
+    """
+    目录条目
+    """
+
+    name: str = Field(..., description="文件/目录名")
+    path: str = Field(..., description="路径")
+    is_dir: bool = Field(..., description="是否为目录")
+
+
+class BrowseDirData(BaseModel):
+    """
+    浏览目录响应数据
+    """
+
+    path: str = Field(..., description="当前路径")
+    items: List[DirectoryItem] = Field(..., description="目录内容列表")

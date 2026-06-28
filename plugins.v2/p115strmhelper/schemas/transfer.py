@@ -1,1 +1,69 @@
-ZnJvbSBkYXRhY2xhc3NlcyBpbXBvcnQgZGF0YWNsYXNzLCBmaWVsZApmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKZnJvbSB0eXBpbmcgaW1wb3J0IExpc3QsIE9wdGlvbmFsLCBUdXBsZQoKZnJvbSBhcHAuY29yZS5jb250ZXh0IGltcG9ydCBNZWRpYUluZm8KZnJvbSBhcHAuY29yZS5tZXRhIGltcG9ydCBNZXRhQmFzZQpmcm9tIGFwcC5zY2hlbWFzIGltcG9ydCBGaWxlSXRlbQoKCkBkYXRhY2xhc3MKY2xhc3MgUmVsYXRlZEZpbGU6CiAgICAiIiIKICAgIOWFs+iBlOaWh+S7tuS/oeaBr++8iOWtl+W5leOAgemfs+i9qO+8iQogICAgIiIiCgogICAgZmlsZWl0ZW06IEZpbGVJdGVtCiAgICB0YXJnZXRfcGF0aDogUGF0aAogICAgZmlsZV90eXBlOiBzdHIKCgpAZGF0YWNsYXNzCmNsYXNzIFRyYW5zZmVyVGFzazoKICAgICIiIgogICAg5pW055CG5Lu75YqhCiAgICAiIiIKCiAgICBmaWxlaXRlbTogRmlsZUl0ZW0KICAgIHRhcmdldF9wYXRoOiBQYXRoCiAgICBtZWRpYWluZm86IE1lZGlhSW5mbwogICAgbWV0YTogTWV0YUJhc2UKICAgIHRyYW5zZmVyX3R5cGU6IHN0cgogICAgb3ZlcndyaXRlX21vZGU6IE9wdGlvbmFsW3N0cl0gPSBOb25lICAjIOimhuebluaooeW8jzogYWx3YXlzLCBzaXplLCBsYXRlc3QsIG5ldmVyCgogICAgbmVlZF9yZW5hbWU6IGJvb2wgPSBUcnVlCiAgICBuZWVkX25vdGlmeTogT3B0aW9uYWxbYm9vbF0gPSBOb25lICAjIOaYr+WQpumcgOimgemAmuefpe+8iOS4jiBNUCDnm67lvZUgbm90aWZ5IOS4gOiHtO+8iQogICAgbmVlZF9zY3JhcGU6IGJvb2wgPSBGYWxzZSAgIyDmmK/lkKbkuI4gTVAgdHJhbnNmZXJfbWVkaWEg55qEIG5lZWRfc2NyYXBlIOS4gOiHtAogICAgc2NyYXBlOiBPcHRpb25hbFtib29sXSA9IE5vbmUgICMgTVAgVHJhbnNmZXJUYXNrLnNjcmFwZSDljp/lp4vlgLzvvIjlj6/pgInvvIkKICAgIG1hbnVhbDogT3B0aW9uYWxbYm9vbF0gPSBOb25lICAjIOaYr+WQpuaJi+WKqOaVtOeQhgogICAgYmFja2dyb3VuZDogT3B0aW9uYWxbYm9vbF0gPSBOb25lICAjIOaYr+WQpuWQjuWPsOi/kOihjAogICAgdXNlcm5hbWU6IE9wdGlvbmFsW3N0cl0gPSBOb25lICAjIOeUqOaIt+WQjQogICAgZG93bmxvYWRlcjogT3B0aW9uYWxbc3RyXSA9IE5vbmUgICMg5LiL6L295ZmoCiAgICBkb3dubG9hZF9oYXNoOiBPcHRpb25hbFtzdHJdID0gTm9uZSAgIyDkuIvovb3orrDlvZVoYXNoCgogICAgdHJhbnNmZXJfYmF0Y2hfaWQ6IE9wdGlvbmFsW3N0cl0gPSBOb25lCiAgICByZWxhdGVkX2ZpbGVzOiBMaXN0WyJSZWxhdGVkRmlsZSJdID0gZmllbGQoZGVmYXVsdF9mYWN0b3J5PWxpc3QpCgogICAgQHByb3BlcnR5CiAgICBkZWYgYWxsX2ZpbGVzKHNlbGYpIC0+IExpc3RbVHVwbGVbRmlsZUl0ZW0sIFBhdGhdXToKICAgICAgICAiIiIKICAgICAgICDov5Tlm57miYDmnInpnIDopoHlpITnkIbnmoTmlofku7bvvIjkuLvop4bpopEr5YWz6IGU5paH5Lu277yJCiAgICAgICAgIiIiCiAgICAgICAgZmlsZXM6IExpc3RbVHVwbGVbRmlsZUl0ZW0sIFBhdGhdXSA9IFsoc2VsZi5maWxlaXRlbSwgc2VsZi50YXJnZXRfcGF0aCldCiAgICAgICAgZm9yIHJmIGluIHNlbGYucmVsYXRlZF9maWxlczoKICAgICAgICAgICAgZmlsZXMuYXBwZW5kKChyZi5maWxlaXRlbSwgcmYudGFyZ2V0X3BhdGgpKQogICAgICAgIHJldHVybiBmaWxlcwoKICAgIEBwcm9wZXJ0eQogICAgZGVmIHRhcmdldF9kaXIoc2VsZikgLT4gUGF0aDoKICAgICAgICAiIiIKICAgICAgICDojrflj5bnm67moIfnm67lvZUKICAgICAgICAiIiIKICAgICAgICByZXR1cm4gc2VsZi50YXJnZXRfcGF0aC5wYXJlbnQKCiAgICBAcHJvcGVydHkKICAgIGRlZiB0YXJnZXRfbmFtZShzZWxmKSAtPiBzdHI6CiAgICAgICAgIiIiCiAgICAgICAg6I635Y+W55uu5qCH5paH5Lu25ZCNCiAgICAgICAgIiIiCiAgICAgICAgcmV0dXJuIHNlbGYudGFyZ2V0X3BhdGgubmFtZQo=
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import List, Optional, Tuple
+
+from app.core.context import MediaInfo
+from app.core.meta import MetaBase
+from app.schemas import FileItem
+
+
+@dataclass
+class RelatedFile:
+    """
+    关联文件信息（字幕、音轨）
+    """
+
+    fileitem: FileItem
+    target_path: Path
+    file_type: str
+
+
+@dataclass
+class TransferTask:
+    """
+    整理任务
+    """
+
+    fileitem: FileItem
+    target_path: Path
+    mediainfo: MediaInfo
+    meta: MetaBase
+    transfer_type: str
+    overwrite_mode: Optional[str] = None  # 覆盖模式: always, size, latest, never
+
+    need_rename: bool = True
+    need_notify: Optional[bool] = None  # 是否需要通知（与 MP 目录 notify 一致）
+    need_scrape: bool = False  # 是否与 MP transfer_media 的 need_scrape 一致
+    scrape: Optional[bool] = None  # MP TransferTask.scrape 原始值（可选）
+    manual: Optional[bool] = None  # 是否手动整理
+    background: Optional[bool] = None  # 是否后台运行
+    username: Optional[str] = None  # 用户名
+    downloader: Optional[str] = None  # 下载器
+    download_hash: Optional[str] = None  # 下载记录hash
+
+    transfer_batch_id: Optional[str] = None
+    related_files: List["RelatedFile"] = field(default_factory=list)
+
+    @property
+    def all_files(self) -> List[Tuple[FileItem, Path]]:
+        """
+        返回所有需要处理的文件（主视频+关联文件）
+        """
+        files: List[Tuple[FileItem, Path]] = [(self.fileitem, self.target_path)]
+        for rf in self.related_files:
+            files.append((rf.fileitem, rf.target_path))
+        return files
+
+    @property
+    def target_dir(self) -> Path:
+        """
+        获取目标目录
+        """
+        return self.target_path.parent
+
+    @property
+    def target_name(self) -> str:
+        """
+        获取目标文件名
+        """
+        return self.target_path.name

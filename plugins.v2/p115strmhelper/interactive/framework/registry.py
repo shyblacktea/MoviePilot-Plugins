@@ -1,1 +1,179 @@
-ZnJvbSBkYXRhY2xhc3NlcyBpbXBvcnQgZGF0YWNsYXNzCmZyb20gdHlwaW5nIGltcG9ydCBEaWN0LCBDYWxsYWJsZQoKZnJvbSBhcHAubG9nIGltcG9ydCBsb2dnZXIKCgpAZGF0YWNsYXNzCmNsYXNzIENvbW1hbmREZWZpbml0aW9uOgogICAgIiIiCiAgICDlkb3ku6TnmoTlrprkuYnmlbDmja7nsbvvvIznlKjkuo7ms6jlhozlkozmn6Xmib7lkb3ku6QKICAgICIiIgoKICAgICMg5ZG95Luk55qE5ZCN56ewCiAgICBuYW1lOiBzdHIKICAgICMg5ZG95Luk55qE55+t56CBCiAgICBjb2RlOiBzdHIKICAgICMg57uR5a6a55qE5aSE55CG5Zmo5pa55rOV5ZCN77yM6Ieq5Yqo5LuO6KOF6aWw5Zmo5Ye95pWw5ZCN6I635Y+WCiAgICBoYW5kbGVyX25hbWU6IHN0cgoKCmNsYXNzIENvbW1hbmRSZWdpc3RyeToKICAgICIiIgogICAg5LiA5Liq54us56uL55qE5ZG95Luk5rOo5YaM6KGo77yM55So5LqO5rOo5YaM5ZKM5p+l5om+5ZG95LukCiAgICAiIiIKCiAgICBkZWYgX19pbml0X18oc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAg5Yid5aeL5YyW5ZG95Luk5rOo5YaM6KGoCiAgICAgICAgIiIiCiAgICAgICAgc2VsZi5fYnlfbmFtZTogRGljdFtzdHIsIENvbW1hbmREZWZpbml0aW9uXSA9IHt9CiAgICAgICAgc2VsZi5fYnlfY29kZTogRGljdFtzdHIsIENvbW1hbmREZWZpbml0aW9uXSA9IHt9CgogICAgZGVmIGNvbW1hbmQoc2VsZiwgbmFtZTogc3RyLCBjb2RlOiBzdHIpOgogICAgICAgICIiIgogICAgICAgIOWRveS7pOijhemlsOWZqO+8jOeUqOS6juazqOWGjOWRveS7pAogICAgICAgIDpwYXJhbSBuYW1lOiDlkb3ku6TlkI3np7AKICAgICAgICA6cGFyYW0gY29kZTog5ZG95Luk55+t56CBCiAgICAgICAgIiIiCgogICAgICAgIGRlZiBkZWNvcmF0b3IoZnVuYzogQ2FsbGFibGUpOgogICAgICAgICAgICAiIiIKICAgICAgICAgICAg5ZG95Luk6KOF6aWw5Zmo5Ye95pWw77yM55So5LqO5rOo5YaM5ZG95LukCiAgICAgICAgICAgIDpwYXJhbSBmdW5jOiDlpITnkIblmajlh73mlbAKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIGhhbmRsZXJfbmFtZSA9IGZ1bmMuX19uYW1lX18KICAgICAgICAgICAgaWYgbmFtZSBpbiBzZWxmLl9ieV9uYW1lOgogICAgICAgICAgICAgICAgcmFpc2UgVmFsdWVFcnJvcihmIuWRveS7pCAne25hbWV9JyDlt7Looqvms6jlhozjgIIiKQogICAgICAgICAgICBpZiBjb2RlIGluIHNlbGYuX2J5X2NvZGU6CiAgICAgICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKGYi5ZG95Luk55+t56CBICd7Y29kZX0nIOW3suiiq+azqOWGjOOAgiIpCiAgICAgICAgICAgIGNvbW1hbmRfZGVmID0gQ29tbWFuZERlZmluaXRpb24oCiAgICAgICAgICAgICAgICBuYW1lPW5hbWUsIGNvZGU9Y29kZSwgaGFuZGxlcl9uYW1lPWhhbmRsZXJfbmFtZQogICAgICAgICAgICApCiAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZyhmIuazqOWGjCBjb21tYW5kIOWRveS7pDoge25hbWV9ICh7Y29kZX0pIC0+IHtoYW5kbGVyX25hbWV9IikKICAgICAgICAgICAgc2VsZi5fYnlfbmFtZVtuYW1lXSA9IGNvbW1hbmRfZGVmCiAgICAgICAgICAgIHNlbGYuX2J5X2NvZGVbY29kZV0gPSBjb21tYW5kX2RlZgogICAgICAgICAgICByZXR1cm4gZnVuYwoKICAgICAgICByZXR1cm4gZGVjb3JhdG9yCgogICAgZGVmIGdldF9ieV9uYW1lKHNlbGYsIG5hbWU6IHN0cikgLT4gQ29tbWFuZERlZmluaXRpb24gfCBOb25lOgogICAgICAgICIiIgogICAgICAgIOagueaNruWRveS7pOWQjeensOiOt+WPluWRveS7pOWumuS5iQogICAgICAgIDpwYXJhbSBuYW1lOiDlkb3ku6TlkI3np7AKICAgICAgICAiIiIKICAgICAgICBjbWRfZGVmID0gc2VsZi5fYnlfbmFtZS5nZXQobmFtZSkKICAgICAgICBpZiBjbWRfZGVmOgogICAgICAgICAgICBsb2dnZXIuZGVidWcoZiLojrflj5blkb3ku6TlrprkuYk6IHtuYW1lfSAtPiB7Y21kX2RlZi5oYW5kbGVyX25hbWV9IikKICAgICAgICBlbHNlOgogICAgICAgICAgICBsb2dnZXIud2FybmluZyhmIuacquaJvuWIsOWRveS7pOWumuS5iToge25hbWV9IikKICAgICAgICByZXR1cm4gY21kX2RlZgoKICAgIGRlZiBnZXRfYnlfY29kZShzZWxmLCBjb2RlOiBzdHIpIC0+IENvbW1hbmREZWZpbml0aW9uIHwgTm9uZToKICAgICAgICAiIiIKICAgICAgICDmoLnmja7lkb3ku6Tnn63noIHojrflj5blkb3ku6TlrprkuYkKICAgICAgICA6cGFyYW0gY29kZTog5ZG95Luk55+t56CBCiAgICAgICAgIiIiCiAgICAgICAgY21kX2RlZiA9IHNlbGYuX2J5X2NvZGUuZ2V0KGNvZGUpCiAgICAgICAgaWYgY21kX2RlZjoKICAgICAgICAgICAgbG9nZ2VyLmRlYnVnKGYi6I635Y+W5ZG95Luk5a6a5LmJOiB7Y29kZX0gLT4ge2NtZF9kZWYuaGFuZGxlcl9uYW1lfSIpCiAgICAgICAgZWxzZToKICAgICAgICAgICAgbG9nZ2VyLndhcm5pbmcoZiLmnKrmib7liLDlkb3ku6TlrprkuYk6IHtjb2RlfSIpCiAgICAgICAgcmV0dXJuIGNtZF9kZWYKCiAgICBkZWYgY2xlYXIoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAg5riF56m65omA5pyJ5bey5rOo5YaM55qE5ZG95LukCiAgICAgICAgIiIiCiAgICAgICAgc2VsZi5fYnlfbmFtZS5jbGVhcigpCiAgICAgICAgc2VsZi5fYnlfY29kZS5jbGVhcigpCiAgICAgICAgbG9nZ2VyLmRlYnVnKCLlt7LmuIXnqbrmiYDmnInms6jlhoznmoTlkb3ku6TjgIIiKQoKCkBkYXRhY2xhc3MKY2xhc3MgVmlld0RlZmluaXRpb246CiAgICAiIiIKICAgIOinhuWbvueahOWumuS5ieaVsOaNruexu++8jOeUqOS6juazqOWGjOWSjOafpeaJvuinhuWbvgogICAgIiIiCgogICAgIyDop4blm77nmoTlkI3np7AKICAgIG5hbWU6IHN0cgogICAgIyDop4blm77nmoTnn63noIEKICAgIGNvZGU6IHN0cgogICAgIyDnu5HlrprnmoTmuLLmn5Plmajmlrnms5XlkI3vvIzoh6rliqjku47oo4XppbDlmajlh73mlbDlkI3ojrflj5YKICAgIHJlbmRlcmVyX25hbWU6IHN0cgoKCmNsYXNzIFZpZXdSZWdpc3RyeToKICAgICIiIgogICAg5LiA5Liq54us56uL55qE6KeG5Zu+5rOo5YaM6KGo77yM55So5LqO5rOo5YaM5ZKM5p+l5om+6KeG5Zu+CiAgICAiIiIKCiAgICBkZWYgX19pbml0X18oc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAg5Yid5aeL5YyW6KeG5Zu+5rOo5YaM6KGoCiAgICAgICAgIiIiCiAgICAgICAgc2VsZi5fYnlfbmFtZTogRGljdFtzdHIsIFZpZXdEZWZpbml0aW9uXSA9IHt9CiAgICAgICAgc2VsZi5fYnlfY29kZTogRGljdFtzdHIsIFZpZXdEZWZpbml0aW9uXSA9IHt9CgogICAgZGVmIHZpZXcoc2VsZiwgbmFtZTogc3RyLCBjb2RlOiBzdHIpOgogICAgICAgICIiIgogICAgICAgIOinhuWbvuijhemlsOWZqO+8jOeUqOS6juazqOWGjOinhuWbvgogICAgICAgIDpwYXJhbSBuYW1lOiDop4blm77lkI3np7AKICAgICAgICA6cGFyYW0gY29kZTog6KeG5Zu+55+t56CBCiAgICAgICAgIiIiCgogICAgICAgIGRlZiBkZWNvcmF0b3IoZnVuYzogQ2FsbGFibGUpOgogICAgICAgICAgICAiIiIKICAgICAgICAgICAg6KeG5Zu+6KOF6aWw5Zmo5Ye95pWw77yM55So5LqO5rOo5YaM6KeG5Zu+CiAgICAgICAgICAgIDpwYXJhbSBmdW5jOiDmuLLmn5Plmajlh73mlbAKICAgICAgICAgICAgIiIiCiAgICAgICAgICAgIHJlbmRlcmVyX25hbWUgPSBmdW5jLl9fbmFtZV9fCiAgICAgICAgICAgIGlmIG5hbWUgaW4gc2VsZi5fYnlfbmFtZToKICAgICAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoZiLop4blm74gJ3tuYW1lfScg5bey6KKr5rOo5YaM44CCIikKICAgICAgICAgICAgaWYgY29kZSBpbiBzZWxmLl9ieV9jb2RlOgogICAgICAgICAgICAgICAgcmFpc2UgVmFsdWVFcnJvcihmIuinhuWbvuefreeggSAne2NvZGV9JyDlt7Looqvms6jlhozjgIIiKQogICAgICAgICAgICB2aWV3X2RlZiA9IFZpZXdEZWZpbml0aW9uKG5hbWU9bmFtZSwgY29kZT1jb2RlLCByZW5kZXJlcl9uYW1lPXJlbmRlcmVyX25hbWUpCiAgICAgICAgICAgIGxvZ2dlci5kZWJ1ZyhmIuazqOWGjCB2aWV3IOinhueqlzoge25hbWV9ICh7Y29kZX0pIC0+IHtyZW5kZXJlcl9uYW1lfSIpCiAgICAgICAgICAgIHNlbGYuX2J5X25hbWVbbmFtZV0gPSB2aWV3X2RlZgogICAgICAgICAgICBzZWxmLl9ieV9jb2RlW2NvZGVdID0gdmlld19kZWYKICAgICAgICAgICAgcmV0dXJuIGZ1bmMKCiAgICAgICAgcmV0dXJuIGRlY29yYXRvcgoKICAgIGRlZiBnZXRfYnlfbmFtZShzZWxmLCBuYW1lOiBzdHIpIC0+IFZpZXdEZWZpbml0aW9uIHwgTm9uZToKICAgICAgICAiIiIKICAgICAgICDmoLnmja7op4blm77lkI3np7Dojrflj5bop4blm77lrprkuYkKICAgICAgICA6cGFyYW0gbmFtZTog6KeG5Zu+5ZCN56ewCiAgICAgICAgIiIiCiAgICAgICAgdmlld19kZWYgPSBzZWxmLl9ieV9uYW1lLmdldChuYW1lKQogICAgICAgIGlmIHZpZXdfZGVmOgogICAgICAgICAgICBsb2dnZXIuZGVidWcoZiLojrflj5bop4blm77lrprkuYk6IHtuYW1lfSAtPiB7dmlld19kZWYucmVuZGVyZXJfbmFtZX0iKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKGYi5pyq5om+5Yiw6KeG5Zu+5a6a5LmJOiB7bmFtZX0iKQogICAgICAgIHJldHVybiB2aWV3X2RlZgoKICAgIGRlZiBnZXRfYnlfY29kZShzZWxmLCBjb2RlOiBzdHIpIC0+IFZpZXdEZWZpbml0aW9uIHwgTm9uZToKICAgICAgICAiIiIKICAgICAgICDmoLnmja7op4blm77nn63noIHojrflj5bop4blm77lrprkuYkKICAgICAgICA6cGFyYW0gY29kZTog6KeG5Zu+55+t56CBCiAgICAgICAgIiIiCiAgICAgICAgdmlld19kZWYgPSBzZWxmLl9ieV9jb2RlLmdldChjb2RlKQogICAgICAgIGlmIHZpZXdfZGVmOgogICAgICAgICAgICBsb2dnZXIuZGVidWcoZiLojrflj5bop4blm77lrprkuYk6IHtjb2RlfSAtPiB7dmlld19kZWYucmVuZGVyZXJfbmFtZX0iKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKGYi5pyq5om+5Yiw6KeG5Zu+5a6a5LmJOiB7Y29kZX0iKQogICAgICAgIHJldHVybiB2aWV3X2RlZgoKICAgIGRlZiBjbGVhcihzZWxmKToKICAgICAgICAiIiIKICAgICAgICDmuIXnqbrmiYDmnInlt7Lms6jlhoznmoTlkb3ku6QKICAgICAgICAiIiIKICAgICAgICBzZWxmLl9ieV9uYW1lLmNsZWFyKCkKICAgICAgICBzZWxmLl9ieV9jb2RlLmNsZWFyKCkKICAgICAgICBsb2dnZXIuZGVidWcoIuW3sua4heepuuaJgOacieazqOWGjOeahOinhuWbvuOAgiIpCgoKIyAjIOWIm+W7uuWFqOWxgOeahOWRveS7pOWSjOinhuWbvuazqOWGjOihqOWunuS+iwpjb21tYW5kX3JlZ2lzdHJ5ID0gQ29tbWFuZFJlZ2lzdHJ5KCkKdmlld19yZWdpc3RyeSA9IFZpZXdSZWdpc3RyeSgpCg==
+from dataclasses import dataclass
+from typing import Dict, Callable
+
+from app.log import logger
+
+
+@dataclass
+class CommandDefinition:
+    """
+    命令的定义数据类，用于注册和查找命令
+    """
+
+    # 命令的名称
+    name: str
+    # 命令的短码
+    code: str
+    # 绑定的处理器方法名，自动从装饰器函数名获取
+    handler_name: str
+
+
+class CommandRegistry:
+    """
+    一个独立的命令注册表，用于注册和查找命令
+    """
+
+    def __init__(self):
+        """
+        初始化命令注册表
+        """
+        self._by_name: Dict[str, CommandDefinition] = {}
+        self._by_code: Dict[str, CommandDefinition] = {}
+
+    def command(self, name: str, code: str):
+        """
+        命令装饰器，用于注册命令
+        :param name: 命令名称
+        :param code: 命令短码
+        """
+
+        def decorator(func: Callable):
+            """
+            命令装饰器函数，用于注册命令
+            :param func: 处理器函数
+            """
+            handler_name = func.__name__
+            if name in self._by_name:
+                raise ValueError(f"命令 '{name}' 已被注册。")
+            if code in self._by_code:
+                raise ValueError(f"命令短码 '{code}' 已被注册。")
+            command_def = CommandDefinition(
+                name=name, code=code, handler_name=handler_name
+            )
+            logger.debug(f"注册 command 命令: {name} ({code}) -> {handler_name}")
+            self._by_name[name] = command_def
+            self._by_code[code] = command_def
+            return func
+
+        return decorator
+
+    def get_by_name(self, name: str) -> CommandDefinition | None:
+        """
+        根据命令名称获取命令定义
+        :param name: 命令名称
+        """
+        cmd_def = self._by_name.get(name)
+        if cmd_def:
+            logger.debug(f"获取命令定义: {name} -> {cmd_def.handler_name}")
+        else:
+            logger.warning(f"未找到命令定义: {name}")
+        return cmd_def
+
+    def get_by_code(self, code: str) -> CommandDefinition | None:
+        """
+        根据命令短码获取命令定义
+        :param code: 命令短码
+        """
+        cmd_def = self._by_code.get(code)
+        if cmd_def:
+            logger.debug(f"获取命令定义: {code} -> {cmd_def.handler_name}")
+        else:
+            logger.warning(f"未找到命令定义: {code}")
+        return cmd_def
+
+    def clear(self):
+        """
+        清空所有已注册的命令
+        """
+        self._by_name.clear()
+        self._by_code.clear()
+        logger.debug("已清空所有注册的命令。")
+
+
+@dataclass
+class ViewDefinition:
+    """
+    视图的定义数据类，用于注册和查找视图
+    """
+
+    # 视图的名称
+    name: str
+    # 视图的短码
+    code: str
+    # 绑定的渲染器方法名，自动从装饰器函数名获取
+    renderer_name: str
+
+
+class ViewRegistry:
+    """
+    一个独立的视图注册表，用于注册和查找视图
+    """
+
+    def __init__(self):
+        """
+        初始化视图注册表
+        """
+        self._by_name: Dict[str, ViewDefinition] = {}
+        self._by_code: Dict[str, ViewDefinition] = {}
+
+    def view(self, name: str, code: str):
+        """
+        视图装饰器，用于注册视图
+        :param name: 视图名称
+        :param code: 视图短码
+        """
+
+        def decorator(func: Callable):
+            """
+            视图装饰器函数，用于注册视图
+            :param func: 渲染器函数
+            """
+            renderer_name = func.__name__
+            if name in self._by_name:
+                raise ValueError(f"视图 '{name}' 已被注册。")
+            if code in self._by_code:
+                raise ValueError(f"视图短码 '{code}' 已被注册。")
+            view_def = ViewDefinition(name=name, code=code, renderer_name=renderer_name)
+            logger.debug(f"注册 view 视窗: {name} ({code}) -> {renderer_name}")
+            self._by_name[name] = view_def
+            self._by_code[code] = view_def
+            return func
+
+        return decorator
+
+    def get_by_name(self, name: str) -> ViewDefinition | None:
+        """
+        根据视图名称获取视图定义
+        :param name: 视图名称
+        """
+        view_def = self._by_name.get(name)
+        if view_def:
+            logger.debug(f"获取视图定义: {name} -> {view_def.renderer_name}")
+        else:
+            logger.warning(f"未找到视图定义: {name}")
+        return view_def
+
+    def get_by_code(self, code: str) -> ViewDefinition | None:
+        """
+        根据视图短码获取视图定义
+        :param code: 视图短码
+        """
+        view_def = self._by_code.get(code)
+        if view_def:
+            logger.debug(f"获取视图定义: {code} -> {view_def.renderer_name}")
+        else:
+            logger.warning(f"未找到视图定义: {code}")
+        return view_def
+
+    def clear(self):
+        """
+        清空所有已注册的命令
+        """
+        self._by_name.clear()
+        self._by_code.clear()
+        logger.debug("已清空所有注册的视图。")
+
+
+# # 创建全局的命令和视图注册表实例
+command_registry = CommandRegistry()
+view_registry = ViewRegistry()

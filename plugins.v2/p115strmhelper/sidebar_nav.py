@@ -1,1 +1,32 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IEFueSwgRGljdCwgTGlzdAoKClNJREVCQVJfTkFWX0lURU1TOiBEaWN0W3N0ciwgRGljdFtzdHIsIEFueV1dID0gewogICAgInN0YXJ0IjogewogICAgICAgICJwbHVnaW5faWQiOiAiUDExNVN0cm1IZWxwZXIiLAogICAgICAgICJuYXZfa2V5IjogInN0YXJ0IiwKICAgICAgICAidGl0bGUiOiAiMTE15Yqp5omL5Luq6KGo55uYIiwKICAgICAgICAiaWNvbiI6ICJtZGktc3BlZWRvbWV0ZXIiLAogICAgICAgICJzZWN0aW9uIjogInN0YXJ0IiwKICAgICAgICAib3JkZXIiOiAxMCwKICAgIH0sCn0KCgpkZWYgc2lkZWJhcl9uYXZfa2V5c19rbm93bigpIC0+IGZyb3plbnNldFtzdHJdOgogICAgIiIiCiAgICDlt7Lms6jlhoznmoQgbmF2X2tleSDpm4blkIgKICAgICIiIgogICAgcmV0dXJuIGZyb3plbnNldChTSURFQkFSX05BVl9JVEVNUy5rZXlzKCkpCgoKZGVmIGJ1aWxkX3NpZGViYXJfbmF2KGtleXM6IExpc3Rbc3RyXSkgLT4gTGlzdFtEaWN0W3N0ciwgQW55XV06CiAgICAiIiIKICAgIOaMiSBrZXlzIOmhuuW6j+i/lOWbnuWvvOiIqumhue+8iOavj+mhueS4uueLrOeri+WJr+acrO+8iQogICAgIiIiCiAgICBvdXQ6IExpc3RbRGljdFtzdHIsIEFueV1dID0gW10KICAgIGZvciBrIGluIGtleXM6CiAgICAgICAgaXRlbSA9IFNJREVCQVJfTkFWX0lURU1TLmdldChrKQogICAgICAgIGlmIGl0ZW06CiAgICAgICAgICAgIG91dC5hcHBlbmQoZGljdChpdGVtKSkKICAgIHJldHVybiBvdXQK
+from typing import Any, Dict, List
+
+
+SIDEBAR_NAV_ITEMS: Dict[str, Dict[str, Any]] = {
+    "start": {
+        "plugin_id": "P115StrmHelper",
+        "nav_key": "start",
+        "title": "115助手仪表盘",
+        "icon": "mdi-speedometer",
+        "section": "start",
+        "order": 10,
+    },
+}
+
+
+def sidebar_nav_keys_known() -> frozenset[str]:
+    """
+    已注册的 nav_key 集合
+    """
+    return frozenset(SIDEBAR_NAV_ITEMS.keys())
+
+
+def build_sidebar_nav(keys: List[str]) -> List[Dict[str, Any]]:
+    """
+    按 keys 顺序返回导航项（每项为独立副本）
+    """
+    out: List[Dict[str, Any]] = []
+    for k in keys:
+        item = SIDEBAR_NAV_ITEMS.get(k)
+        if item:
+            out.append(dict(item))
+    return out

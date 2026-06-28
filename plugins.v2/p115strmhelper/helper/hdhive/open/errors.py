@@ -1,1 +1,154 @@
-ZnJvbSB0eXBpbmcgaW1wb3J0IEFueQoKZnJvbSBodHRweCBpbXBvcnQgUmVzcG9uc2UKCgpjbGFzcyBIREhpdmVBUElFcnJvcihFeGNlcHRpb24pOgogICAgIiIiCiAgICBIREhpdmUgQVBJIOmUmeivr+eahOWfuuexuwogICAgIiIiCgogICAgZGVmIF9faW5pdF9fKAogICAgICAgIHNlbGYsCiAgICAgICAgY29kZTogc3RyLAogICAgICAgIG1lc3NhZ2U6IHN0ciwKICAgICAgICBkZXNjcmlwdGlvbjogc3RyIHwgTm9uZSA9IE5vbmUsCiAgICAgICAgaHR0cF9zdGF0dXM6IGludCB8IE5vbmUgPSBOb25lLAogICAgICAgICosCiAgICAgICAgbGltaXRfc2NvcGU6IHN0ciB8IE5vbmUgPSBOb25lLAogICAgICAgIHJldHJ5X2FmdGVyOiBmbG9hdCB8IE5vbmUgPSBOb25lLAogICAgKSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIDpwYXJhbSBjb2RlIChzdHIpOiDmnI3liqHnq6/kuJrliqHplJnor6/noIHmiJblm57pgIDkuLogSFRUUCDnirbmgIHnoIHlrZfnrKbkuLIKICAgICAgICA6cGFyYW0gbWVzc2FnZSAoc3RyKTog6ZSZ6K+v5pGY6KaBCiAgICAgICAgOnBhcmFtIGRlc2NyaXB0aW9uIChzdHIpOiDlj6/pgInor6bnu4bor7TmmI4KICAgICAgICA6cGFyYW0gaHR0cF9zdGF0dXMgKGludCk6IOWTjeW6lCBIVFRQIOeKtuaAgeeggQogICAgICAgIDpwYXJhbSBsaW1pdF9zY29wZSAoc3RyKTog6ZmQ5rWB6IyD5Zu077yIZ2xvYmFsL2FwcC91c2Vy77yJCiAgICAgICAgOnBhcmFtIHJldHJ5X2FmdGVyIChmbG9hdCk6IFJldHJ5LUFmdGVyIOenkuaVsAogICAgICAgICIiIgogICAgICAgIHNlbGYuY29kZSA9IGNvZGUKICAgICAgICBzZWxmLm1lc3NhZ2UgPSBtZXNzYWdlCiAgICAgICAgc2VsZi5kZXNjcmlwdGlvbiA9IGRlc2NyaXB0aW9uCiAgICAgICAgc2VsZi5odHRwX3N0YXR1cyA9IGh0dHBfc3RhdHVzCiAgICAgICAgc2VsZi5saW1pdF9zY29wZSA9IGxpbWl0X3Njb3BlCiAgICAgICAgc2VsZi5yZXRyeV9hZnRlciA9IHJldHJ5X2FmdGVyCiAgICAgICAgc3VwZXIoKS5fX2luaXRfXygKICAgICAgICAgICAgZiJbe2NvZGV9XSB7bWVzc2FnZX0iICsgKGYiIOKAlCB7ZGVzY3JpcHRpb259IiBpZiBkZXNjcmlwdGlvbiBlbHNlICIiKQogICAgICAgICkKCgpjbGFzcyBIREhpdmVBdXRoRXJyb3IoSERIaXZlQVBJRXJyb3IpOgogICAgIiIiCiAgICA0MDEg5oiW6Ym05p2D55u45YWz6ZSZ6K+vCiAgICAiIiIKCgpjbGFzcyBIREhpdmVSZWF1dGhSZXF1aXJlZEVycm9yKEhESGl2ZUF1dGhFcnJvcik6CiAgICAiIiIKICAgIOmcgOimgemHjeaWsCBPQXV0aCDmjojmnYPvvIhPUEVOQVBJX1JFQVVUSF9SRVFVSVJFRO+8iQogICAgIiIiCgoKY2xhc3MgSERIaXZlUmVmcmVzaFJlcXVpcmVkRXJyb3IoSERIaXZlQXV0aEVycm9yKToKICAgICIiIgogICAgQWNjZXNzIFRva2VuIOmcgOWIt+aWsO+8iE9QRU5BUElfUkVGUkVTSF9SRVFVSVJFRO+8iQogICAgIiIiCgoKY2xhc3MgSERIaXZlRm9yYmlkZGVuRXJyb3IoSERIaXZlQVBJRXJyb3IpOgogICAgIiIiCiAgICA0MDMg56aB5q2i6K6/6ZeuCiAgICAiIiIKCgpjbGFzcyBIREhpdmVOb3RGb3VuZEVycm9yKEhESGl2ZUFQSUVycm9yKToKICAgICIiIgogICAgNDA0IOi1hOa6kOS4jeWtmOWcqAogICAgIiIiCgoKY2xhc3MgSERIaXZlUmF0ZUxpbWl0RXJyb3IoSERIaXZlQVBJRXJyb3IpOgogICAgIiIiCiAgICA0Mjkg6ZmQ5rWB5oiW6YWN6aKdCiAgICAiIiIKCgpjbGFzcyBIREhpdmVJbnN1ZmZpY2llbnRQb2ludHNFcnJvcihIREhpdmVBUElFcnJvcik6CiAgICAiIiIKICAgIDQwMiDnp6/liIbkuI3otrPvvIhJTlNVRkZJQ0lFTlRfUE9JTlRT77yJCiAgICAiIiIKCgpfRVJST1JfTUFQOiBkaWN0W2ludCwgdHlwZVtIREhpdmVBUElFcnJvcl1dID0gewogICAgNDAxOiBIREhpdmVBdXRoRXJyb3IsCiAgICA0MDM6IEhESGl2ZUZvcmJpZGRlbkVycm9yLAogICAgNDA0OiBIREhpdmVOb3RGb3VuZEVycm9yLAogICAgNDAyOiBIREhpdmVJbnN1ZmZpY2llbnRQb2ludHNFcnJvciwKICAgIDQyOTogSERIaXZlUmF0ZUxpbWl0RXJyb3IsCn0KCl9DT0RFX01BUDogZGljdFtzdHIsIHR5cGVbSERIaXZlQVBJRXJyb3JdXSA9IHsKICAgICJNSVNTSU5HX0FQSV9LRVkiOiBIREhpdmVBdXRoRXJyb3IsCiAgICAiSU5WQUxJRF9BUElfS0VZIjogSERIaXZlQXV0aEVycm9yLAogICAgIkRJU0FCTEVEX0FQSV9LRVkiOiBIREhpdmVBdXRoRXJyb3IsCiAgICAiRVhQSVJFRF9BUElfS0VZIjogSERIaXZlQXV0aEVycm9yLAogICAgIk9QRU5BUElfUkVGUkVTSF9SRVFVSVJFRCI6IEhESGl2ZVJlZnJlc2hSZXF1aXJlZEVycm9yLAogICAgIk9QRU5BUElfUkVBVVRIX1JFUVVJUkVEIjogSERIaXZlUmVhdXRoUmVxdWlyZWRFcnJvciwKICAgICJJTlZBTElEX09QRU5BUElfVVNFUl9UT0tFTiI6IEhESGl2ZUF1dGhFcnJvciwKICAgICJPUEVOQVBJX1VTRVJfUkVRVUlSRUQiOiBIREhpdmVBdXRoRXJyb3IsCiAgICAiU0NPUEVfTk9UX0FMTE9XRUQiOiBIREhpdmVGb3JiaWRkZW5FcnJvciwKICAgICJVU0VSX1NDT1BFX05PVF9BTExPV0VEIjogSERIaXZlRm9yYmlkZGVuRXJyb3IsCiAgICAiVklQX1JFUVVJUkVEIjogSERIaXZlRm9yYmlkZGVuRXJyb3IsCiAgICAiRU5EUE9JTlRfRElTQUJMRUQiOiBIREhpdmVGb3JiaWRkZW5FcnJvciwKICAgICJFTkRQT0lOVF9RVU9UQV9FWENFRURFRCI6IEhESGl2ZVJhdGVMaW1pdEVycm9yLAogICAgIlJBVEVfTElNSVRfRVhDRUVERUQiOiBIREhpdmVSYXRlTGltaXRFcnJvciwKICAgICJHTE9CQUxfUkFURV9MSU1JVF9FWENFRURFRCI6IEhESGl2ZVJhdGVMaW1pdEVycm9yLAogICAgIkFQUF9SQVRFX0xJTUlUX0VYQ0VFREVEIjogSERIaXZlUmF0ZUxpbWl0RXJyb3IsCiAgICAiVVNFUl9SQVRFX0xJTUlUX0VYQ0VFREVEIjogSERIaXZlUmF0ZUxpbWl0RXJyb3IsCiAgICAiT1BFTkFQSV9DT09MRE9XTiI6IEhESGl2ZVJhdGVMaW1pdEVycm9yLAogICAgIklOU1VGRklDSUVOVF9QT0lOVFMiOiBIREhpdmVJbnN1ZmZpY2llbnRQb2ludHNFcnJvciwKfQoKCmRlZiBfcGFyc2VfcmV0cnlfYWZ0ZXIocmVzcDogUmVzcG9uc2UpIC0+IGZsb2F0IHwgTm9uZToKICAgIHJhdyA9IHJlc3AuaGVhZGVycy5nZXQoIlJldHJ5LUFmdGVyIikKICAgIGlmIG5vdCByYXc6CiAgICAgICAgcmV0dXJuIE5vbmUKICAgIHRyeToKICAgICAgICByZXR1cm4gZmxvYXQocmF3KQogICAgZXhjZXB0IFZhbHVlRXJyb3I6CiAgICAgICAgcmV0dXJuIE5vbmUKCgpkZWYgcmFpc2VfZm9yX3Jlc3BvbnNlKHJlc3A6IFJlc3BvbnNlKSAtPiBOb25lOgogICAgIiIiCiAgICDop6PmnpDnu5/kuIAgSlNPTiDplJnor6/kvZPlubbmipvlh7rlr7nlupTlvILluLjvvJvmiJDlip/lk43lupTliJnnm7TmjqXov5Tlm54KCiAgICA6cGFyYW0gcmVzcCAoUmVzcG9uc2UpOiBodHRweCDlk43lupTlr7nosaEKICAgIDpyYWlzZXMgSERIaXZlQVBJRXJyb3I6IOS4muWKoeWksei0peaIliBIVFRQIOmUmeivr+aXtgogICAgIiIiCiAgICByZXRyeV9hZnRlciA9IF9wYXJzZV9yZXRyeV9hZnRlcihyZXNwKQogICAgdHJ5OgogICAgICAgIGJvZHk6IGRpY3Rbc3RyLCBBbnldID0gcmVzcC5qc29uKCkKICAgIGV4Y2VwdCBFeGNlcHRpb246CiAgICAgICAgcmVzcC5yYWlzZV9mb3Jfc3RhdHVzKCkKICAgICAgICByZXR1cm4KCiAgICBpZiBib2R5LmdldCgic3VjY2VzcyIpOgogICAgICAgIHJldHVybgoKICAgIGNvZGU6IHN0ciA9IHN0cihib2R5LmdldCgiY29kZSIsIHJlc3Auc3RhdHVzX2NvZGUpKQogICAgbWVzc2FnZTogc3RyID0gYm9keS5nZXQoIm1lc3NhZ2UiLCAiVW5rbm93biBlcnJvciIpCiAgICBkZXNjcmlwdGlvbjogc3RyIHwgTm9uZSA9IGJvZHkuZ2V0KCJkZXNjcmlwdGlvbiIpCiAgICBodHRwX3N0YXR1czogaW50ID0gcmVzcC5zdGF0dXNfY29kZQogICAgbGltaXRfc2NvcGU6IHN0ciB8IE5vbmUgPSBib2R5LmdldCgibGltaXRfc2NvcGUiKQoKICAgIGV4Y19jbHMgPSBfQ09ERV9NQVAuZ2V0KGNvZGUpIG9yIF9FUlJPUl9NQVAuZ2V0KGh0dHBfc3RhdHVzLCBIREhpdmVBUElFcnJvcikKICAgIHJhaXNlIGV4Y19jbHMoCiAgICAgICAgY29kZT1jb2RlLAogICAgICAgIG1lc3NhZ2U9bWVzc2FnZSwKICAgICAgICBkZXNjcmlwdGlvbj1kZXNjcmlwdGlvbiwKICAgICAgICBodHRwX3N0YXR1cz1odHRwX3N0YXR1cywKICAgICAgICBsaW1pdF9zY29wZT1saW1pdF9zY29wZSwKICAgICAgICByZXRyeV9hZnRlcj1yZXRyeV9hZnRlciwKICAgICkK
+from typing import Any
+
+from httpx import Response
+
+
+class HDHiveAPIError(Exception):
+    """
+    HDHive API 错误的基类
+    """
+
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        description: str | None = None,
+        http_status: int | None = None,
+        *,
+        limit_scope: str | None = None,
+        retry_after: float | None = None,
+    ) -> None:
+        """
+        :param code (str): 服务端业务错误码或回退为 HTTP 状态码字符串
+        :param message (str): 错误摘要
+        :param description (str): 可选详细说明
+        :param http_status (int): 响应 HTTP 状态码
+        :param limit_scope (str): 限流范围（global/app/user）
+        :param retry_after (float): Retry-After 秒数
+        """
+        self.code = code
+        self.message = message
+        self.description = description
+        self.http_status = http_status
+        self.limit_scope = limit_scope
+        self.retry_after = retry_after
+        super().__init__(
+            f"[{code}] {message}" + (f" — {description}" if description else "")
+        )
+
+
+class HDHiveAuthError(HDHiveAPIError):
+    """
+    401 或鉴权相关错误
+    """
+
+
+class HDHiveReauthRequiredError(HDHiveAuthError):
+    """
+    需要重新 OAuth 授权（OPENAPI_REAUTH_REQUIRED）
+    """
+
+
+class HDHiveRefreshRequiredError(HDHiveAuthError):
+    """
+    Access Token 需刷新（OPENAPI_REFRESH_REQUIRED）
+    """
+
+
+class HDHiveForbiddenError(HDHiveAPIError):
+    """
+    403 禁止访问
+    """
+
+
+class HDHiveNotFoundError(HDHiveAPIError):
+    """
+    404 资源不存在
+    """
+
+
+class HDHiveRateLimitError(HDHiveAPIError):
+    """
+    429 限流或配额
+    """
+
+
+class HDHiveInsufficientPointsError(HDHiveAPIError):
+    """
+    402 积分不足（INSUFFICIENT_POINTS）
+    """
+
+
+_ERROR_MAP: dict[int, type[HDHiveAPIError]] = {
+    401: HDHiveAuthError,
+    403: HDHiveForbiddenError,
+    404: HDHiveNotFoundError,
+    402: HDHiveInsufficientPointsError,
+    429: HDHiveRateLimitError,
+}
+
+_CODE_MAP: dict[str, type[HDHiveAPIError]] = {
+    "MISSING_API_KEY": HDHiveAuthError,
+    "INVALID_API_KEY": HDHiveAuthError,
+    "DISABLED_API_KEY": HDHiveAuthError,
+    "EXPIRED_API_KEY": HDHiveAuthError,
+    "OPENAPI_REFRESH_REQUIRED": HDHiveRefreshRequiredError,
+    "OPENAPI_REAUTH_REQUIRED": HDHiveReauthRequiredError,
+    "INVALID_OPENAPI_USER_TOKEN": HDHiveAuthError,
+    "OPENAPI_USER_REQUIRED": HDHiveAuthError,
+    "SCOPE_NOT_ALLOWED": HDHiveForbiddenError,
+    "USER_SCOPE_NOT_ALLOWED": HDHiveForbiddenError,
+    "VIP_REQUIRED": HDHiveForbiddenError,
+    "ENDPOINT_DISABLED": HDHiveForbiddenError,
+    "ENDPOINT_QUOTA_EXCEEDED": HDHiveRateLimitError,
+    "RATE_LIMIT_EXCEEDED": HDHiveRateLimitError,
+    "GLOBAL_RATE_LIMIT_EXCEEDED": HDHiveRateLimitError,
+    "APP_RATE_LIMIT_EXCEEDED": HDHiveRateLimitError,
+    "USER_RATE_LIMIT_EXCEEDED": HDHiveRateLimitError,
+    "OPENAPI_COOLDOWN": HDHiveRateLimitError,
+    "INSUFFICIENT_POINTS": HDHiveInsufficientPointsError,
+}
+
+
+def _parse_retry_after(resp: Response) -> float | None:
+    raw = resp.headers.get("Retry-After")
+    if not raw:
+        return None
+    try:
+        return float(raw)
+    except ValueError:
+        return None
+
+
+def raise_for_response(resp: Response) -> None:
+    """
+    解析统一 JSON 错误体并抛出对应异常；成功响应则直接返回
+
+    :param resp (Response): httpx 响应对象
+    :raises HDHiveAPIError: 业务失败或 HTTP 错误时
+    """
+    retry_after = _parse_retry_after(resp)
+    try:
+        body: dict[str, Any] = resp.json()
+    except Exception:
+        resp.raise_for_status()
+        return
+
+    if body.get("success"):
+        return
+
+    code: str = str(body.get("code", resp.status_code))
+    message: str = body.get("message", "Unknown error")
+    description: str | None = body.get("description")
+    http_status: int = resp.status_code
+    limit_scope: str | None = body.get("limit_scope")
+
+    exc_cls = _CODE_MAP.get(code) or _ERROR_MAP.get(http_status, HDHiveAPIError)
+    raise exc_cls(
+        code=code,
+        message=message,
+        description=description,
+        http_status=http_status,
+        limit_scope=limit_scope,
+        retry_after=retry_after,
+    )

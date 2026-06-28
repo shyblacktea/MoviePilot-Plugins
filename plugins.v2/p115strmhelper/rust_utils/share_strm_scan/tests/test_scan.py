@@ -1,1 +1,143 @@
-ZnJvbSBfX2Z1dHVyZV9fIGltcG9ydCBhbm5vdGF0aW9ucwoKaW1wb3J0IHRlbXBmaWxlCmltcG9ydCB1bml0dGVzdApmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKCmltcG9ydCBzaGFyZV9zdHJtX3NjYW4gYXMgcnVzdF9tb2QKZnJvbSBzaGFyZV9zdHJtX3NjYW4gaW1wb3J0IFNoYXJlU3RybVNjYW5DYWNoZSwgc2Nhbl9zaGFyZV9zdHJtX2luZGV4CgoKY2xhc3MgVGVzdFNoYXJlU3RybVNjYW4odW5pdHRlc3QuVGVzdENhc2UpOgogICAgIiIiCiAgICBgc2hhcmVfc3RybV9zY2FuLnNjYW5fc2hhcmVfc3RybV9wYWlyc2Ag6KGM5Li65rWL6K+VCiAgICAiIiIKCiAgICBkZWYgdGVzdF9zY2FuX25lc3RlZF9kZWR1cF9hbmRfbm9uX3NoYXJlX3N0cm0oc2VsZikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDlrZDnm67lvZXjgIHlpJrmlofku7bjgIHph43lpI0gVVJMIOS4juS7hSBwaWNrY29kZSDnmoQgU1RSTSDmt7flkIjlnLrmma8KCiAgICAgICAg5pat6KiA5LuF6Kej5p6Q5Ye65ZSv5LiA5LiA57uEIGAoc2hhcmVfY29kZSwgcmVjZWl2ZV9jb2RlKWDvvIzkuJTpnZ7liIbkuqsgU1RSTSDkuI3kuqfnlJ/mnaHnm64KICAgICAgICAiIiIKICAgICAgICB3aXRoIHRlbXBmaWxlLlRlbXBvcmFyeURpcmVjdG9yeSgpIGFzIHRkOgogICAgICAgICAgICByb290ID0gUGF0aCh0ZCkKICAgICAgICAgICAgZCA9IHJvb3QgLyAibWVkaWEiCiAgICAgICAgICAgIGQubWtkaXIoKQogICAgICAgICAgICBzdWIgPSBkIC8gImEiCiAgICAgICAgICAgIHN1Yi5ta2RpcigpCiAgICAgICAgICAgIHVybCA9ICgKICAgICAgICAgICAgICAgICJodHRwOi8vMTI3LjAuMC4xOjMwMDAvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci9yZWRpcmVjdF91cmwiCiAgICAgICAgICAgICAgICAiP3NoYXJlX2NvZGU9c2MxJnJlY2VpdmVfY29kZT1yMSZpZD05OSIKICAgICAgICAgICAgKQogICAgICAgICAgICAoc3ViIC8gImEuc3RybSIpLndyaXRlX3RleHQodXJsICsgIlxuIiwgZW5jb2Rpbmc9InV0Zi04IikKICAgICAgICAgICAgKHN1YiAvICJkdXAuc3RybSIpLndyaXRlX3RleHQodXJsICsgIlxuIiwgZW5jb2Rpbmc9InV0Zi04IikKICAgICAgICAgICAgKGQgLyAicGljay5zdHJtIikud3JpdGVfdGV4dCgKICAgICAgICAgICAgICAgICJodHRwOi8veC9hcGkvdjEvcGx1Z2luL1AxMTVTdHJtSGVscGVyL3JlZGlyZWN0X3VybD9waWNrY29kZT1hYmNcbiIsCiAgICAgICAgICAgICAgICBlbmNvZGluZz0idXRmLTgiLAogICAgICAgICAgICApCiAgICAgICAgICAgIHBhaXJzID0gc2V0KHJ1c3RfbW9kLnNjYW5fc2hhcmVfc3RybV9wYWlycyhzdHIocm9vdCkpKQogICAgICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHBhaXJzLCB7KCJzYzEiLCAicjEiKX0pCgogICAgZGVmIHRlc3RfbXVsdGlsaW5lX3R3b19wYWlycyhzZWxmKSAtPiBOb25lOgogICAgICAgICIiIgogICAgICAgIOWNleaWh+S7tuWGheWkmuihjCBVUkzvvIzmr4/ooYzkuIDnu4QgYHNoYXJlX2NvZGVgIC8gYHJlY2VpdmVfY29kZWAKCiAgICAgICAg5pat6KiA5Y676YeN5ZCO5b6X5Yiw5Lik57uE5LiN5ZCM56CB5a+5CiAgICAgICAgIiIiCiAgICAgICAgd2l0aCB0ZW1wZmlsZS5UZW1wb3JhcnlEaXJlY3RvcnkoKSBhcyB0ZDoKICAgICAgICAgICAgcm9vdCA9IFBhdGgodGQpCiAgICAgICAgICAgIGJhc2UgPSAoCiAgICAgICAgICAgICAgICAiaHR0cDovL2gvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci9yIgogICAgICAgICAgICAgICAgIj9zaGFyZV9jb2RlPXtzY30mcmVjZWl2ZV9jb2RlPXtyY30iCiAgICAgICAgICAgICkKICAgICAgICAgICAgYm9keSA9IGJhc2UuZm9ybWF0KHNjPSJhIiwgcmM9ImIiKSArICJcbiIgKyBiYXNlLmZvcm1hdChzYz0iYyIsIHJjPSJkIikKICAgICAgICAgICAgKHJvb3QgLyAibS5zdHJtIikud3JpdGVfdGV4dChib2R5LCBlbmNvZGluZz0idXRmLTgiKQogICAgICAgICAgICBwYWlycyA9IHNldChydXN0X21vZC5zY2FuX3NoYXJlX3N0cm1fcGFpcnMoc3RyKHJvb3QpKSkKICAgICAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChwYWlycywgeygiYSIsICJiIiksICgiYyIsICJkIil9KQoKICAgIGRlZiB0ZXN0X3ZlcnNpb24oc2VsZikgLT4gTm9uZToKICAgICAgICAiIiIKICAgICAgICDmqKHlnZfmmrTpnLIgYF9fdmVyc2lvbl9fYCDkuJTpnZ7nqboKICAgICAgICAiIiIKICAgICAgICBzZWxmLmFzc2VydFRydWUoaGFzYXR0cihydXN0X21vZCwgIl9fdmVyc2lvbl9fIikpCiAgICAgICAgc2VsZi5hc3NlcnRUcnVlKHJ1c3RfbW9kLl9fdmVyc2lvbl9fKQoKCmNsYXNzIFRlc3RTY2FuU2hhcmVTdHJtSW5kZXgodW5pdHRlc3QuVGVzdENhc2UpOgogICAgIiIiCiAgICBgc2Nhbl9zaGFyZV9zdHJtX2luZGV4YCDov5Tlm54gcGFpcnMg5LiOIHBhaXIgLT4gcGF0aHMg5pig5bCECiAgICAiIiIKCiAgICBkZWYgdGVzdF9pbmRleF90d29fcGF0aHNfb25lX3BhaXIoc2VsZikgLT4gTm9uZToKICAgICAgICB3aXRoIHRlbXBmaWxlLlRlbXBvcmFyeURpcmVjdG9yeSgpIGFzIHRkOgogICAgICAgICAgICByb290ID0gUGF0aCh0ZCkKICAgICAgICAgICAgc3ViID0gcm9vdCAvICJtZWRpYSIgLyAiYSIKICAgICAgICAgICAgc3ViLm1rZGlyKHBhcmVudHM9VHJ1ZSkKICAgICAgICAgICAgdXJsID0gKAogICAgICAgICAgICAgICAgImh0dHA6Ly8xMjcuMC4wLjE6MzAwMC9hcGkvdjEvcGx1Z2luL1AxMTVTdHJtSGVscGVyL3JlZGlyZWN0X3VybCIKICAgICAgICAgICAgICAgICI/c2hhcmVfY29kZT1zYzEmcmVjZWl2ZV9jb2RlPXIxJmlkPTk5IgogICAgICAgICAgICApCiAgICAgICAgICAgIChzdWIgLyAiYS5zdHJtIikud3JpdGVfdGV4dCh1cmwgKyAiXG4iLCBlbmNvZGluZz0idXRmLTgiKQogICAgICAgICAgICAoc3ViIC8gImR1cC5zdHJtIikud3JpdGVfdGV4dCh1cmwgKyAiXG4iLCBlbmNvZGluZz0idXRmLTgiKQogICAgICAgICAgICBwYWlycywgcGFpcl90b19wYXRocyA9IHNjYW5fc2hhcmVfc3RybV9pbmRleChzdHIocm9vdCkpCiAgICAgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocGFpcnMsIFsoInNjMSIsICJyMSIpXSkKICAgICAgICAgICAgcGF0aHMgPSBwYWlyX3RvX3BhdGhzWygic2MxIiwgInIxIildCiAgICAgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGVuKHBhdGhzKSwgMikKICAgICAgICAgICAgc2VsZi5hc3NlcnRFcXVhbCh7UGF0aChwKS5uYW1lIGZvciBwIGluIHBhdGhzfSwgeyJhLnN0cm0iLCAiZHVwLnN0cm0ifSkKCgpjbGFzcyBUZXN0U2hhcmVTdHJtU2NhbkNhY2hlKHVuaXR0ZXN0LlRlc3RDYXNlKToKICAgICIiIgogICAgYFNoYXJlU3RybVNjYW5DYWNoZWAg57yT5a2Y5LiOIGBwYXRoc19mb3JgIC8gYHBhdGhzX2Zvcl9tYW55YCAvIGBpbnZhbGlkYXRlYAogICAgIiIiCgogICAgZGVmIHRlc3RfcGF0aHNfZm9yX3dpdGhvdXRfcHJpb3Jfc2NhbihzZWxmKSAtPiBOb25lOgogICAgICAgIHdpdGggdGVtcGZpbGUuVGVtcG9yYXJ5RGlyZWN0b3J5KCkgYXMgdGQ6CiAgICAgICAgICAgIHJvb3QgPSBQYXRoKHRkKQogICAgICAgICAgICB1cmwgPSAoCiAgICAgICAgICAgICAgICAiaHR0cDovL2gvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci9yP3NoYXJlX2NvZGU9YWEmcmVjZWl2ZV9jb2RlPWJiIgogICAgICAgICAgICApCiAgICAgICAgICAgIChyb290IC8gIm9uZS5zdHJtIikud3JpdGVfdGV4dCh1cmwgKyAiXG4iLCBlbmNvZGluZz0idXRmLTgiKQogICAgICAgICAgICBjYWNoZSA9IFNoYXJlU3RybVNjYW5DYWNoZSgpCiAgICAgICAgICAgIHBhdGhzID0gY2FjaGUucGF0aHNfZm9yKHJvb3QsICJhYSIsICJiYiIpCiAgICAgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGVuKHBhdGhzKSwgMSkKICAgICAgICAgICAgc2VsZi5hc3NlcnRUcnVlKHBhdGhzWzBdLmVuZHN3aXRoKCJvbmUuc3RybSIpKQoKICAgIGRlZiB0ZXN0X3BhdGhzX2Zvcl9tYW55X2FuZF9taXNzaW5nX3BhaXIoc2VsZikgLT4gTm9uZToKICAgICAgICB3aXRoIHRlbXBmaWxlLlRlbXBvcmFyeURpcmVjdG9yeSgpIGFzIHRkOgogICAgICAgICAgICByb290ID0gUGF0aCh0ZCkKICAgICAgICAgICAgdTEgPSAiaHR0cDovL2gvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci9yP3NoYXJlX2NvZGU9YSZyZWNlaXZlX2NvZGU9YiIKICAgICAgICAgICAgdTIgPSAiaHR0cDovL2gvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci9yP3NoYXJlX2NvZGU9YyZyZWNlaXZlX2NvZGU9ZCIKICAgICAgICAgICAgKHJvb3QgLyAieC5zdHJtIikud3JpdGVfdGV4dCh1MSArICJcbiIgKyB1MiArICJcbiIsIGVuY29kaW5nPSJ1dGYtOCIpCiAgICAgICAgICAgIGNhY2hlID0gU2hhcmVTdHJtU2NhbkNhY2hlKCkKICAgICAgICAgICAgZ290ID0gY2FjaGUucGF0aHNfZm9yX21hbnkoCiAgICAgICAgICAgICAgICByb290LAogICAgICAgICAgICAgICAgWwogICAgICAgICAgICAgICAgICAgICgiYSIsICJiIiksCiAgICAgICAgICAgICAgICAgICAgKCJhIiwgImIiKSwKICAgICAgICAgICAgICAgICAgICAoImMiLCAiZCIpLAogICAgICAgICAgICAgICAgICAgICgibWlzc2luZyIsICJwYWlyIiksCiAgICAgICAgICAgICAgICBdLAogICAgICAgICAgICApCiAgICAgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwoCiAgICAgICAgICAgICAgICBsaXN0KGdvdC5rZXlzKCkpLCBbKCJhIiwgImIiKSwgKCJjIiwgImQiKSwgKCJtaXNzaW5nIiwgInBhaXIiKV0KICAgICAgICAgICAgKQogICAgICAgICAgICBzZWxmLmFzc2VydEVxdWFsKGxlbihnb3RbKCJhIiwgImIiKV0pLCAxKQogICAgICAgICAgICBzZWxmLmFzc2VydEVxdWFsKGdvdFsoIm1pc3NpbmciLCAicGFpciIpXSwgW10pCgogICAgZGVmIHRlc3RfaW52YWxpZGF0ZV90aGVuX3BhdGhzX3N0aWxsX3dvcmsoc2VsZikgLT4gTm9uZToKICAgICAgICB3aXRoIHRlbXBmaWxlLlRlbXBvcmFyeURpcmVjdG9yeSgpIGFzIHRkOgogICAgICAgICAgICByb290ID0gUGF0aCh0ZCkKICAgICAgICAgICAgdXJsID0gImh0dHA6Ly9oL2FwaS92MS9wbHVnaW4vUDExNVN0cm1IZWxwZXIvcj9zaGFyZV9jb2RlPXomcmVjZWl2ZV9jb2RlPXciCiAgICAgICAgICAgIChyb290IC8gInouc3RybSIpLndyaXRlX3RleHQodXJsICsgIlxuIiwgZW5jb2Rpbmc9InV0Zi04IikKICAgICAgICAgICAgY2FjaGUgPSBTaGFyZVN0cm1TY2FuQ2FjaGUoKQogICAgICAgICAgICBiZWZvcmUgPSBjYWNoZS5wYXRoc19mb3Iocm9vdCwgInoiLCAidyIpCiAgICAgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGVuKGJlZm9yZSksIDEpCiAgICAgICAgICAgIGNhY2hlLmludmFsaWRhdGUocm9vdCkKICAgICAgICAgICAgYWZ0ZXIgPSBjYWNoZS5wYXRoc19mb3Iocm9vdCwgInoiLCAidyIpCiAgICAgICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGVuKGFmdGVyKSwgMSkKICAgICAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChQYXRoKGJlZm9yZVswXSkubmFtZSwgUGF0aChhZnRlclswXSkubmFtZSkKCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgdW5pdHRlc3QubWFpbigpCg==
+from __future__ import annotations
+
+import tempfile
+import unittest
+from pathlib import Path
+
+import share_strm_scan as rust_mod
+from share_strm_scan import ShareStrmScanCache, scan_share_strm_index
+
+
+class TestShareStrmScan(unittest.TestCase):
+    """
+    `share_strm_scan.scan_share_strm_pairs` 行为测试
+    """
+
+    def test_scan_nested_dedup_and_non_share_strm(self) -> None:
+        """
+        子目录、多文件、重复 URL 与仅 pickcode 的 STRM 混合场景
+
+        断言仅解析出唯一一组 `(share_code, receive_code)`，且非分享 STRM 不产生条目
+        """
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            d = root / "media"
+            d.mkdir()
+            sub = d / "a"
+            sub.mkdir()
+            url = (
+                "http://127.0.0.1:3000/api/v1/plugin/P115StrmHelper/redirect_url"
+                "?share_code=sc1&receive_code=r1&id=99"
+            )
+            (sub / "a.strm").write_text(url + "\n", encoding="utf-8")
+            (sub / "dup.strm").write_text(url + "\n", encoding="utf-8")
+            (d / "pick.strm").write_text(
+                "http://x/api/v1/plugin/P115StrmHelper/redirect_url?pickcode=abc\n",
+                encoding="utf-8",
+            )
+            pairs = set(rust_mod.scan_share_strm_pairs(str(root)))
+            self.assertEqual(pairs, {("sc1", "r1")})
+
+    def test_multiline_two_pairs(self) -> None:
+        """
+        单文件内多行 URL，每行一组 `share_code` / `receive_code`
+
+        断言去重后得到两组不同码对
+        """
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            base = (
+                "http://h/api/v1/plugin/P115StrmHelper/r"
+                "?share_code={sc}&receive_code={rc}"
+            )
+            body = base.format(sc="a", rc="b") + "\n" + base.format(sc="c", rc="d")
+            (root / "m.strm").write_text(body, encoding="utf-8")
+            pairs = set(rust_mod.scan_share_strm_pairs(str(root)))
+            self.assertEqual(pairs, {("a", "b"), ("c", "d")})
+
+    def test_version(self) -> None:
+        """
+        模块暴露 `__version__` 且非空
+        """
+        self.assertTrue(hasattr(rust_mod, "__version__"))
+        self.assertTrue(rust_mod.__version__)
+
+
+class TestScanShareStrmIndex(unittest.TestCase):
+    """
+    `scan_share_strm_index` 返回 pairs 与 pair -> paths 映射
+    """
+
+    def test_index_two_paths_one_pair(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            sub = root / "media" / "a"
+            sub.mkdir(parents=True)
+            url = (
+                "http://127.0.0.1:3000/api/v1/plugin/P115StrmHelper/redirect_url"
+                "?share_code=sc1&receive_code=r1&id=99"
+            )
+            (sub / "a.strm").write_text(url + "\n", encoding="utf-8")
+            (sub / "dup.strm").write_text(url + "\n", encoding="utf-8")
+            pairs, pair_to_paths = scan_share_strm_index(str(root))
+            self.assertEqual(pairs, [("sc1", "r1")])
+            paths = pair_to_paths[("sc1", "r1")]
+            self.assertEqual(len(paths), 2)
+            self.assertEqual({Path(p).name for p in paths}, {"a.strm", "dup.strm"})
+
+
+class TestShareStrmScanCache(unittest.TestCase):
+    """
+    `ShareStrmScanCache` 缓存与 `paths_for` / `paths_for_many` / `invalidate`
+    """
+
+    def test_paths_for_without_prior_scan(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            url = (
+                "http://h/api/v1/plugin/P115StrmHelper/r?share_code=aa&receive_code=bb"
+            )
+            (root / "one.strm").write_text(url + "\n", encoding="utf-8")
+            cache = ShareStrmScanCache()
+            paths = cache.paths_for(root, "aa", "bb")
+            self.assertEqual(len(paths), 1)
+            self.assertTrue(paths[0].endswith("one.strm"))
+
+    def test_paths_for_many_and_missing_pair(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            u1 = "http://h/api/v1/plugin/P115StrmHelper/r?share_code=a&receive_code=b"
+            u2 = "http://h/api/v1/plugin/P115StrmHelper/r?share_code=c&receive_code=d"
+            (root / "x.strm").write_text(u1 + "\n" + u2 + "\n", encoding="utf-8")
+            cache = ShareStrmScanCache()
+            got = cache.paths_for_many(
+                root,
+                [
+                    ("a", "b"),
+                    ("a", "b"),
+                    ("c", "d"),
+                    ("missing", "pair"),
+                ],
+            )
+            self.assertEqual(
+                list(got.keys()), [("a", "b"), ("c", "d"), ("missing", "pair")]
+            )
+            self.assertEqual(len(got[("a", "b")]), 1)
+            self.assertEqual(got[("missing", "pair")], [])
+
+    def test_invalidate_then_paths_still_work(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            url = "http://h/api/v1/plugin/P115StrmHelper/r?share_code=z&receive_code=w"
+            (root / "z.strm").write_text(url + "\n", encoding="utf-8")
+            cache = ShareStrmScanCache()
+            before = cache.paths_for(root, "z", "w")
+            self.assertEqual(len(before), 1)
+            cache.invalidate(root)
+            after = cache.paths_for(root, "z", "w")
+            self.assertEqual(len(after), 1)
+            self.assertEqual(Path(before[0]).name, Path(after[0]).name)
+
+
+if __name__ == "__main__":
+    unittest.main()

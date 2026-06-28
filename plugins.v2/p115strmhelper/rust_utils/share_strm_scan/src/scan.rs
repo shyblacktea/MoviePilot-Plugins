@@ -1,1 +1,224 @@
-dXNlIHN0ZDo6ZnM6OkZpbGU7CnVzZSBzdGQ6OmlvOjpSZWFkOwp1c2Ugc3RkOjpwYXRoOjp7UGF0aCwgUGF0aEJ1Zn07Cgp1c2UgYWhhc2g6OntBSGFzaE1hcCwgQUhhc2hTZXR9Owp1c2UgcmF5b246OnByZWx1ZGU6Oio7CnVzZSByYXlvbjo6VGhyZWFkUG9vbEJ1aWxkZXI7CnVzZSB3YWxrZGlyOjpXYWxrRGlyOwoKdXNlIGNyYXRlOjpxdWVyeTo6cGFyc2Vfc2hhcmVfc3RybV9saW5lOwoKZm4gc3RyaXBfYm9tX2J5dGVzKGJ1ZjogJlt1OF0pIC0+ICZbdThdIHsKICAgIGlmIGJ1Zi5zdGFydHNfd2l0aChiIlx4RUZceEJCXHhCRiIpIHsKICAgICAgICAmYnVmWzMuLl0KICAgIH0gZWxzZSB7CiAgICAgICAgYnVmCiAgICB9Cn0KCmZuIHJlYWRfYm91bmRlZChwYXRoOiAmUGF0aCwgbWF4OiB1c2l6ZSkgLT4gc3RkOjppbzo6UmVzdWx0PFZlYzx1OD4+IHsKICAgIGxldCBmID0gRmlsZTo6b3BlbihwYXRoKT87CiAgICBsZXQgbXV0IGJ1ZiA9IFZlYzo6bmV3KCk7CiAgICBsZXQgbWV0YSA9IGYubWV0YWRhdGEoKS5vaygpOwogICAgbGV0IGhpbnQgPSBtZXRhLm1hcCh8bXwgKG0ubGVuKCkgYXMgdXNpemUpLm1pbihtYXgpKS51bndyYXBfb3IoMCk7CiAgICBpZiBoaW50ID4gMCB7CiAgICAgICAgYnVmLnJlc2VydmUoaGludC5taW4obWF4KSk7CiAgICB9CiAgICBsZXQgbXV0IHRha2UgPSBmLnRha2UobWF4IGFzIHU2NCk7CiAgICB0YWtlLnJlYWRfdG9fZW5kKCZtdXQgYnVmKT87CiAgICBPayhidWYpCn0KCmZuIGlzX3N0cm1fZXh0ZW5zaW9uKHBhdGg6ICZQYXRoKSAtPiBib29sIHsKICAgIHBhdGguZXh0ZW5zaW9uKCkKICAgICAgICAuYW5kX3RoZW4ofGV8IGUudG9fc3RyKCkpCiAgICAgICAgLm1hcCh8ZXwgZS5lcV9pZ25vcmVfYXNjaWlfY2FzZSgic3RybSIpKQogICAgICAgIC51bndyYXBfb3IoZmFsc2UpCn0KCnB1YiBmbiBwcm9jZXNzX2ZpbGVfY29udGVudHMoYnl0ZXM6ICZbdThdKSAtPiBBSGFzaFNldDwoU3RyaW5nLCBTdHJpbmcpPiB7CiAgICBsZXQgbXV0IG91dCA9IEFIYXNoU2V0OjpuZXcoKTsKICAgIGxldCBieXRlcyA9IHN0cmlwX2JvbV9ieXRlcyhieXRlcyk7CiAgICBsZXQgcyA9IG1hdGNoIHN0ZDo6c3RyOjpmcm9tX3V0ZjgoYnl0ZXMpIHsKICAgICAgICBPayhzKSA9PiBzLAogICAgICAgIEVycihfKSA9PiByZXR1cm4gb3V0LAogICAgfTsKICAgIGxldCBzID0gcy50cmltKCk7CiAgICBpZiBzLmlzX2VtcHR5KCkgewogICAgICAgIHJldHVybiBvdXQ7CiAgICB9CiAgICBmb3IgbGluZSBpbiBzLmxpbmVzKCkgewogICAgICAgIGxldCBsaW5lID0gbGluZS50cmltX2VuZF9tYXRjaGVzKCdccicpLnRyaW0oKTsKICAgICAgICBpZiBsaW5lLmlzX2VtcHR5KCkgewogICAgICAgICAgICBjb250aW51ZTsKICAgICAgICB9CiAgICAgICAgaWYgbGV0IFNvbWUocGFpcikgPSBwYXJzZV9zaGFyZV9zdHJtX2xpbmUobGluZSkgewogICAgICAgICAgICBvdXQuaW5zZXJ0KHBhaXIpOwogICAgICAgIH0KICAgIH0KICAgIG91dAp9CgpwdWIgZm4gcHJvY2Vzc19maWxlX3BhaXJfcGF0aHMoCiAgICBwYXRoOiAmUGF0aCwKICAgIG1heF9maWxlX2J5dGVzOiB1c2l6ZSwKKSAtPiBBSGFzaE1hcDwoU3RyaW5nLCBTdHJpbmcpLCBWZWM8UGF0aEJ1Zj4+IHsKICAgIGxldCBidWYgPSBtYXRjaCByZWFkX2JvdW5kZWQocGF0aCwgbWF4X2ZpbGVfYnl0ZXMpIHsKICAgICAgICBPayhiKSA9PiBiLAogICAgICAgIEVycihfKSA9PiByZXR1cm4gQUhhc2hNYXA6Om5ldygpLAogICAgfTsKICAgIGxldCBwYWlycyA9IHByb2Nlc3NfZmlsZV9jb250ZW50cygmYnVmKTsKICAgIGxldCBtdXQgb3V0OiBBSGFzaE1hcDwoU3RyaW5nLCBTdHJpbmcpLCBWZWM8UGF0aEJ1Zj4+ID0gQUhhc2hNYXA6Om5ldygpOwogICAgZm9yIHBhaXIgaW4gcGFpcnMgewogICAgICAgIG91dC5lbnRyeShwYWlyKS5vcl9kZWZhdWx0KCkucHVzaChwYXRoLnRvX3BhdGhfYnVmKCkpOwogICAgfQogICAgb3V0Cn0KCmZuIG1lcmdlX3BhdGhfbWFwcygKICAgIG11dCBhOiBBSGFzaE1hcDwoU3RyaW5nLCBTdHJpbmcpLCBWZWM8UGF0aEJ1Zj4+LAogICAgYjogQUhhc2hNYXA8KFN0cmluZywgU3RyaW5nKSwgVmVjPFBhdGhCdWY+PiwKKSAtPiBBSGFzaE1hcDwoU3RyaW5nLCBTdHJpbmcpLCBWZWM8UGF0aEJ1Zj4+IHsKICAgIGlmIGEubGVuKCkgPCBiLmxlbigpIHsKICAgICAgICByZXR1cm4gbWVyZ2VfcGF0aF9tYXBzKGIsIGEpOwogICAgfQogICAgZm9yIChrLCB2KSBpbiBiIHsKICAgICAgICBhLmVudHJ5KGspLm9yX2RlZmF1bHQoKS5leHRlbmQodik7CiAgICB9CiAgICBhCn0KCmZuIGZpbmFsaXplX3BhaXJfcGF0aHNfbWFwKAogICAgbXV0IG1hcDogQUhhc2hNYXA8KFN0cmluZywgU3RyaW5nKSwgVmVjPFBhdGhCdWY+PiwKKSAtPiBBSGFzaE1hcDwoU3RyaW5nLCBTdHJpbmcpLCBWZWM8U3RyaW5nPj4gewogICAgbGV0IG11dCBvdXQ6IEFIYXNoTWFwPChTdHJpbmcsIFN0cmluZyksIFZlYzxTdHJpbmc+PiA9IEFIYXNoTWFwOjp3aXRoX2NhcGFjaXR5KG1hcC5sZW4oKSk7CiAgICBmb3IgKHBhaXIsIG11dCBwYXRocykgaW4gbWFwLmRyYWluKCkgewogICAgICAgIHBhdGhzLnNvcnQoKTsKICAgICAgICBwYXRocy5kZWR1cCgpOwogICAgICAgIGxldCBzdHJpbmdzOiBWZWM8U3RyaW5nPiA9IHBhdGhzCiAgICAgICAgICAgIC5pbnRvX2l0ZXIoKQogICAgICAgICAgICAubWFwKHxwfCBwLnRvX3N0cmluZ19sb3NzeSgpLmludG9fb3duZWQoKSkKICAgICAgICAgICAgLmNvbGxlY3QoKTsKICAgICAgICBvdXQuaW5zZXJ0KHBhaXIsIHN0cmluZ3MpOwogICAgfQogICAgb3V0Cn0KCnB1YiBmbiBjb2xsZWN0X3N0cm1fcGF0aHMocm9vdDogJlBhdGgpIC0+IHN0ZDo6aW86OlJlc3VsdDxWZWM8UGF0aEJ1Zj4+IHsKICAgIGxldCBtdXQgcGF0aHMgPSBWZWM6Om5ldygpOwogICAgZm9yIGVudHJ5IGluIFdhbGtEaXI6Om5ldyhyb290KQogICAgICAgIC5mb2xsb3dfbGlua3MoZmFsc2UpCiAgICAgICAgLmludG9faXRlcigpCiAgICAgICAgLmZpbHRlcl9tYXAofGV8IGUub2soKSkKICAgIHsKICAgICAgICBpZiAhZW50cnkuZmlsZV90eXBlKCkuaXNfZmlsZSgpIHsKICAgICAgICAgICAgY29udGludWU7CiAgICAgICAgfQogICAgICAgIGxldCBwID0gZW50cnkucGF0aCgpOwogICAgICAgIGlmIGlzX3N0cm1fZXh0ZW5zaW9uKHApIHsKICAgICAgICAgICAgcGF0aHMucHVzaChwLnRvX3BhdGhfYnVmKCkpOwogICAgICAgIH0KICAgIH0KICAgIE9rKHBhdGhzKQp9CgpmbiBzY2FuX3Bvb2xfZXJyb3IoKSAtPiBzdGQ6OmlvOjpFcnJvciB7CiAgICBzdGQ6OmlvOjpFcnJvcjo6bmV3KHN0ZDo6aW86OkVycm9yS2luZDo6T3RoZXIsICJ0aHJlYWQgcG9vbCBidWlsZCBmYWlsZWQiKQp9CgpwdWIgZm4gc2Nhbl9zaGFyZV9zdHJtX2luZGV4X2lubmVyKAogICAgcm9vdDogJlBhdGgsCiAgICBtYXhfZmlsZV9ieXRlczogdXNpemUsCiAgICBudW1fdGhyZWFkczogT3B0aW9uPHVzaXplPiwKKSAtPiBSZXN1bHQ8CiAgICAoCiAgICAgICAgVmVjPChTdHJpbmcsIFN0cmluZyk+LAogICAgICAgIEFIYXNoTWFwPChTdHJpbmcsIFN0cmluZyksIFZlYzxTdHJpbmc+PiwKICAgICksCiAgICBzdGQ6OmlvOjpFcnJvciwKPiB7CiAgICBsZXQgcGF0aHMgPSBjb2xsZWN0X3N0cm1fcGF0aHMocm9vdCk/OwogICAgbGV0IG1lcmdlZF9tYXAgPSBpZiBsZXQgU29tZShuKSA9IG51bV90aHJlYWRzIHsKICAgICAgICBpZiBuIDwgMSB7CiAgICAgICAgICAgIHJldHVybiBFcnIoc3RkOjppbzo6RXJyb3I6Om5ldygKICAgICAgICAgICAgICAgIHN0ZDo6aW86OkVycm9yS2luZDo6SW52YWxpZElucHV0LAogICAgICAgICAgICAgICAgIm51bV90aHJlYWRzIG11c3QgYmUgPj0gMSIsCiAgICAgICAgICAgICkpOwogICAgICAgIH0KICAgICAgICBsZXQgcG9vbCA9IFRocmVhZFBvb2xCdWlsZGVyOjpuZXcoKQogICAgICAgICAgICAubnVtX3RocmVhZHMobikKICAgICAgICAgICAgLmJ1aWxkKCkKICAgICAgICAgICAgLm1hcF9lcnIofF98IHNjYW5fcG9vbF9lcnJvcigpKT87CiAgICAgICAgcG9vbC5pbnN0YWxsKHx8IHsKICAgICAgICAgICAgcGF0aHMKICAgICAgICAgICAgICAgIC5wYXJfaXRlcigpCiAgICAgICAgICAgICAgICAubWFwKHxwfCBwcm9jZXNzX2ZpbGVfcGFpcl9wYXRocyhwLCBtYXhfZmlsZV9ieXRlcykpCiAgICAgICAgICAgICAgICAucmVkdWNlKEFIYXNoTWFwOjpuZXcsIG1lcmdlX3BhdGhfbWFwcykKICAgICAgICB9KQogICAgfSBlbHNlIHsKICAgICAgICBwYXRocwogICAgICAgICAgICAucGFyX2l0ZXIoKQogICAgICAgICAgICAubWFwKHxwfCBwcm9jZXNzX2ZpbGVfcGFpcl9wYXRocyhwLCBtYXhfZmlsZV9ieXRlcykpCiAgICAgICAgICAgIC5yZWR1Y2UoQUhhc2hNYXA6Om5ldywgbWVyZ2VfcGF0aF9tYXBzKQogICAgfTsKICAgIGxldCBtYXAgPSBmaW5hbGl6ZV9wYWlyX3BhdGhzX21hcChtZXJnZWRfbWFwKTsKICAgIGxldCBtdXQgcGFpcnM6IFZlYzxfPiA9IG1hcC5rZXlzKCkuY2xvbmVkKCkuY29sbGVjdCgpOwogICAgcGFpcnMuc29ydCgpOwogICAgT2soKHBhaXJzLCBtYXApKQp9CgpwdWIgZm4gc2Nhbl9zaGFyZV9zdHJtX3BhaXJzX2lubmVyKAogICAgcm9vdDogJlBhdGgsCiAgICBtYXhfZmlsZV9ieXRlczogdXNpemUsCiAgICBudW1fdGhyZWFkczogT3B0aW9uPHVzaXplPiwKKSAtPiBSZXN1bHQ8VmVjPChTdHJpbmcsIFN0cmluZyk+LCBzdGQ6OmlvOjpFcnJvcj4gewogICAgbGV0IChwYWlycywgXykgPSBzY2FuX3NoYXJlX3N0cm1faW5kZXhfaW5uZXIocm9vdCwgbWF4X2ZpbGVfYnl0ZXMsIG51bV90aHJlYWRzKT87CiAgICBPayhwYWlycykKfQoKI1tjZmcodGVzdCldCm1vZCB0ZXN0cyB7CiAgICB1c2Ugc3VwZXI6Oio7CiAgICB1c2Ugc3RkOjpmczsKCiAgICAjW3Rlc3RdCiAgICBmbiBwcm9jZXNzX211bHRpbGluZV9kZWR1cF9pbl9maWxlKCkgewogICAgICAgIGxldCBzID0gYiJodHRwOi8veC9QMTE1U3RybUhlbHBlcj9zaGFyZV9jb2RlPWEmcmVjZWl2ZV9jb2RlPWJcbmh0dHA6Ly94L1AxMTVTdHJtSGVscGVyP3NoYXJlX2NvZGU9YSZyZWNlaXZlX2NvZGU9YlxuIjsKICAgICAgICBsZXQgc2V0ID0gcHJvY2Vzc19maWxlX2NvbnRlbnRzKHMpOwogICAgICAgIGFzc2VydF9lcSEoc2V0LmxlbigpLCAxKTsKICAgIH0KCiAgICAjW3Rlc3RdCiAgICBmbiBtZXJnZV9wYXRoX21hcHNfdHdvX2ZpbGVzX3NhbWVfcGFpcigpIHsKICAgICAgICBsZXQgbXV0IGEgPSBBSGFzaE1hcDo6bmV3KCk7CiAgICAgICAgYS5pbnNlcnQoKCJzYyIuaW50bygpLCAicmMiLmludG8oKSksIHZlYyFbUGF0aEJ1Zjo6ZnJvbSgiL2EveC5zdHJtIildKTsKICAgICAgICBsZXQgbXV0IGIgPSBBSGFzaE1hcDo6bmV3KCk7CiAgICAgICAgYi5pbnNlcnQoKCJzYyIuaW50bygpLCAicmMiLmludG8oKSksIHZlYyFbUGF0aEJ1Zjo6ZnJvbSgiL2IveS5zdHJtIildKTsKICAgICAgICBsZXQgbSA9IG1lcmdlX3BhdGhfbWFwcyhhLCBiKTsKICAgICAgICBsZXQgcGF0aHMgPSBtLmdldCgmKCJzYyIuaW50bygpLCAicmMiLmludG8oKSkpLnVud3JhcCgpOwogICAgICAgIGFzc2VydF9lcSEocGF0aHMubGVuKCksIDIpOwogICAgfQoKICAgICNbdGVzdF0KICAgIGZuIHNjYW5faW5kZXhfbmVzdGVkX3R3b19zdHJtX29uZV9wYWlyKCkgewogICAgICAgIGxldCByb290ID0gc3RkOjplbnY6OnRlbXBfZGlyKCkuam9pbihmb3JtYXQhKAogICAgICAgICAgICAic2hhcmVfc3RybV9zY2FuX3Rlc3Rfe30iLAogICAgICAgICAgICBzdGQ6OnRpbWU6OlN5c3RlbVRpbWU6Om5vdygpCiAgICAgICAgICAgICAgICAuZHVyYXRpb25fc2luY2Uoc3RkOjp0aW1lOjpVTklYX0VQT0NIKQogICAgICAgICAgICAgICAgLnVud3JhcCgpCiAgICAgICAgICAgICAgICAuYXNfbmFub3MoKQogICAgICAgICkpOwogICAgICAgIGxldCBfID0gZnM6OnJlbW92ZV9kaXJfYWxsKCZyb290KTsKICAgICAgICBsZXQgc3ViID0gcm9vdC5qb2luKCJtZWRpYSIpLmpvaW4oImEiKTsKICAgICAgICBmczo6Y3JlYXRlX2Rpcl9hbGwoJnN1YikudW53cmFwKCk7CiAgICAgICAgbGV0IHVybCA9ICJodHRwOi8vMTI3LjAuMC4xOjMwMDAvYXBpL3YxL3BsdWdpbi9QMTE1U3RybUhlbHBlci9yZWRpcmVjdF91cmw/c2hhcmVfY29kZT1zYzEmcmVjZWl2ZV9jb2RlPXIxJmlkPTk5IjsKICAgICAgICBmczo6d3JpdGUoc3ViLmpvaW4oImEuc3RybSIpLCBmb3JtYXQhKCJ7dXJsfVxuIikpLnVud3JhcCgpOwogICAgICAgIGZzOjp3cml0ZShzdWIuam9pbigiZHVwLnN0cm0iKSwgZm9ybWF0ISgie3VybH1cbiIpKS51bndyYXAoKTsKICAgICAgICBsZXQgKHBhaXJzLCBtYXApID0gc2Nhbl9zaGFyZV9zdHJtX2luZGV4X2lubmVyKCZyb290LCAyNjJfMTQ0LCBOb25lKS5leHBlY3QoInNjYW4iKTsKICAgICAgICBsZXQgXyA9IGZzOjpyZW1vdmVfZGlyX2FsbCgmcm9vdCk7CiAgICAgICAgYXNzZXJ0X2VxIShwYWlycywgdmVjIVsoInNjMSIuaW50bygpLCAicjEiLmludG8oKSldKTsKICAgICAgICBsZXQgcGF0aHMgPSBtYXAuZ2V0KCYoInNjMSIuaW50bygpLCAicjEiLmludG8oKSkpLnVud3JhcCgpOwogICAgICAgIGFzc2VydF9lcSEocGF0aHMubGVuKCksIDIpOwogICAgfQp9Cg==
+use std::fs::File;
+use std::io::Read;
+use std::path::{Path, PathBuf};
+
+use ahash::{AHashMap, AHashSet};
+use rayon::prelude::*;
+use rayon::ThreadPoolBuilder;
+use walkdir::WalkDir;
+
+use crate::query::parse_share_strm_line;
+
+fn strip_bom_bytes(buf: &[u8]) -> &[u8] {
+    if buf.starts_with(b"\xEF\xBB\xBF") {
+        &buf[3..]
+    } else {
+        buf
+    }
+}
+
+fn read_bounded(path: &Path, max: usize) -> std::io::Result<Vec<u8>> {
+    let f = File::open(path)?;
+    let mut buf = Vec::new();
+    let meta = f.metadata().ok();
+    let hint = meta.map(|m| (m.len() as usize).min(max)).unwrap_or(0);
+    if hint > 0 {
+        buf.reserve(hint.min(max));
+    }
+    let mut take = f.take(max as u64);
+    take.read_to_end(&mut buf)?;
+    Ok(buf)
+}
+
+fn is_strm_extension(path: &Path) -> bool {
+    path.extension()
+        .and_then(|e| e.to_str())
+        .map(|e| e.eq_ignore_ascii_case("strm"))
+        .unwrap_or(false)
+}
+
+pub fn process_file_contents(bytes: &[u8]) -> AHashSet<(String, String)> {
+    let mut out = AHashSet::new();
+    let bytes = strip_bom_bytes(bytes);
+    let s = match std::str::from_utf8(bytes) {
+        Ok(s) => s,
+        Err(_) => return out,
+    };
+    let s = s.trim();
+    if s.is_empty() {
+        return out;
+    }
+    for line in s.lines() {
+        let line = line.trim_end_matches('\r').trim();
+        if line.is_empty() {
+            continue;
+        }
+        if let Some(pair) = parse_share_strm_line(line) {
+            out.insert(pair);
+        }
+    }
+    out
+}
+
+pub fn process_file_pair_paths(
+    path: &Path,
+    max_file_bytes: usize,
+) -> AHashMap<(String, String), Vec<PathBuf>> {
+    let buf = match read_bounded(path, max_file_bytes) {
+        Ok(b) => b,
+        Err(_) => return AHashMap::new(),
+    };
+    let pairs = process_file_contents(&buf);
+    let mut out: AHashMap<(String, String), Vec<PathBuf>> = AHashMap::new();
+    for pair in pairs {
+        out.entry(pair).or_default().push(path.to_path_buf());
+    }
+    out
+}
+
+fn merge_path_maps(
+    mut a: AHashMap<(String, String), Vec<PathBuf>>,
+    b: AHashMap<(String, String), Vec<PathBuf>>,
+) -> AHashMap<(String, String), Vec<PathBuf>> {
+    if a.len() < b.len() {
+        return merge_path_maps(b, a);
+    }
+    for (k, v) in b {
+        a.entry(k).or_default().extend(v);
+    }
+    a
+}
+
+fn finalize_pair_paths_map(
+    mut map: AHashMap<(String, String), Vec<PathBuf>>,
+) -> AHashMap<(String, String), Vec<String>> {
+    let mut out: AHashMap<(String, String), Vec<String>> = AHashMap::with_capacity(map.len());
+    for (pair, mut paths) in map.drain() {
+        paths.sort();
+        paths.dedup();
+        let strings: Vec<String> = paths
+            .into_iter()
+            .map(|p| p.to_string_lossy().into_owned())
+            .collect();
+        out.insert(pair, strings);
+    }
+    out
+}
+
+pub fn collect_strm_paths(root: &Path) -> std::io::Result<Vec<PathBuf>> {
+    let mut paths = Vec::new();
+    for entry in WalkDir::new(root)
+        .follow_links(false)
+        .into_iter()
+        .filter_map(|e| e.ok())
+    {
+        if !entry.file_type().is_file() {
+            continue;
+        }
+        let p = entry.path();
+        if is_strm_extension(p) {
+            paths.push(p.to_path_buf());
+        }
+    }
+    Ok(paths)
+}
+
+fn scan_pool_error() -> std::io::Error {
+    std::io::Error::new(std::io::ErrorKind::Other, "thread pool build failed")
+}
+
+pub fn scan_share_strm_index_inner(
+    root: &Path,
+    max_file_bytes: usize,
+    num_threads: Option<usize>,
+) -> Result<
+    (
+        Vec<(String, String)>,
+        AHashMap<(String, String), Vec<String>>,
+    ),
+    std::io::Error,
+> {
+    let paths = collect_strm_paths(root)?;
+    let merged_map = if let Some(n) = num_threads {
+        if n < 1 {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                "num_threads must be >= 1",
+            ));
+        }
+        let pool = ThreadPoolBuilder::new()
+            .num_threads(n)
+            .build()
+            .map_err(|_| scan_pool_error())?;
+        pool.install(|| {
+            paths
+                .par_iter()
+                .map(|p| process_file_pair_paths(p, max_file_bytes))
+                .reduce(AHashMap::new, merge_path_maps)
+        })
+    } else {
+        paths
+            .par_iter()
+            .map(|p| process_file_pair_paths(p, max_file_bytes))
+            .reduce(AHashMap::new, merge_path_maps)
+    };
+    let map = finalize_pair_paths_map(merged_map);
+    let mut pairs: Vec<_> = map.keys().cloned().collect();
+    pairs.sort();
+    Ok((pairs, map))
+}
+
+pub fn scan_share_strm_pairs_inner(
+    root: &Path,
+    max_file_bytes: usize,
+    num_threads: Option<usize>,
+) -> Result<Vec<(String, String)>, std::io::Error> {
+    let (pairs, _) = scan_share_strm_index_inner(root, max_file_bytes, num_threads)?;
+    Ok(pairs)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    #[test]
+    fn process_multiline_dedup_in_file() {
+        let s = b"http://x/P115StrmHelper?share_code=a&receive_code=b\nhttp://x/P115StrmHelper?share_code=a&receive_code=b\n";
+        let set = process_file_contents(s);
+        assert_eq!(set.len(), 1);
+    }
+
+    #[test]
+    fn merge_path_maps_two_files_same_pair() {
+        let mut a = AHashMap::new();
+        a.insert(("sc".into(), "rc".into()), vec![PathBuf::from("/a/x.strm")]);
+        let mut b = AHashMap::new();
+        b.insert(("sc".into(), "rc".into()), vec![PathBuf::from("/b/y.strm")]);
+        let m = merge_path_maps(a, b);
+        let paths = m.get(&("sc".into(), "rc".into())).unwrap();
+        assert_eq!(paths.len(), 2);
+    }
+
+    #[test]
+    fn scan_index_nested_two_strm_one_pair() {
+        let root = std::env::temp_dir().join(format!(
+            "share_strm_scan_test_{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        let sub = root.join("media").join("a");
+        fs::create_dir_all(&sub).unwrap();
+        let url = "http://127.0.0.1:3000/api/v1/plugin/P115StrmHelper/redirect_url?share_code=sc1&receive_code=r1&id=99";
+        fs::write(sub.join("a.strm"), format!("{url}\n")).unwrap();
+        fs::write(sub.join("dup.strm"), format!("{url}\n")).unwrap();
+        let (pairs, map) = scan_share_strm_index_inner(&root, 262_144, None).expect("scan");
+        let _ = fs::remove_dir_all(&root);
+        assert_eq!(pairs, vec![("sc1".into(), "r1".into())]);
+        let paths = map.get(&("sc1".into(), "r1".into())).unwrap();
+        assert_eq!(paths.len(), 2);
+    }
+}
