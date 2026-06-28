@@ -1,15 +1,1 @@
-from threading import Event as ThreadEvent, Thread
-
-from pydantic import BaseModel, ConfigDict, Field
-
-
-class ObserverInfo(BaseModel):
-    """
-    目录上传 watchfiles 监控项
-    """
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    thread: Thread = Field(..., description="watchfiles 监控线程")
-    stop_event: ThreadEvent = Field(..., description="停止监控用的 Event")
-    mon_path: str = Field(..., description="监控目录路径")
+ZnJvbSB0aHJlYWRpbmcgaW1wb3J0IEV2ZW50IGFzIFRocmVhZEV2ZW50LCBUaHJlYWQKCmZyb20gcHlkYW50aWMgaW1wb3J0IEJhc2VNb2RlbCwgQ29uZmlnRGljdCwgRmllbGQKCgpjbGFzcyBPYnNlcnZlckluZm8oQmFzZU1vZGVsKToKICAgICIiIgogICAg55uu5b2V5LiK5LygIHdhdGNoZmlsZXMg55uR5o6n6aG5CiAgICAiIiIKCiAgICBtb2RlbF9jb25maWcgPSBDb25maWdEaWN0KGFyYml0cmFyeV90eXBlc19hbGxvd2VkPVRydWUpCgogICAgdGhyZWFkOiBUaHJlYWQgPSBGaWVsZCguLi4sIGRlc2NyaXB0aW9uPSJ3YXRjaGZpbGVzIOebkeaOp+e6v+eoiyIpCiAgICBzdG9wX2V2ZW50OiBUaHJlYWRFdmVudCA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuWBnOatouebkeaOp+eUqOeahCBFdmVudCIpCiAgICBtb25fcGF0aDogc3RyID0gRmllbGQoLi4uLCBkZXNjcmlwdGlvbj0i55uR5o6n55uu5b2V6Lev5b6EIikK

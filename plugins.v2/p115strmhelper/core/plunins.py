@@ -1,9 +1,1 @@
-from app.chain import ChainBase
-
-
-class PluginChian(ChainBase):
-    """
-    插件处理链
-    """
-
-    pass
+ZnJvbSBhcHAuY2hhaW4gaW1wb3J0IENoYWluQmFzZQoKCmNsYXNzIFBsdWdpbkNoaWFuKENoYWluQmFzZSk6CiAgICAiIiIKICAgIOaPkuS7tuWkhOeQhumTvgogICAgIiIiCgogICAgcGFzcwo=

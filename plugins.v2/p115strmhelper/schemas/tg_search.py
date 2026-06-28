@@ -1,18 +1,1 @@
-from typing import List, Optional, TypedDict
-
-
-class ResourceItem(TypedDict):
-    """
-    资源项
-    """
-
-    message_id: Optional[str]
-    title: Optional[str]
-    pub_date: Optional[str]
-    content: Optional[str]
-    image: Optional[str]
-    cloud_links: List[str]
-    tags: List[str]
-    cloud_type: Optional[str]
-    channel_id: Optional[str]
-    channel_name: str
+ZnJvbSB0eXBpbmcgaW1wb3J0IExpc3QsIE9wdGlvbmFsLCBUeXBlZERpY3QKCgpjbGFzcyBSZXNvdXJjZUl0ZW0oVHlwZWREaWN0KToKICAgICIiIgogICAg6LWE5rqQ6aG5CiAgICAiIiIKCiAgICBtZXNzYWdlX2lkOiBPcHRpb25hbFtzdHJdCiAgICB0aXRsZTogT3B0aW9uYWxbc3RyXQogICAgcHViX2RhdGU6IE9wdGlvbmFsW3N0cl0KICAgIGNvbnRlbnQ6IE9wdGlvbmFsW3N0cl0KICAgIGltYWdlOiBPcHRpb25hbFtzdHJdCiAgICBjbG91ZF9saW5rczogTGlzdFtzdHJdCiAgICB0YWdzOiBMaXN0W3N0cl0KICAgIGNsb3VkX3R5cGU6IE9wdGlvbmFsW3N0cl0KICAgIGNoYW5uZWxfaWQ6IE9wdGlvbmFsW3N0cl0KICAgIGNoYW5uZWxfbmFtZTogc3RyCg==

@@ -1,18 +1,1 @@
-{
-  "top_level_packages": [
-    "p115client",
-    "p115rsacipher",
-    "qrcode_terminal",
-    "qrcode-terminal"
-  ],
-  "rules": [
-    {
-      "strategy": "author_match",
-      "value": "ChenyangGao"
-    },
-    {
-      "strategy": "package_name_match",
-      "value": ["qrcode_terminal", "qrcode-terminal"]
-    }
-  ]
-}
+ew0KICAidG9wX2xldmVsX3BhY2thZ2VzIjogWw0KICAgICJwMTE1Y2xpZW50IiwNCiAgICAicDExNXJzYWNpcGhlciIsDQogICAgInFyY29kZV90ZXJtaW5hbCIsDQogICAgInFyY29kZS10ZXJtaW5hbCINCiAgXSwNCiAgInJ1bGVzIjogWw0KICAgIHsNCiAgICAgICJzdHJhdGVneSI6ICJhdXRob3JfbWF0Y2giLA0KICAgICAgInZhbHVlIjogIkNoZW55YW5nR2FvIg0KICAgIH0sDQogICAgew0KICAgICAgInN0cmF0ZWd5IjogInBhY2thZ2VfbmFtZV9tYXRjaCIsDQogICAgICAidmFsdWUiOiBbInFyY29kZV90ZXJtaW5hbCIsICJxcmNvZGUtdGVybWluYWwiXQ0KICAgIH0NCiAgXQ0KfQ==

@@ -1,2 +1,1 @@
-from .open import *
-from .browser import *
+ZnJvbSAub3BlbiBpbXBvcnQgKgpmcm9tIC5icm93c2VyIGltcG9ydCAqCg==

@@ -1,17 +1,1 @@
-from dataclasses import dataclass
-from pathlib import Path
-from typing import List, Optional, Union
-
-
-@dataclass
-class EmbyMediainfoTask:
-    """
-    单条 Emby 媒体信息提取任务
-    """
-
-    func_name: str
-    mp_mediaserver: Optional[str]
-    mediaservers: Optional[List[str]]
-    sha1: Optional[str]
-    path: Union[str, Path]
-    size: Optional[int]
+ZnJvbSBkYXRhY2xhc3NlcyBpbXBvcnQgZGF0YWNsYXNzCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aApmcm9tIHR5cGluZyBpbXBvcnQgTGlzdCwgT3B0aW9uYWwsIFVuaW9uCgoKQGRhdGFjbGFzcwpjbGFzcyBFbWJ5TWVkaWFpbmZvVGFzazoKICAgICIiIgogICAg5Y2V5p2hIEVtYnkg5aqS5L2T5L+h5oGv5o+Q5Y+W5Lu75YqhCiAgICAiIiIKCiAgICBmdW5jX25hbWU6IHN0cgogICAgbXBfbWVkaWFzZXJ2ZXI6IE9wdGlvbmFsW3N0cl0KICAgIG1lZGlhc2VydmVyczogT3B0aW9uYWxbTGlzdFtzdHJdXQogICAgc2hhMTogT3B0aW9uYWxbc3RyXQogICAgcGF0aDogVW5pb25bc3RyLCBQYXRoXQogICAgc2l6ZTogT3B0aW9uYWxbaW50XQo=

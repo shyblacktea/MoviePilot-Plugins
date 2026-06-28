@@ -1,15 +1,1 @@
-from typing import TypeVar, Generic, Optional
-from pydantic import BaseModel, Field
-
-
-T = TypeVar("T")
-
-
-class ApiResponse(BaseModel, Generic[T]):
-    """
-    通用 API 响应模型
-    """
-
-    code: int = Field(default=0, description="响应码")
-    msg: str = Field(default="success", description="响应消息")
-    data: Optional[T] = Field(default=None, description="响应数据")
+ZnJvbSB0eXBpbmcgaW1wb3J0IFR5cGVWYXIsIEdlbmVyaWMsIE9wdGlvbmFsCmZyb20gcHlkYW50aWMgaW1wb3J0IEJhc2VNb2RlbCwgRmllbGQKCgpUID0gVHlwZVZhcigiVCIpCgoKY2xhc3MgQXBpUmVzcG9uc2UoQmFzZU1vZGVsLCBHZW5lcmljW1RdKToKICAgICIiIgogICAg6YCa55SoIEFQSSDlk43lupTmqKHlnosKICAgICIiIgoKICAgIGNvZGU6IGludCA9IEZpZWxkKGRlZmF1bHQ9MCwgZGVzY3JpcHRpb249IuWTjeW6lOeggSIpCiAgICBtc2c6IHN0ciA9IEZpZWxkKGRlZmF1bHQ9InN1Y2Nlc3MiLCBkZXNjcmlwdGlvbj0i5ZON5bqU5raI5oGvIikKICAgIGRhdGE6IE9wdGlvbmFsW1RdID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5ZON5bqU5pWw5o2uIikK

@@ -1,12 +1,1 @@
-[package]
-name = "txt_tree_storage"
-version = "0.2.0"
-edition = "2021"
-
-[lib]
-name = "txt_tree_storage"
-crate-type = ["cdylib"]
-
-[dependencies]
-pyo3 = { version = "0.28.0", features = ["extension-module"] }
-ahash = "0.8"
+W3BhY2thZ2VdCm5hbWUgPSAidHh0X3RyZWVfc3RvcmFnZSIKdmVyc2lvbiA9ICIwLjIuMCIKZWRpdGlvbiA9ICIyMDIxIgoKW2xpYl0KbmFtZSA9ICJ0eHRfdHJlZV9zdG9yYWdlIgpjcmF0ZS10eXBlID0gWyJjZHlsaWIiXQoKW2RlcGVuZGVuY2llc10KcHlvMyA9IHsgdmVyc2lvbiA9ICIwLjI4LjAiLCBmZWF0dXJlcyA9IFsiZXh0ZW5zaW9uLW1vZHVsZSJdIH0KYWhhc2ggPSAiMC44Igo=

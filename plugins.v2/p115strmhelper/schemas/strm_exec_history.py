@@ -1,9 +1,1 @@
-from pydantic import BaseModel, Field
-
-
-class DeleteStrmSyncHistoryPayload(BaseModel):
-    """
-    删除 STRM 执行历史单条记录请求体
-    """
-
-    key: str = Field(..., description="历史记录 unique")
+ZnJvbSBweWRhbnRpYyBpbXBvcnQgQmFzZU1vZGVsLCBGaWVsZAoKCmNsYXNzIERlbGV0ZVN0cm1TeW5jSGlzdG9yeVBheWxvYWQoQmFzZU1vZGVsKToKICAgICIiIgogICAg5Yig6ZmkIFNUUk0g5omn6KGM5Y6G5Y+y5Y2V5p2h6K6w5b2V6K+35rGC5L2TCiAgICAiIiIKCiAgICBrZXk6IHN0ciA9IEZpZWxkKC4uLiwgZGVzY3JpcHRpb249IuWOhuWPsuiusOW9lSB1bmlxdWUiKQo=

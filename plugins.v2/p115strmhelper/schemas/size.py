@@ -1,10 +1,1 @@
-from pydantic import BaseModel, Field
-
-
-class CompareMinSize(BaseModel):
-    """
-    文件大小最小值比较模型
-    """
-
-    min_size: int | None = Field(default=None, description="最小文件大小")
-    file_size: int | None = Field(default=None, description="文件大小")
+ZnJvbSBweWRhbnRpYyBpbXBvcnQgQmFzZU1vZGVsLCBGaWVsZAoKCmNsYXNzIENvbXBhcmVNaW5TaXplKEJhc2VNb2RlbCk6CiAgICAiIiIKICAgIOaWh+S7tuWkp+Wwj+acgOWwj+WAvOavlOi+g+aooeWeiwogICAgIiIiCgogICAgbWluX3NpemU6IGludCB8IE5vbmUgPSBGaWVsZChkZWZhdWx0PU5vbmUsIGRlc2NyaXB0aW9uPSLmnIDlsI/mlofku7blpKflsI8iKQogICAgZmlsZV9zaXplOiBpbnQgfCBOb25lID0gRmllbGQoZGVmYXVsdD1Ob25lLCBkZXNjcmlwdGlvbj0i5paH5Lu25aSn5bCPIikK
