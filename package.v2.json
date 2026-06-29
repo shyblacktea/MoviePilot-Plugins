@@ -19,6 +19,11 @@
     "author": "DDSRem,shyblacktea",
     "level": 2,
     "history": {
+      "2.9.1": [
+        "fix: 补全本地安装时缺失的 core/database/db_manager/dist 目录",
+        "fix: 修复 helper/offline/__init__.py 中残留的无效代码行",
+        "fix: 移除未使用的 p115client.tool.offline 导入，解决 ModuleNotFoundError"
+      ],
       "2.9.0": [
         "fix: 去除 pan_transfer 与 monitor_life 的关联逻辑，修复 HTTP 405 错误",
         "fix: 修复文件双重 base64 编码问题导致乱码"
