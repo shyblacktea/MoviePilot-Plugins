@@ -128,7 +128,7 @@ class OfflineDownloadHelper:
         """
         获取当前所有任务
         """
-        return offline_iter(
+        return clouddownload_iter(
             self.client, cooldown=2, type="web", **configer.get_ios_ua_app(app=False)
         )
 
@@ -301,3 +301,4 @@ class OfflineDownloadHelper:
             logger.info(f"【离线下载】离线下载信息报告服务器成功: {resp.model_dump()}")
         except Exception as e:
             logger.debug(f"【离线下载】离线下载报告服务器失败: {e}")
+e}")
