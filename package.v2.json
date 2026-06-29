@@ -41,6 +41,7 @@
         "feat: 兼容新版 P115Client",
         "fix: 修复 strm 文件名特殊符号问题"
       ]
-    }
+    },
+    "release": true
   }
 }
