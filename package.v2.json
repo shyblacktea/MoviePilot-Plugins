@@ -10,38 +10,5 @@
         "feat: 新增重新安装功能，可选择清理或从市场重装无效插件"
       ]
     }
-  },
-  "P115StrmHelper": {
-    "v2": true,
-    "name": "115网盘STRM助手",
-    "description": "115网盘STRM生成一条龙服务（小k自用版）",
-    "version": "2.9.1",
-    "author": "DDSRem,shyblacktea",
-    "level": 2,
-    "history": {
-      "2.9.1": [
-        "fix: 适配 p115client 0.0.9.0.2 API 变更 - offline_iter -> clouddownload_iter, offline_add_urls -> clouddownload_task_add_urls",
-        "fix: 补全上游 p115client 0.0.9.0.2 的 valid wheel（原文件损坏）",
-        "fix: 补全本地安装时缺失的 core/database/db_manager/dist 目录"
-      ],
-      "2.9.0": [
-        "fix: 去除 pan_transfer 与 monitor_life 的关联逻辑，修复 HTTP 405 错误",
-        "fix: 修复文件双重 base64 编码问题导致乱码"
-      ],
-      "2.8.49": [
-        "fix: 修复扫码登录 - 绕过 login_qrcode() 直接请求带 uid 的官方二维码地址",
-        "fix: 修复全量同步 - 切换 Python 模式，解决 Rust Core v0.1.5 过滤 bug",
-        "fix: 修复 syntax error - full/__init__.py 括号不匹配"
-      ],
-      "2.8.48": [
-        "fix: full_sync_cleanup_confirm_mode=none 时跳过阈值安全检测，直接清理无效 STRM",
-        "fix: 清理不被部分文件生成失败阻塞"
-      ],
-      "2.8.47": [
-        "feat: 兼容新版 P115Client",
-        "fix: 修复 strm 文件名特殊符号问题"
-      ]
-    },
-    "release": true
   }
 }
