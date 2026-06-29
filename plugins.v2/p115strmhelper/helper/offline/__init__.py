@@ -5,7 +5,6 @@ from datetime import datetime, timezone
 
 from p115center import P115Center, OfflineInfo
 from p115client import P115Client
-from p115client.tool.offline import offline_iter
 from p115client.tool.attr import get_attr
 
 from app.log import logger
@@ -301,4 +300,3 @@ class OfflineDownloadHelper:
             logger.info(f"【离线下载】离线下载信息报告服务器成功: {resp.model_dump()}")
         except Exception as e:
             logger.debug(f"【离线下载】离线下载报告服务器失败: {e}")
-e}")
