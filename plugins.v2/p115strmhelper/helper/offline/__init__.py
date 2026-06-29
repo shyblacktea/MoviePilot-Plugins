@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 
 from p115center import P115Center, OfflineInfo
 from p115client import P115Client
+from p115client.tool.clouddownload import clouddownload_iter
 from p115client.tool.attr import get_attr
 
 from app.log import logger
