@@ -20,9 +20,9 @@
     "level": 2,
     "history": {
       "2.9.1": [
-        "fix: 补全本地安装时缺失的 core/database/db_manager/dist 目录",
-        "fix: 修复 helper/offline/__init__.py 中残留的无效代码行",
-        "fix: 移除未使用的 p115client.tool.offline 导入，解决 ModuleNotFoundError"
+        "fix: 适配 p115client 0.0.9.0.2 API 变更 - offline_iter -> clouddownload_iter, offline_add_urls -> clouddownload_task_add_urls",
+        "fix: 补全上游 p115client 0.0.9.0.2 的 valid wheel（原文件损坏）",
+        "fix: 补全本地安装时缺失的 core/database/db_manager/dist 目录"
       ],
       "2.9.0": [
         "fix: 去除 pan_transfer 与 monitor_life 的关联逻辑，修复 HTTP 405 错误",
