@@ -1,0 +1,20 @@
+{
+  "CleanInvalidPlugin": {
+    "name": "清理无效插件",
+    "description": "扫描、清理或重新安装数据库中无法加载的插件记录。（小k自用版）",
+    "version": "1.2",
+    "author": "cddjr,shyblacktea",
+    "level": 1,
+    "v2": true,
+    "history": {
+      "1.2": [
+        "feat: 使用 Vue 联邦组件重做配置页与详情页",
+        "fix: 重装失败时保留安装记录，避免记录丢失",
+        "feat: 重新安装时优先尝试本地插件源"
+      ],
+      "1.1": [
+        "feat: 新增重新安装功能，可选择清理或从市场重装无效插件"
+      ]
+    }
+  }
+}
