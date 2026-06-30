@@ -356,14 +356,16 @@ class CleanInvalidPlugin(_PluginBase):
         try:
             current_file = Path(__file__).resolve()
             for parent in current_file.parents:
-                if parent.name == "plugins" and parent.parent.name == "localplugins":
+                if parent.name in ("plugins.v2", "plugins") and parent.parent.name == "localplugins":
                     candidates.append(parent / normalized_id)
                     candidates.append(parent / plugin_id)
         except Exception:
             pass
 
         for root in (
+            Path("/config/localplugins/plugins.v2"),
             Path("/config/localplugins/plugins"),
+            Path("/opt/moviepilot/config/localplugins/plugins.v2"),
             Path("/opt/moviepilot/config/localplugins/plugins"),
         ):
             candidates.append(root / normalized_id)
