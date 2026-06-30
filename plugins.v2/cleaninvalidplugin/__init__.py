@@ -5,21 +5,21 @@ from typing import Any, Dict, List, Optional, Tuple
 from app.core.config import settings
 from app.core.plugin import PluginManager
 from app.db.systemconfig_oper import SystemConfigOper
+from app.helper.plugin import PluginHelper
 from app.log import logger
 from app.plugins import _PluginBase
-from app.schemas.types import SystemConfigKey, EventType
-from app.helper.plugin import PluginHelper
+from app.schemas.types import SystemConfigKey
 
 
 class CleanInvalidPlugin(_PluginBase):
     # 插件名称
     plugin_name = "清理无效插件"
     # 插件描述
-    plugin_desc = "删除或重新安装数据库中无法安装的插件记录。"
+    plugin_desc = "扫描、清理或重新安装数据库中无法加载的插件记录。"
     # 插件图标
     plugin_icon = "delete.jpg"
     # 插件版本
-    plugin_version = "1.1"
+    plugin_version = "1.2"
     # 插件作者
     plugin_author = "cddjr,shyblacktea"
     # 作者主页
@@ -32,9 +32,11 @@ class CleanInvalidPlugin(_PluginBase):
     auth_level = 1
 
     # 需要处理的插件
-    _invalid_plugin_ids = []
+    _invalid_plugin_ids: List[str] = []
     # 操作模式：clean 清理 / reinstall 重新安装
     _action_mode = "clean"
+    # 最近一次执行结果
+    _last_result: Optional[Dict[str, Any]] = None
 
     def init_plugin(self, config: dict = None):
         """
@@ -45,21 +47,25 @@ class CleanInvalidPlugin(_PluginBase):
         try:
             if not config:
                 return
-            self._invalid_plugin_ids = config.get("invalid_plugin_ids") or []
+
+            self._invalid_plugin_ids = self.__normalize_plugin_ids(
+                config.get("invalid_plugin_ids")
+            )
             self._action_mode = config.get("action_mode") or "clean"
 
             if not self._invalid_plugin_ids:
+                self._last_result = None
                 return
 
             if self._action_mode == "reinstall":
-                self._reinstall_plugins()
+                self._last_result = self._reinstall_plugins()
             else:
-                self._clean_plugins()
+                self._last_result = self._clean_plugins()
 
         except Exception as e:
-            logger.error(f"异常: {e}", exc_info=True)
+            logger.error(f"清理无效插件异常: {e}", exc_info=True)
 
-    def _clean_plugins(self):
+    def _clean_plugins(self) -> Dict[str, Any]:
         """
         清理选中的无效插件
         """
@@ -67,43 +73,53 @@ class CleanInvalidPlugin(_PluginBase):
         plugin_manager = PluginManager()
 
         valid_plugins = set(plugin_manager.get_plugin_ids() or [])
-        all_plugins: List[str] = (
-            config_oper.get(SystemConfigKey.UserInstalledPlugins) or []
-        )
+        all_plugins = self.__get_installed_plugins(config_oper)
+        selected_plugins = set(self._invalid_plugin_ids)
+        next_plugins = []
+        cleaned_plugins = []
+        skipped_plugins = []
+        failed_plugins = []
 
-        all_plugins_modified = []
         for plugin_id in all_plugins:
-            if plugin_id not in self._invalid_plugin_ids:
-                all_plugins_modified.append(plugin_id)
+            if plugin_id not in selected_plugins:
+                next_plugins.append(plugin_id)
                 continue
+
             try:
                 if plugin_id in valid_plugins:
-                    all_plugins_modified.append(plugin_id)
-                    logger.warn(f"{plugin_id} 是有效插件，跳过清理")
+                    next_plugins.append(plugin_id)
+                    skipped_plugins.append(plugin_id)
+                    logger.warning(f"{plugin_id} 是有效插件，跳过清理")
                     continue
+
                 logger.info(f"正在清理无效插件 {plugin_id}")
-                plugin_dir = (
-                    Path(settings.ROOT_PATH) / "app" / "plugins" / plugin_id.lower()
-                )
+                plugin_dir = self.__get_runtime_plugin_dir(plugin_id)
                 if plugin_dir.exists():
                     shutil.rmtree(plugin_dir, ignore_errors=True)
-                else:
-                    logger.warn(f"插件目录 {plugin_dir} 不存在")
+                cleaned_plugins.append(plugin_id)
             except Exception as e:
-                logger.warn(
-                    f"清理无效插件 {plugin_id} 产生异常: {e}", exc_info=True
-                )
+                next_plugins.append(plugin_id)
+                failed_plugins.append(plugin_id)
+                logger.warning(f"清理无效插件 {plugin_id} 产生异常: {e}", exc_info=True)
 
-        config_oper.set(SystemConfigKey.UserInstalledPlugins, all_plugins_modified)
-        self._invalid_plugin_ids = []
-        self.update_config(
-            {
-                "invalid_plugin_ids": [],
-                "action_mode": self._action_mode,
-            }
-        )
+        config_oper.set(SystemConfigKey.UserInstalledPlugins, self.__dedupe(next_plugins))
+        self.__clear_pending_config()
 
-    def _reinstall_plugins(self):
+        message = f"已清理 {len(cleaned_plugins)} 个无效插件"
+        if failed_plugins:
+            message += f"，{len(failed_plugins)} 个失败"
+        self.post_message(title="无效插件清理完成", text=message)
+
+        return {
+            "action": "clean",
+            "success": len(failed_plugins) == 0,
+            "cleaned": cleaned_plugins,
+            "skipped": skipped_plugins,
+            "failed": failed_plugins,
+            "message": message,
+        }
+
+    def _reinstall_plugins(self) -> Dict[str, Any]:
         """
         重新安装选中的无效插件
         """
@@ -112,69 +128,75 @@ class CleanInvalidPlugin(_PluginBase):
         plugin_helper = PluginHelper()
 
         valid_plugins = set(plugin_manager.get_plugin_ids() or [])
-        all_plugins: List[str] = (
-            config_oper.get(SystemConfigKey.UserInstalledPlugins) or []
-        )
+        all_plugins = self.__get_installed_plugins(config_oper)
+        selected_plugins = set(self._invalid_plugin_ids)
+        next_plugins = [p for p in all_plugins if p not in selected_plugins]
 
-        success_count = 0
-        fail_count = 0
+        reinstalled_plugins = []
+        skipped_plugins = []
+        failed_plugins = []
 
         for plugin_id in self._invalid_plugin_ids:
             try:
-                # 检查是否有效
                 if plugin_id in valid_plugins:
-                    logger.warn(f"{plugin_id} 已是有效插件，跳过重装")
+                    next_plugins.append(plugin_id)
+                    skipped_plugins.append(plugin_id)
+                    logger.warning(f"{plugin_id} 已是有效插件，跳过重装")
                     continue
 
                 logger.info(f"正在重装插件 {plugin_id}")
-
-                # 1. 清理旧插件目录
-                plugin_dir = (
-                    Path(settings.ROOT_PATH) / "app" / "plugins" / plugin_id.lower()
-                )
+                plugin_dir = self.__get_runtime_plugin_dir(plugin_id)
                 if plugin_dir.exists():
                     shutil.rmtree(plugin_dir, ignore_errors=True)
 
-                # 2. 从已安装列表中移除
-                all_plugins = [p for p in all_plugins if p != plugin_id]
+                local_source_dir = self.__find_local_source_dir(plugin_id)
+                if local_source_dir:
+                    shutil.copytree(
+                        local_source_dir,
+                        plugin_dir,
+                        dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store"),
+                    )
+                    next_plugins.append(plugin_id)
+                    reinstalled_plugins.append(plugin_id)
+                    logger.info(f"已从本地插件源重装 {plugin_id}: {local_source_dir}")
+                    continue
 
-                # 3. 尝试从插件市场安装
                 plugin_info = plugin_helper.get_plugin_by_id(plugin_id)
                 if plugin_info:
                     plugin_helper.download_plugin(
                         plugin_id=plugin_id,
                         plugin_info=plugin_info,
                     )
-                    success_count += 1
-                    logger.info(f"插件 {plugin_id} 重装成功")
+                    next_plugins.append(plugin_id)
+                    reinstalled_plugins.append(plugin_id)
+                    logger.info(f"插件 {plugin_id} 已从插件市场重装")
                 else:
-                    logger.warn(f"插件 {plugin_id} 在市场中未找到，跳过重装")
-                    fail_count += 1
+                    next_plugins.append(plugin_id)
+                    failed_plugins.append(plugin_id)
+                    logger.warning(f"插件 {plugin_id} 在本地源和插件市场中均未找到，保留原记录")
 
             except Exception as e:
-                logger.warn(
-                    f"重装插件 {plugin_id} 产生异常: {e}", exc_info=True
-                )
-                fail_count += 1
+                next_plugins.append(plugin_id)
+                failed_plugins.append(plugin_id)
+                logger.warning(f"重装插件 {plugin_id} 产生异常: {e}", exc_info=True)
 
-        # 更新安装记录
-        config_oper.set(SystemConfigKey.UserInstalledPlugins, all_plugins)
+        config_oper.set(SystemConfigKey.UserInstalledPlugins, self.__dedupe(next_plugins))
+        self.__clear_pending_config()
 
-        # 发送通知
-        if success_count > 0:
-            self.post_message(
-                title="插件重装完成",
-                text=f"成功重装 {success_count} 个插件"
-                + (f"，{fail_count} 个失败" if fail_count > 0 else ""),
-            )
+        message = f"已重装 {len(reinstalled_plugins)} 个插件"
+        if failed_plugins:
+            message += f"，{len(failed_plugins)} 个失败并已保留记录"
+        self.post_message(title="无效插件重装完成", text=message)
 
-        self._invalid_plugin_ids = []
-        self.update_config(
-            {
-                "invalid_plugin_ids": [],
-                "action_mode": self._action_mode,
-            }
-        )
+        return {
+            "action": "reinstall",
+            "success": len(failed_plugins) == 0,
+            "reinstalled": reinstalled_plugins,
+            "skipped": skipped_plugins,
+            "failed": failed_plugins,
+            "message": message,
+        }
 
     def get_state(self) -> bool:
         """
@@ -183,131 +205,81 @@ class CleanInvalidPlugin(_PluginBase):
         return False
 
     @staticmethod
+    def get_render_mode() -> Tuple[str, Optional[str]]:
+        """
+        获取插件渲染模式。
+        """
+        return "vue", "dist/assets"
+
+    @staticmethod
     def get_command() -> List[Dict[str, Any]]:
         """
         注册插件远程命令
         """
-        pass
+        return []
 
     def get_api(self) -> List[Dict[str, Any]]:
         """
         注册插件API
         """
-        pass
+        return [
+            {
+                "path": "/invalid_plugins",
+                "endpoint": self.get_invalid_plugins_api,
+                "methods": ["GET"],
+                "auth": "bear",
+                "summary": "获取无效插件列表",
+                "description": "获取已安装记录中无法被当前 MoviePilot 加载的插件。",
+            },
+            {
+                "path": "/last_result",
+                "endpoint": self.get_last_result_api,
+                "methods": ["GET"],
+                "auth": "bear",
+                "summary": "获取最近执行结果",
+                "description": "获取清理或重装操作的最近一次执行结果。",
+            },
+        ]
 
-    def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
+    def get_invalid_plugins_api(self) -> Dict[str, Any]:
+        """
+        获取无效插件列表API
+        """
+        return {
+            "success": True,
+            "data": {
+                "items": self.get_invalid_plugin_details(),
+                "last_result": self._last_result,
+            },
+        }
+
+    def get_last_result_api(self) -> Dict[str, Any]:
+        """
+        获取最近执行结果API
+        """
+        return {"success": True, "data": self._last_result or {}}
+
+    def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
         """
         拼装插件配置页面
 
-        :return: 1、页面配置（vuetify模式）；2、默认数据结构
+        :return: 1、页面配置（vue模式返回None）；2、默认数据结构
         """
         invalid_items = self.get_invalid_plugins()
-        has_invalid = len(invalid_items) > 0
+        current_selection = [
+            item["value"] for item in invalid_items if item["value"] in self._invalid_plugin_ids
+        ]
 
-        return [
-            {
-                "component": "VForm",
-                "content": [
-                    {
-                        "component": "VRow",
-                        "content": [
-                            {
-                                "component": "VCol",
-                                "props": {"cols": 12, "md": 6},
-                                "content": [
-                                    {
-                                        "component": "VSelect",
-                                        "props": {
-                                            "multiple": True,
-                                            "chips": True,
-                                            "model": "invalid_plugin_ids",
-                                            "label": "选择要处理的插件",
-                                            "items": invalid_items,
-                                        },
-                                    }
-                                ],
-                            },
-                            {
-                                "component": "VCol",
-                                "props": {"cols": 12, "md": 6},
-                                "content": [
-                                    {
-                                        "component": "VSelect",
-                                        "props": {
-                                            "model": "action_mode",
-                                            "label": "操作方式",
-                                            "items": [
-                                                {"title": "清理（删除插件记录）", "value": "clean"},
-                                                {"title": "重新安装（从市场重装）", "value": "reinstall"},
-                                            ],
-                                        },
-                                    }
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        "component": "VRow",
-                        "content": [
-                            {
-                                "component": "VCol",
-                                "props": {
-                                    "cols": 12,
-                                },
-                                "content": [
-                                    {
-                                        "component": "VAlert",
-                                        "props": {
-                                            "type": "info" if has_invalid else "success",
-                                            "variant": "tonal",
-                                            "text": (
-                                                f"当前有{len(invalid_items)}个插件无法安装，"
-                                                f"选择插件后选择操作方式，点击【保存】执行"
-                                                if has_invalid
-                                                else "所有插件均已成功安装，无需处理"
-                                            ),
-                                        },
-                                    }
-                                ],
-                            }
-                        ],
-                    },
-                    {
-                        "component": "VRow",
-                        "content": [
-                            {
-                                "component": "VCol",
-                                "props": {
-                                    "cols": 12,
-                                },
-                                "content": [
-                                    {
-                                        "component": "VAlert",
-                                        "props": {
-                                            "type": "warning",
-                                            "variant": "tonal",
-                                            "text": (
-                                                "提示：重新安装需要网络连接正常，"
-                                                "且插件市场中有对应插件源。"
-                                            ),
-                                        },
-                                    }
-                                ],
-                            }
-                        ],
-                    },
-                ],
-            }
-        ], {
-            "invalid_plugin_ids": self._invalid_plugin_ids,
-            "action_mode": "clean",
+        return None, {
+            "invalid_plugin_ids": current_selection,
+            "action_mode": self._action_mode or "clean",
         }
 
-    def get_page(self) -> List[dict]:
+    def get_page(self) -> Optional[List[dict]]:
         """
         拼装插件详情页面
         """
-        pass
+        return None
 
     def stop_service(self):
         """
@@ -322,20 +294,115 @@ class CleanInvalidPlugin(_PluginBase):
 
         :return: VSelect 数据格式的无效插件列表
         """
+        return [
+            {
+                "title": item["title"],
+                "value": item["id"],
+            }
+            for item in CleanInvalidPlugin.get_invalid_plugin_details()
+        ]
+
+    @staticmethod
+    def get_invalid_plugin_details() -> List[Dict[str, Any]]:
+        """
+        获取本地无效插件明细
+        """
         try:
             config_oper = SystemConfigOper()
             plugin_manager = PluginManager()
 
-            all_plugins = set(
-                config_oper.get(SystemConfigKey.UserInstalledPlugins) or []
-            )
+            all_plugins = set(CleanInvalidPlugin.__get_installed_plugins(config_oper))
             valid_plugins = set(plugin_manager.get_plugin_ids() or [])
-            invalid_plugins = all_plugins - valid_plugins
+            invalid_plugins = sorted(all_plugins - valid_plugins, key=str.lower)
 
-            return [
-                {"title": f"{plugin_id}", "value": plugin_id}
-                for plugin_id in invalid_plugins
-            ]
+            details = []
+            for plugin_id in invalid_plugins:
+                plugin_dir = CleanInvalidPlugin.__get_runtime_plugin_dir(plugin_id)
+                source_dir = CleanInvalidPlugin.__find_local_source_dir(plugin_id)
+                status = "运行目录存在但未被加载" if plugin_dir.exists() else "运行目录缺失"
+                if source_dir:
+                    status += "，本地源可用"
+
+                details.append(
+                    {
+                        "id": plugin_id,
+                        "title": f"{plugin_id} · {status}",
+                        "status": status,
+                        "runtime_path": str(plugin_dir),
+                        "runtime_exists": plugin_dir.exists(),
+                        "local_source_path": str(source_dir) if source_dir else "",
+                    }
+                )
+            return details
         except Exception as e:
-            logger.error(f"异常: {e}", exc_info=True)
+            logger.error(f"获取无效插件列表异常: {e}", exc_info=True)
             return []
+
+    @staticmethod
+    def __get_runtime_plugin_dir(plugin_id: str) -> Path:
+        return Path(settings.ROOT_PATH) / "app" / "plugins" / plugin_id.lower()
+
+    @staticmethod
+    def __get_installed_plugins(config_oper: Optional[SystemConfigOper] = None) -> List[str]:
+        config_oper = config_oper or SystemConfigOper()
+        plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []
+        return [str(plugin_id) for plugin_id in plugins if plugin_id]
+
+    @staticmethod
+    def __find_local_source_dir(plugin_id: str) -> Optional[Path]:
+        candidates = []
+        normalized_id = plugin_id.lower()
+
+        try:
+            current_file = Path(__file__).resolve()
+            for parent in current_file.parents:
+                if parent.name == "plugins" and parent.parent.name == "localplugins":
+                    candidates.append(parent / normalized_id)
+                    candidates.append(parent / plugin_id)
+        except Exception:
+            pass
+
+        for root in (
+            Path("/config/localplugins/plugins"),
+            Path("/opt/moviepilot/config/localplugins/plugins"),
+        ):
+            candidates.append(root / normalized_id)
+            candidates.append(root / plugin_id)
+
+        for candidate in candidates:
+            try:
+                if candidate.exists() and candidate.is_dir() and (candidate / "__init__.py").exists():
+                    return candidate
+            except Exception:
+                continue
+        return None
+
+    @staticmethod
+    def __normalize_plugin_ids(plugin_ids: Any) -> List[str]:
+        if not plugin_ids:
+            return []
+        if isinstance(plugin_ids, str):
+            return [plugin_ids]
+        if isinstance(plugin_ids, list):
+            return [str(plugin_id) for plugin_id in plugin_ids if plugin_id]
+        return []
+
+    @staticmethod
+    def __dedupe(plugin_ids: List[str]) -> List[str]:
+        result = []
+        seen = set()
+        for plugin_id in plugin_ids:
+            if plugin_id in seen:
+                continue
+            seen.add(plugin_id)
+            result.append(plugin_id)
+        return result
+
+    def __clear_pending_config(self):
+        self._invalid_plugin_ids = []
+        self.update_config(
+            {
+                "invalid_plugin_ids": [],
+                "action_mode": self._action_mode,
+            }
+        )
