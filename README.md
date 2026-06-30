@@ -1,25 +1,27 @@
-# shyblacktea MoviePilot-Plugins
+# MoviePilot-Plugins
 
-基于 MoviePilot 插件市场社区的二次修复与增强版插件集合。
+> [!NOTE]
+> MoviePilot 第三方插件仓库，小 k 自用维护版。
 
----
+## 插件市场地址
 
-## P115StrmHelper — 115网盘STRM助手
+https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/package.v2.json
 
-- **原作者**: [DDSRem](https://github.com/DDSRem)
-- **原仓库**: [DDSRem-Dev/MoviePilot-Plugins](https://github.com/DDSRem-Dev/MoviePilot-Plugins)
-- **说明**: 115网盘STRM生成一条龙服务（小k自用版）
+在 MoviePilot 的插件市场中添加上面的第三方市场地址后，即可安装本仓库插件。
 
----
+## 插件列表
 
-## CleanInvalidPlugin — 清理无效插件
+#### 工具类
 
-- **原作者**: [cddjr](https://github.com/cddjr)
-- **原仓库**: [cddjr/MoviePilot-Plugins](https://github.com/cddjr/MoviePilot-Plugins)
-- **说明**: 删除或重新安装数据库中无法安装的插件记录。（小k自用版）
-
----
+- [清理无效插件](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/cleaninvalidplugin)：扫描、清理或重新安装数据库中无法加载的插件记录。
 
 ## 致谢
 
-感谢以上所有原作者的杰出贡献，本仓库仅在其基础上进行本地修复和功能增强。
+- [cddjr](https://github.com/cddjr)：感谢原作者提供 清理无效插件的基础实现。
+- [MoviePilot](https://github.com/jxxghp/MoviePilot)：感谢项目本体与插件生态。
+
+本仓库仅用于个人维护和本地增强，感谢社区作者的基础工作。
+
+## 许可证
+
+此仓库内项目遵循原项目许可证约束，仅供学习交流与个人自用。
