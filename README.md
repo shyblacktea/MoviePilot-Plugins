@@ -3,9 +3,11 @@
 > [!NOTE]
 > MoviePilot 第三方插件仓库，小 k 自用维护版。
 
-## 插件市场地址
+## MoviePilot-Plugins 本仓库地址
 
-https://github.com/shyblacktea/MoviePilot-Plugins
+```text
+https://github.com/shyblacktea/MoviePilot-Plugins/
+```
 
 在 MoviePilot 的插件市场中添加上面的第三方仓库地址后，即可安装本仓库插件。
 
