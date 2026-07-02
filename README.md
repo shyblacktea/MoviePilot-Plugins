@@ -1,30 +1,30 @@
-# shyblacktea MoviePilot-Plugins
+# MoviePilot-Plugins
 
-基于 MoviePilot 插件市场社区的二次修复与增强版插件集合。
+MoviePilot 第三方插件仓库，shyblacktea 自用维护版。
 
----
+## 仓库地址
 
-## CleanInvalidPlugin - 清理无效插件
+```text
+https://github.com/shyblacktea/MoviePilot-Plugins/
+```
 
-- **原作者**: [cddjr](https://github.com/cddjr)
-- **原仓库**: [cddjr/MoviePilot-Plugins](https://github.com/cddjr/MoviePilot-Plugins)
-- **说明**: 扫描、清理或重新安装数据库中无法加载的插件记录。（小k自用版）
-- **当前版本**: 1.2
+在 MoviePilot 的插件市场中添加上面的第三方仓库地址后，即可安装本仓库插件。
 
-### 版本更新日志
+## 插件列表
 
-#### 1.2
+### 工具类
 
-- 使用 Vue 联邦组件重做配置页与详情页。
-- 重装失败时保留安装记录，避免记录丢失。
-- 重新安装时优先尝试本地插件源。
+- [清理无效插件](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/cleaninvalidplugin)：扫描、清理或重新安装数据库中无法加载的插件记录。
 
-#### 1.1
+### 订阅类
 
-- 新增重新安装功能，可选择清理或从市场重装无效插件。
-
----
+- [订阅下载增强](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/subscribeplus)：检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。
 
 ## 致谢
 
-感谢以上所有原作者的杰出贡献，本仓库仅在其基础上进行本地修复和功能增强。
+- 感谢 MoviePilot 社区提供插件机制和生态。
+- 感谢相关开源作者提供基础思路与实现参考。
+
+## 许可证
+
+本仓库内项目遵循原项目许可证约束，仅供学习交流与个人自用。
