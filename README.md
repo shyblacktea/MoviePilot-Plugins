@@ -1,7 +1,7 @@
 # MoviePilot-Plugins
 
 > [!NOTE]
-> MoviePilot 第三方插件仓库，小 k 自用维护版。
+> MoviePilot 第三方插件仓库，shyblacktea 自用维护版。
 
 ## MoviePilot-Plugins 本仓库地址
 
@@ -16,6 +16,10 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 #### 工具类
 
 - [清理无效插件](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/cleaninvalidplugin)：扫描、清理或重新安装数据库中无法加载的插件记录。
+
+#### 订阅类
+
+- [订阅下载增强](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/subscribeplus)：检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。
 
 ## 致谢
 

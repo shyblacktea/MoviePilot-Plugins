@@ -1,7 +1,7 @@
 {
   "CleanInvalidPlugin": {
     "name": "清理无效插件",
-    "description": "扫描、清理或重新安装数据库中无法加载的插件记录。（小k自用版）",
+    "description": "扫描、清理或重新安装数据库中无法加载的插件记录。（shyblacktea 自用版）",
     "version": "1.2",
     "author": "cddjr,shyblacktea",
     "level": 1,
@@ -17,6 +17,24 @@
       ],
       "1.1": [
         "feat: 新增重新安装功能，可选择清理或从市场重装无效插件"
+      ]
+    }
+  },
+  "SubscribePlus": {
+    "name": "订阅下载增强",
+    "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
+    "version": "0.1",
+    "author": "shyblacktea,Codex",
+    "level": 1,
+    "v2": true,
+    "release": true,
+    "history": {
+      "0.1": [
+        "feat: 初版支持 TMDB 播出日期停更检测、PT 搜索诊断、Telegram 独立通知和 Vue 配置详情页",
+        "feat: 二级分类读取 MoviePilot 分类策略，并支持订阅无分类时按 TMDB 信息识别分类",
+        "feat: 分类站点范围同步 MoviePilot 搜索站点设置",
+        "ui: 移除固定规则模式配置，规则调整改为 Telegram 菜单动态选择",
+        "docs: 更新作者为 shyblacktea,Codex"
       ]
     }
   }

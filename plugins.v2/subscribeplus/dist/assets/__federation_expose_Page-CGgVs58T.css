@@ -1,0 +1,102 @@
+
+.main-container[data-v-a75b59d5] {
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.scroll-content[data-v-a75b59d5] {
+  height: 75vh;
+  overflow-y: auto;
+  padding: 16px;
+}
+.footer-bar[data-v-a75b59d5] {
+  flex-shrink: 0;
+  padding: 0 5px;
+}
+.title-bar[data-v-a75b59d5],
+.small-title[data-v-a75b59d5] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: rgba(var(--v-theme-primary), 0.07);
+}
+.title-bar[data-v-a75b59d5] {
+  font-size: 1rem;
+}
+.small-title[data-v-a75b59d5] {
+  font-size: 0.875rem;
+}
+.content[data-v-a75b59d5] {
+  padding: 0.75rem;
+}
+.border[data-v-a75b59d5] {
+  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+.summary-item[data-v-a75b59d5] {
+  border-radius: 8px;
+  min-height: 56px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(var(--v-theme-primary), 0.03);
+}
+.summary-item strong[data-v-a75b59d5] {
+  margin-left: auto;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+.result-card[data-v-a75b59d5] {
+  overflow: hidden;
+}
+.result-header[data-v-a75b59d5] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+.result-title[data-v-a75b59d5] {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.candidate-title[data-v-a75b59d5],
+.path-line[data-v-a75b59d5] {
+  overflow-wrap: anywhere;
+}
+.empty-panel[data-v-a75b59d5] {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(var(--v-theme-on-surface), 0.62);
+}
+.preview-box[data-v-a75b59d5] {
+  display: grid;
+  gap: 0.5rem;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.875rem;
+}
+.action-bar[data-v-a75b59d5] {
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+.main-container[data-v-a75b59d5] {
+    height: 88vh;
+}
+.scroll-content[data-v-a75b59d5] {
+    height: 68vh;
+    padding: 8px;
+}
+.action-spacer[data-v-a75b59d5] {
+    display: none;
+}
+.action-bar[data-v-a75b59d5] .v-btn {
+    flex: 1 1 auto;
+    min-width: max-content;
+}
+}
