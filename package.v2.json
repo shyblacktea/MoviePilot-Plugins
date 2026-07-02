@@ -2,12 +2,16 @@
   "CleanInvalidPlugin": {
     "name": "清理无效插件",
     "description": "扫描、清理或重新安装数据库中无法加载的插件记录。（shyblacktea 自用版）",
-    "version": "1.2",
+    "version": "1.3",
     "author": "cddjr,shyblacktea",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "1.3": [
+        "fix: 补齐 plugins.v2 官方目录，避免 Release API 失败回退文件列表安装时缺少前端资源",
+        "fix: 插件初始化时修正 dist 静态资源权限，兼容 Docker 非 root 或严格 umask 环境"
+      ],
       "1.2": [
         "feat: 使用 Vue 联邦组件重做配置页与详情页",
         "ui: 参考路径名称格式化插件重构分组卡片、紧凑表单与底部操作栏",
@@ -23,16 +27,22 @@
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
-    "version": "0.1",
+    "version": "0.2",
     "author": "shyblacktea,Codex",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "0.2": [
+        "feat: Telegram 规则调整改为只添加官组或平台，避免官组+平台组合误扩大匹配范围",
+        "feat: 规则菜单、确认页和完成页新增结束按钮，确认后可返回规则菜单继续处理",
+        "feat: 支持从 MoviePilot 自定义识别词和订阅自定义词中提取制作组/官组",
+        "fix: 平台关键词按边界匹配，避免 BluRay 等标题片段误判平台"
+      ],
       "0.1": [
         "feat: 初版支持 TMDB 播出日期停更检测、PT 搜索诊断、Telegram 独立通知和 Vue 配置详情页",
         "feat: 二级分类读取 MoviePilot 分类策略，并支持订阅无分类时按 TMDB 信息识别分类",
-        "feat: 分类站点范围同步 MoviePilot 搜索站点设置",
+        "feat: 搜索站点范围同步 MoviePilot 搜索站点设置",
         "ui: 移除固定规则模式配置，规则调整改为 Telegram 菜单动态选择",
         "docs: 更新作者为 shyblacktea,Codex"
       ]
