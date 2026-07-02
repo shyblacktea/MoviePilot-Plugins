@@ -19,7 +19,7 @@ class CleanInvalidPlugin(_PluginBase):
     # 插件图标
     plugin_icon = "delete.jpg"
     # 插件版本
-    plugin_version = "1.2"
+    plugin_version = "1.3"
     # 插件作者
     plugin_author = "cddjr,shyblacktea"
     # 作者主页
@@ -44,6 +44,8 @@ class CleanInvalidPlugin(_PluginBase):
 
         :param config: 配置信息字典
         """
+        self.__ensure_static_asset_permissions()
+
         try:
             if not config:
                 return
@@ -399,6 +401,21 @@ class CleanInvalidPlugin(_PluginBase):
             seen.add(plugin_id)
             result.append(plugin_id)
         return result
+
+    @staticmethod
+    def __ensure_static_asset_permissions():
+        dist_dir = Path(__file__).resolve().parent / "dist"
+        if not dist_dir.exists():
+            return
+
+        for path in [dist_dir, *dist_dir.rglob("*")]:
+            try:
+                if path.is_dir():
+                    path.chmod(0o755)
+                elif path.is_file():
+                    path.chmod(0o644)
+            except Exception as e:
+                logger.debug(f"Skip static asset chmod for {path}: {e}")
 
     def __clear_pending_config(self):
         self._invalid_plugin_ids = []

@@ -47,6 +47,11 @@
 
 ## 更新日志
 
+### 1.3
+
+- 补齐仓库 `plugins.v2/cleaninvalidplugin` 官方目录，避免 GitHub Release API 失败或限流后回退文件列表安装时缺少前端资源。
+- 插件初始化时修正 `dist` 静态资源权限，兼容 Docker 非 root 或严格 `umask` 环境下的 Vue UI 加载。
+
 ### 1.2
 
 - 使用 Vue 联邦组件重做配置页与详情页。

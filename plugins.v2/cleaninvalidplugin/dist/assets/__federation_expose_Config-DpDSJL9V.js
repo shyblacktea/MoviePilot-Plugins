@@ -56,9 +56,9 @@ const selectedCount = computed(() => config.invalid_plugin_ids.length);
 const localSourceCount = computed(() => invalidItems.value.filter(item => item.local_source_path).length);
 const actionHint = computed(() => {
   if (config.action_mode === 'reinstall') {
-    return '重新安装会优先使用本地插件源；找不到来源时会保留记录，并保留原插件配置。'
+    return '重新安装会优先使用本地插件源；找不到来源时会保留记录。'
   }
-  return '清理记录只移除已安装列表中的选中项和无效运行目录，不删除原插件配置。'
+  return '清理记录会从已安装列表移除选中项，适合已经不再使用的插件。'
 });
 
 function applyInitialConfig() {
@@ -574,6 +574,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-1ca0636f"]]);
+const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-ff45875c"]]);
 
 export { Config as default };

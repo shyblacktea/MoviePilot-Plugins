@@ -1,0 +1,90 @@
+
+.clean-invalid-page[data-v-7eea1e8d] {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+.surface[data-v-7eea1e8d] {
+  background: transparent;
+  max-width: 100%;
+}
+.dialog-header[data-v-7eea1e8d] .v-card-item__content {
+  min-width: 0;
+}
+.dialog-header[data-v-7eea1e8d] .v-card-title,
+.dialog-header[data-v-7eea1e8d] .v-card-subtitle {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.header-actions[data-v-7eea1e8d] {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.summary-grid[data-v-7eea1e8d] {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.summary-panel[data-v-7eea1e8d] {
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-left-width: 4px;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: rgba(var(--v-theme-surface), 0.72);
+}
+.summary-panel span[data-v-7eea1e8d] {
+  display: block;
+  color: rgba(var(--v-theme-on-surface), 0.68);
+  font-size: 12px;
+  line-height: 18px;
+}
+.summary-panel strong[data-v-7eea1e8d] {
+  display: block;
+  font-size: 24px;
+  line-height: 32px;
+}
+.accent-red[data-v-7eea1e8d] {
+  border-left-color: rgb(var(--v-theme-error));
+}
+.accent-green[data-v-7eea1e8d] {
+  border-left-color: rgb(var(--v-theme-success));
+}
+.accent-blue[data-v-7eea1e8d] {
+  border-left-color: rgb(var(--v-theme-primary));
+}
+.plugin-list[data-v-7eea1e8d] {
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 8px;
+}
+.path-line[data-v-7eea1e8d] {
+  margin-top: 4px;
+  color: rgba(var(--v-theme-on-surface), 0.62);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.action-bar[data-v-7eea1e8d] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media (max-width: 600px) {
+.summary-grid[data-v-7eea1e8d] {
+    grid-template-columns: 1fr;
+}
+.clean-invalid-page[data-v-7eea1e8d] {
+    padding-inline: 2px;
+}
+.dialog-header[data-v-7eea1e8d] {
+    align-items: start;
+}
+.action-spacer[data-v-7eea1e8d] {
+    display: none;
+}
+.action-bar[data-v-7eea1e8d] .v-btn {
+    flex: 1 1 auto;
+    min-width: max-content;
+}
+}
