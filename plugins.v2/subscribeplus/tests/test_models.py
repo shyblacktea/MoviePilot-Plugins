@@ -1,4 +1,5 @@
 import unittest
+import inspect
 
 from subscribeplus import SubscribePlus
 from subscribeplus.models import PluginConfig
@@ -18,8 +19,6 @@ class PluginConfigTest(unittest.TestCase):
         self.assertFalse(config.enabled)
         self.assertEqual(config.delay_days, 1)
         self.assertEqual(config.selected_categories, [])
-        self.assertTrue(config.use_moviepilot_search_sites)
-        self.assertEqual(config.category_sites, {})
         self.assertTrue(config.notify_tg)
         self.assertFalse(config.allow_tg_rule_update)
 
@@ -28,6 +27,19 @@ class PluginConfigTest(unittest.TestCase):
 
         self.assertEqual(config.delay_days, 0)
         self.assertEqual(config.max_scan_subscribes, 1)
+
+    def test_post_api_endpoints_do_not_require_var_kwargs(self):
+        plugin = SubscribePlus()
+        post_apis = [api for api in plugin.get_api() if "POST" in api.get("methods", [])]
+
+        self.assertTrue(post_apis)
+        for api in post_apis:
+            signature = inspect.signature(api["endpoint"])
+            self.assertNotIn(
+                inspect.Parameter.VAR_KEYWORD,
+                {parameter.kind for parameter in signature.parameters.values()},
+                msg=f"{api['path']} should use an explicit optional body parameter",
+            )
 
 
 if __name__ == "__main__":

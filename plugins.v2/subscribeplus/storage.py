@@ -40,6 +40,13 @@ class JsonStore:
     def load_scan_meta(self) -> Dict[str, Any]:
         return self._read("scan_meta.json", {})
 
+    def clear_scan_results(self):
+        for name in ("scan_results.json", "scan_meta.json"):
+            try:
+                self._path(name).unlink(missing_ok=True)
+            except OSError:
+                pass
+
     def append_rule_record(self, record: Dict[str, Any]):
         records = [record] + self.load_rule_records()
         self._write("rule_records.json", records[: self.max_rule_records])

@@ -25,5 +25,8 @@ class SiteResolver:
 
     def resolve_for_category(self, config: PluginConfig, category: str) -> List[str]:
         available = [site["id"] for site in self.available_sites()]
-        selected = config.category_sites.get(category) or available
-        return [str(site_id) for site_id in selected if str(site_id) in available]
+        selected = [str(site_id) for site_id in (config.search_sites or [])]
+        if not selected:
+            return available
+        selected_set = set(selected)
+        return [site_id for site_id in available if site_id in selected_set]

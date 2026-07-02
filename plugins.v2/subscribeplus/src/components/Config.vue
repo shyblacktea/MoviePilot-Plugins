@@ -35,7 +35,16 @@
                 />
               </v-col>
               <v-col cols="12" md="4">
-                <v-text-field v-model="config.cron" label="Cron" variant="outlined" density="compact" hide-details="auto" />
+                <v-text-field
+                  v-model="config.cron"
+                  label="Cron"
+                  variant="outlined"
+                  density="compact"
+                  hide-details="auto"
+                  :error-messages="cronError"
+                  hint="每 6 小时建议写 0 */6 * * *"
+                  persistent-hint
+                />
               </v-col>
               <v-col cols="12" md="6">
                 <v-select
@@ -57,34 +66,24 @@
                   v-model.number="config.max_scan_subscribes"
                   type="number"
                   min="1"
-                  label="单次最多诊断"
+                  label="订阅部数通知上限"
                   variant="outlined"
                   density="compact"
                   hide-details="auto"
                 />
               </v-col>
-            </v-row>
-          </section>
-
-          <section class="config-section">
-            <div class="section-title">
-              <v-icon icon="mdi-server-network" color="primary" size="small" />
-              <span>分类站点范围</span>
-            </div>
-            <v-row>
-              <v-col v-for="category in selectedCategoryItems" :key="category.value" cols="12" md="6">
+              <v-col cols="12" md="9">
                 <v-select
-                  v-model="config.category_sites[category.value]"
+                  v-model="config.search_sites"
                   :items="sites"
                   item-title="name"
                   item-value="id"
-                  :label="category.title"
+                  label="搜索 PT 站点范围"
                   variant="outlined"
                   density="compact"
                   multiple
                   chips
                   closable-chips
-                  clearable
                   hide-details="auto"
                 />
               </v-col>
@@ -126,7 +125,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 
 const props = defineProps({
   initialConfig: {
@@ -145,22 +144,17 @@ const loading = ref(false)
 const error = ref('')
 const categories = ref([])
 const sites = ref([])
+const cronError = ref('')
 
 const config = reactive({
   enabled: false,
   delay_days: 1,
   cron: '0 9 * * *',
   selected_categories: [],
-  use_moviepilot_search_sites: true,
-  category_sites: {},
+  search_sites: [],
   max_scan_subscribes: 20,
   notify_tg: true,
   allow_tg_rule_update: false,
-})
-
-const selectedCategoryItems = computed(() => {
-  const selected = new Set(config.selected_categories)
-  return categories.value.filter(item => selected.has(item.value))
 })
 
 function unwrap(response) {
@@ -175,9 +169,9 @@ function applyInitialConfig() {
     selected_categories: Array.isArray(props.initialConfig.selected_categories)
       ? [...props.initialConfig.selected_categories]
       : [],
-    category_sites: props.initialConfig.category_sites
-      ? { ...props.initialConfig.category_sites }
-      : {},
+    search_sites: Array.isArray(props.initialConfig.search_sites)
+      ? [...props.initialConfig.search_sites]
+      : [],
   })
 }
 
@@ -198,6 +192,11 @@ async function loadOptions() {
     if (!config.selected_categories.length || staleUncategorizedOnly) {
       config.selected_categories = categories.value.map(item => item.value)
     }
+    const availableSiteIds = sites.value.map(item => String(item.id))
+    config.search_sites = config.search_sites.filter(site => availableSiteIds.includes(String(site)))
+    if (!config.search_sites.length) {
+      config.search_sites = [...availableSiteIds]
+    }
   } catch (err) {
     error.value = err?.message || '读取配置选项失败'
   } finally {
@@ -205,30 +204,28 @@ async function loadOptions() {
   }
 }
 
+function validateCron(value) {
+  const parts = String(value || '').trim().split(/\s+/)
+  if (parts.length !== 5) return 'Cron 需要 5 段，例如 0 */6 * * *'
+  const ranges = [59, 23, 31, 12, 7]
+  const invalid = parts.find((part, index) => {
+    const match = part.match(/^\*\/(\d+)$/)
+    return match && Number(match[1]) > ranges[index]
+  })
+  if (invalid) return `${invalid} 超出该 Cron 字段范围`
+  return ''
+}
+
 function saveConfig() {
-  const selected = new Set(config.selected_categories)
-  const categorySites = Object.fromEntries(
-    Object.entries(config.category_sites || {}).filter(([category]) => selected.has(category))
-  )
+  cronError.value = validateCron(config.cron)
+  if (cronError.value) return
   emit('save', {
     ...config,
     delay_days: Number(config.delay_days),
+    search_sites: [...config.search_sites],
     max_scan_subscribes: Number(config.max_scan_subscribes),
-    category_sites: categorySites,
   })
 }
-
-watch(
-  () => config.selected_categories,
-  categoriesValue => {
-    for (const category of categoriesValue) {
-      if (!Array.isArray(config.category_sites[category])) {
-        config.category_sites[category] = []
-      }
-    }
-  },
-  { deep: true }
-)
 
 onMounted(() => {
   applyInitialConfig()

@@ -63,8 +63,6 @@
             </v-chip>
           </div>
           <div class="text-caption text-medium-emphasis mb-2">{{ item.message }}</div>
-          <div class="text-caption path-line">站点：{{ (item.sites || []).join(', ') || 'MP 默认搜索站点' }}</div>
-
           <v-table v-if="item.candidates?.length" density="compact" class="mt-2">
             <thead>
               <tr>
@@ -114,6 +112,7 @@
         <v-btn color="info" prepend-icon="mdi-cog-outline" variant="text" size="small" @click="emit('switch')">配置页</v-btn>
         <v-spacer class="action-spacer" />
         <v-btn color="primary" prepend-icon="mdi-radar" variant="text" size="small" :loading="scanning" @click="runScan">手动扫描</v-btn>
+        <v-btn color="warning" prepend-icon="mdi-delete-sweep-outline" variant="text" size="small" :loading="clearing" @click="clearResults">清除</v-btn>
         <v-btn color="grey" prepend-icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadData">刷新</v-btn>
         <v-btn color="grey" prepend-icon="mdi-close" variant="text" size="small" @click="emit('close')">关闭</v-btn>
       </v-container>
@@ -153,6 +152,7 @@ const emit = defineEmits(['action', 'switch', 'close'])
 
 const loading = ref(false)
 const scanning = ref(false)
+const clearing = ref(false)
 const error = ref('')
 const status = ref({})
 const items = ref([])
@@ -223,6 +223,19 @@ async function runScan() {
     error.value = err?.message || '手动扫描失败'
   } finally {
     scanning.value = false
+  }
+}
+
+async function clearResults() {
+  clearing.value = true
+  error.value = ''
+  try {
+    await props.api.post('plugin/SubscribePlus/results/clear', {})
+    await loadData()
+  } catch (err) {
+    error.value = err?.message || '清除诊断结果失败'
+  } finally {
+    clearing.value = false
   }
 }
 

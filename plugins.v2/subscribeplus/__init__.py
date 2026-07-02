@@ -7,6 +7,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 try:
+    from fastapi import Body
+except Exception:  # pragma: no cover - local unit tests may not install FastAPI
+    def Body(default=None, **kwargs):
+        return default
+
+try:
     from apscheduler.triggers.cron import CronTrigger
 except Exception:  # pragma: no cover - MoviePilot runtime dependency
     CronTrigger = None
@@ -55,10 +61,16 @@ except Exception:  # pragma: no cover - lets local unit tests import this packag
 
     class SystemConfigKey:
         IndexerSites = "IndexerSites"
+        CustomIdentifiers = "CustomIdentifiers"
 
 from .diagnosis import TorrentDiagnoser
 from .models import DiagnosisInput, PluginConfig
-from .rules import apply_include_preview, build_include_preview, build_rule_suggestions
+from .rules import (
+    apply_include_preview,
+    build_include_preview,
+    build_rule_suggestions,
+    extract_release_groups_from_words,
+)
 from .scanner import SubscriptionScanner, episode_in_seasoninfo, episode_in_transfer_history
 from .sites import SiteResolver
 from .storage import JsonStore
@@ -66,9 +78,11 @@ from .telegram import (
     build_main_menu,
     build_resource_menu,
     build_rule_confirm_menu,
+    build_rule_done_menu,
     build_rule_menu,
     make_token,
     render_notification_text,
+    render_rule_preview_text,
 )
 
 
@@ -79,7 +93,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.1"
+    plugin_version = "0.2"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -94,6 +108,7 @@ class SubscribePlus(_PluginBase):
     _diagnoser: Optional[TorrentDiagnoser] = None
     _download_contexts: Dict[str, Any] = {}
     _category_cache: Dict[str, str] = {}
+    _custom_release_groups_cache: List[str] = []
 
     def init_plugin(self, config: dict = None):
         self._config = config or {}
@@ -110,6 +125,7 @@ class SubscribePlus(_PluginBase):
         self._diagnoser = TorrentDiagnoser(self._search_torrents)
         self._download_contexts = {}
         self._category_cache = {}
+        self._custom_release_groups_cache = []
 
     def get_state(self) -> bool:
         return bool(self._plugin_config.enabled)
@@ -149,6 +165,7 @@ class SubscribePlus(_PluginBase):
             {"path": "/sites", "endpoint": self.get_site_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取可搜索 PT 站点"},
             {"path": "/scan", "endpoint": self.run_scan_api, "methods": ["POST"], "auth": "bear", "summary": "手动扫描订阅"},
             {"path": "/results", "endpoint": self.get_results_api, "methods": ["GET"], "auth": "bear", "summary": "获取最近诊断结果"},
+            {"path": "/results/clear", "endpoint": self.clear_results_api, "methods": ["POST"], "auth": "bear", "summary": "清除最近诊断结果"},
             {"path": "/rule_preview", "endpoint": self.rule_preview_api, "methods": ["POST"], "auth": "bear", "summary": "生成规则修改预览"},
             {"path": "/rule_confirm", "endpoint": self.rule_confirm_api, "methods": ["POST"], "auth": "bear", "summary": "确认规则修改"},
         ]
@@ -202,15 +219,19 @@ class SubscribePlus(_PluginBase):
             },
         }
 
-    def run_scan_api(self, **kwargs) -> Dict[str, Any]:
+    def clear_results_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        self._ensure_store().clear_scan_results()
+        return {"success": True}
+
+    def run_scan_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         return self.run_scan(source="manual")
 
-    def rule_preview_api(self, **kwargs) -> Dict[str, Any]:
-        payload = self._extract_payload(kwargs)
+    def rule_preview_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
         return self._rule_preview(payload, source="vue")
 
-    def rule_confirm_api(self, **kwargs) -> Dict[str, Any]:
-        payload = self._extract_payload(kwargs)
+    def rule_confirm_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
         token = payload.get("token") or payload.get("confirm_token")
         if not token:
             return {"success": False, "message": "缺少确认 token"}
@@ -287,32 +308,60 @@ class SubscribePlus(_PluginBase):
             self._download_candidate(diagnosis, index)
             return
         if op == "rule":
-            suggestions = build_rule_suggestions(diagnosis.get("candidates") or [])
+            suggestions = build_rule_suggestions(
+                diagnosis.get("candidates") or [],
+                release_groups=self._release_groups_for_diagnosis(diagnosis),
+            )
             self.post_message(
                 title=f"调整订阅规则：{diagnosis.get('title')}",
-                text="请选择要加入订阅包含规则的站点或平台关键词。",
+                text="请选择要加入订阅包含规则的官组或平台关键词。",
                 buttons=build_rule_menu(token, suggestions),
                 save_history=False,
             )
             return
         if op == "rule-confirm":
+            back_token = ((state.get("preview") or {}).get("back_token") or "").strip()
             result = self._rule_confirm(token)
-            text = "订阅规则已修改。" if result.get("success") else result.get("message", "订阅规则修改失败。")
-            self.post_message(title="订阅下载增强", text=text, save_history=False)
+            if result.get("success"):
+                record = result.get("data") or {}
+                text = "\n".join(
+                    [
+                        f"已添加：{record.get('selected_text') or '订阅包含规则'}",
+                        "当前包含规则：",
+                        record.get("new_value") or "-",
+                    ]
+                )
+                self.post_message(
+                    title="订阅下载增强",
+                    text=text,
+                    buttons=build_rule_done_menu(back_token) if back_token else None,
+                    save_history=False,
+                )
+            else:
+                self.post_message(title="订阅下载增强", text=result.get("message", "订阅规则修改失败。"), save_history=False)
             return
         if op.startswith("rule"):
             index = int(op.replace("rule", "") or 0) - 1
-            suggestions = build_rule_suggestions(diagnosis.get("candidates") or [])
+            suggestions = build_rule_suggestions(
+                diagnosis.get("candidates") or [],
+                release_groups=self._release_groups_for_diagnosis(diagnosis),
+            )
             if 0 <= index < len(suggestions):
+                selected_text = suggestions[index].get("text") or suggestions[index].get("value") or "规则"
                 result = self._rule_preview(
-                    {"subscribe_id": diagnosis.get("subscribe_id"), "pattern": suggestions[index].get("pattern")},
+                    {
+                        "subscribe_id": diagnosis.get("subscribe_id"),
+                        "pattern": suggestions[index].get("pattern"),
+                        "back_token": token,
+                        "selected_text": selected_text,
+                    },
                     source="telegram",
                 )
                 if result.get("success"):
                     preview = result.get("data") or {}
                     self.post_message(
                         title=f"规则修改预览：{diagnosis.get('title')}",
-                        text=f"旧 include：{preview.get('old_include') or '-'}\n新 include：{preview.get('new_include') or '-'}",
+                        text=render_rule_preview_text(preview, selected_text),
                         buttons=build_rule_confirm_menu(preview.get("token"), token),
                         save_history=False,
                     )
@@ -325,7 +374,8 @@ class SubscribePlus(_PluginBase):
             return
         if op == "close":
             self._ensure_store().delete_interaction(token)
-            self.post_message(title="订阅下载增强", text="已关闭本次交互。", save_history=False)
+            if not self._delete_callback_message(event_data):
+                self.post_message(title="订阅下载增强", text="已关闭本次交互。", save_history=False)
             return
         if op == "back":
             self.post_message(
@@ -346,7 +396,13 @@ class SubscribePlus(_PluginBase):
         except ValueError as exc:
             return {"success": False, "message": str(exc)}
         token = make_token(preview)
-        preview.update({"token": token})
+        preview.update(
+            {
+                "token": token,
+                "back_token": payload.get("back_token") or "",
+                "selected_text": payload.get("selected_text") or "",
+            }
+        )
         self._ensure_store().save_interaction(
             token,
             {
@@ -365,6 +421,7 @@ class SubscribePlus(_PluginBase):
             record = apply_include_preview(state["preview"], self._update_subscribe)
         except ValueError as exc:
             return {"success": False, "message": str(exc)}
+        record["selected_text"] = (state.get("preview") or {}).get("selected_text") or ""
         self._ensure_store().append_rule_record(record)
         self._ensure_store().delete_interaction(token)
         return {"success": True, "data": record}
@@ -387,6 +444,23 @@ class SubscribePlus(_PluginBase):
             self.post_message(title="订阅下载增强", text="已提交下载任务。", save_history=False)
         except Exception as exc:
             self.post_message(title="订阅下载增强", text=f"提交下载失败：{exc}", save_history=False)
+
+    def _delete_callback_message(self, event_data: Dict[str, Any]) -> bool:
+        try:
+            channel = event_data.get("channel")
+            source = event_data.get("source")
+            message_id = event_data.get("original_message_id") or event_data.get("message_id")
+            chat_id = event_data.get("original_chat_id") or event_data.get("chat_id")
+            if not message_id or not chat_id:
+                return False
+            chain = getattr(self, "chain", None)
+            if not chain or not hasattr(chain, "delete_message"):
+                return False
+            chain.delete_message(channel, source, message_id, chat_id)
+            return True
+        except Exception as exc:
+            logger.warning(f"订阅下载增强删除 Telegram 消息失败: {exc}")
+            return False
 
     def _save_interaction(self, diagnosis: Dict[str, Any]) -> str:
         token = make_token(
@@ -436,11 +510,67 @@ class SubscribePlus(_PluginBase):
         subscribe = SubscribeOper().update(subscribe_id, payload)
         return {"id": subscribe_id, "updated": bool(subscribe)}
 
-    def _load_moviepilot_search_sites(self) -> List[Dict[str, Any]]:
+    @staticmethod
+    def _flatten_words(value: Any) -> List[str]:
+        if value is None:
+            return []
+        if isinstance(value, str):
+            return [line.strip() for line in value.splitlines() if line.strip()]
+        if isinstance(value, dict):
+            words: List[str] = []
+            for item in value.values():
+                words.extend(SubscribePlus._flatten_words(item))
+            return words
+        if isinstance(value, (list, tuple, set)):
+            words = []
+            for item in value:
+                words.extend(SubscribePlus._flatten_words(item))
+            return words
+        return [str(value)]
+
+    def _load_custom_release_groups(self) -> List[str]:
+        words: List[str] = []
         try:
             from app.db.systemconfig_oper import SystemConfigOper
 
-            selected_ids = {str(item) for item in (SystemConfigOper().get(SystemConfigKey.IndexerSites) or [])}
+            oper = SystemConfigOper()
+            for key in (
+                getattr(SystemConfigKey, "CustomIdentifiers", "CustomIdentifiers"),
+                getattr(SystemConfigKey, "CustomReleaseGroups", "CustomReleaseGroups"),
+                getattr(SystemConfigKey, "CustomWords", "CustomWords"),
+                getattr(SystemConfigKey, "ReleaseGroups", "ReleaseGroups"),
+            ):
+                try:
+                    words.extend(self._flatten_words(oper.get(key)))
+                except Exception:
+                    continue
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取自定义制作组词表失败: {exc}")
+        return extract_release_groups_from_words(words)
+
+    def _release_groups_for_diagnosis(self, diagnosis: Dict[str, Any]) -> List[str]:
+        groups = list(self._load_custom_release_groups())
+        subscribe_id = int(diagnosis.get("subscribe_id") or 0)
+        if subscribe_id:
+            subscribe = self._get_subscribe(subscribe_id)
+            if subscribe:
+                words: List[str] = []
+                for attr in ("custom_words", "custom_identifiers", "release_groups"):
+                    words.extend(self._flatten_words(getattr(subscribe, attr, None)))
+                groups.extend(extract_release_groups_from_words(words))
+
+        result: List[str] = []
+        seen = set()
+        for group in groups:
+            key = str(group or "").lower()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            result.append(str(group))
+        return result
+
+    def _load_moviepilot_search_sites(self) -> List[Dict[str, Any]]:
+        try:
             indexers = []
             try:
                 from app.helper.sites import SitesHelper
@@ -457,19 +587,23 @@ class SubscribePlus(_PluginBase):
                     }
                     for site in (SiteOper().list_active() or [])
                 ]
-
-            sites = []
-            for indexer in indexers:
-                if indexer.get("is_active") is False:
-                    continue
-                site_id = str(indexer.get("id"))
-                if selected_ids and site_id not in selected_ids:
-                    continue
-                sites.append({"id": site_id, "name": indexer.get("name") or site_id})
-            return sites
+            return self._normalize_indexer_sites(indexers)
         except Exception as exc:
             logger.warning(f"订阅下载增强读取搜索站点失败: {exc}")
             return []
+
+    @staticmethod
+    def _normalize_indexer_sites(indexers: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+        sites = []
+        for indexer in indexers or []:
+            if indexer.get("is_active") is False:
+                continue
+            site_id = indexer.get("id", indexer.get("value"))
+            if site_id in (None, ""):
+                continue
+            site_id = str(site_id)
+            sites.append({"id": site_id, "name": str(indexer.get("name") or indexer.get("title") or site_id)})
+        return sites
 
     def _load_tv_categories(self) -> List[str]:
         try:
@@ -640,14 +774,12 @@ class SubscribePlus(_PluginBase):
         return candidate_id
 
     @staticmethod
-    def _extract_payload(kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        if not kwargs:
+    def _extract_payload(payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+        if not payload:
             return {}
-        if len(kwargs) == 1:
-            value = next(iter(kwargs.values()))
-            if isinstance(value, dict):
-                return value
-        return kwargs
+        if isinstance(payload, dict):
+            return payload
+        return {}
 
     def _ensure_store(self) -> JsonStore:
         if not self._store:

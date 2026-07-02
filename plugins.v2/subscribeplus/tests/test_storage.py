@@ -39,6 +39,18 @@ class JsonStoreTest(unittest.TestCase):
         self.assertIsNone(store.load_interaction("old"))
         self.assertEqual(store.load_interaction("fresh")["expires_at"], fresh)
 
+    def test_clear_scan_results_removes_results_and_meta(self):
+        TEST_TMP_ROOT.mkdir(exist_ok=True)
+        tmpdir = TEST_TMP_ROOT / "storage_clear"
+        tmpdir.mkdir(exist_ok=True)
+        store = JsonStore(tmpdir)
+        store.save_scan_results([{"title": "Show"}])
+
+        store.clear_scan_results()
+
+        self.assertEqual(store.load_scan_results(), [])
+        self.assertEqual(store.load_scan_meta(), {})
+
 
 if __name__ == "__main__":
     unittest.main()

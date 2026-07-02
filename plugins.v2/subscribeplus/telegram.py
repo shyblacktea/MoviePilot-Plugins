@@ -29,7 +29,7 @@ def build_main_menu(token: str, allow_rule_update: bool) -> List[List[Dict[str, 
         first_row,
         [
             {"text": "忽略本次", "callback_data": make_callback("ignore", token)},
-            {"text": "关闭", "callback_data": make_callback("close", token)},
+            {"text": "结束", "callback_data": make_callback("close", token)},
         ],
     ]
 
@@ -47,7 +47,12 @@ def build_resource_menu(token: str, candidates: List[Dict[str, Any]]) -> List[Li
                 }
             ]
         )
-    buttons.append([{"text": "返回", "callback_data": make_callback("back", token)}])
+    buttons.append(
+        [
+            {"text": "返回", "callback_data": make_callback("back", token)},
+            {"text": "结束", "callback_data": make_callback("close", token)},
+        ]
+    )
     return buttons
 
 
@@ -55,21 +60,52 @@ def build_rule_menu(token: str, suggestions: List[Dict[str, str]]) -> List[List[
     buttons = [
         [
             {
-                "text": item.get("value") or item.get("kind") or "规则",
+                "text": item.get("text") or item.get("value") or item.get("kind") or "规则",
                 "callback_data": make_callback(f"rule{index}", token),
             }
         ]
         for index, item in enumerate(suggestions[:8], start=1)
     ]
-    buttons.append([{"text": "返回", "callback_data": make_callback("back", token)}])
+    buttons.append(
+        [
+            {"text": "返回", "callback_data": make_callback("back", token)},
+            {"text": "结束", "callback_data": make_callback("close", token)},
+        ]
+    )
     return buttons
 
 
 def build_rule_confirm_menu(confirm_token: str, back_token: str) -> List[List[Dict[str, str]]]:
     return [
-        [{"text": "确认修改", "callback_data": make_callback("rule-confirm", confirm_token)}],
-        [{"text": "返回", "callback_data": make_callback("back", back_token)}],
+        [{"text": "确认添加", "callback_data": make_callback("rule-confirm", confirm_token)}],
+        [
+            {"text": "返回", "callback_data": make_callback("rule", back_token)},
+            {"text": "结束", "callback_data": make_callback("close", back_token)},
+        ],
     ]
+
+
+def build_rule_done_menu(back_token: str) -> List[List[Dict[str, str]]]:
+    return [
+        [
+            {"text": "返回", "callback_data": make_callback("rule", back_token)},
+            {"text": "结束", "callback_data": make_callback("close", back_token)},
+        ]
+    ]
+
+
+def render_rule_preview_text(preview: Dict[str, Any], selected_text: str = "") -> str:
+    lines = []
+    if selected_text:
+        lines.append(f"已选择：{selected_text}")
+    lines.extend(
+        [
+            "是否添加到订阅包含规则？",
+            f"添加前：{preview.get('old_include') or '-'}",
+            f"添加后：{preview.get('new_include') or '-'}",
+        ]
+    )
+    return "\n".join(lines)
 
 
 def render_notification_text(item: Dict[str, Any]) -> str:

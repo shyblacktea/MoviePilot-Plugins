@@ -23,8 +23,7 @@ class PluginConfig:
     delay_days: int = 1
     cron: str = "0 9 * * *"
     selected_categories: List[str] = field(default_factory=list)
-    use_moviepilot_search_sites: bool = True
-    category_sites: Dict[str, List[str]] = field(default_factory=dict)
+    search_sites: List[str] = field(default_factory=list)
     max_scan_subscribes: int = 20
     notify_tg: bool = True
     allow_tg_rule_update: bool = False
@@ -40,12 +39,7 @@ class PluginConfig:
         config.enabled = bool(config.enabled)
         config.delay_days = max(0, int(config.delay_days or 0))
         config.selected_categories = [str(item) for item in _as_list(config.selected_categories)]
-        config.use_moviepilot_search_sites = bool(config.use_moviepilot_search_sites)
-        config.category_sites = {
-            str(category): [str(site_id) for site_id in _as_list(site_ids)]
-            for category, site_ids in (config.category_sites or {}).items()
-            if category
-        }
+        config.search_sites = [str(item) for item in _as_list(config.search_sites)]
         config.max_scan_subscribes = max(1, int(config.max_scan_subscribes or 1))
         config.notify_tg = bool(config.notify_tg)
         config.allow_tg_rule_update = bool(config.allow_tg_rule_update)

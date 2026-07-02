@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 from .models import DiagnosisInput, DiagnosisItem
 
@@ -47,15 +47,31 @@ def normalize_search_result(raw: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _target_episode_set(episode: int | Iterable[int]) -> set[int]:
+    if isinstance(episode, int):
+        return {int(episode)}
+    return {int(item) for item in episode if int(item or 0) > 0}
+
+
+def _matches_target_episode(item: Dict[str, Any], season: int, target_episodes: set[int]) -> bool:
+    item_season = int(item.get("season") or season)
+    if item_season not in (0, int(season)):
+        return False
+    episodes = item.get("episodes")
+    if isinstance(episodes, list) and episodes:
+        return bool({int(ep) for ep in episodes if int(ep or 0) > 0} & target_episodes)
+    return int(item.get("episode") or 0) in target_episodes
+
+
 def classify_results(
-    results: List[Dict[str, Any]], season: int, episode: int, include_pattern: str
+    results: List[Dict[str, Any]], season: int, episode: int | Iterable[int], include_pattern: str
 ) -> DiagnosisResult:
     normalized = [normalize_search_result(item) for item in results]
+    target_episodes = _target_episode_set(episode)
     episode_hits = [
         item
         for item in normalized
-        if int(item.get("episode") or 0) == int(episode)
-        and int(item.get("season") or season) in (0, int(season))
+        if _matches_target_episode(item, season, target_episodes)
     ]
     if not episode_hits:
         return DiagnosisResult("no_pt_resource", [], "未搜索到覆盖目标集的 PT 资源")
@@ -96,8 +112,8 @@ class TorrentDiagnoser:
                 sites=item.sites,
             )
 
-        first_episode = item.episodes[0]
-        diagnosis = classify_results(raw_results, item.season, first_episode.episode, item.include)
+        target_episodes = [episode.episode for episode in item.episodes]
+        diagnosis = classify_results(raw_results, item.season, target_episodes, item.include)
         return DiagnosisItem(
             subscribe_id=item.subscribe_id,
             title=item.title,
