@@ -27,12 +27,16 @@
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
-    "version": "0.3",
+    "version": "0.4",
     "author": "shyblacktea,Codex",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "0.4": [
+        "fix: 扫描不再按订阅启用/暂停状态过滤，暂停订阅也会按 TMDB 单集播出日期参与检测",
+        "fix: 订阅列表加载改为读取全部状态，避免仅读取启用订阅导致超期剧集漏扫"
+      ],
       "0.3": [
         "feat: 新增自定义识别词工具，支持页面自动/手动写入和 Telegram /ci 命令触发",
         "feat: 自动写入识别词后刷新解析缓存并再次识别验证，识别记录展示成功或失败原因",

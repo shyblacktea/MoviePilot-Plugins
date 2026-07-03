@@ -117,7 +117,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.3"
+    plugin_version = "0.4"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -1187,7 +1187,7 @@ class SubscribePlus(_PluginBase):
         try:
             from app.db.subscribe_oper import SubscribeOper
 
-            return SubscribeOper().list("R") or []
+            return SubscribeOper().list() or []
         except Exception as exc:
             logger.warning(f"订阅下载增强读取订阅失败: {exc}")
             return []

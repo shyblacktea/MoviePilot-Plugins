@@ -134,7 +134,7 @@ class SubscriptionScanner:
         categories = [
             self._subscribe_category(subscribe)
             for subscribe in self.load_subscribes()
-            if getattr(subscribe, "state", None) == "R" and self._is_tv(subscribe)
+            if self._is_tv(subscribe)
         ]
         return sorted(_ordered_unique(categories))
 
@@ -144,7 +144,7 @@ class SubscriptionScanner:
         results: List[DiagnosisInput] = []
 
         for subscribe in self.load_subscribes():
-            if getattr(subscribe, "state", None) != "R" or not self._is_tv(subscribe):
+            if not self._is_tv(subscribe):
                 continue
             tmdbid = int(getattr(subscribe, "tmdbid", 0) or 0)
             season = int(getattr(subscribe, "season", 0) or 0)

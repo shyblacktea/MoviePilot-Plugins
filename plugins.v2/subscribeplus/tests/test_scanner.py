@@ -52,6 +52,47 @@ class ScannerTest(unittest.TestCase):
 
         self.assertEqual(scanner.collect_categories(), ["日番", "日韩剧", "未分类"])
 
+    def test_collect_categories_includes_paused_tv_subscriptions(self):
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [
+                SimpleNamespace(id=1, state="P", type="tv", media_category="anime", category=""),
+            ],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [],
+            is_episode_downloaded=lambda tmdbid, season, episode: (False, ""),
+        )
+
+        self.assertEqual(scanner.collect_categories(), ["anime"])
+
+    def test_scan_includes_paused_subscription_when_episode_is_stale(self):
+        subscribe = SimpleNamespace(
+            id=2,
+            state="P",
+            type="tv",
+            name="Paused Show",
+            tmdbid=200,
+            season=1,
+            start_episode=1,
+            media_category="anime",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": 1, "air_date": "2026-07-01"},
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (False, "missing"),
+            load_downloaded_episodes=lambda tmdbid, season: set(),
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["anime"], delay_days=1), resolver, today=date(2026, 7, 3))
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].subscribe_id, 2)
+        self.assertEqual([episode.episode for episode in results[0].episodes], [1])
+
     def test_scan_filters_by_resolved_category_when_subscribe_has_no_category(self):
         subscribe = SimpleNamespace(
             id=1,
