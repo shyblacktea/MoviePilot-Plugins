@@ -39,7 +39,7 @@
             <v-col cols="12" md="3">
               <div class="summary-item">
                 <v-icon icon="mdi-file-document-edit-outline" color="info" size="small" />
-                <span>规则记录</span>
+                <span>规则修改</span>
                 <strong>{{ ruleRecords.length }}</strong>
               </div>
             </v-col>
@@ -90,6 +90,112 @@
 
       <v-card flat class="rounded border mb-3">
         <v-card-title class="small-title">
+          <v-icon icon="mdi-tag-plus-outline" color="primary" size="small" />
+          <span>自定义识别词</span>
+          <v-spacer />
+          <v-chip size="small" variant="tonal">{{ identifierRecords.length }}</v-chip>
+        </v-card-title>
+        <v-card-text class="content">
+          <v-alert v-if="identifierError" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable>
+            {{ identifierError }}
+          </v-alert>
+          <v-alert v-if="identifierMessage" type="success" density="compact" variant="tonal" class="mb-3 text-caption" closable>
+            {{ identifierMessage }}
+          </v-alert>
+
+          <v-row class="identifier-row" align="center">
+            <v-col cols="12" md="8">
+              <v-text-field
+                v-model="identifierAutoTitle"
+                label="媒体文件名"
+                density="compact"
+                variant="outlined"
+                hide-details
+                clearable
+              />
+            </v-col>
+            <v-col cols="12" md="4" class="identifier-action-col">
+              <v-btn
+                color="primary"
+                prepend-icon="mdi-auto-fix"
+                variant="text"
+                size="small"
+                :loading="identifierBusy === 'auto'"
+                @click="runIdentifierAuto"
+              >
+                自动处理
+              </v-btn>
+            </v-col>
+          </v-row>
+
+          <v-divider class="my-3" />
+
+          <v-row class="identifier-row" align="center">
+            <v-col cols="12" md="5">
+              <v-text-field
+                v-model="identifierManualTitle"
+                label="媒体文件名"
+                density="compact"
+                variant="outlined"
+                hide-details
+                clearable
+              />
+            </v-col>
+            <v-col cols="6" md="2">
+              <v-select
+                v-model="identifierManualType"
+                :items="mediaTypeOptions"
+                label="类型"
+                density="compact"
+                variant="outlined"
+                hide-details
+              />
+            </v-col>
+            <v-col cols="6" md="3">
+              <v-text-field
+                v-model="identifierManualTmdbid"
+                label="TMDB ID"
+                placeholder="填写 TMDB 的 ID"
+                density="compact"
+                variant="outlined"
+                hide-details
+                clearable
+              />
+            </v-col>
+            <v-col cols="12" md="2" class="identifier-action-col">
+              <v-btn
+                color="primary"
+                prepend-icon="mdi-pencil-plus-outline"
+                variant="text"
+                size="small"
+                :loading="identifierBusy === 'manual'"
+                @click="runIdentifierManual"
+              >
+                手动处理
+              </v-btn>
+            </v-col>
+          </v-row>
+
+          <v-list v-if="identifierRecords.length" density="compact" lines="two" class="mt-2">
+            <v-list-item
+              v-for="record in identifierRecords"
+              :key="`${record.mode}-${record.candidate_title}-${record.created_at}`"
+              :title="`${identifierModeText(record.mode)}：${record.candidate_title || record.title || '-'}`"
+              :subtitle="`${record.message || '-'} / ${record.created_at || '-'}`"
+            >
+              <template #append>
+                <v-chip :color="identifierStatusColor(record.status)" size="small" variant="tonal">
+                  {{ identifierStatusText(record.status) }}
+                </v-chip>
+              </template>
+            </v-list-item>
+          </v-list>
+          <div v-else class="empty-panel">暂无识别词记录</div>
+        </v-card-text>
+      </v-card>
+
+      <v-card flat class="rounded border mb-3">
+        <v-card-title class="small-title">
           <v-icon icon="mdi-history" color="primary" size="small" />
           <span>规则修改记录</span>
         </v-card-title>
@@ -123,7 +229,23 @@
         <v-card-title class="text-subtitle-1">规则修改预览</v-card-title>
         <v-card-text>
           <v-alert v-if="previewError" type="error" density="compact" variant="tonal" class="mb-2">{{ previewError }}</v-alert>
+          <div v-if="ruleSuggestions.length && !preview" class="suggestion-panel">
+            <div class="text-caption text-medium-emphasis mb-2">请选择要添加到订阅包含规则的关键词</div>
+            <v-btn
+              v-for="suggestion in ruleSuggestions"
+              :key="suggestion.pattern"
+              color="primary"
+              variant="tonal"
+              size="small"
+              class="mr-2 mb-2"
+              :loading="previewLoading === suggestion.pattern"
+              @click="previewRuleSuggestion(suggestion)"
+            >
+              {{ suggestion.text }}
+            </v-btn>
+          </div>
           <div v-if="preview" class="preview-box">
+            <div v-if="preview.selected_text">已选择：{{ preview.selected_text }}</div>
             <div>旧 include：{{ preview.old_include || '-' }}</div>
             <div>新 include：{{ preview.new_include || '-' }}</div>
           </div>
@@ -157,9 +279,25 @@ const error = ref('')
 const status = ref({})
 const items = ref([])
 const ruleRecords = ref([])
+const identifierRecords = ref([])
+const identifierAutoTitle = ref('')
+const identifierManualTitle = ref('')
+const identifierManualType = ref('tv')
+const identifierManualTmdbid = ref('')
+const identifierBusy = ref('')
+const identifierError = ref('')
+const identifierMessage = ref('')
 const previewDialog = ref(false)
 const preview = ref(null)
 const previewError = ref('')
+const previewContext = ref(null)
+const previewLoading = ref('')
+const ruleSuggestions = ref([])
+
+const mediaTypeOptions = [
+  { title: 'TV', value: 'tv' },
+  { title: 'Movie', value: 'movie' },
+]
 
 const reasonCount = computed(() => {
   return items.value.reduce((acc, item) => {
@@ -193,6 +331,18 @@ function reasonColor(reason) {
   }[reason] || 'grey'
 }
 
+function identifierModeText(mode) {
+  return mode === 'manual' ? '手动' : '自动'
+}
+
+function identifierStatusText(statusValue) {
+  return statusValue === 'success' ? '成功' : '失败'
+}
+
+function identifierStatusColor(statusValue) {
+  return statusValue === 'success' ? 'success' : 'error'
+}
+
 async function loadData() {
   loading.value = true
   error.value = ''
@@ -205,6 +355,7 @@ async function loadData() {
     const data = unwrap(resultsResponse)
     items.value = data.items || []
     ruleRecords.value = data.rule_records || status.value.rule_records || []
+    identifierRecords.value = data.identifier_records || status.value.identifier_records || []
     emit('action')
   } catch (err) {
     error.value = err?.message || '读取诊断结果失败'
@@ -239,15 +390,109 @@ async function clearResults() {
   }
 }
 
+function readActionResponse(response, fallback) {
+  const body = response?.data ?? response ?? {}
+  const data = body?.data ?? body
+  if (body.success === false || data.success === false) {
+    return { success: false, message: body.message || data.message || fallback }
+  }
+  return { success: true, message: body.message || data.message || fallback }
+}
+
+async function runIdentifierAuto() {
+  const title = identifierAutoTitle.value.trim()
+  identifierError.value = ''
+  identifierMessage.value = ''
+  if (!title) {
+    identifierError.value = '请填写媒体文件名'
+    return
+  }
+  identifierBusy.value = 'auto'
+  try {
+    const response = await props.api.post('plugin/SubscribePlus/identifier_auto', { title })
+    const result = readActionResponse(response, '已提交自动处理')
+    if (!result.success) {
+      identifierError.value = result.message
+      return
+    }
+    identifierMessage.value = result.message
+    await loadData()
+  } catch (err) {
+    identifierError.value = err?.message || '自动处理失败'
+  } finally {
+    identifierBusy.value = ''
+  }
+}
+
+async function runIdentifierManual() {
+  const title = identifierManualTitle.value.trim()
+  const tmdbid = identifierManualTmdbid.value.trim()
+  identifierError.value = ''
+  identifierMessage.value = ''
+  if (!title || !tmdbid) {
+    identifierError.value = '请填写媒体文件名和 TMDB ID'
+    return
+  }
+  identifierBusy.value = 'manual'
+  try {
+    const response = await props.api.post('plugin/SubscribePlus/identifier_manual', {
+      title,
+      media_type: identifierManualType.value,
+      tmdbid,
+    })
+    const result = readActionResponse(response, '已提交手动处理')
+    if (!result.success) {
+      identifierError.value = result.message
+      return
+    }
+    identifierMessage.value = result.message
+    await loadData()
+  } catch (err) {
+    identifierError.value = err?.message || '手动处理失败'
+  } finally {
+    identifierBusy.value = ''
+  }
+}
+
 async function previewRule(item, candidate) {
   previewDialog.value = true
   preview.value = null
   previewError.value = ''
+  previewContext.value = { item, candidate }
+  previewLoading.value = ''
+  ruleSuggestions.value = []
   try {
-    const pattern = candidate.site || candidate.site_name || ''
+    const response = await props.api.post('plugin/SubscribePlus/rule_suggestions', {
+      diagnosis: item,
+      candidate,
+    })
+    const body = response?.data ?? response ?? {}
+    const data = body?.data ?? body
+    if (body.success === false || data.success === false) {
+      previewError.value = body.message || data.message || '生成规则建议失败'
+      return
+    }
+    ruleSuggestions.value = data.items || []
+    if (!ruleSuggestions.value.length) {
+      previewError.value = '没有可添加的官组或平台建议'
+    } else if (ruleSuggestions.value.length === 1) {
+      await previewRuleSuggestion(ruleSuggestions.value[0])
+    }
+  } catch (err) {
+    previewError.value = err?.message || '生成规则建议失败'
+  }
+}
+
+async function previewRuleSuggestion(suggestion) {
+  if (!previewContext.value?.item || !suggestion?.pattern) return
+  preview.value = null
+  previewError.value = ''
+  previewLoading.value = suggestion.pattern
+  try {
     const response = await props.api.post('plugin/SubscribePlus/rule_preview', {
-      subscribe_id: item.subscribe_id,
-      pattern,
+      subscribe_id: previewContext.value.item.subscribe_id,
+      pattern: suggestion.pattern,
+      selected_text: suggestion.text,
     })
     const body = response?.data ?? response ?? {}
     const data = body?.data ?? body
@@ -258,6 +503,8 @@ async function previewRule(item, candidate) {
     preview.value = data
   } catch (err) {
     previewError.value = err?.message || '生成预览失败'
+  } finally {
+    previewLoading.value = ''
   }
 }
 
@@ -357,6 +604,15 @@ onMounted(loadData)
   overflow-wrap: anywhere;
 }
 
+.identifier-row {
+  row-gap: 0.5rem;
+}
+
+.identifier-action-col {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .empty-panel {
   min-height: 88px;
   display: flex;
@@ -371,6 +627,12 @@ onMounted(loadData)
   overflow-wrap: anywhere;
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   font-size: 0.875rem;
+}
+
+.suggestion-panel {
+  padding: 0.75rem;
+  border: 1px solid rgba(var(--v-theme-primary), 0.16);
+  border-radius: 8px;
 }
 
 .action-bar {
@@ -395,6 +657,14 @@ onMounted(loadData)
   .action-bar :deep(.v-btn) {
     flex: 1 1 auto;
     min-width: max-content;
+  }
+
+  .identifier-action-col {
+    justify-content: stretch;
+  }
+
+  .identifier-action-col :deep(.v-btn) {
+    flex: 1 1 auto;
   }
 }
 </style>

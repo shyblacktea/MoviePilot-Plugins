@@ -167,6 +167,8 @@ def _add_term_to_lookahead(include: str, term: str, group_index: int) -> str:
 
 
 def merge_include_suggestion(old_include: str, pattern: str) -> str:
+    if re.fullmatch(r"\d+", str(pattern or "").strip()):
+        raise ValueError("规则建议无效：不能把站点 ID 直接写入包含规则")
     payload = _parse_suggestion_pattern(pattern)
     if not payload:
         return merge_include(old_include, pattern)

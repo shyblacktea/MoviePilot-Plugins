@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import json
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -55,6 +57,7 @@ except Exception:  # pragma: no cover - lets local unit tests import this packag
 
     class EventType:
         MessageAction = "message.action"
+        PluginAction = "plugin.action"
 
     class MediaType:
         TV = type("TV", (), {"value": "电视剧"})()
@@ -64,6 +67,16 @@ except Exception:  # pragma: no cover - lets local unit tests import this packag
         CustomIdentifiers = "CustomIdentifiers"
 
 from .diagnosis import TorrentDiagnoser
+from .identifiers import (
+    build_identifier_lines,
+    build_identifier_record,
+    dedupe_identifier_lines,
+    normalize_identifier_line,
+    normalize_media_type,
+    refresh_identifier_runtime_cache,
+    safe_int,
+    validate_identifier_rule,
+)
 from .models import DiagnosisInput, PluginConfig
 from .rules import (
     apply_include_preview,
@@ -71,16 +84,27 @@ from .rules import (
     build_rule_suggestions,
     extract_release_groups_from_words,
 )
-from .scanner import SubscriptionScanner, episode_in_seasoninfo, episode_in_transfer_history
+from .scanner import (
+    SubscriptionScanner,
+    episode_in_seasoninfo,
+    episode_in_transfer_history,
+    episodes_in_seasoninfo,
+    episodes_in_transfer_history,
+)
 from .sites import SiteResolver
 from .storage import JsonStore
 from .telegram import (
+    build_ci_done_menu,
+    build_ci_manual_type_menu,
+    build_ci_mode_menu,
+    build_ci_wait_tmdb_menu,
     build_main_menu,
     build_resource_menu,
     build_rule_confirm_menu,
     build_rule_done_menu,
     build_rule_menu,
     make_token,
+    render_identifier_fix_result_text,
     render_notification_text,
     render_rule_preview_text,
 )
@@ -93,7 +117,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.2"
+    plugin_version = "0.3"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -121,6 +145,7 @@ class SubscribePlus(_PluginBase):
             is_episode_downloaded=self._is_episode_downloaded,
             load_categories=self._load_tv_categories,
             resolve_subscribe_category=self._resolve_subscribe_category,
+            load_downloaded_episodes=self._load_downloaded_episodes,
         )
         self._diagnoser = TorrentDiagnoser(self._search_torrents)
         self._download_contexts = {}
@@ -136,7 +161,15 @@ class SubscribePlus(_PluginBase):
 
     @staticmethod
     def get_command() -> List[Dict[str, Any]]:
-        return []
+        return [
+            {
+                "cmd": "/ci",
+                "event": EventType.PluginAction,
+                "desc": "自定义识别词修正",
+                "category": "订阅下载增强",
+                "data": {"action": "subscribeplus_ci"},
+            }
+        ]
 
     def get_service(self) -> List[Dict[str, Any]]:
         if not self._plugin_config.enabled:
@@ -166,6 +199,10 @@ class SubscribePlus(_PluginBase):
             {"path": "/scan", "endpoint": self.run_scan_api, "methods": ["POST"], "auth": "bear", "summary": "手动扫描订阅"},
             {"path": "/results", "endpoint": self.get_results_api, "methods": ["GET"], "auth": "bear", "summary": "获取最近诊断结果"},
             {"path": "/results/clear", "endpoint": self.clear_results_api, "methods": ["POST"], "auth": "bear", "summary": "清除最近诊断结果"},
+            {"path": "/identifier_auto", "endpoint": self.identifier_auto_api, "methods": ["POST"], "auth": "bear", "summary": "自动识别并写入自定义识别词"},
+            {"path": "/identifier_manual", "endpoint": self.identifier_manual_api, "methods": ["POST"], "auth": "bear", "summary": "按 TMDB 手动写入自定义识别词"},
+            {"path": "/identifier_fix", "endpoint": self.identifier_fix_api, "methods": ["POST"], "auth": "bear", "summary": "兼容旧版识别修正入口"},
+            {"path": "/rule_suggestions", "endpoint": self.rule_suggestions_api, "methods": ["POST"], "auth": "bear", "summary": "生成订阅规则建议"},
             {"path": "/rule_preview", "endpoint": self.rule_preview_api, "methods": ["POST"], "auth": "bear", "summary": "生成规则修改预览"},
             {"path": "/rule_confirm", "endpoint": self.rule_confirm_api, "methods": ["POST"], "auth": "bear", "summary": "确认规则修改"},
         ]
@@ -195,6 +232,7 @@ class SubscribePlus(_PluginBase):
                 "count": len(results),
                 "counts": counts,
                 "rule_records": store.load_rule_records()[:20],
+                "identifier_records": store.load_identifier_records()[:20],
             },
         }
 
@@ -215,6 +253,7 @@ class SubscribePlus(_PluginBase):
             "data": {
                 "items": store.load_scan_results(),
                 "last_scan": store.load_scan_meta().get("last_scan_at"),
+                "identifier_records": store.load_identifier_records()[:50],
                 "rule_records": store.load_rule_records()[:50],
             },
         }
@@ -229,6 +268,33 @@ class SubscribePlus(_PluginBase):
     def rule_preview_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         payload = self._extract_payload(payload)
         return self._rule_preview(payload, source="vue")
+
+    def identifier_fix_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._identifier_fix(payload, source="vue")
+
+    def identifier_auto_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._identifier_auto(payload, source="vue")
+
+    def identifier_manual_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._identifier_manual(payload, source="vue")
+
+    def rule_suggestions_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        diagnosis = payload.get("diagnosis") or {}
+        candidate = payload.get("candidate")
+        candidates = payload.get("candidates")
+        if candidate and not candidates:
+            candidates = [candidate]
+        if not candidates:
+            candidates = diagnosis.get("candidates") or []
+        suggestions = build_rule_suggestions(
+            candidates or [],
+            release_groups=self._release_groups_for_diagnosis(diagnosis),
+        )
+        return {"success": True, "data": {"items": suggestions}}
 
     def rule_confirm_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         payload = self._extract_payload(payload)
@@ -266,7 +332,11 @@ class SubscribePlus(_PluginBase):
                     mtype=NotificationType.Plugin if NotificationType else None,
                     title=f"订阅下载增强：{item.get('title')}",
                     text=render_notification_text(item),
-                    buttons=build_main_menu(token, self._plugin_config.allow_tg_rule_update),
+                    buttons=build_main_menu(
+                        token,
+                        self._plugin_config.allow_tg_rule_update,
+                        can_identifier_fix=item.get("reason") == "recognition_issue",
+                    ),
                     save_history=False,
                 )
             except Exception as exc:
@@ -280,23 +350,65 @@ class SubscribePlus(_PluginBase):
             if plugin_id and plugin_id != PLUGIN_ID:
                 return
             action = event_data.get("text") or event_data.get("action") or event_data.get("callback_data") or ""
+            if str(action).strip().startswith("/ci"):
+                self._handle_ci_command_text(str(action), event_data)
+                return
             if not str(action).startswith(f"[PLUGIN]{PLUGIN_ID}|") and plugin_id != PLUGIN_ID:
                 return
             self._handle_callback(str(action), event_data)
+
+        @eventmanager.register(EventType.PluginAction)
+        def handle_plugin_action(self, event):
+            event_data = getattr(event, "event_data", None) or {}
+            action = event_data.get("action") or (event_data.get("data") or {}).get("action")
+            if action != "subscribeplus_ci":
+                return
+            args = event_data.get("arg_str") or event_data.get("args") or event_data.get("text") or ""
+            if isinstance(args, (list, tuple)):
+                args = " ".join(str(item) for item in args)
+            text = str(args or "").strip()
+            self._handle_ci_command_text(f"/ci {text}".strip(), event_data)
+
+    @staticmethod
+    def _callback_post_kwargs(event_data: Dict[str, Any]) -> Dict[str, Any]:
+        kwargs: Dict[str, Any] = {}
+        for source_key, target_key in (
+            ("channel", "channel"),
+            ("source", "source"),
+            ("userid", "userid"),
+            ("user", "userid"),
+            ("original_message_id", "original_message_id"),
+            ("original_chat_id", "original_chat_id"),
+        ):
+            value = event_data.get(source_key)
+            if value is not None and target_key not in kwargs:
+                kwargs[target_key] = value
+        return kwargs
+
+    def _post_callback_message(self, event_data: Dict[str, Any], **kwargs):
+        kwargs.update(self._callback_post_kwargs(event_data))
+        self.post_message(**kwargs)
 
     def _handle_callback(self, action: str, event_data: Dict[str, Any]):
         command = action
         if action.startswith(f"[PLUGIN]{PLUGIN_ID}|"):
             command = action.split("|", 1)[1]
         op, _, token = command.partition(":")
+        logger.info(f"订阅下载增强处理 Telegram 回调：{op}:{token}")
+        if op == "close":
+            self._ensure_store().delete_interaction(token)
+            if not self._delete_callback_message(event_data):
+                self._post_callback_message(event_data, title="订阅下载增强", text="已关闭本次交互。", save_history=False)
+            return
         state = self._ensure_store().load_interaction(token)
         if not state:
-            self.post_message(title="订阅下载增强", text="交互已过期，请重新扫描。", save_history=False)
+            self._post_callback_message(event_data, title="订阅下载增强", text="交互已过期，请重新扫描。", save_history=False)
             return
 
         diagnosis = state.get("diagnosis") or {}
         if op == "download":
-            self.post_message(
+            self._post_callback_message(
+                event_data,
                 title=f"选择下载资源：{diagnosis.get('title')}",
                 text="请选择一个候选资源下载。",
                 buttons=build_resource_menu(token, diagnosis.get("candidates") or []),
@@ -305,14 +417,65 @@ class SubscribePlus(_PluginBase):
             return
         if op.startswith("pick"):
             index = int(op.replace("pick", "") or 0) - 1
-            self._download_candidate(diagnosis, index)
+            self._download_candidate(diagnosis, index, event_data)
+            return
+        if op == "ci-auto":
+            result = self._identifier_auto({"title": state.get("title")}, source="telegram")
+            self._update_ci_state_after_result(token, state, result)
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=render_identifier_fix_result_text(result),
+                buttons=build_ci_done_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "ci-manual":
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=f"媒体文件名：{state.get('title') or '-'}",
+                buttons=build_ci_manual_type_menu(token),
+                save_history=False,
+            )
+            return
+        if op in {"ci-tv", "ci-movie"}:
+            state["manual_media_type"] = "tv" if op == "ci-tv" else "movie"
+            self._ensure_store().save_interaction(token, state)
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=f"已选择 {state['manual_media_type']}，请回复：/ci {token} TMDBID",
+                buttons=build_ci_wait_tmdb_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "ci-retry":
+            result = self._retry_ci_recognition(state)
+            self._post_callback_message(
+                event_data,
+                title="再次识别",
+                text=render_identifier_fix_result_text(result),
+                buttons=build_ci_done_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "ci-back":
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=f"媒体文件名：{state.get('title') or '-'}",
+                buttons=build_ci_mode_menu(token),
+                save_history=False,
+            )
             return
         if op == "rule":
             suggestions = build_rule_suggestions(
                 diagnosis.get("candidates") or [],
                 release_groups=self._release_groups_for_diagnosis(diagnosis),
             )
-            self.post_message(
+            self._post_callback_message(
+                event_data,
                 title=f"调整订阅规则：{diagnosis.get('title')}",
                 text="请选择要加入订阅包含规则的官组或平台关键词。",
                 buttons=build_rule_menu(token, suggestions),
@@ -331,14 +494,20 @@ class SubscribePlus(_PluginBase):
                         record.get("new_value") or "-",
                     ]
                 )
-                self.post_message(
+                self._post_callback_message(
+                    event_data,
                     title="订阅下载增强",
                     text=text,
                     buttons=build_rule_done_menu(back_token) if back_token else None,
                     save_history=False,
                 )
             else:
-                self.post_message(title="订阅下载增强", text=result.get("message", "订阅规则修改失败。"), save_history=False)
+                self._post_callback_message(
+                    event_data,
+                    title="订阅下载增强",
+                    text=result.get("message", "订阅规则修改失败。"),
+                    save_history=False,
+                )
             return
         if op.startswith("rule"):
             index = int(op.replace("rule", "") or 0) - 1
@@ -359,29 +528,35 @@ class SubscribePlus(_PluginBase):
                 )
                 if result.get("success"):
                     preview = result.get("data") or {}
-                    self.post_message(
+                    self._post_callback_message(
+                        event_data,
                         title=f"规则修改预览：{diagnosis.get('title')}",
                         text=render_rule_preview_text(preview, selected_text),
                         buttons=build_rule_confirm_menu(preview.get("token"), token),
                         save_history=False,
                     )
                 else:
-                    self.post_message(title="订阅下载增强", text=result.get("message", "生成预览失败。"), save_history=False)
+                    self._post_callback_message(
+                        event_data,
+                        title="订阅下载增强",
+                        text=result.get("message", "生成预览失败。"),
+                        save_history=False,
+                    )
             return
         if op == "ignore":
             self._ensure_store().save_ignore(self._ignore_key(diagnosis))
-            self.post_message(title="订阅下载增强", text="已忽略本次提醒。", save_history=False)
-            return
-        if op == "close":
-            self._ensure_store().delete_interaction(token)
-            if not self._delete_callback_message(event_data):
-                self.post_message(title="订阅下载增强", text="已关闭本次交互。", save_history=False)
+            self._post_callback_message(event_data, title="订阅下载增强", text="已忽略本次提醒。", save_history=False)
             return
         if op == "back":
-            self.post_message(
+            self._post_callback_message(
+                event_data,
                 title=f"订阅下载增强：{diagnosis.get('title')}",
                 text=render_notification_text(diagnosis),
-                buttons=build_main_menu(token, self._plugin_config.allow_tg_rule_update),
+                buttons=build_main_menu(
+                    token,
+                    self._plugin_config.allow_tg_rule_update,
+                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                ),
                 save_history=False,
             )
 
@@ -426,24 +601,442 @@ class SubscribePlus(_PluginBase):
         self._ensure_store().delete_interaction(token)
         return {"success": True, "data": record}
 
-    def _download_candidate(self, diagnosis: Dict[str, Any], index: int):
+    def _identifier_fix(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        if payload.get("mode") == "manual" or payload.get("tmdbid") or payload.get("tmdb_id"):
+            return self._identifier_manual(payload, source)
+        diagnosis = self._resolve_diagnosis_payload(payload)
+        candidate = self._resolve_candidate_payload(payload, diagnosis) if diagnosis else {}
+        title = str(payload.get("title") or payload.get("candidate_title") or candidate.get("title") or "").strip()
+        return self._identifier_auto({"title": title}, source)
+
+    def _identifier_auto(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        title = self._identifier_title_from_payload(payload)
+        if not title:
+            return self._record_identifier_tool_failure("", {}, "媒体文件名不能为空", "missing_title", source, "auto")
+        try:
+            target = self._identify_target_by_ai(title)
+        except Exception as exc:
+            return self._record_identifier_tool_failure(
+                title,
+                {},
+                f"AI 未配置或调用失败：{exc}",
+                "ai_unavailable",
+                source,
+                "auto",
+            )
+        if not isinstance(target, dict):
+            return self._record_identifier_tool_failure(title, {}, "AI 返回格式无效", "invalid_ai_response", source, "auto")
+        return self._apply_identifier_rule(title, target, source, mode="auto")
+
+    def _identifier_manual(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        title = self._identifier_title_from_payload(payload)
+        if not title:
+            return self._record_identifier_tool_failure("", {}, "媒体文件名不能为空", "missing_title", source, "manual")
+        media_type = normalize_media_type(payload.get("media_type") or payload.get("type"))
+        tmdbid = safe_int(payload.get("tmdbid") or payload.get("tmdb_id"), 0)
+        if media_type == "unknown" or not tmdbid:
+            return self._record_identifier_tool_failure(
+                title,
+                {},
+                "请填写 movie/tv 和 TMDB ID",
+                "missing_target",
+                source,
+                "manual",
+            )
+        target = {
+            "media_type": media_type,
+            "tmdbid": tmdbid,
+            "season": safe_int(payload.get("season"), 0),
+            "episode": safe_int(payload.get("episode"), 0),
+        }
+        return self._apply_identifier_rule(title, target, source, mode="manual")
+
+    @staticmethod
+    def _identifier_title_from_payload(payload: Dict[str, Any]) -> str:
+        return str(
+            payload.get("title")
+            or payload.get("media_title")
+            or payload.get("filename")
+            or payload.get("candidate_title")
+            or ""
+        ).strip()
+
+    def _apply_identifier_rule(self, title: str, target: Dict[str, Any], source: str, mode: str) -> Dict[str, Any]:
+        target = dict(target or {})
+        target["media_type"] = normalize_media_type(target.get("media_type") or target.get("type"))
+        target["tmdbid"] = safe_int(target.get("tmdbid") or target.get("tmdb_id"), 0)
+        if target["media_type"] == "unknown" or not target["tmdbid"]:
+            return self._record_identifier_tool_failure(title, target, "缺少 movie/tv 或 TMDB ID", "missing_target", source, mode)
+        if target["media_type"] == "tv":
+            season, episode = self._parse_season_episode_from_title(title)
+            if not safe_int(target.get("season"), 0) and season:
+                target["season"] = season
+            if not safe_int(target.get("episode"), 0) and episode:
+                target["episode"] = episode
+
+        tmdb_summary = self._load_tmdb_target_summary(target)
+        if tmdb_summary.get("success") is False:
+            return self._record_identifier_tool_failure(
+                title,
+                target,
+                tmdb_summary.get("message") or "TMDB 没有查到可用数据",
+                "tmdb_unavailable",
+                source,
+                mode,
+            )
+        if tmdb_summary.get("name"):
+            target["name"] = target.get("name") or tmdb_summary.get("name")
+        if tmdb_summary.get("year"):
+            target["year"] = target.get("year") or tmdb_summary.get("year")
+
+        try:
+            lines = build_identifier_lines(title, target)
+        except ValueError as exc:
+            return self._record_identifier_tool_failure(title, target, str(exc), "invalid_target", source, mode)
+        rules = [line for line in lines if validate_identifier_rule(line)]
+        if not rules:
+            return self._record_identifier_tool_failure(title, target, "生成的识别词规则无效", "invalid_rule", source, mode)
+
+        rule = rules[0]
+        try:
+            applied = self._append_custom_identifiers([rule])
+        except Exception as exc:
+            return self._record_identifier_tool_failure(title, target, f"写入自定义识别词失败：{exc}", "write_failed", source, mode)
+
+        recheck = self._recognize_identifier_title(title, target)
+        success = bool(recheck.get("success"))
+        if success:
+            message = "已识别并写入自定义识别词" if applied.get("added") else "识别词已存在，再次识别已命中"
+            status = "success"
+            reason = ""
+        else:
+            message = recheck.get("message") or "识别词已写入，但再次识别未命中目标 TMDB"
+            status = "failed"
+            reason = recheck.get("reason") or "recognize_failed"
+
+        record = build_identifier_record(
+            subscribe_id=0,
+            title=str(target.get("name") or title),
+            candidate_title=title,
+            target=target,
+            added=applied.get("added") or [],
+            source=source,
+            status=status,
+            message=message,
+        )
+        record["mode"] = mode
+        record["rule"] = rule
+        record["total_count"] = applied.get("total_count")
+        record["recheck"] = recheck
+        if reason:
+            record["reason"] = reason
+        self._ensure_store().append_identifier_record(record)
+        return {"success": success, "message": message, "reason": reason, "data": record}
+
+    def _record_identifier_tool_failure(
+        self,
+        title: str,
+        target: Dict[str, Any],
+        message: str,
+        reason: str,
+        source: str,
+        mode: str,
+    ) -> Dict[str, Any]:
+        record = build_identifier_record(
+            subscribe_id=0,
+            title=str((target or {}).get("name") or title or ""),
+            candidate_title=title,
+            target=target or {},
+            added=[],
+            source=source,
+            status="failed",
+            message=message,
+        )
+        record["mode"] = mode
+        record["reason"] = reason
+        self._ensure_store().append_identifier_record(record)
+        return {"success": False, "message": message, "reason": reason, "data": record}
+
+    @staticmethod
+    def _parse_season_episode_from_title(title: str) -> Tuple[int, int]:
+        text = str(title or "")
+        match = re.search(r"(?i)\bS(\d{1,2})E(\d{1,4})\b", text)
+        if match:
+            return safe_int(match.group(1), 0), safe_int(match.group(2), 0)
+        match = re.search(r"(?i)\bS(\d{1,2})\b", text)
+        if match:
+            return safe_int(match.group(1), 0), 0
+        return 0, 0
+
+    def _record_identifier_failure(
+        self,
+        diagnosis: Dict[str, Any],
+        candidate: Dict[str, Any],
+        target: Dict[str, Any],
+        message: str,
+        reason: str,
+        source: str,
+    ) -> Dict[str, Any]:
+        record = build_identifier_record(
+            subscribe_id=safe_int(diagnosis.get("subscribe_id"), 0),
+            title=str(diagnosis.get("title") or target.get("name") or ""),
+            candidate_title=str(candidate.get("title") or ""),
+            target=target,
+            added=[],
+            source=source,
+            status="failed",
+            message=message,
+        )
+        record["reason"] = reason
+        self._ensure_store().append_identifier_record(record)
+        return {"success": False, "message": message, "reason": reason, "data": record}
+
+    def _resolve_diagnosis_payload(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        diagnosis = payload.get("diagnosis")
+        if isinstance(diagnosis, dict):
+            return diagnosis
+        subscribe_id = safe_int(payload.get("subscribe_id"), 0)
+        tmdbid = safe_int(payload.get("tmdbid"), 0)
+        for item in self._ensure_store().load_scan_results():
+            if subscribe_id and safe_int(item.get("subscribe_id"), 0) == subscribe_id:
+                return item
+            if tmdbid and safe_int(item.get("tmdbid"), 0) == tmdbid:
+                return item
+        return {}
+
+    @staticmethod
+    def _resolve_candidate_payload(payload: Dict[str, Any], diagnosis: Dict[str, Any]) -> Dict[str, Any]:
+        candidate = payload.get("candidate")
+        if isinstance(candidate, dict):
+            return candidate
+        candidates = diagnosis.get("candidates") or []
+        candidate_id = str(payload.get("candidate_id") or "").strip()
+        if candidate_id:
+            for item in candidates:
+                if str(item.get("candidate_id") or item.get("download_payload") or "") == candidate_id:
+                    return item
+        index = safe_int(payload.get("candidate_index"), -1)
+        if 0 <= index < len(candidates):
+            return candidates[index]
+        if payload.get("candidate_title") or payload.get("title"):
+            return {"title": payload.get("candidate_title") or payload.get("title")}
+        return {}
+
+    @staticmethod
+    def _build_identifier_target(
+        payload: Dict[str, Any], diagnosis: Dict[str, Any], candidate: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        episodes = diagnosis.get("episodes") or []
+        first_episode = episodes[0] if episodes else {}
+        media_type = normalize_media_type(payload.get("media_type") or payload.get("type") or "tv")
+        return {
+            "name": str(payload.get("desired_name") or diagnosis.get("title") or "").strip(),
+            "year": str(payload.get("desired_year") or payload.get("year") or "").strip(),
+            "media_type": media_type,
+            "tmdbid": safe_int(payload.get("tmdbid") or payload.get("tmdb_id") or diagnosis.get("tmdbid"), 0),
+            "season": safe_int(payload.get("season") or candidate.get("season") or diagnosis.get("season"), 0),
+            "episode": safe_int(payload.get("episode") or candidate.get("episode") or first_episode.get("episode"), 0),
+        }
+
+    def _load_tmdb_target_summary(self, target: Dict[str, Any]) -> Dict[str, Any]:
+        tmdbid = safe_int(target.get("tmdbid"), 0)
+        media_type = normalize_media_type(target.get("media_type"))
+        if not tmdbid or media_type == "unknown":
+            return {"success": False, "message": "缺少 TMDB ID 或媒体类型"}
+        try:
+            try:
+                from app.chain.media import MediaChain
+            except Exception:
+                from app.chain import MediaChain
+
+            mtype = MediaType.TV
+            if media_type == "movie" and hasattr(MediaType, "MOVIE"):
+                mtype = MediaType.MOVIE
+            mediainfo = MediaChain().recognize_media(mtype=mtype, tmdbid=tmdbid)
+            if not mediainfo:
+                return {"success": False, "message": "TMDB 没有查到可用数据"}
+            return {
+                "success": True,
+                "name": str(getattr(mediainfo, "title", "") or getattr(mediainfo, "name", "") or "").strip(),
+                "year": str(getattr(mediainfo, "year", "") or "").strip(),
+            }
+        except Exception as exc:
+            logger.warning(f"订阅下载增强校验 TMDB 目标失败 TMDB={tmdbid}: {exc}")
+            return {"success": False, "message": f"TMDB 校验失败：{exc}"}
+
+    def _identify_target_by_ai(self, title: str) -> Dict[str, Any]:
+        try:
+            from app.helper.llm import LLMHelper
+        except Exception:
+            try:
+                from app.agent.llm import LLMHelper
+            except Exception as exc:
+                raise RuntimeError("AI 未配置或 LLMHelper 不可用") from exc
+
+        llm = LLMHelper.get_llm(streaming=False)
+        if hasattr(llm, "__await__"):
+            try:
+                llm = asyncio.run(llm)
+            except RuntimeError:
+                loop = asyncio.get_event_loop()
+                llm = loop.run_until_complete(llm)
+        prompt = "\n".join(
+            [
+                "你是 MoviePilot 媒体识别助手。",
+                "请根据媒体文件名判断目标媒体，并只输出 JSON。",
+                "JSON 字段：media_type 只能是 tv 或 movie；tmdbid 必须是 TMDB 数字 ID；name/year/season/episode 可选。",
+                "不要输出 markdown，不要解释。",
+                f"媒体文件名：{title}",
+            ]
+        )
+        response = llm.invoke(prompt)
+        content = str(getattr(response, "content", response) or "").strip()
+        start = content.find("{")
+        end = content.rfind("}")
+        if start >= 0 and end > start:
+            content = content[start : end + 1]
+        try:
+            data = json.loads(content)
+        except Exception as exc:
+            raise RuntimeError("AI 返回不是可解析 JSON") from exc
+        return {
+            "media_type": normalize_media_type(data.get("media_type") or data.get("type")),
+            "tmdbid": safe_int(data.get("tmdbid") or data.get("tmdb_id"), 0),
+            "name": str(data.get("name") or data.get("title") or "").strip(),
+            "year": str(data.get("year") or "").strip(),
+            "season": safe_int(data.get("season"), 0),
+            "episode": safe_int(data.get("episode"), 0),
+        }
+
+    def _recognize_identifier_title(self, title: str, target: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            try:
+                from app.chain.media import MediaChain
+            except Exception:
+                from app.chain import MediaChain
+            from app.core.metainfo import MetaInfo
+
+            meta = MetaInfo(title)
+            mediainfo = MediaChain().recognize_media(meta=meta, cache=False)
+            recognized_tmdbid = safe_int(
+                getattr(mediainfo, "tmdb_id", None) or getattr(mediainfo, "tmdbid", None),
+                0,
+            ) if mediainfo else 0
+            target_tmdbid = safe_int(target.get("tmdbid"), 0)
+            matched = bool(recognized_tmdbid and recognized_tmdbid == target_tmdbid)
+            return {
+                "success": matched,
+                "message": "再次识别成功" if matched else "再次识别未命中目标 TMDB",
+                "recognized_title": getattr(mediainfo, "title", "") if mediainfo else "",
+                "tmdbid": recognized_tmdbid,
+            }
+        except Exception as exc:
+            return {"success": False, "message": f"再次识别失败：{exc}", "reason": "recognize_failed"}
+
+    def _suggest_identifier_lines_by_ai(self, title: str, target: Dict[str, Any]) -> List[str]:
+        try:
+            from app.helper.llm import LLMHelper
+        except Exception:
+            try:
+                from app.agent.llm import LLMHelper
+            except Exception as exc:
+                raise RuntimeError("AI 未配置或 LLMHelper 不可用") from exc
+
+        llm = LLMHelper.get_llm(streaming=False)
+        if hasattr(llm, "__await__"):
+            try:
+                llm = asyncio.run(llm)
+            except RuntimeError:
+                loop = asyncio.get_event_loop()
+                llm = loop.run_until_complete(llm)
+        prompt = "\n".join(
+            [
+                "你是 MoviePilot 自定义识别词规则助手。",
+                "请根据原始标题和目标信息生成 1 组尽量窄作用域、可直接用于 CustomIdentifiers 的规则。",
+                "只输出规则行，不要 markdown。",
+                "支持格式：屏蔽词；被替换词 => 替换词；前定位词 <> 后定位词 >> EP±N；组合规则。",
+                "运算符两侧必须保留空格： => 、 <> 、 >> 、 && 。",
+                "可使用强制 TMDB：{[tmdbid=xxx;type=tv/movie;s=1;e=1]}。",
+                f"原始标题：{title}",
+                f"目标：{target}",
+            ]
+        )
+        response = llm.invoke(prompt)
+        content = getattr(response, "content", response)
+        lines = []
+        for raw in str(content or "").replace("```text", "```").splitlines():
+            line = raw.strip().strip("`")
+            if not line or line.lower().startswith(("```", "规则", "说明")):
+                continue
+            normalized = normalize_identifier_line(line)
+            if normalized:
+                lines.append(normalized)
+        return lines
+
+    def _append_custom_identifiers(self, lines: List[str]) -> Dict[str, Any]:
+        from app.db.systemconfig_oper import SystemConfigOper
+
+        oper = SystemConfigOper()
+        key = getattr(SystemConfigKey, "CustomIdentifiers", "CustomIdentifiers")
+        existing = oper.get(key) or []
+        existing = self._flatten_words(existing)
+        cleaned = []
+        for line in lines:
+            normalized = str(line or "").rstrip()
+            if validate_identifier_rule(normalized):
+                cleaned.append(normalized)
+        added = dedupe_identifier_lines(existing, cleaned)
+        if added:
+            oper.set(key, added + existing)
+            try:
+                refresh_identifier_runtime_cache()
+            except Exception as exc:
+                logger.warning(f"订阅下载增强刷新识别词缓存失败: {exc}")
+        return {"added": added, "total_count": len(existing) + len(added)}
+
+    def _retry_identifier_recognition(self, diagnosis: Dict[str, Any]) -> Dict[str, Any]:
+        candidates = diagnosis.get("candidates") or []
+        candidate = candidates[0] if candidates else {}
+        title = str(candidate.get("title") or diagnosis.get("title") or "").strip()
+        if not title:
+            return {"success": False, "message": "没有可再次识别的标题", "reason": "missing_title"}
+        try:
+            try:
+                from app.chain.media import MediaChain
+            except Exception:
+                from app.chain import MediaChain
+            from app.core.metainfo import MetaInfo
+
+            meta = MetaInfo(title)
+            mediainfo = MediaChain().recognize_media(meta=meta, cache=False)
+            matched = bool(mediainfo and safe_int(getattr(mediainfo, "tmdb_id", 0), 0) == safe_int(diagnosis.get("tmdbid"), 0))
+            return {
+                "success": matched,
+                "message": "再次识别成功" if matched else "再次识别仍未命中目标 TMDB",
+                "data": {"added": [], "recognized_title": getattr(mediainfo, "title", "") if mediainfo else ""},
+            }
+        except Exception as exc:
+            return {"success": False, "message": f"再次识别失败：{exc}", "reason": "recognize_failed"}
+
+    def _download_candidate(self, diagnosis: Dict[str, Any], index: int, event_data: Optional[Dict[str, Any]] = None):
+        event_data = event_data or {}
         candidates = diagnosis.get("candidates") or []
         if not (0 <= index < len(candidates)):
-            self.post_message(title="订阅下载增强", text="候选资源不存在。", save_history=False)
+            self._post_callback_message(event_data, title="订阅下载增强", text="候选资源不存在。", save_history=False)
             return
         candidate = candidates[index]
         candidate_id = candidate.get("download_payload") or candidate.get("candidate_id")
         context = self._download_contexts.get(str(candidate_id))
         if not context:
-            self.post_message(title="订阅下载增强", text="下载上下文已过期，请重新扫描后再下载。", save_history=False)
+            self._post_callback_message(event_data, title="订阅下载增强", text="下载上下文已过期，请重新扫描后再下载。", save_history=False)
             return
         try:
             from app.chain.download import DownloadChain
 
             DownloadChain().download_single(context=context, username=PLUGIN_ID)
-            self.post_message(title="订阅下载增强", text="已提交下载任务。", save_history=False)
+            self._post_callback_message(event_data, title="订阅下载增强", text="已提交下载任务。", save_history=False)
         except Exception as exc:
-            self.post_message(title="订阅下载增强", text=f"提交下载失败：{exc}", save_history=False)
+            self._post_callback_message(event_data, title="订阅下载增强", text=f"提交下载失败：{exc}", save_history=False)
 
     def _delete_callback_message(self, event_data: Dict[str, Any]) -> bool:
         try:
@@ -461,6 +1054,110 @@ class SubscribePlus(_PluginBase):
         except Exception as exc:
             logger.warning(f"订阅下载增强删除 Telegram 消息失败: {exc}")
             return False
+
+    def _handle_ci_command_text(self, text: str, event_data: Dict[str, Any]):
+        raw = str(text or "").strip()
+        arg = raw[3:].strip() if raw.startswith("/ci") else raw
+        if not arg:
+            self._post_callback_message(event_data, title="自定义识别词", text="请发送：/ci 媒体文件名", save_history=False)
+            return
+
+        parts = arg.split()
+        if parts:
+            state = self._ensure_store().load_interaction(parts[0])
+            if state and state.get("view") == "ci_tool":
+                tmdbid = safe_int(parts[1] if len(parts) > 1 else None, 0)
+                if not tmdbid:
+                    self._post_callback_message(
+                        event_data,
+                        title="自定义识别词",
+                        text=f"请回复：/ci {parts[0]} TMDBID",
+                        save_history=False,
+                    )
+                    return
+                result = self._identifier_manual(
+                    {
+                        "title": state.get("title"),
+                        "media_type": state.get("manual_media_type") or "tv",
+                        "tmdbid": tmdbid,
+                    },
+                    source="telegram",
+                )
+                self._update_ci_state_after_result(parts[0], state, result)
+                self._post_callback_message(
+                    event_data,
+                    title="自定义识别词",
+                    text=render_identifier_fix_result_text(result),
+                    buttons=build_ci_done_menu(parts[0]),
+                    save_history=False,
+                )
+                return
+
+        if len(parts) >= 3 and parts[0].lower() in {"tv", "movie"} and safe_int(parts[1], 0):
+            title = " ".join(parts[2:]).strip()
+            token = self._save_ci_interaction(title)
+            result = self._identifier_manual(
+                {"title": title, "media_type": parts[0], "tmdbid": safe_int(parts[1], 0)},
+                source="telegram",
+            )
+            state = self._ensure_store().load_interaction(token) or {"view": "ci_tool", "title": title}
+            self._update_ci_state_after_result(token, state, result)
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=render_identifier_fix_result_text(result),
+                buttons=build_ci_done_menu(token),
+                save_history=False,
+            )
+            return
+
+        token = self._save_ci_interaction(arg)
+        self._post_callback_message(
+            event_data,
+            title="自定义识别词",
+            text=f"媒体文件名：{arg}",
+            buttons=build_ci_mode_menu(token),
+            save_history=False,
+        )
+
+    def _save_ci_interaction(self, title: str) -> str:
+        token = make_token({"ci": title, "created_at": datetime.now().isoformat(timespec="seconds")})
+        self._ensure_store().save_interaction(
+            token,
+            {
+                "view": "ci_tool",
+                "title": str(title or "").strip(),
+                "expires_at": (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds"),
+            },
+        )
+        return token
+
+    def _update_ci_state_after_result(self, token: str, state: Dict[str, Any], result: Dict[str, Any]):
+        data = result.get("data") or {}
+        if data.get("candidate_title"):
+            state["title"] = data.get("candidate_title")
+        if data.get("tmdbid"):
+            state["last_target"] = {
+                "tmdbid": data.get("tmdbid"),
+                "media_type": data.get("media_type"),
+                "season": data.get("season"),
+                "episode": data.get("episode"),
+                "name": data.get("title"),
+            }
+        self._ensure_store().save_interaction(token, state)
+
+    def _retry_ci_recognition(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        title = str(state.get("title") or "").strip()
+        target = state.get("last_target") or {}
+        if not title or not target.get("tmdbid"):
+            return {"success": False, "message": "没有可再次识别的记录", "reason": "missing_target", "data": {"added": []}}
+        recheck = self._recognize_identifier_title(title, target)
+        return {
+            "success": bool(recheck.get("success")),
+            "message": recheck.get("message") or "再次识别完成",
+            "reason": recheck.get("reason") or ("" if recheck.get("success") else "recognize_failed"),
+            "data": {"added": [], "recheck": recheck},
+        }
 
     def _save_interaction(self, diagnosis: Dict[str, Any]) -> str:
         token = make_token(
@@ -626,10 +1323,23 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强读取二级分类策略失败: {exc}")
             return []
 
+    @staticmethod
+    def _describe_subscribe(subscribe: Any) -> str:
+        title = str(getattr(subscribe, "name", "") or getattr(subscribe, "title", "") or "未知订阅").strip()
+        subscribe_id = getattr(subscribe, "id", None)
+        tmdbid = getattr(subscribe, "tmdbid", None)
+        parts = [title]
+        if subscribe_id:
+            parts.append(f"ID={subscribe_id}")
+        if tmdbid:
+            parts.append(f"TMDB={tmdbid}")
+        return " ".join(parts)
+
     def _resolve_subscribe_category(self, subscribe: Any) -> Optional[str]:
         tmdbid = int(getattr(subscribe, "tmdbid", 0) or 0)
         if not tmdbid:
             return None
+        subscribe_label = self._describe_subscribe(subscribe)
         episode_group = getattr(subscribe, "episode_group", None) or ""
         cache_key = f"{tmdbid}:{episode_group}"
         if cache_key in self._category_cache:
@@ -649,8 +1359,9 @@ class SubscribePlus(_PluginBase):
             if category:
                 self._category_cache[cache_key] = category
                 return category
+            logger.warning(f"订阅下载增强识别订阅分类未命中 {subscribe_label}")
         except Exception as exc:
-            logger.warning(f"订阅下载增强识别订阅分类失败 TMDB={tmdbid}: {exc}")
+            logger.warning(f"订阅下载增强识别订阅分类失败 {subscribe_label}: {exc}")
         return None
 
     def _load_tmdb_episodes(self, tmdbid: int, season: int, episode_group: Optional[str]) -> List[Dict[str, Any]]:
@@ -707,6 +1418,35 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强查询整理历史失败: {exc}")
 
         return False, "媒体库缓存和整理历史均未命中"
+
+    def _load_downloaded_episodes(self, tmdbid: int, season: int) -> set[int]:
+        episodes: set[int] = set()
+        try:
+            from app.db.mediaserver_oper import MediaServerOper
+
+            item = MediaServerOper().exists(tmdbid=tmdbid, mtype=MediaType.TV.value)
+            if item:
+                episodes.update(episodes_in_seasoninfo(getattr(item, "seasoninfo", None), season))
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取媒体库已下载集失败: {exc}")
+
+        try:
+            from app.db.transferhistory_oper import TransferHistoryOper
+
+            histories = TransferHistoryOper().get_by(tmdbid=tmdbid, mtype=MediaType.TV.value) or []
+            history_dicts = [
+                {
+                    "tmdbid": getattr(history, "tmdbid", None),
+                    "season": getattr(history, "seasons", None),
+                    "episodes": getattr(history, "episodes", None),
+                }
+                for history in histories
+            ]
+            episodes.update(episodes_in_transfer_history(history_dicts, tmdbid, season))
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取整理历史已下载集失败: {exc}")
+
+        return {episode for episode in episodes if episode > 0}
 
     def _search_torrents(self, item: DiagnosisInput) -> List[Dict[str, Any]]:
         try:
@@ -799,6 +1539,7 @@ class SubscribePlus(_PluginBase):
                 self._is_episode_downloaded,
                 load_categories=self._load_tv_categories,
                 resolve_subscribe_category=self._resolve_subscribe_category,
+                load_downloaded_episodes=self._load_downloaded_episodes,
             )
         return self._scanner
 

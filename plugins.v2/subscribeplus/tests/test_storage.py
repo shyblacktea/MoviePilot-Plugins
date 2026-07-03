@@ -23,6 +23,20 @@ class JsonStoreTest(unittest.TestCase):
 
         self.assertEqual([item["id"] for item in store.load_rule_records()], ["3", "2"])
 
+    def test_store_keeps_recent_identifier_records(self):
+        TEST_TMP_ROOT.mkdir(exist_ok=True)
+        tmpdir = TEST_TMP_ROOT / "storage_identifiers"
+        tmpdir.mkdir(exist_ok=True)
+        records_file = tmpdir / "identifier_records.json"
+        if records_file.exists():
+            records_file.unlink()
+        store = JsonStore(tmpdir, max_rule_records=2)
+        store.append_identifier_record({"id": "1"})
+        store.append_identifier_record({"id": "2"})
+        store.append_identifier_record({"id": "3"})
+
+        self.assertEqual([item["id"] for item in store.load_identifier_records()], ["3", "2"])
+
     def test_store_expires_interaction_tokens(self):
         TEST_TMP_ROOT.mkdir(exist_ok=True)
         tmpdir = TEST_TMP_ROOT / "storage_interactions"

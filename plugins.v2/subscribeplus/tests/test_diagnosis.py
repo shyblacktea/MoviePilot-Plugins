@@ -48,6 +48,32 @@ class DiagnosisTest(unittest.TestCase):
         self.assertEqual(diagnosis.reason, "downloadable")
         self.assertEqual([candidate["episode"] for candidate in diagnosis.candidates], [8, 9])
 
+    def test_diagnoser_keeps_multi_episode_candidate_when_it_covers_missing_episode(self):
+        def search(_item):
+            return [
+                {
+                    "title": "Show.S01E01-E10.1080p",
+                    "recognized": True,
+                    "season": 1,
+                    "episode": 1,
+                    "episodes": list(range(1, 11)),
+                }
+            ]
+
+        item = DiagnosisInput(
+            subscribe_id=1,
+            title="Show",
+            tmdbid=100,
+            season=1,
+            category="日番",
+            episodes=[StaleEpisode(season=1, episode=8, air_date="2026-07-01")],
+        )
+
+        diagnosis = TorrentDiagnoser(search).diagnose(item)
+
+        self.assertEqual(diagnosis.reason, "downloadable")
+        self.assertEqual(diagnosis.candidates[0]["episodes"], list(range(1, 11)))
+
 
 if __name__ == "__main__":
     unittest.main()

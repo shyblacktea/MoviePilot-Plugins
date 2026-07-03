@@ -1,5 +1,6 @@
 import unittest
 import inspect
+from types import SimpleNamespace
 
 from subscribeplus import SubscribePlus
 from subscribeplus.models import PluginConfig
@@ -40,6 +41,12 @@ class PluginConfigTest(unittest.TestCase):
                 {parameter.kind for parameter in signature.parameters.values()},
                 msg=f"{api['path']} should use an explicit optional body parameter",
             )
+
+    def test_subscribe_log_label_includes_title_and_ids(self):
+        plugin = SubscribePlus()
+        subscribe = SimpleNamespace(id=102, name="一念永恒", tmdbid=107371)
+
+        self.assertEqual(plugin._describe_subscribe(subscribe), "一念永恒 ID=102 TMDB=107371")
 
 
 if __name__ == "__main__":

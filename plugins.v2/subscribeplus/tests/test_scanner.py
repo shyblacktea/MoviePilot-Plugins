@@ -85,6 +85,96 @@ class ScannerTest(unittest.TestCase):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].category, "日番")
 
+    def test_scan_keeps_only_recent_missing_episodes_after_latest_downloaded(self):
+        subscribe = SimpleNamespace(
+            id=1,
+            state="R",
+            type="电视剧",
+            name="测试剧",
+            tmdbid=100,
+            season=1,
+            start_episode=1,
+            media_category="日番",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        downloaded = set(range(1, 8))
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": episode, "air_date": f"2026-07-0{min(episode, 9)}"}
+                for episode in range(1, 10)
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (episode in downloaded, "命中" if episode in downloaded else "未命中"),
+            load_downloaded_episodes=lambda tmdbid, season: downloaded,
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["日番"], delay_days=0), resolver, today=date(2026, 7, 9))
+
+        self.assertEqual([episode.episode for episode in results[0].episodes], [8, 9])
+
+    def test_scan_ignores_episodes_before_subscribe_start_episode(self):
+        subscribe = SimpleNamespace(
+            id=54,
+            state="R",
+            type="电视剧",
+            name="牧神记",
+            tmdbid=236534,
+            season=1,
+            start_episode=29,
+            media_category="国漫",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        downloaded = set(range(29, 81))
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": episode, "air_date": "2026-07-01"}
+                for episode in range(1, 83)
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (episode in downloaded, "命中" if episode in downloaded else "未命中"),
+            load_downloaded_episodes=lambda tmdbid, season: downloaded,
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["国漫"], delay_days=0), resolver, today=date(2026, 7, 9))
+
+        self.assertEqual([episode.episode for episode in results[0].episodes], [81, 82])
+
+    def test_scan_ignores_old_gap_before_latest_downloaded_episode(self):
+        subscribe = SimpleNamespace(
+            id=54,
+            state="R",
+            type="电视剧",
+            name="牧神记",
+            tmdbid=236534,
+            season=1,
+            start_episode=29,
+            media_category="国漫",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        downloaded = set(range(29, 81)) | set(range(82, 90))
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": episode, "air_date": "2026-07-01"}
+                for episode in range(1, 92)
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (episode in downloaded, "命中" if episode in downloaded else "未命中"),
+            load_downloaded_episodes=lambda tmdbid, season: downloaded,
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["国漫"], delay_days=0), resolver, today=date(2026, 7, 9))
+
+        self.assertEqual([episode.episode for episode in results[0].episodes], [90, 91])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -71,6 +71,14 @@ class RulesTest(unittest.TestCase):
         )
         self.assertNotIn("platform", {item["kind"] for item in suggestions})
 
+    def test_numeric_site_id_does_not_create_rule_suggestion(self):
+        candidates = [{"title": "Show S04E12 1080p CR WEB-DL H264-HHWEB", "site": "20", "site_name": "憨憨"}]
+        suggestions = build_rule_suggestions(candidates)
+
+        self.assertNotIn("20", {item["pattern"] for item in suggestions})
+        self.assertIn("添加平台：CR", {item["text"] for item in suggestions})
+        self.assertIn("添加官组：HHWeb", {item["text"] for item in suggestions})
+
     def test_extract_release_groups_from_custom_words(self):
         groups = extract_release_groups_from_words(
             [
@@ -94,6 +102,15 @@ class RulesTest(unittest.TestCase):
             preview["new_include"],
             "(?=.*HHWeb|MWeb|ADWeb|cctc)(?=.*Viu|friDay|Baha)",
         )
+
+    def test_include_preview_rejects_numeric_site_id_pattern(self):
+        subscribe = SimpleNamespace(
+            id=7,
+            include=".*(LINETV|Crunchyroll|\\bCR\\b).*(HHWEB|ADWeb)",
+        )
+
+        with self.assertRaises(ValueError):
+            build_include_preview(subscribe, "20", source="vue")
 
     def test_apply_include_preview_appends_old_and_new_record(self):
         preview = {"subscribe_id": 7, "old_include": "CR", "new_include": "CR|Baha", "source": "telegram"}

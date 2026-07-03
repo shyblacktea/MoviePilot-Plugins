@@ -25,13 +25,23 @@ def extract_season_episode(title: str) -> Tuple[Optional[int], Optional[int]]:
     return None, None
 
 
+def _safe_positive_int(value: Any) -> Optional[int]:
+    try:
+        number = int(value or 0)
+    except (TypeError, ValueError):
+        return None
+    return number if number > 0 else None
+
+
 def normalize_search_result(raw: Dict[str, Any]) -> Dict[str, Any]:
     title = raw.get("title") or raw.get("name") or raw.get("torrent_name") or ""
     season, episode = extract_season_episode(title)
     raw_episode = raw.get("episode")
-    if raw_episode is None and raw.get("episodes"):
-        episodes = raw.get("episodes")
-        if isinstance(episodes, list) and episodes:
+    raw_episodes = raw.get("episodes")
+    episodes = []
+    if isinstance(raw_episodes, list):
+        episodes = [number for item in raw_episodes if (number := _safe_positive_int(item))]
+        if raw_episode is None and episodes:
             raw_episode = episodes[0]
     return {
         "site": str(raw.get("site") or raw.get("site_id") or ""),
@@ -39,6 +49,7 @@ def normalize_search_result(raw: Dict[str, Any]) -> Dict[str, Any]:
         "title": title,
         "season": int(raw.get("season") or season or 0),
         "episode": int(raw_episode or episode or 0),
+        "episodes": episodes,
         "recognized": bool(raw.get("recognized", raw.get("media_info") is not None or raw.get("meta") is not None)),
         "seeders": int(raw.get("seeders") or raw.get("seed_count") or 0),
         "size": raw.get("size") or raw.get("volume") or "",

@@ -54,6 +54,13 @@ class JsonStore:
     def load_rule_records(self) -> List[Dict[str, Any]]:
         return self._read("rule_records.json", [])
 
+    def append_identifier_record(self, record: Dict[str, Any]):
+        records = [record] + self.load_identifier_records()
+        self._write("identifier_records.json", records[: self.max_rule_records])
+
+    def load_identifier_records(self) -> List[Dict[str, Any]]:
+        return self._read("identifier_records.json", [])
+
     def save_interaction(self, token: str, state: Dict[str, Any]):
         states = self._read("interactions.json", {})
         states[token] = state

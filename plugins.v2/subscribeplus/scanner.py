@@ -78,20 +78,35 @@ def episode_in_transfer_history(
 
 
 def episode_in_seasoninfo(seasoninfo: Any, season: int, episode: int) -> bool:
+    return episode in episodes_in_seasoninfo(seasoninfo, season)
+
+
+def episodes_in_seasoninfo(seasoninfo: Any, season: int) -> set[int]:
+    episodes: set[int] = set()
     if isinstance(seasoninfo, dict):
         if str(season) in seasoninfo:
-            return episode in _episode_numbers(seasoninfo.get(str(season)))
+            return _episode_numbers(seasoninfo.get(str(season)))
         if season in seasoninfo:
-            return episode in _episode_numbers(seasoninfo.get(season))
+            return _episode_numbers(seasoninfo.get(season))
         seasoninfo = seasoninfo.get("seasons") or seasoninfo.get("seasoninfo") or seasoninfo.values()
     for item in seasoninfo or []:
         if not isinstance(item, dict):
             continue
         if _season_value(item) != int(season):
             continue
-        if episode in _episode_numbers(item.get("episodes") or item.get("episode")):
-            return True
-    return False
+        episodes.update(_episode_numbers(item.get("episodes") or item.get("episode")))
+    return episodes
+
+
+def episodes_in_transfer_history(histories: Iterable[Dict[str, Any]], tmdbid: int, season: int) -> set[int]:
+    episodes: set[int] = set()
+    for item in histories:
+        if int(item.get("tmdbid") or 0) != int(tmdbid):
+            continue
+        if _season_value(item) != int(season):
+            continue
+        episodes.update(_episode_numbers(item.get("episodes")))
+    return episodes
 
 
 class SubscriptionScanner:
@@ -102,12 +117,14 @@ class SubscriptionScanner:
         is_episode_downloaded: Callable[[int, int, int], tuple[bool, str]],
         load_categories: Optional[Callable[[], List[Any]]] = None,
         resolve_subscribe_category: Optional[Callable[[Any], Optional[str]]] = None,
+        load_downloaded_episodes: Optional[Callable[[int, int], set[int]]] = None,
     ):
         self.load_subscribes = load_subscribes
         self.load_tmdb_episodes = load_tmdb_episodes
         self.is_episode_downloaded = is_episode_downloaded
         self.load_categories = load_categories
         self.resolve_subscribe_category = resolve_subscribe_category
+        self.load_downloaded_episodes = load_downloaded_episodes
 
     def collect_categories(self) -> List[str]:
         strategy_categories = self.load_categories() if self.load_categories else []
@@ -138,16 +155,24 @@ class SubscriptionScanner:
                 continue
 
             stale_episodes = []
+            downloaded_episodes = self._downloaded_episodes(tmdbid, season)
+            start_episode = int(getattr(subscribe, "start_episode", 0) or 0)
+            latest_downloaded_episode = max(downloaded_episodes or {0})
+            recent_threshold = max(start_episode - 1, latest_downloaded_episode)
             episode_group = getattr(subscribe, "episode_group", None)
             for episode in self.load_tmdb_episodes(tmdbid, season, episode_group):
                 air_date = parse_air_date(episode.get("air_date"))
                 episode_number = int(episode.get("episode_number") or episode.get("episode") or 0)
                 if not air_date or not episode_number:
                     continue
+                if episode_number <= recent_threshold:
+                    continue
                 if not should_check_episode(air_date, config.delay_days, today):
                     continue
                 downloaded, evidence = self.is_episode_downloaded(tmdbid, season, episode_number)
                 if downloaded:
+                    downloaded_episodes.add(episode_number)
+                    recent_threshold = max(recent_threshold, episode_number)
                     continue
                 stale_episodes.append(
                     StaleEpisode(
@@ -187,3 +212,11 @@ class SubscriptionScanner:
         if self.resolve_subscribe_category:
             return normalize_category(self.resolve_subscribe_category(subscribe))
         return UNCATEGORIZED
+
+    def _downloaded_episodes(self, tmdbid: int, season: int) -> set[int]:
+        if not self.load_downloaded_episodes:
+            return set()
+        try:
+            return {int(item) for item in (self.load_downloaded_episodes(tmdbid, season) or set()) if int(item or 0) > 0}
+        except Exception:
+            return set()
