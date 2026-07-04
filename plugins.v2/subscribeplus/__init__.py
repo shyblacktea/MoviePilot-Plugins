@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import asyncio
-import copy
 import hashlib
 import json
 import re
-from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -79,10 +77,10 @@ from .identifiers import (
     safe_int,
     validate_identifier_rule,
 )
-from .models import DiagnosisInput, PluginConfig, StaleEpisode
+from .models import DiagnosisInput, PluginConfig
 from .rules import (
-    apply_rule_preview,
-    build_rule_preview,
+    apply_include_preview,
+    build_include_preview,
     build_rule_suggestions,
     extract_release_groups_from_words,
 )
@@ -119,7 +117,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.5"
+    plugin_version = "0.4"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -309,14 +307,13 @@ class SubscribePlus(_PluginBase):
         config = self._plugin_config
         store = self._ensure_store()
         scanner = self._ensure_scanner()
+        diagnoser = self._ensure_diagnoser()
         resolver = self._ensure_site_resolver()
 
         results = []
         inputs = scanner.scan(config, resolver)
         for item in inputs[: config.max_scan_subscribes]:
-            diagnosis = self._diagnose_item(item)
-            if not diagnosis:
-                continue
+            diagnosis = diagnoser.diagnose(item)
             results.append(diagnosis.to_dict())
 
         store.save_scan_results(results)
@@ -324,191 +321,16 @@ class SubscribePlus(_PluginBase):
             self._notify_each_show(results)
         return {"success": True, "count": len(results), "source": source}
 
-    def _diagnose_item(self, item: DiagnosisInput) -> Optional[DiagnosisItem]:
-        mp_search = self._run_moviepilot_subscribe_search_for_item(item)
-        mp_diagnosis = self._diagnose_with_moviepilot_subscription_scope(item, mp_search)
-        if mp_diagnosis.candidates:
-            if mp_diagnosis.reason == "downloadable":
-                logger.info(
-                    f"订阅下载增强：{item.title} 在 MP 订阅搜索范围内已有可匹配资源，交给 MP 订阅搜索处理"
-                )
-                return None
-            return mp_diagnosis
-        logger.info(f"订阅下载增强：{item.title} 在 MP 订阅搜索范围内没有候选资源，不再执行插件 PT 范围兜底搜索")
-        return None
-
-    def _run_moviepilot_subscribe_search_for_item(self, item: DiagnosisInput) -> Dict[str, Any]:
-        captured: Dict[str, Any] = {"matched_contexts": [], "diagnostic_contexts": [], "errors": []}
-        subscribe_id = safe_int(item.subscribe_id, 0)
-        if not subscribe_id:
-            return captured
-        try:
-            from app.chain.subscribe import SubscribeChain
-            from app.chain.search import SearchChain
-
-            original_parse_result = getattr(SearchChain, "_SearchChain__parse_result")
-
-            def wrapped_parse_result(
-                search_self,
-                torrents,
-                mediainfo,
-                keyword=None,
-                rule_groups=None,
-                season_episodes=None,
-                custom_words=None,
-                filter_params=None,
-            ):
-                raw_torrents = list(torrents or [])
-                try:
-                    diagnostic_contexts = original_parse_result(
-                        search_self,
-                        list(raw_torrents),
-                        copy.deepcopy(mediainfo),
-                        keyword=keyword,
-                        rule_groups=[],
-                        season_episodes=season_episodes,
-                        custom_words=custom_words,
-                        filter_params=None,
-                    )
-                    captured["diagnostic_contexts"].extend(diagnostic_contexts or [])
-                except Exception as exc:
-                    captured["errors"].append(str(exc))
-                    logger.warning(f"订阅下载增强分析 MP 订阅搜索原始结果失败：{item.title}，{exc}")
-
-                matched_contexts = original_parse_result(
-                    search_self,
-                    torrents,
-                    mediainfo,
-                    keyword=keyword,
-                    rule_groups=rule_groups,
-                    season_episodes=season_episodes,
-                    custom_words=custom_words,
-                    filter_params=filter_params,
-                )
-                captured["matched_contexts"].extend(matched_contexts or [])
-                return matched_contexts
-
-            setattr(SearchChain, "_SearchChain__parse_result", wrapped_parse_result)
-            try:
-                SubscribeChain().search(sid=subscribe_id, state=None, manual=False)
-            finally:
-                setattr(SearchChain, "_SearchChain__parse_result", original_parse_result)
-        except Exception as exc:
-            captured["errors"].append(str(exc))
-            logger.warning(f"订阅下载增强触发 MP 订阅搜索失败：{item.title} ID={subscribe_id}，{exc}")
-        return captured
-
-    def _diagnose_with_moviepilot_subscription_scope(self, item: DiagnosisInput, mp_search: Optional[Dict[str, Any]] = None) -> DiagnosisItem:
-        mp_sites = self._load_moviepilot_subscribe_sites(item)
-        scoped_item = replace(item, sites=mp_sites)
-        mp_search = mp_search or {}
-
-        matched_candidates = [
-            self._context_to_candidate(context, scoped_item)
-            for context in (mp_search.get("matched_contexts") or [])
-        ]
-        matched_diagnosis = TorrentDiagnoser(lambda _item: matched_candidates).diagnose(scoped_item)
-        if matched_diagnosis.candidates:
-            matched_diagnosis.reason = "downloadable"
-            matched_diagnosis.message = "MP 订阅搜索结果中存在可匹配资源，已交给 MP 订阅搜索处理"
-            return matched_diagnosis
-
-        diagnostic_candidates = [
-            self._context_to_candidate(context, scoped_item)
-            for context in (mp_search.get("diagnostic_contexts") or [])
-        ]
-        diagnostic_item = replace(scoped_item, include="")
-        diagnostic_result = TorrentDiagnoser(lambda _item: diagnostic_candidates).diagnose(diagnostic_item)
-        if diagnostic_result.candidates:
-            diagnostic_result.reason = "rule_blocked"
-            diagnostic_result.message = "MP 订阅搜索结果中存在季集正确资源，但被订阅规则或过滤条件拦截"
-            return diagnostic_result
-
-        return DiagnosisItem(
-            subscribe_id=scoped_item.subscribe_id,
-            title=scoped_item.title,
-            tmdbid=scoped_item.tmdbid,
-            season=scoped_item.season,
-            category=scoped_item.category,
-            reason="no_pt_resource",
-            message="MP 订阅搜索结果中没有覆盖目标集的候选资源",
-            episodes=[episode.to_dict() for episode in scoped_item.episodes],
-            sites=scoped_item.sites,
-        )
-
-    def _manual_pt_scope_diagnosis(self, diagnosis: Dict[str, Any]) -> Dict[str, Any]:
-        subscribe_id = safe_int(diagnosis.get("subscribe_id"), 0)
-        season = safe_int(diagnosis.get("season"), 0)
-        tmdbid = safe_int(diagnosis.get("tmdbid"), 0)
-        title = str(diagnosis.get("title") or "").strip()
-        episodes = []
-        for raw in diagnosis.get("episodes") or []:
-            episode = safe_int(raw.get("episode"), 0) if isinstance(raw, dict) else 0
-            if not episode:
-                continue
-            episodes.append(
-                StaleEpisode(
-                    season=safe_int(raw.get("season"), season) if isinstance(raw, dict) else season,
-                    episode=episode,
-                    air_date=str(raw.get("air_date") or "") if isinstance(raw, dict) else "",
-                    evidence=str(raw.get("evidence") or "来自当前 Telegram 诊断记录") if isinstance(raw, dict) else "来自当前 Telegram 诊断记录",
-                )
-            )
-        if not (subscribe_id and season and tmdbid and title and episodes):
-            failed = dict(diagnosis)
-            failed.update(
-                {
-                    "reason": "search_failed",
-                    "message": "插件 PT 范围搜索失败：当前通知缺少订阅、TMDB、季或缺失集信息",
-                    "candidates": [],
-                }
-            )
-            return failed
-
-        subscribe = self._get_subscribe(subscribe_id)
-        include = str(getattr(subscribe, "include", "") or diagnosis.get("include") or "")
-        category = str(diagnosis.get("category") or getattr(subscribe, "media_category", "") or "")
-        sites = self._ensure_site_resolver().resolve_for_category(self._plugin_config, category)
-        item = DiagnosisInput(
-            subscribe_id=subscribe_id,
-            title=title,
-            tmdbid=tmdbid,
-            season=season,
-            category=category,
-            include=include,
-            sites=sites,
-            episodes=episodes,
-        )
-        result = TorrentDiagnoser(self._search_torrents).diagnose(item).to_dict()
-        result["source"] = "plugin_pt_scope"
-        result["message"] = f"插件 PT 范围搜索结果：{result.get('message') or result.get('reason')}"
-        return result
-
     def _notify_each_show(self, results: List[Dict[str, Any]]):
-        store = self._ensure_store()
-        pending = []
         for item in results:
             ignore_key = self._ignore_key(item)
-            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
-                continue
-            pending.append(item)
-        store.save_notification_queue(pending)
-        self._notify_next_queued_show()
-
-    def _notify_next_queued_show(self):
-        store = self._ensure_store()
-        while True:
-            item = store.pop_notification_queue()
-            if not item:
-                return
-            ignore_key = self._ignore_key(item)
-            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
+            if self._ensure_store().is_ignored(ignore_key):
                 continue
             token = self._save_interaction(item)
             try:
                 self.post_message(
                     mtype=NotificationType.Plugin if NotificationType else None,
-                    title=f"SubscribePlus: {item.get('title')}",
+                    title=f"订阅下载增强：{item.get('title')}",
                     text=render_notification_text(item),
                     buttons=build_main_menu(
                         token,
@@ -518,8 +340,7 @@ class SubscribePlus(_PluginBase):
                     save_history=False,
                 )
             except Exception as exc:
-                logger.warning(f"璁㈤槄涓嬭浇澧炲己鍙戦€侀€氱煡澶辫触: {exc}")
-            return
+                logger.warning(f"订阅下载增强发送通知失败: {exc}")
 
     if eventmanager:
         @eventmanager.register(EventType.MessageAction)
@@ -576,7 +397,6 @@ class SubscribePlus(_PluginBase):
         logger.info(f"订阅下载增强处理 Telegram 回调：{op}:{token}")
         if op == "close":
             self._ensure_store().delete_interaction(token)
-            self._notify_next_queued_show()
             if not self._delete_callback_message(event_data):
                 self._post_callback_message(event_data, title="订阅下载增强", text="已关闭本次交互。", save_history=False)
             return
@@ -586,66 +406,12 @@ class SubscribePlus(_PluginBase):
             return
 
         diagnosis = state.get("diagnosis") or {}
-        if op == "snooze3d":
-            until = (datetime.now() + timedelta(days=3)).isoformat(timespec="seconds")
-            self._ensure_store().save_snooze(self._ignore_key(diagnosis), until)
-            self._ensure_store().delete_interaction(token)
-            self._post_callback_message(
-                event_data,
-                title=f"SubscribePlus: {diagnosis.get('title')}",
-                text=f"Snoozed for 3 days until {until}",
-                save_history=False,
-            )
-            self._notify_next_queued_show()
-            return
         if op == "download":
-            if diagnosis.get("source") == "plugin_pt_scope":
-                candidates = diagnosis.get("candidates") or []
-                if candidates:
-                    self._post_callback_message(
-                        event_data,
-                        title=f"选择下载：{diagnosis.get('title')}",
-                        text="请选择要下载的候选资源。",
-                        buttons=build_resource_menu(token, candidates),
-                        save_history=False,
-                    )
-                else:
-                    self._post_callback_message(
-                        event_data,
-                        title=f"SubscribePlus: {diagnosis.get('title')}",
-                        text="插件 PT 范围搜索没有可下载候选资源。",
-                        buttons=build_main_menu(
-                            token,
-                            self._plugin_config.allow_tg_rule_update,
-                            can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
-                        ),
-                        save_history=False,
-                    )
-                return
-            result = self._start_moviepilot_subscribe_search(diagnosis)
-            self._ensure_store().delete_interaction(token)
             self._post_callback_message(
                 event_data,
-                title=f"SubscribePlus: {diagnosis.get('title')}",
-                text=result.get("message") or ("Started MP subscribe search" if result.get("success") else "Failed to start MP subscribe search"),
-                save_history=False,
-            )
-            self._notify_next_queued_show()
-            return
-        if op == "ptscope":
-            diagnosis = self._manual_pt_scope_diagnosis(diagnosis)
-            state["diagnosis"] = diagnosis
-            state["expires_at"] = (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds")
-            self._ensure_store().save_interaction(token, state)
-            self._post_callback_message(
-                event_data,
-                title=f"订阅下载增强：{diagnosis.get('title')}",
-                text=render_notification_text(diagnosis),
-                buttons=build_main_menu(
-                    token,
-                    self._plugin_config.allow_tg_rule_update,
-                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
-                ),
+                title=f"选择下载资源：{diagnosis.get('title')}",
+                text="请选择一个候选资源下载。",
+                buttons=build_resource_menu(token, diagnosis.get("candidates") or []),
                 save_history=False,
             )
             return
@@ -711,7 +477,7 @@ class SubscribePlus(_PluginBase):
             self._post_callback_message(
                 event_data,
                 title=f"调整订阅规则：{diagnosis.get('title')}",
-                text="请选择要添加的官组、平台关键词或 PT 站点。",
+                text="请选择要加入订阅包含规则的官组或平台关键词。",
                 buttons=build_rule_menu(token, suggestions),
                 save_history=False,
             )
@@ -721,12 +487,10 @@ class SubscribePlus(_PluginBase):
             result = self._rule_confirm(token)
             if result.get("success"):
                 record = result.get("data") or {}
-                current_label = "当前订阅站点：" if record.get("field") == "sites" else "当前包含规则："
-                default_target = "订阅站点" if record.get("field") == "sites" else "订阅包含规则"
                 text = "\n".join(
                     [
-                        f"已添加：{record.get('selected_text') or default_target}",
-                        current_label,
+                        f"已添加：{record.get('selected_text') or '订阅包含规则'}",
+                        "当前包含规则：",
                         record.get("new_value") or "-",
                     ]
                 )
@@ -781,9 +545,7 @@ class SubscribePlus(_PluginBase):
             return
         if op == "ignore":
             self._ensure_store().save_ignore(self._ignore_key(diagnosis))
-            self._ensure_store().delete_interaction(token)
             self._post_callback_message(event_data, title="订阅下载增强", text="已忽略本次提醒。", save_history=False)
-            self._notify_next_queued_show()
             return
         if op == "back":
             self._post_callback_message(
@@ -805,7 +567,7 @@ class SubscribePlus(_PluginBase):
         if not subscribe:
             return {"success": False, "message": "订阅不存在"}
         try:
-            preview = build_rule_preview(subscribe, pattern, source=source)
+            preview = build_include_preview(subscribe, pattern, source=source)
         except ValueError as exc:
             return {"success": False, "message": str(exc)}
         token = make_token(preview)
@@ -831,7 +593,7 @@ class SubscribePlus(_PluginBase):
         if not state or not state.get("preview"):
             return {"success": False, "message": "确认 token 无效或已过期"}
         try:
-            record = apply_rule_preview(state["preview"], self._update_subscribe)
+            record = apply_include_preview(state["preview"], self._update_subscribe)
         except ValueError as exc:
             return {"success": False, "message": str(exc)}
         record["selected_text"] = (state.get("preview") or {}).get("selected_text") or ""
@@ -1256,31 +1018,6 @@ class SubscribePlus(_PluginBase):
         except Exception as exc:
             return {"success": False, "message": f"再次识别失败：{exc}", "reason": "recognize_failed"}
 
-    def _start_moviepilot_subscribe_search(self, diagnosis: Dict[str, Any]) -> Dict[str, Any]:
-        subscribe_id = safe_int(diagnosis.get("subscribe_id"), 0)
-        if not subscribe_id:
-            return {"success": False, "message": "缺少订阅 ID，无法触发 MP 原生订阅搜索"}
-        try:
-            from app.scheduler import Scheduler
-
-            Scheduler().start(
-                job_id="subscribe_search",
-                sid=subscribe_id,
-                state=None,
-                manual=True,
-            )
-            return {
-                "success": True,
-                "message": f"已触发 MP 原生订阅搜索：{diagnosis.get('title') or subscribe_id}",
-            }
-        except Exception as exc:
-            log_exception = getattr(logger, "exception", None)
-            if callable(log_exception):
-                log_exception("订阅下载增强触发 MP 原生订阅搜索失败")
-            else:
-                logger.warning(f"订阅下载增强触发 MP 原生订阅搜索失败: {exc}")
-            return {"success": False, "message": f"触发 MP 原生订阅搜索失败：{exc}"}
-
     def _download_candidate(self, diagnosis: Dict[str, Any], index: int, event_data: Optional[Dict[str, Any]] = None):
         event_data = event_data or {}
         candidates = diagnosis.get("candidates") or []
@@ -1291,13 +1028,7 @@ class SubscribePlus(_PluginBase):
         candidate_id = candidate.get("download_payload") or candidate.get("candidate_id")
         context = self._download_contexts.get(str(candidate_id))
         if not context:
-            result = self._start_moviepilot_subscribe_search(diagnosis)
-            text = result.get("message") or "已触发 MP 原生订阅搜索"
-            if result.get("success"):
-                text = f"候选下载上下文已失效，{text}"
-            else:
-                text = f"候选下载上下文已失效，且{text}"
-            self._post_callback_message(event_data, title="订阅下载增强", text=text, save_history=False)
+            self._post_callback_message(event_data, title="订阅下载增强", text="下载上下文已过期，请重新扫描后再下载。", save_history=False)
             return
         try:
             from app.chain.download import DownloadChain
@@ -1305,11 +1036,6 @@ class SubscribePlus(_PluginBase):
             DownloadChain().download_single(context=context, username=PLUGIN_ID)
             self._post_callback_message(event_data, title="订阅下载增强", text="已提交下载任务。", save_history=False)
         except Exception as exc:
-            log_exception = getattr(logger, "exception", None)
-            if callable(log_exception):
-                log_exception("订阅下载增强提交候选资源下载失败")
-            else:
-                logger.warning(f"订阅下载增强提交候选资源下载失败: {exc}")
             self._post_callback_message(event_data, title="订阅下载增强", text=f"提交下载失败：{exc}", save_history=False)
 
     def _delete_callback_message(self, event_data: Dict[str, Any]) -> bool:
@@ -1722,25 +1448,11 @@ class SubscribePlus(_PluginBase):
 
         return {episode for episode in episodes if episode > 0}
 
-    def _load_moviepilot_subscribe_sites(self, item: DiagnosisInput) -> List[str]:
-        try:
-            from app.chain.subscribe import SubscribeChain
-            from app.db.subscribe_oper import SubscribeOper
-
-            subscribe = SubscribeOper().get(safe_int(item.subscribe_id, 0))
-            if not subscribe:
-                return []
-            return [str(site) for site in (SubscribeChain.get_sub_sites(subscribe) or [])]
-        except Exception as exc:
-            logger.warning(f"订阅下载增强读取 MP 订阅搜索站点失败：{item.title}，{exc}")
-            return []
-
-    def _search_torrents(self, item: DiagnosisInput, sites: Optional[List[str]] = None) -> List[Dict[str, Any]]:
+    def _search_torrents(self, item: DiagnosisInput) -> List[Dict[str, Any]]:
         try:
             from app.chain.search import SearchChain
 
-            search_sites = item.sites if sites is None else sites
-            site_ids = [int(site_id) for site_id in search_sites if str(site_id).isdigit()]
+            site_ids = [int(site_id) for site_id in item.sites if str(site_id).isdigit()]
             coro = SearchChain().async_search_by_id(
                 tmdbid=item.tmdbid,
                 mtype=MediaType.TV,
@@ -1791,58 +1503,6 @@ class SubscribePlus(_PluginBase):
         except Exception as exc:
             logger.warning(f"订阅下载增强搜索 PT 资源失败: {exc}")
             return []
-
-    def _context_to_candidate(self, context: Any, item: DiagnosisInput) -> Dict[str, Any]:
-        torrent = getattr(context, "torrent_info", context)
-        media_info = getattr(context, "media_info", None)
-        meta_info = getattr(context, "meta_info", None)
-        title = getattr(torrent, "title", None) or getattr(torrent, "name", None) or ""
-        episodes = list(getattr(meta_info, "episode_list", None) or [])
-        season_list = list(getattr(meta_info, "season_list", None) or [])
-        candidate_id = self._remember_download_context(context, item, title)
-        tmdb_id = safe_int(getattr(media_info, "tmdb_id", None), 0) if media_info else 0
-        recognized = bool(
-            getattr(context, "candidate_recognized", False)
-            or getattr(context, "media_info_is_target", False)
-            or (tmdb_id and tmdb_id == int(item.tmdbid or 0))
-        )
-        download_factor = getattr(torrent, "downloadvolumefactor", None)
-        volume_factor = getattr(torrent, "volume_factor", None)
-        if not volume_factor and download_factor is not None:
-            try:
-                if float(download_factor) == 0:
-                    volume_factor = "Free"
-                elif float(download_factor) < 1:
-                    volume_factor = f"{int(float(download_factor) * 100)}%"
-            except (TypeError, ValueError):
-                volume_factor = ""
-        return {
-            "candidate_id": candidate_id,
-            "site": str(getattr(torrent, "site", "") or ""),
-            "site_name": getattr(torrent, "site_name", None),
-            "title": title,
-            "recognized": recognized,
-            "season": season_list[0] if season_list else item.season,
-            "episode": episodes[0] if episodes else 0,
-            "episodes": episodes,
-            "seeders": getattr(torrent, "seeders", 0),
-            "peers": getattr(torrent, "peers", 0),
-            "grabs": getattr(torrent, "grabs", 0),
-            "size": getattr(torrent, "size", ""),
-            "description": getattr(torrent, "description", "") or "",
-            "pubdate": getattr(torrent, "pubdate", "") or "",
-            "date_elapsed": getattr(torrent, "date_elapsed", "") or "",
-            "freedate": getattr(torrent, "freedate", "") or "",
-            "freedate_diff": getattr(torrent, "freedate_diff", "") or "",
-            "volume_factor": volume_factor or "",
-            "uploadvolumefactor": getattr(torrent, "uploadvolumefactor", None),
-            "downloadvolumefactor": download_factor,
-            "labels": list(getattr(torrent, "labels", None) or []),
-            "page_url": getattr(torrent, "page_url", "") or "",
-            "enclosure": getattr(torrent, "enclosure", "") or "",
-            "free": bool(download_factor == 0),
-            "download_payload": candidate_id,
-        }
 
     def _remember_download_context(self, context: Any, item: DiagnosisInput, title: str) -> str:
         raw = f"{item.subscribe_id}:{item.tmdbid}:{item.season}:{title}:{len(self._download_contexts)}"

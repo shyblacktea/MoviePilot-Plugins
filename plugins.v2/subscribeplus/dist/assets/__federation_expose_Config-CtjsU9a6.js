@@ -36,7 +36,7 @@ const emit = __emit;
 const loading = ref(false);
 const error = ref('');
 const categories = ref([]);
-const siteOptions = ref([]);
+const sites = ref([]);
 const cronError = ref('');
 
 const config = reactive({
@@ -77,16 +77,18 @@ async function loadOptions() {
       props.api.get('plugin/SubscribePlus/sites'),
     ]);
     categories.value = unwrap(categoryResponse).items || [];
-    siteOptions.value = (unwrap(siteResponse).items || []).map(item => ({
-      title: item.name || item.title || item.id || item.value,
-      value: String(item.id ?? item.value ?? ''),
-    })).filter(item => item.value);
+    sites.value = unwrap(siteResponse).items || [];
     const staleUncategorizedOnly =
       config.selected_categories.length === 1 &&
       config.selected_categories[0] === '未分类' &&
       categories.value.some(item => item.value !== '未分类');
     if (!config.selected_categories.length || staleUncategorizedOnly) {
       config.selected_categories = categories.value.map(item => item.value);
+    }
+    const availableSiteIds = sites.value.map(item => String(item.id));
+    config.search_sites = config.search_sites.filter(site => availableSiteIds.includes(String(site)));
+    if (!config.search_sites.length) {
+      config.search_sites = [...availableSiteIds];
     }
   } catch (err) {
     error.value = err?.message || '读取配置选项失败';
@@ -113,8 +115,8 @@ function saveConfig() {
   emit('save', {
     ...config,
     delay_days: Number(config.delay_days),
+    search_sites: [...config.search_sites],
     max_scan_subscribes: Number(config.max_scan_subscribes),
-    search_sites: Array.isArray(config.search_sites) ? [...config.search_sites] : [],
   });
 }
 
@@ -275,35 +277,12 @@ return (_ctx, _cache) => {
                       }),
                       _createVNode(_component_v_col, {
                         cols: "12",
-                        md: "6"
-                      }, {
-                        default: _withCtx(() => [
-                          _createVNode(_component_v_select, {
-                            modelValue: config.search_sites,
-                            "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => ((config.search_sites) = $event)),
-                            items: siteOptions.value,
-                            "item-title": "title",
-                            "item-value": "value",
-                            label: "PT搜索范围",
-                            variant: "outlined",
-                            density: "compact",
-                            multiple: "",
-                            chips: "",
-                            "closable-chips": "",
-                            clearable: "",
-                            "hide-details": "auto"
-                          }, null, 8, ["modelValue", "items"])
-                        ]),
-                        _: 1
-                      }),
-                      _createVNode(_component_v_col, {
-                        cols: "12",
                         md: "3"
                       }, {
                         default: _withCtx(() => [
                           _createVNode(_component_v_text_field, {
                             modelValue: config.max_scan_subscribes,
-                            "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => ((config.max_scan_subscribes) = $event)),
+                            "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => ((config.max_scan_subscribes) = $event)),
                             modelModifiers: { number: true },
                             type: "number",
                             min: "1",
@@ -312,6 +291,28 @@ return (_ctx, _cache) => {
                             density: "compact",
                             "hide-details": "auto"
                           }, null, 8, ["modelValue"])
+                        ]),
+                        _: 1
+                      }),
+                      _createVNode(_component_v_col, {
+                        cols: "12",
+                        md: "9"
+                      }, {
+                        default: _withCtx(() => [
+                          _createVNode(_component_v_select, {
+                            modelValue: config.search_sites,
+                            "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => ((config.search_sites) = $event)),
+                            items: sites.value,
+                            "item-title": "name",
+                            "item-value": "id",
+                            label: "搜索 PT 站点范围",
+                            variant: "outlined",
+                            density: "compact",
+                            multiple: "",
+                            chips: "",
+                            "closable-chips": "",
+                            "hide-details": "auto"
+                          }, null, 8, ["modelValue", "items"])
                         ]),
                         _: 1
                       })
@@ -435,6 +436,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-7a379bc5"]]);
+const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-74605e42"]]);
 
 export { Config as default };

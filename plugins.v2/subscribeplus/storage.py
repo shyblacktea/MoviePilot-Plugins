@@ -103,36 +103,3 @@ class JsonStore:
 
     def is_ignored(self, key: str) -> bool:
         return key in self._read("ignores.json", [])
-
-    def save_notification_queue(self, items: List[Dict[str, Any]]):
-        self._write("notification_queue.json", items or [])
-
-    def load_notification_queue(self) -> List[Dict[str, Any]]:
-        return self._read("notification_queue.json", [])
-
-    def pop_notification_queue(self) -> Optional[Dict[str, Any]]:
-        queue = self.load_notification_queue()
-        if not queue:
-            return None
-        item = queue.pop(0)
-        self.save_notification_queue(queue)
-        return item
-
-    def save_snooze(self, key: str, until: str):
-        snoozes = self._read("snoozes.json", {})
-        snoozes[str(key)] = str(until)
-        self._write("snoozes.json", snoozes)
-
-    def is_snoozed(self, key: str) -> bool:
-        snoozes = self._read("snoozes.json", {})
-        until = snoozes.get(str(key))
-        if not until:
-            return False
-        try:
-            if datetime.fromisoformat(until) > datetime.now():
-                return True
-        except ValueError:
-            pass
-        snoozes.pop(str(key), None)
-        self._write("snoozes.json", snoozes)
-        return False
