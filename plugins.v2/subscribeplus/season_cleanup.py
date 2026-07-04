@@ -31,6 +31,13 @@ class CleanupPlan:
         return self.mode != CLEANUP_OFF and bool(self.histories)
 
 
+@dataclass
+class SeasonPackMatch:
+    matched: bool = False
+    reason: str = ""
+    season: int = 0
+
+
 def normalize_cleanup_mode(value: Any) -> str:
     if isinstance(value, bool):
         return CLEANUP_SOURCE if value else CLEANUP_OFF
@@ -116,23 +123,32 @@ def _same_show_and_season(current: Any, history: Any, season: int) -> bool:
     return parse_season_number(getattr(history, "seasons", None)) == season
 
 
+def build_season_pack_match(current: Any, total_episode: int) -> SeasonPackMatch:
+    season = parse_season_number(getattr(current, "seasons", None))
+    if not season:
+        return SeasonPackMatch(reason="missing season")
+    if not total_episode:
+        return SeasonPackMatch(reason="missing total episode", season=season)
+
+    current_episodes = parse_episode_numbers(getattr(current, "episodes", None))
+    if int(total_episode) not in current_episodes:
+        return SeasonPackMatch(reason="not finale", season=season)
+
+    if not is_season_pack_title(_history_title(current), season):
+        return SeasonPackMatch(reason="not season pack", season=season)
+
+    return SeasonPackMatch(matched=True, reason="finale season pack", season=season)
+
+
 def build_cleanup_plan(current: Any, histories: Iterable[Any], total_episode: int, mode: Any) -> CleanupPlan:
     normalized_mode = normalize_cleanup_mode(mode)
     if normalized_mode == CLEANUP_OFF:
         return CleanupPlan(mode=normalized_mode, reason="disabled")
 
-    season = parse_season_number(getattr(current, "seasons", None))
-    if not season:
-        return CleanupPlan(mode=normalized_mode, reason="missing season")
-    if not total_episode:
-        return CleanupPlan(mode=normalized_mode, reason="missing total episode")
-
-    current_episodes = parse_episode_numbers(getattr(current, "episodes", None))
-    if int(total_episode) not in current_episodes:
-        return CleanupPlan(mode=normalized_mode, reason="not finale")
-
-    if not is_season_pack_title(_history_title(current), season):
-        return CleanupPlan(mode=normalized_mode, reason="not season pack")
+    match = build_season_pack_match(current, total_episode)
+    if not match.matched:
+        return CleanupPlan(mode=normalized_mode, reason=match.reason)
+    season = match.season
 
     current_id = getattr(current, "id", None)
     current_hash = str(getattr(current, "download_hash", "") or "")

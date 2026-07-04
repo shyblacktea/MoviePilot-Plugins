@@ -56,6 +56,7 @@ const config = reactive({
   notify_tg: true,
   allow_tg_rule_update: false,
   season_pack_cleanup: 'off',
+  season_pack_full_download: false,
 });
 
 function unwrap(response) {
@@ -74,6 +75,7 @@ function applyInitialConfig() {
       ? [...props.initialConfig.search_sites]
       : [],
     season_pack_cleanup: props.initialConfig.season_pack_cleanup || 'off',
+    season_pack_full_download: Boolean(props.initialConfig.season_pack_full_download),
   });
 }
 
@@ -161,7 +163,7 @@ return (_ctx, _cache) => {
               color: "primary",
               size: "small"
             }),
-            _cache[11] || (_cache[11] = _createElementVNode("span", null, "订阅下载增强", -1)),
+            _cache[12] || (_cache[12] = _createElementVNode("span", null, "订阅下载增强", -1)),
             _createVNode(_component_v_spacer),
             _createVNode(_component_v_btn, {
               icon: "mdi-refresh",
@@ -202,7 +204,7 @@ return (_ctx, _cache) => {
                       color: "primary",
                       size: "small"
                     }),
-                    _cache[12] || (_cache[12] = _createElementVNode("span", null, "扫描设置", -1))
+                    _cache[13] || (_cache[13] = _createElementVNode("span", null, "扫描设置", -1))
                   ]),
                   _createVNode(_component_v_row, null, {
                     default: _withCtx(() => [
@@ -335,7 +337,7 @@ return (_ctx, _cache) => {
                       color: "primary",
                       size: "small"
                     }),
-                    _cache[13] || (_cache[13] = _createElementVNode("span", null, "通知权限", -1))
+                    _cache[14] || (_cache[14] = _createElementVNode("span", null, "通知权限", -1))
                   ]),
                   _createVNode(_component_v_row, null, {
                     default: _withCtx(() => [
@@ -382,7 +384,7 @@ return (_ctx, _cache) => {
                       color: "warning",
                       size: "small"
                     }),
-                    _cache[14] || (_cache[14] = _createElementVNode("span", null, "全集包清理", -1))
+                    _cache[15] || (_cache[15] = _createElementVNode("span", null, "全集包清理", -1))
                   ]),
                   _createVNode(_component_v_row, null, {
                     default: _withCtx(() => [
@@ -404,6 +406,22 @@ return (_ctx, _cache) => {
                           }, null, 8, ["modelValue"])
                         ]),
                         _: 1
+                      }),
+                      _createVNode(_component_v_col, {
+                        cols: "12",
+                        md: "6"
+                      }, {
+                        default: _withCtx(() => [
+                          _createVNode(_component_v_switch, {
+                            modelValue: config.season_pack_full_download,
+                            "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => ((config.season_pack_full_download) = $event)),
+                            color: "warning",
+                            label: "qB 整季包全选下载",
+                            density: "compact",
+                            "hide-details": ""
+                          }, null, 8, ["modelValue"])
+                        ]),
+                        _: 1
                       })
                     ]),
                     _: 1
@@ -416,9 +434,9 @@ return (_ctx, _cache) => {
                       "prepend-icon": "mdi-view-dashboard-outline",
                       variant: "text",
                       size: "small",
-                      onClick: _cache[9] || (_cache[9] = $event => (emit('switch')))
+                      onClick: _cache[10] || (_cache[10] = $event => (emit('switch')))
                     }, {
-                      default: _withCtx(() => [...(_cache[15] || (_cache[15] = [
+                      default: _withCtx(() => [...(_cache[16] || (_cache[16] = [
                         _createTextVNode("数据页", -1)
                       ]))]),
                       _: 1
@@ -432,7 +450,7 @@ return (_ctx, _cache) => {
                       loading: loading.value,
                       onClick: loadOptions
                     }, {
-                      default: _withCtx(() => [...(_cache[16] || (_cache[16] = [
+                      default: _withCtx(() => [...(_cache[17] || (_cache[17] = [
                         _createTextVNode("刷新", -1)
                       ]))]),
                       _: 1
@@ -444,7 +462,7 @@ return (_ctx, _cache) => {
                       size: "small",
                       onClick: saveConfig
                     }, {
-                      default: _withCtx(() => [...(_cache[17] || (_cache[17] = [
+                      default: _withCtx(() => [...(_cache[18] || (_cache[18] = [
                         _createTextVNode("保存", -1)
                       ]))]),
                       _: 1
@@ -454,9 +472,9 @@ return (_ctx, _cache) => {
                       "prepend-icon": "mdi-close",
                       variant: "text",
                       size: "small",
-                      onClick: _cache[10] || (_cache[10] = $event => (emit('close')))
+                      onClick: _cache[11] || (_cache[11] = $event => (emit('close')))
                     }, {
-                      default: _withCtx(() => [...(_cache[18] || (_cache[18] = [
+                      default: _withCtx(() => [...(_cache[19] || (_cache[19] = [
                         _createTextVNode("关闭", -1)
                       ]))]),
                       _: 1
@@ -478,6 +496,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-a555da2e"]]);
+const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-bdba0b0a"]]);
 
 export { Config as default };

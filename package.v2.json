@@ -27,12 +27,17 @@
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
-    "version": "0.6",
+    "version": "0.7",
     "author": "shyblacktea,Codex",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "0.7": [
+        "feat: 最终集命中整季包时可自动将 qBittorrent 当前种子全部文件设为下载",
+        "feat: 全集包清理新增独立的 qB 整季包全选下载开关，可与旧记录清理分开启用",
+        "feat: Telegram 全集包处理通知会显示 qB 全包下载成功或失败原因"
+      ],
       "0.6": [
         "feat: 新增最终集整季包清理，可在整理完成后清理旧拆包转移记录",
         "feat: 清理模式支持关闭、仅删除转移记录、删除转移记录和源文件",

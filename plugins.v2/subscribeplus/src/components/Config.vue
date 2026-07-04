@@ -130,6 +130,15 @@
                   hide-details="auto"
                 />
               </v-col>
+              <v-col cols="12" md="6">
+                <v-switch
+                  v-model="config.season_pack_full_download"
+                  color="warning"
+                  label="qB 整季包全选下载"
+                  density="compact"
+                  hide-details
+                />
+              </v-col>
             </v-row>
           </section>
 
@@ -183,6 +192,7 @@ const config = reactive({
   notify_tg: true,
   allow_tg_rule_update: false,
   season_pack_cleanup: 'off',
+  season_pack_full_download: false,
 })
 
 function unwrap(response) {
@@ -201,6 +211,7 @@ function applyInitialConfig() {
       ? [...props.initialConfig.search_sites]
       : [],
     season_pack_cleanup: props.initialConfig.season_pack_cleanup || 'off',
+    season_pack_full_download: Boolean(props.initialConfig.season_pack_full_download),
   })
 }
 

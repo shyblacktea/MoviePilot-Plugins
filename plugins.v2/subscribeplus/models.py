@@ -28,6 +28,7 @@ class PluginConfig:
     notify_tg: bool = True
     allow_tg_rule_update: bool = False
     season_pack_cleanup: str = "off"
+    season_pack_full_download: bool = False
 
     @classmethod
     def from_dict(cls, raw: Optional[Dict[str, Any]]) -> "PluginConfig":
@@ -44,6 +45,7 @@ class PluginConfig:
         config.max_scan_subscribes = max(1, int(config.max_scan_subscribes or 1))
         config.notify_tg = bool(config.notify_tg)
         config.allow_tg_rule_update = bool(config.allow_tg_rule_update)
+        config.season_pack_full_download = bool(config.season_pack_full_download)
         from .season_cleanup import normalize_cleanup_mode
 
         config.season_pack_cleanup = normalize_cleanup_mode(config.season_pack_cleanup)

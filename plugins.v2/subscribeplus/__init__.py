@@ -94,7 +94,7 @@ from .scanner import (
     episodes_in_seasoninfo,
     episodes_in_transfer_history,
 )
-from .season_cleanup import CLEANUP_OFF, build_cleanup_plan, normalize_cleanup_mode, parse_season_number
+from .season_cleanup import CLEANUP_OFF, build_cleanup_plan, build_season_pack_match, normalize_cleanup_mode, parse_season_number
 from .sites import SiteResolver
 from .storage import JsonStore
 from .telegram import (
@@ -121,7 +121,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.6"
+    plugin_version = "0.7"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -1338,7 +1338,8 @@ class SubscribePlus(_PluginBase):
     def _handle_transfer_complete_cleanup(self, event):
         config = getattr(self, "_plugin_config", PluginConfig.from_dict({}))
         mode = normalize_cleanup_mode(getattr(config, "season_pack_cleanup", CLEANUP_OFF))
-        if mode == CLEANUP_OFF:
+        full_download = bool(getattr(config, "season_pack_full_download", False))
+        if mode == CLEANUP_OFF and not full_download:
             return
         event_data = getattr(event, "event_data", None) or {}
         if not isinstance(event_data, dict):
@@ -1352,18 +1353,28 @@ class SubscribePlus(_PluginBase):
             return
         self._attach_cleanup_torrent_name(current, event_data)
         total_episode = self._resolve_total_episode_for_cleanup(current, event_data)
-        histories = self._load_transfer_histories_for_cleanup(current)
+        match = build_season_pack_match(current, total_episode)
+        if not match.matched:
+            logger.info(
+                f"订阅下载增强全集最终集处理跳过：{self._cleanup_history_label(current)}，原因={match.reason}"
+            )
+            return
+
+        histories = self._load_transfer_histories_for_cleanup(current) if mode != CLEANUP_OFF else []
         plan = build_cleanup_plan(
             current=current,
             histories=histories,
             total_episode=total_episode,
             mode=mode,
         )
-        if not plan.should_cleanup:
+        download_result = None
+        if full_download:
+            download_result = self._ensure_season_pack_full_download(current, event_data)
+
+        if mode != CLEANUP_OFF and not plan.should_cleanup:
             logger.info(
                 f"订阅下载增强全集最终集清理跳过：{self._cleanup_history_label(current)}，原因={plan.reason}"
             )
-            return
 
         deleted, errors = [], []
         for history in plan.histories:
@@ -1375,7 +1386,110 @@ class SubscribePlus(_PluginBase):
             except Exception as exc:
                 errors.append(f"{self._cleanup_history_label(history)} {exc}")
                 logger.warning(f"订阅下载增强全集最终集清理失败：{self._cleanup_history_label(history)}，{exc}")
-        self._notify_season_cleanup(current, plan, deleted, errors)
+        self._notify_season_cleanup(current, plan, deleted, errors, download_result=download_result)
+
+    def _ensure_season_pack_full_download(self, current, event_data: Dict[str, Any]) -> Dict[str, Any]:
+        download_hash = self._resolve_cleanup_download_hash(current, event_data)
+        if not download_hash:
+            return {"ok": False, "reason": "missing download hash", "file_count": 0}
+
+        downloader = self._resolve_cleanup_downloader_name(current, event_data)
+        try:
+            from app.helper.downloader import DownloaderHelper
+
+            helper = DownloaderHelper()
+            if downloader:
+                service = helper.get_service(name=downloader, type_filter="qbittorrent")
+            else:
+                service = helper.get_service(type_filter="qbittorrent")
+            if isinstance(service, (list, tuple)):
+                service = service[0] if service else None
+            qbittorrent = getattr(service, "instance", None) or service
+            if not qbittorrent or not hasattr(qbittorrent, "get_files"):
+                return {
+                    "ok": False,
+                    "reason": "qBittorrent downloader not found",
+                    "file_count": 0,
+                    "downloader": downloader,
+                }
+
+            files = list(qbittorrent.get_files(download_hash) or [])
+            file_ids = []
+            for position, fileitem in enumerate(files):
+                file_index = self._torrent_file_index(fileitem, position)
+                if file_index is not None:
+                    file_ids.append(str(file_index))
+            if not file_ids:
+                return {
+                    "ok": False,
+                    "reason": "torrent files not found",
+                    "file_count": 0,
+                    "downloader": downloader,
+                    "hash": download_hash,
+                }
+
+            joined_file_ids = "|".join(file_ids)
+            qbittorrent.set_files(torrent_hash=download_hash, file_ids=joined_file_ids, priority=1)
+            qbittorrent.start_torrents(download_hash)
+            logger.info(
+                f"订阅下载增强已将整季包 qB 文件全部设为下载：hash={download_hash}，files={len(file_ids)}"
+            )
+            return {
+                "ok": True,
+                "reason": "selected all files",
+                "file_count": len(file_ids),
+                "downloader": downloader,
+                "hash": download_hash,
+            }
+        except Exception as exc:
+            logger.warning(f"订阅下载增强设置整季包 qB 全包下载失败：hash={download_hash}，{exc}")
+            return {
+                "ok": False,
+                "reason": str(exc),
+                "file_count": 0,
+                "downloader": downloader,
+                "hash": download_hash,
+            }
+
+    @staticmethod
+    def _resolve_cleanup_download_hash(current, event_data: Dict[str, Any]) -> str:
+        return str(
+            getattr(current, "download_hash", "")
+            or event_data.get("download_hash")
+            or event_data.get("hash")
+            or ""
+        )
+
+    @classmethod
+    def _resolve_cleanup_downloader_name(cls, current, event_data: Dict[str, Any]) -> str:
+        sources = [event_data, current]
+        for key in ("download", "download_info", "torrent", "torrent_info", "transferinfo"):
+            value = event_data.get(key)
+            if value:
+                sources.append(value)
+        for source in sources:
+            value = cls._read_cleanup_value(source, "downloader", "downloader_name", "download_source")
+            if value:
+                return str(value)
+        return ""
+
+    @staticmethod
+    def _read_cleanup_value(source, *names: str):
+        for name in names:
+            if isinstance(source, dict):
+                value = source.get(name)
+            else:
+                value = getattr(source, name, None)
+            if value:
+                return value
+        return None
+
+    @classmethod
+    def _torrent_file_index(cls, fileitem, fallback: int) -> int:
+        value = cls._read_cleanup_value(fileitem, "index", "id")
+        if value is None:
+            return fallback
+        return safe_int(value, fallback)
 
     def _get_transfer_history_for_cleanup(self, history_id: int):
         try:
@@ -1482,7 +1596,7 @@ class SubscribePlus(_PluginBase):
         TransferHistory.delete(history_oper._db, getattr(history, "id"))
         return True
 
-    def _notify_season_cleanup(self, current, plan, deleted: List[Any], errors: List[str]):
+    def _notify_season_cleanup_legacy(self, current, plan, deleted: List[Any], errors: List[str]):
         config = getattr(self, "_plugin_config", PluginConfig.from_dict({}))
         if not getattr(config, "notify_tg", True):
             return
@@ -1498,6 +1612,52 @@ class SubscribePlus(_PluginBase):
         ]
         if errors:
             lines.append(f"失败：{len(errors)} 条")
+            lines.extend(errors[:5])
+        self.post_message(
+            mtype=NotificationType.Plugin if NotificationType else None,
+            title=f"SubscribePlus: {title}",
+            text="\n".join(lines),
+            save_history=False,
+        )
+
+    def _notify_season_cleanup(
+        self,
+        current,
+        plan,
+        deleted: List[Any],
+        errors: List[str],
+        download_result: Optional[Dict[str, Any]] = None,
+    ):
+        config = getattr(self, "_plugin_config", PluginConfig.from_dict({}))
+        if not getattr(config, "notify_tg", True):
+            return
+        if not deleted and not errors and not download_result:
+            return
+
+        title = getattr(current, "title", None) or getattr(current, "name", None) or "全集包处理"
+        lines = [
+            f"剧名：{title}",
+            "触发：最终集来自整季包",
+        ]
+        if download_result:
+            if download_result.get("ok"):
+                lines.append(f"整季包下载：已在 qB 全选 {download_result.get('file_count', 0)} 个文件")
+            else:
+                lines.append(f"整季包下载：失败，{download_result.get('reason') or '未知原因'}")
+
+        if plan.mode != CLEANUP_OFF:
+            lines.extend(
+                [
+                    f"清理模式：{'删除转移记录和源文件' if plan.delete_source else '仅删除转移记录'}",
+                    f"旧记录集数：{', '.join('E%02d' % episode for episode in plan.episode_numbers) or '-'}",
+                    f"清理成功：{len(deleted)} 条",
+                ]
+            )
+        else:
+            lines.append("清理模式：关闭")
+
+        if errors:
+            lines.append(f"清理失败：{len(errors)} 条")
             lines.extend(errors[:5])
         self.post_message(
             mtype=NotificationType.Plugin if NotificationType else None,

@@ -1,4 +1,4 @@
-import './__federation_expose_Config-D24Jp0WL.js';
+import './__federation_expose_Config-N5VHHG9H.js';
 import './__federation_expose_Page-Bl24XKkS.js';
 
 true&&(function polyfill() {
