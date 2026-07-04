@@ -61,6 +61,22 @@
                   hide-details="auto"
                 />
               </v-col>
+              <v-col cols="12" md="6">
+                <v-select
+                  v-model="config.search_sites"
+                  :items="siteOptions"
+                  item-title="title"
+                  item-value="value"
+                  label="PT搜索范围"
+                  variant="outlined"
+                  density="compact"
+                  multiple
+                  chips
+                  closable-chips
+                  clearable
+                  hide-details="auto"
+                />
+              </v-col>
               <v-col cols="12" md="3">
                 <v-text-field
                   v-model.number="config.max_scan_subscribes"
@@ -69,21 +85,6 @@
                   label="订阅部数通知上限"
                   variant="outlined"
                   density="compact"
-                  hide-details="auto"
-                />
-              </v-col>
-              <v-col cols="12" md="9">
-                <v-select
-                  v-model="config.search_sites"
-                  :items="sites"
-                  item-title="name"
-                  item-value="id"
-                  label="搜索 PT 站点范围"
-                  variant="outlined"
-                  density="compact"
-                  multiple
-                  chips
-                  closable-chips
                   hide-details="auto"
                 />
               </v-col>
@@ -106,6 +107,27 @@
                   label="允许 TG 修改订阅规则"
                   density="compact"
                   hide-details
+                />
+              </v-col>
+            </v-row>
+          </section>
+
+          <section class="config-section">
+            <div class="section-title">
+              <v-icon icon="mdi-broom" color="warning" size="small" />
+              <span>全集包清理</span>
+            </div>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-select
+                  v-model="config.season_pack_cleanup"
+                  :items="seasonPackCleanupOptions"
+                  item-title="title"
+                  item-value="value"
+                  label="最终集整季包清理"
+                  variant="outlined"
+                  density="compact"
+                  hide-details="auto"
                 />
               </v-col>
             </v-row>
@@ -143,8 +165,13 @@ const emit = defineEmits(['save', 'close', 'switch'])
 const loading = ref(false)
 const error = ref('')
 const categories = ref([])
-const sites = ref([])
+const siteOptions = ref([])
 const cronError = ref('')
+const seasonPackCleanupOptions = [
+  { title: '关闭', value: 'off' },
+  { title: '仅删转移记录', value: 'record' },
+  { title: '删转移记录+源文件', value: 'source' },
+]
 
 const config = reactive({
   enabled: false,
@@ -155,6 +182,7 @@ const config = reactive({
   max_scan_subscribes: 20,
   notify_tg: true,
   allow_tg_rule_update: false,
+  season_pack_cleanup: 'off',
 })
 
 function unwrap(response) {
@@ -172,6 +200,7 @@ function applyInitialConfig() {
     search_sites: Array.isArray(props.initialConfig.search_sites)
       ? [...props.initialConfig.search_sites]
       : [],
+    season_pack_cleanup: props.initialConfig.season_pack_cleanup || 'off',
   })
 }
 
@@ -184,18 +213,16 @@ async function loadOptions() {
       props.api.get('plugin/SubscribePlus/sites'),
     ])
     categories.value = unwrap(categoryResponse).items || []
-    sites.value = unwrap(siteResponse).items || []
+    siteOptions.value = (unwrap(siteResponse).items || []).map(item => ({
+      title: item.name || item.title || item.id || item.value,
+      value: String(item.id ?? item.value ?? ''),
+    })).filter(item => item.value)
     const staleUncategorizedOnly =
       config.selected_categories.length === 1 &&
       config.selected_categories[0] === '未分类' &&
       categories.value.some(item => item.value !== '未分类')
     if (!config.selected_categories.length || staleUncategorizedOnly) {
       config.selected_categories = categories.value.map(item => item.value)
-    }
-    const availableSiteIds = sites.value.map(item => String(item.id))
-    config.search_sites = config.search_sites.filter(site => availableSiteIds.includes(String(site)))
-    if (!config.search_sites.length) {
-      config.search_sites = [...availableSiteIds]
     }
   } catch (err) {
     error.value = err?.message || '读取配置选项失败'
@@ -222,8 +249,8 @@ function saveConfig() {
   emit('save', {
     ...config,
     delay_days: Number(config.delay_days),
-    search_sites: [...config.search_sites],
     max_scan_subscribes: Number(config.max_scan_subscribes),
+    search_sites: Array.isArray(config.search_sites) ? [...config.search_sites] : [],
   })
 }
 
@@ -282,6 +309,11 @@ onMounted(() => {
   padding: 0.25rem 0;
 }
 
+.plugin-config :deep(.v-field__input),
+.plugin-config :deep(.v-select__selection) {
+  min-width: 0;
+}
+
 @media (max-width: 600px) {
   .plugin-config {
     padding: 0.25rem;
@@ -294,6 +326,10 @@ onMounted(() => {
   .action-bar :deep(.v-btn) {
     flex: 1 1 auto;
     min-width: max-content;
+  }
+
+  .plugin-config :deep(.v-chip) {
+    max-width: 100%;
   }
 }
 </style>

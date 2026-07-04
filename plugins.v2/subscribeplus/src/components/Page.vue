@@ -47,47 +47,6 @@
         </v-card-text>
       </v-card>
 
-      <v-card v-for="item in items" :key="`${item.subscribe_id}-${item.created_at}`" flat class="rounded border mb-3 result-card">
-        <v-card-title class="result-header">
-          <div class="result-title">
-            <div class="text-subtitle-1">{{ item.title }}</div>
-            <div class="text-caption text-medium-emphasis">TMDB {{ item.tmdbid }} / S{{ item.season }} / {{ item.category }}</div>
-          </div>
-          <v-spacer />
-          <v-chip :color="reasonColor(item.reason)" size="small" variant="tonal">{{ reasonText(item.reason) }}</v-chip>
-        </v-card-title>
-        <v-card-text class="content">
-          <div class="episode-line">
-            <v-chip v-for="episode in item.episodes || []" :key="episode.episode" size="small" variant="tonal" class="mr-1 mb-1">
-              E{{ episode.episode }} / {{ episode.air_date }}
-            </v-chip>
-          </div>
-          <div class="text-caption text-medium-emphasis mb-2">{{ item.message }}</div>
-          <v-table v-if="item.candidates?.length" density="compact" class="mt-2">
-            <thead>
-              <tr>
-                <th>站点</th>
-                <th>标题</th>
-                <th>做种</th>
-                <th class="text-right">操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="candidate in item.candidates.slice(0, 8)" :key="candidate.candidate_id || candidate.title">
-                <td>{{ candidate.site_name || candidate.site }}</td>
-                <td class="candidate-title">{{ candidate.title }}</td>
-                <td>{{ candidate.seeders || 0 }}</td>
-                <td class="text-right">
-                  <v-btn color="primary" variant="text" size="small" prepend-icon="mdi-file-eye-outline" @click="previewRule(item, candidate)">
-                    规则预览
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card-text>
-      </v-card>
-
       <v-card flat class="rounded border mb-3">
         <v-card-title class="small-title">
           <v-icon icon="mdi-tag-plus-outline" color="primary" size="small" />
@@ -211,6 +170,49 @@
           <div v-else class="empty-panel">暂无记录</div>
         </v-card-text>
       </v-card>
+
+      <v-card v-for="item in items" :key="`${item.subscribe_id}-${item.created_at}`" flat class="rounded border mb-3 result-card">
+        <v-card-title class="result-header">
+          <div class="result-title">
+            <div class="text-subtitle-1">{{ item.title }}</div>
+            <div class="text-caption text-medium-emphasis">TMDB {{ item.tmdbid }} / S{{ item.season }} / {{ item.category }}</div>
+          </div>
+          <v-spacer />
+          <v-chip :color="reasonColor(item.reason)" size="small" variant="tonal">{{ reasonText(item.reason) }}</v-chip>
+        </v-card-title>
+        <v-card-text class="content">
+          <div class="episode-line">
+            <v-chip v-for="episode in item.episodes || []" :key="episode.episode" size="small" variant="tonal" class="mr-1 mb-1">
+              E{{ episode.episode }} / {{ episode.air_date }}
+            </v-chip>
+          </div>
+          <div class="text-caption text-medium-emphasis mb-2">{{ item.message }}</div>
+          <div v-if="item.candidates?.length" class="candidate-table-wrap mt-2">
+            <v-table density="compact" class="candidate-table">
+              <thead>
+                <tr>
+                  <th>站点</th>
+                  <th>标题</th>
+                  <th>做种</th>
+                  <th class="text-right">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="candidate in item.candidates.slice(0, 8)" :key="candidate.candidate_id || candidate.title">
+                  <td class="candidate-site">{{ candidate.site_name || candidate.site }}</td>
+                  <td class="candidate-title">{{ candidate.title }}</td>
+                  <td class="candidate-seeders">{{ candidate.seeders || 0 }}</td>
+                  <td class="text-right candidate-actions">
+                    <v-btn color="primary" variant="text" size="small" prepend-icon="mdi-file-eye-outline" @click="previewRule(item, candidate)">
+                      规则预览
+                    </v-btn>
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
+          </div>
+        </v-card-text>
+      </v-card>
     </div>
 
     <v-footer class="footer-bar">
@@ -230,7 +232,7 @@
         <v-card-text>
           <v-alert v-if="previewError" type="error" density="compact" variant="tonal" class="mb-2">{{ previewError }}</v-alert>
           <div v-if="ruleSuggestions.length && !preview" class="suggestion-panel">
-            <div class="text-caption text-medium-emphasis mb-2">请选择要添加到订阅包含规则的关键词</div>
+            <div class="text-caption text-medium-emphasis mb-2">请选择要添加的官组、平台关键词或 PT 站点</div>
             <v-btn
               v-for="suggestion in ruleSuggestions"
               :key="suggestion.pattern"
@@ -246,8 +248,14 @@
           </div>
           <div v-if="preview" class="preview-box">
             <div v-if="preview.selected_text">已选择：{{ preview.selected_text }}</div>
-            <div>旧 include：{{ preview.old_include || '-' }}</div>
-            <div>新 include：{{ preview.new_include || '-' }}</div>
+            <template v-if="preview.field === 'sites'">
+              <div>旧订阅站点：{{ formatPreviewSites(preview.old_site_names || preview.old_sites, 'MP 默认搜索站点') }}</div>
+              <div>新订阅站点：{{ formatPreviewSites(preview.new_site_names || preview.new_sites) }}</div>
+            </template>
+            <template v-else>
+              <div>旧 include：{{ preview.old_include || '-' }}</div>
+              <div>新 include：{{ preview.new_include || '-' }}</div>
+            </template>
           </div>
         </v-card-text>
         <v-card-actions>
@@ -329,6 +337,12 @@ function reasonColor(reason) {
     downloadable: 'success',
     search_failed: 'error',
   }[reason] || 'grey'
+}
+
+function formatPreviewSites(value, emptyText = '-') {
+  const items = Array.isArray(value) ? value : []
+  const text = items.filter(item => item !== undefined && item !== null && String(item).trim()).map(item => String(item)).join(', ')
+  return text || emptyText
 }
 
 function identifierModeText(mode) {
@@ -474,7 +488,7 @@ async function previewRule(item, candidate) {
     }
     ruleSuggestions.value = data.items || []
     if (!ruleSuggestions.value.length) {
-      previewError.value = '没有可添加的官组或平台建议'
+      previewError.value = '没有可添加的官组、平台或 PT 站点建议'
     } else if (ruleSuggestions.value.length === 1) {
       await previewRuleSuggestion(ruleSuggestions.value[0])
     }
@@ -604,6 +618,29 @@ onMounted(loadData)
   overflow-wrap: anywhere;
 }
 
+.candidate-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.candidate-table {
+  min-width: 42rem;
+}
+
+.candidate-site {
+  width: 7rem;
+  white-space: nowrap;
+}
+
+.candidate-seeders {
+  width: 4.5rem;
+}
+
+.candidate-actions {
+  width: 6.5rem;
+  white-space: nowrap;
+}
+
 .identifier-row {
   row-gap: 0.5rem;
 }
@@ -657,6 +694,10 @@ onMounted(loadData)
   .action-bar :deep(.v-btn) {
     flex: 1 1 auto;
     min-width: max-content;
+  }
+
+  .candidate-table {
+    min-width: 36rem;
   }
 
   .identifier-action-col {

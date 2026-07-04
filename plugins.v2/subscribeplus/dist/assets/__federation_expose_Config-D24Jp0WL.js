@@ -9,6 +9,8 @@ const _hoisted_2 = { class: "config-section" };
 const _hoisted_3 = { class: "section-title" };
 const _hoisted_4 = { class: "config-section" };
 const _hoisted_5 = { class: "section-title" };
+const _hoisted_6 = { class: "config-section" };
+const _hoisted_7 = { class: "section-title" };
 
 const {onMounted,reactive,ref} = await importShared('vue');
 
@@ -36,8 +38,13 @@ const emit = __emit;
 const loading = ref(false);
 const error = ref('');
 const categories = ref([]);
-const sites = ref([]);
+const siteOptions = ref([]);
 const cronError = ref('');
+const seasonPackCleanupOptions = [
+  { title: '关闭', value: 'off' },
+  { title: '仅删转移记录', value: 'record' },
+  { title: '删转移记录+源文件', value: 'source' },
+];
 
 const config = reactive({
   enabled: false,
@@ -48,6 +55,7 @@ const config = reactive({
   max_scan_subscribes: 20,
   notify_tg: true,
   allow_tg_rule_update: false,
+  season_pack_cleanup: 'off',
 });
 
 function unwrap(response) {
@@ -65,6 +73,7 @@ function applyInitialConfig() {
     search_sites: Array.isArray(props.initialConfig.search_sites)
       ? [...props.initialConfig.search_sites]
       : [],
+    season_pack_cleanup: props.initialConfig.season_pack_cleanup || 'off',
   });
 }
 
@@ -77,18 +86,16 @@ async function loadOptions() {
       props.api.get('plugin/SubscribePlus/sites'),
     ]);
     categories.value = unwrap(categoryResponse).items || [];
-    sites.value = unwrap(siteResponse).items || [];
+    siteOptions.value = (unwrap(siteResponse).items || []).map(item => ({
+      title: item.name || item.title || item.id || item.value,
+      value: String(item.id ?? item.value ?? ''),
+    })).filter(item => item.value);
     const staleUncategorizedOnly =
       config.selected_categories.length === 1 &&
       config.selected_categories[0] === '未分类' &&
       categories.value.some(item => item.value !== '未分类');
     if (!config.selected_categories.length || staleUncategorizedOnly) {
       config.selected_categories = categories.value.map(item => item.value);
-    }
-    const availableSiteIds = sites.value.map(item => String(item.id));
-    config.search_sites = config.search_sites.filter(site => availableSiteIds.includes(String(site)));
-    if (!config.search_sites.length) {
-      config.search_sites = [...availableSiteIds];
     }
   } catch (err) {
     error.value = err?.message || '读取配置选项失败';
@@ -115,8 +122,8 @@ function saveConfig() {
   emit('save', {
     ...config,
     delay_days: Number(config.delay_days),
-    search_sites: [...config.search_sites],
     max_scan_subscribes: Number(config.max_scan_subscribes),
+    search_sites: Array.isArray(config.search_sites) ? [...config.search_sites] : [],
   });
 }
 
@@ -154,7 +161,7 @@ return (_ctx, _cache) => {
               color: "primary",
               size: "small"
             }),
-            _cache[10] || (_cache[10] = _createElementVNode("span", null, "订阅下载增强", -1)),
+            _cache[11] || (_cache[11] = _createElementVNode("span", null, "订阅下载增强", -1)),
             _createVNode(_component_v_spacer),
             _createVNode(_component_v_btn, {
               icon: "mdi-refresh",
@@ -195,7 +202,7 @@ return (_ctx, _cache) => {
                       color: "primary",
                       size: "small"
                     }),
-                    _cache[11] || (_cache[11] = _createElementVNode("span", null, "扫描设置", -1))
+                    _cache[12] || (_cache[12] = _createElementVNode("span", null, "扫描设置", -1))
                   ]),
                   _createVNode(_component_v_row, null, {
                     default: _withCtx(() => [
@@ -277,12 +284,35 @@ return (_ctx, _cache) => {
                       }),
                       _createVNode(_component_v_col, {
                         cols: "12",
+                        md: "6"
+                      }, {
+                        default: _withCtx(() => [
+                          _createVNode(_component_v_select, {
+                            modelValue: config.search_sites,
+                            "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => ((config.search_sites) = $event)),
+                            items: siteOptions.value,
+                            "item-title": "title",
+                            "item-value": "value",
+                            label: "PT搜索范围",
+                            variant: "outlined",
+                            density: "compact",
+                            multiple: "",
+                            chips: "",
+                            "closable-chips": "",
+                            clearable: "",
+                            "hide-details": "auto"
+                          }, null, 8, ["modelValue", "items"])
+                        ]),
+                        _: 1
+                      }),
+                      _createVNode(_component_v_col, {
+                        cols: "12",
                         md: "3"
                       }, {
                         default: _withCtx(() => [
                           _createVNode(_component_v_text_field, {
                             modelValue: config.max_scan_subscribes,
-                            "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => ((config.max_scan_subscribes) = $event)),
+                            "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => ((config.max_scan_subscribes) = $event)),
                             modelModifiers: { number: true },
                             type: "number",
                             min: "1",
@@ -291,28 +321,6 @@ return (_ctx, _cache) => {
                             density: "compact",
                             "hide-details": "auto"
                           }, null, 8, ["modelValue"])
-                        ]),
-                        _: 1
-                      }),
-                      _createVNode(_component_v_col, {
-                        cols: "12",
-                        md: "9"
-                      }, {
-                        default: _withCtx(() => [
-                          _createVNode(_component_v_select, {
-                            modelValue: config.search_sites,
-                            "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => ((config.search_sites) = $event)),
-                            items: sites.value,
-                            "item-title": "name",
-                            "item-value": "id",
-                            label: "搜索 PT 站点范围",
-                            variant: "outlined",
-                            density: "compact",
-                            multiple: "",
-                            chips: "",
-                            "closable-chips": "",
-                            "hide-details": "auto"
-                          }, null, 8, ["modelValue", "items"])
                         ]),
                         _: 1
                       })
@@ -327,7 +335,7 @@ return (_ctx, _cache) => {
                       color: "primary",
                       size: "small"
                     }),
-                    _cache[12] || (_cache[12] = _createElementVNode("span", null, "通知权限", -1))
+                    _cache[13] || (_cache[13] = _createElementVNode("span", null, "通知权限", -1))
                   ]),
                   _createVNode(_component_v_row, null, {
                     default: _withCtx(() => [
@@ -367,6 +375,40 @@ return (_ctx, _cache) => {
                     _: 1
                   })
                 ]),
+                _createElementVNode("section", _hoisted_6, [
+                  _createElementVNode("div", _hoisted_7, [
+                    _createVNode(_component_v_icon, {
+                      icon: "mdi-broom",
+                      color: "warning",
+                      size: "small"
+                    }),
+                    _cache[14] || (_cache[14] = _createElementVNode("span", null, "全集包清理", -1))
+                  ]),
+                  _createVNode(_component_v_row, null, {
+                    default: _withCtx(() => [
+                      _createVNode(_component_v_col, {
+                        cols: "12",
+                        md: "6"
+                      }, {
+                        default: _withCtx(() => [
+                          _createVNode(_component_v_select, {
+                            modelValue: config.season_pack_cleanup,
+                            "onUpdate:modelValue": _cache[8] || (_cache[8] = $event => ((config.season_pack_cleanup) = $event)),
+                            items: seasonPackCleanupOptions,
+                            "item-title": "title",
+                            "item-value": "value",
+                            label: "最终集整季包清理",
+                            variant: "outlined",
+                            density: "compact",
+                            "hide-details": "auto"
+                          }, null, 8, ["modelValue"])
+                        ]),
+                        _: 1
+                      })
+                    ]),
+                    _: 1
+                  })
+                ]),
                 _createVNode(_component_v_card_actions, { class: "action-bar" }, {
                   default: _withCtx(() => [
                     _createVNode(_component_v_btn, {
@@ -374,9 +416,9 @@ return (_ctx, _cache) => {
                       "prepend-icon": "mdi-view-dashboard-outline",
                       variant: "text",
                       size: "small",
-                      onClick: _cache[8] || (_cache[8] = $event => (emit('switch')))
+                      onClick: _cache[9] || (_cache[9] = $event => (emit('switch')))
                     }, {
-                      default: _withCtx(() => [...(_cache[13] || (_cache[13] = [
+                      default: _withCtx(() => [...(_cache[15] || (_cache[15] = [
                         _createTextVNode("数据页", -1)
                       ]))]),
                       _: 1
@@ -390,7 +432,7 @@ return (_ctx, _cache) => {
                       loading: loading.value,
                       onClick: loadOptions
                     }, {
-                      default: _withCtx(() => [...(_cache[14] || (_cache[14] = [
+                      default: _withCtx(() => [...(_cache[16] || (_cache[16] = [
                         _createTextVNode("刷新", -1)
                       ]))]),
                       _: 1
@@ -402,7 +444,7 @@ return (_ctx, _cache) => {
                       size: "small",
                       onClick: saveConfig
                     }, {
-                      default: _withCtx(() => [...(_cache[15] || (_cache[15] = [
+                      default: _withCtx(() => [...(_cache[17] || (_cache[17] = [
                         _createTextVNode("保存", -1)
                       ]))]),
                       _: 1
@@ -412,9 +454,9 @@ return (_ctx, _cache) => {
                       "prepend-icon": "mdi-close",
                       variant: "text",
                       size: "small",
-                      onClick: _cache[9] || (_cache[9] = $event => (emit('close')))
+                      onClick: _cache[10] || (_cache[10] = $event => (emit('close')))
                     }, {
-                      default: _withCtx(() => [...(_cache[16] || (_cache[16] = [
+                      default: _withCtx(() => [...(_cache[18] || (_cache[18] = [
                         _createTextVNode("关闭", -1)
                       ]))]),
                       _: 1
@@ -436,6 +478,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-74605e42"]]);
+const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-a555da2e"]]);
 
 export { Config as default };
