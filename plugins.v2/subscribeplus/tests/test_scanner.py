@@ -1,0 +1,251 @@
+import unittest
+from datetime import date
+from types import SimpleNamespace
+
+from subscribeplus.scanner import (
+    SubscriptionScanner,
+    episode_in_seasoninfo,
+    episode_in_transfer_history,
+    normalize_category,
+    should_check_episode,
+)
+from subscribeplus.models import PluginConfig
+from subscribeplus.sites import SiteResolver
+
+
+class ScannerTest(unittest.TestCase):
+    def test_episode_air_date_plus_delay_triggers_on_next_day(self):
+        self.assertTrue(should_check_episode(date(2026, 7, 3), delay_days=1, today=date(2026, 7, 4)))
+        self.assertFalse(should_check_episode(date(2026, 7, 3), delay_days=1, today=date(2026, 7, 3)))
+
+    def test_transfer_history_episode_range_matches_target(self):
+        histories = [{"tmdbid": 100, "season": 1, "episodes": "1-3"}]
+
+        self.assertTrue(episode_in_transfer_history(histories, tmdbid=100, season=1, episode=2))
+        self.assertFalse(episode_in_transfer_history(histories, tmdbid=100, season=1, episode=4))
+
+    def test_seasoninfo_matches_episode_lists(self):
+        seasoninfo = [{"season": 1, "episodes": [1, 2, 3]}]
+
+        self.assertTrue(episode_in_seasoninfo(seasoninfo, season=1, episode=2))
+        self.assertFalse(episode_in_seasoninfo(seasoninfo, season=1, episode=4))
+
+    def test_seasoninfo_matches_moviepilot_dict_keys(self):
+        seasoninfo = {"1": [1, 2, 3]}
+
+        self.assertTrue(episode_in_seasoninfo(seasoninfo, season=1, episode=2))
+        self.assertFalse(episode_in_seasoninfo(seasoninfo, season=1, episode=4))
+
+    def test_blank_category_is_uncategorized(self):
+        self.assertEqual(normalize_category(""), "未分类")
+        self.assertEqual(normalize_category(None), "未分类")
+
+    def test_collect_categories_prefers_moviepilot_category_strategy(self):
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [
+                SimpleNamespace(id=1, state="R", type="电视剧", media_category="", category=""),
+            ],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [],
+            is_episode_downloaded=lambda tmdbid, season, episode: (False, ""),
+            load_categories=lambda: ["日番", "日韩剧"],
+        )
+
+        self.assertEqual(scanner.collect_categories(), ["日番", "日韩剧", "未分类"])
+
+    def test_collect_categories_includes_paused_tv_subscriptions(self):
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [
+                SimpleNamespace(id=1, state="P", type="tv", media_category="anime", category=""),
+            ],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [],
+            is_episode_downloaded=lambda tmdbid, season, episode: (False, ""),
+        )
+
+        self.assertEqual(scanner.collect_categories(), ["anime"])
+
+    def test_scan_includes_paused_subscription_when_episode_is_stale(self):
+        subscribe = SimpleNamespace(
+            id=2,
+            state="P",
+            type="tv",
+            name="Paused Show",
+            tmdbid=200,
+            season=1,
+            start_episode=1,
+            media_category="anime",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": 1, "air_date": "2026-07-01"},
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (False, "missing"),
+            load_downloaded_episodes=lambda tmdbid, season: set(),
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["anime"], delay_days=1), resolver, today=date(2026, 7, 3))
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].subscribe_id, 2)
+        self.assertEqual([episode.episode for episode in results[0].episodes], [1])
+
+    def test_scan_filters_by_resolved_category_when_subscribe_has_no_category(self):
+        subscribe = SimpleNamespace(
+            id=1,
+            state="R",
+            type="电视剧",
+            name="测试日番",
+            tmdbid=100,
+            season=1,
+            media_category="",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": 1, "air_date": "2026-07-03"},
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (False, "未命中"),
+            load_categories=lambda: ["日番", "日韩剧"],
+            resolve_subscribe_category=lambda item: "日番",
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(
+            PluginConfig(selected_categories=["日番"], delay_days=1),
+            resolver,
+            today=date(2026, 7, 4),
+        )
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].category, "日番")
+
+    def test_scan_keeps_only_recent_missing_episodes_after_latest_downloaded(self):
+        subscribe = SimpleNamespace(
+            id=1,
+            state="R",
+            type="电视剧",
+            name="测试剧",
+            tmdbid=100,
+            season=1,
+            start_episode=1,
+            media_category="日番",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        downloaded = set(range(1, 8))
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": episode, "air_date": f"2026-07-0{min(episode, 9)}"}
+                for episode in range(1, 10)
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (episode in downloaded, "命中" if episode in downloaded else "未命中"),
+            load_downloaded_episodes=lambda tmdbid, season: downloaded,
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["日番"], delay_days=0), resolver, today=date(2026, 7, 9))
+
+        self.assertEqual([episode.episode for episode in results[0].episodes], [8, 9])
+
+    def test_scan_ignores_episodes_before_subscribe_start_episode(self):
+        subscribe = SimpleNamespace(
+            id=54,
+            state="R",
+            type="电视剧",
+            name="牧神记",
+            tmdbid=236534,
+            season=1,
+            start_episode=29,
+            media_category="国漫",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        downloaded = set(range(29, 81))
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": episode, "air_date": "2026-07-01"}
+                for episode in range(1, 83)
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (episode in downloaded, "命中" if episode in downloaded else "未命中"),
+            load_downloaded_episodes=lambda tmdbid, season: downloaded,
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["国漫"], delay_days=0), resolver, today=date(2026, 7, 9))
+
+        self.assertEqual([episode.episode for episode in results[0].episodes], [81, 82])
+
+    def test_scan_ignores_old_gap_before_latest_downloaded_episode(self):
+        subscribe = SimpleNamespace(
+            id=54,
+            state="R",
+            type="电视剧",
+            name="牧神记",
+            tmdbid=236534,
+            season=1,
+            start_episode=29,
+            media_category="国漫",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        downloaded = set(range(29, 81)) | set(range(82, 90))
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": episode, "air_date": "2026-07-01"}
+                for episode in range(1, 92)
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (episode in downloaded, "命中" if episode in downloaded else "未命中"),
+            load_downloaded_episodes=lambda tmdbid, season: downloaded,
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["国漫"], delay_days=0), resolver, today=date(2026, 7, 9))
+
+        self.assertEqual([episode.episode for episode in results[0].episodes], [90, 91])
+
+    def test_scan_keeps_near_gap_when_newer_episode_downloaded_first(self):
+        subscribe = SimpleNamespace(
+            id=79,
+            state="R",
+            type="tv",
+            name="斗破苍穹",
+            tmdbid=79481,
+            season=5,
+            start_episode=1,
+            media_category="国漫",
+            category="",
+            include="",
+            episode_group=None,
+        )
+        downloaded = set(range(1, 205)) | {206}
+        scanner = SubscriptionScanner(
+            load_subscribes=lambda: [subscribe],
+            load_tmdb_episodes=lambda tmdbid, season, episode_group: [
+                {"episode_number": episode, "air_date": "2026-07-01"}
+                for episode in range(1, 207)
+            ],
+            is_episode_downloaded=lambda tmdbid, season, episode: (episode in downloaded, "命中" if episode in downloaded else "未命中"),
+            load_downloaded_episodes=lambda tmdbid, season: downloaded,
+        )
+        resolver = SiteResolver(lambda: [{"id": "1", "name": "PT1"}])
+
+        results = scanner.scan(PluginConfig(selected_categories=["国漫"], delay_days=0), resolver, today=date(2026, 7, 9))
+
+        self.assertEqual([episode.episode for episode in results[0].episodes], [205])
+
+
+if __name__ == "__main__":
+    unittest.main()

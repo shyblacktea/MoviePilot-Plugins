@@ -67,6 +67,13 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 ## 版本
 
+### v0.10
+
+- 修复整理历史季号兼容：同时识别 `S01` 与 `S1`，避免已整理剧集因媒体库缓存滞后被误判为缺失。
+- Telegram 通知里的候选资源正文支持翻页，候选下载菜单也支持分页选择。
+- 新增 Telegram `/sp` 命令，可查看当前待处理诊断并进入单剧详情。
+- Telegram 通知标题改为插件中文名 `订阅下载增强`。
+
 ### v0.9
 
 - 订阅站点暂无目标集时，会自动检查插件 `PT搜索范围` 中的其他站点。
@@ -132,9 +139,9 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.9`
-- Release tag：`SubscribePlus_v0.9`
-- Release 资产：`subscribeplus_v0.9.zip`
+- 当前版本：`0.10`
+- Release tag：`SubscribePlus_v0.10`
+- Release 资产：`subscribeplus_v0.10.zip`
 
 ## 致谢
 

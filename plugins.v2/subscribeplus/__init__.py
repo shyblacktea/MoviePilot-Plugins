@@ -103,6 +103,7 @@ from .telegram import (
     build_ci_mode_menu,
     build_ci_wait_tmdb_menu,
     build_main_menu,
+    build_pending_menu,
     build_resource_menu,
     build_rule_confirm_menu,
     build_rule_done_menu,
@@ -121,7 +122,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.9"
+    plugin_version = "0.10"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -172,6 +173,13 @@ class SubscribePlus(_PluginBase):
                 "desc": "自定义识别词修正",
                 "category": "订阅下载增强",
                 "data": {"action": "subscribeplus_ci"},
+            },
+            {
+                "cmd": "/sp",
+                "event": EventType.PluginAction,
+                "desc": "订阅下载增强待处理列表",
+                "category": "订阅下载增强",
+                "data": {"action": "subscribeplus_pending"},
             }
         ]
 
@@ -209,6 +217,7 @@ class SubscribePlus(_PluginBase):
             {"path": "/rule_suggestions", "endpoint": self.rule_suggestions_api, "methods": ["POST"], "auth": "bear", "summary": "生成订阅规则建议"},
             {"path": "/rule_preview", "endpoint": self.rule_preview_api, "methods": ["POST"], "auth": "bear", "summary": "生成规则修改预览"},
             {"path": "/rule_confirm", "endpoint": self.rule_confirm_api, "methods": ["POST"], "auth": "bear", "summary": "确认规则修改"},
+            {"path": "/diagnose_one", "endpoint": self.diagnose_one_api, "methods": ["POST"], "auth": "bear", "summary": "manual single subscribe diagnosis"},
         ]
 
     def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
@@ -269,6 +278,27 @@ class SubscribePlus(_PluginBase):
     def run_scan_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         return self.run_scan(source="manual")
 
+    def diagnose_one_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        notify_value = payload.get("notify", True)
+        notify = str(notify_value).strip().lower() not in {"0", "false", "no", "off"}
+        item, error = self._build_single_diagnosis_input(payload)
+        if not item:
+            return {"success": False, "count": 0, "message": error or "no diagnosable subscription item"}
+
+        diagnosis = self._diagnose_item(item)
+        results = [diagnosis.to_dict()] if diagnosis else []
+        self._ensure_store().save_scan_results(results)
+        if notify and self._plugin_config.notify_tg and results:
+            self._notify_each_show(results)
+        return {
+            "success": True,
+            "count": len(results),
+            "source": "manual_one",
+            "message": "diagnosis completed" if results else "moviepilot handled it or no notifiable candidate found",
+            "data": results[0] if results else None,
+        }
+
     def rule_preview_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         payload = self._extract_payload(payload)
         return self._rule_preview(payload, source="vue")
@@ -325,6 +355,78 @@ class SubscribePlus(_PluginBase):
         if config.notify_tg:
             self._notify_each_show(results)
         return {"success": True, "count": len(results), "source": source}
+
+    def _build_single_diagnosis_input(self, payload: Dict[str, Any]) -> Tuple[Optional[DiagnosisInput], str]:
+        subscribe_id = safe_int(payload.get("subscribe_id") or payload.get("sid") or payload.get("id"), 0)
+        if not subscribe_id:
+            return None, "missing subscribe_id"
+        subscribe = self._get_subscribe(subscribe_id)
+        if not subscribe:
+            return None, f"subscription not found: {subscribe_id}"
+
+        tmdbid = safe_int(getattr(subscribe, "tmdbid", 0), 0)
+        season = safe_int(getattr(subscribe, "season", 0), 0)
+        if not (tmdbid and season):
+            return None, f"subscription misses tmdbid or season: {self._describe_subscribe(subscribe)}"
+
+        title = str(getattr(subscribe, "name", "") or getattr(subscribe, "title", "") or "").strip()
+        category = str(
+            getattr(subscribe, "media_category", "")
+            or getattr(subscribe, "category", "")
+            or self._resolve_subscribe_category(subscribe)
+            or ""
+        ).strip()
+        include = str(getattr(subscribe, "include", "") or "")
+        episode_group = getattr(subscribe, "episode_group", None)
+        sites = self._ensure_site_resolver().resolve_for_category(self._plugin_config, category)
+        episode_number = safe_int(payload.get("episode") or payload.get("ep"), 0)
+
+        if episode_number:
+            downloaded, evidence = self._is_episode_downloaded(tmdbid, season, episode_number)
+            if downloaded:
+                return None, f"{title} S{season:02d}E{episode_number:02d} is already downloaded"
+            air_date = ""
+            for episode in self._load_tmdb_episodes(tmdbid, season, episode_group):
+                number = safe_int(episode.get("episode_number") or episode.get("episode"), 0)
+                if number == episode_number:
+                    air_date = str(episode.get("air_date") or "")
+                    break
+            return (
+                DiagnosisInput(
+                    subscribe_id=subscribe_id,
+                    title=title,
+                    tmdbid=tmdbid,
+                    season=season,
+                    category=category,
+                    include=include,
+                    sites=sites,
+                    episodes=[
+                        StaleEpisode(
+                            season=season,
+                            episode=episode_number,
+                            air_date=air_date,
+                            evidence=evidence or "manual single episode diagnosis",
+                        )
+                    ],
+                ),
+                "",
+            )
+
+        single_config = PluginConfig.from_dict(self._plugin_config.to_dict())
+        if category:
+            single_config.selected_categories = [category]
+        scanner = SubscriptionScanner(
+            lambda: [subscribe],
+            self._load_tmdb_episodes,
+            self._is_episode_downloaded,
+            load_categories=self._load_tv_categories,
+            resolve_subscribe_category=self._resolve_subscribe_category,
+            load_downloaded_episodes=self._load_downloaded_episodes,
+        )
+        inputs = scanner.scan(single_config, self._ensure_site_resolver())
+        if not inputs:
+            return None, f"{title or subscribe_id} has no stale episode to diagnose"
+        return inputs[0], ""
 
     def _diagnose_item(self, item: DiagnosisInput) -> Optional[DiagnosisItem]:
         mp_search = self._run_moviepilot_subscribe_search_for_item(item)
@@ -615,6 +717,14 @@ class SubscribePlus(_PluginBase):
         store.save_notification_queue(pending)
         self._notify_next_queued_show()
 
+    @staticmethod
+    def _notification_title(item: Any = None) -> str:
+        if isinstance(item, dict):
+            title = str(item.get("title") or "").strip()
+        else:
+            title = str(item or "").strip()
+        return f"订阅下载增强：{title}" if title else "订阅下载增强"
+
     def _notify_next_queued_show(self):
         store = self._ensure_store()
         while True:
@@ -628,12 +738,13 @@ class SubscribePlus(_PluginBase):
             try:
                 self.post_message(
                     mtype=NotificationType.Plugin if NotificationType else None,
-                    title=f"SubscribePlus: {item.get('title')}",
+                    title=self._notification_title(item),
                     text=render_notification_text(item),
                     buttons=build_main_menu(
                         token,
                         self._plugin_config.allow_tg_rule_update,
                         can_identifier_fix=item.get("reason") == "recognition_issue",
+                        candidate_count=len(item.get("candidates") or []),
                     ),
                     save_history=False,
                 )
@@ -652,6 +763,9 @@ class SubscribePlus(_PluginBase):
             if str(action).strip().startswith("/ci"):
                 self._handle_ci_command_text(str(action), event_data)
                 return
+            if str(action).strip().startswith("/sp"):
+                self._handle_sp_command_text(str(action), event_data)
+                return
             if not str(action).startswith(f"[PLUGIN]{PLUGIN_ID}|") and plugin_id != PLUGIN_ID:
                 return
             self._handle_callback(str(action), event_data)
@@ -660,6 +774,9 @@ class SubscribePlus(_PluginBase):
         def handle_plugin_action(self, event):
             event_data = getattr(event, "event_data", None) or {}
             action = event_data.get("action") or (event_data.get("data") or {}).get("action")
+            if action == "subscribeplus_pending":
+                self._handle_sp_command_text("/sp", event_data)
+                return
             if action != "subscribeplus_ci":
                 return
             args = event_data.get("arg_str") or event_data.get("args") or event_data.get("text") or ""
@@ -700,7 +817,8 @@ class SubscribePlus(_PluginBase):
         logger.info(f"订阅下载增强处理 Telegram 回调：{op}:{token}")
         if op == "close":
             self._ensure_store().delete_interaction(token)
-            self._notify_next_queued_show()
+            if token != "spmenu":
+                self._notify_next_queued_show()
             if not self._delete_callback_message(event_data):
                 self._post_callback_message(event_data, title="订阅下载增强", text="已关闭本次交互。", save_history=False)
             return
@@ -710,14 +828,54 @@ class SubscribePlus(_PluginBase):
             return
 
         diagnosis = state.get("diagnosis") or {}
+        if op == "open":
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=render_notification_text(diagnosis),
+                buttons=build_main_menu(
+                    token,
+                    self._plugin_config.allow_tg_rule_update,
+                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
+                ),
+                save_history=False,
+            )
+            return
+        if op.startswith("cand"):
+            page = max(safe_int(op.replace("cand", ""), 1) - 1, 0)
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=render_notification_text(diagnosis, candidate_page=page),
+                buttons=build_main_menu(
+                    token,
+                    self._plugin_config.allow_tg_rule_update,
+                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
+                    candidate_page=page,
+                ),
+                save_history=False,
+            )
+            return
+        if op.startswith("rpage"):
+            page = max(safe_int(op.replace("rpage", ""), 1) - 1, 0)
+            self._post_callback_message(
+                event_data,
+                title=f"选择下载：{diagnosis.get('title')}",
+                text="请选择要下载的候选资源。",
+                buttons=build_resource_menu(token, diagnosis.get("candidates") or [], page=page),
+                save_history=False,
+            )
+            return
         if op == "snooze3d":
             until = (datetime.now() + timedelta(days=3)).isoformat(timespec="seconds")
             self._ensure_store().save_snooze(self._ignore_key(diagnosis), until)
             self._ensure_store().delete_interaction(token)
             self._post_callback_message(
                 event_data,
-                title=f"SubscribePlus: {diagnosis.get('title')}",
-                text=f"Snoozed for 3 days until {until}",
+                title=self._notification_title(diagnosis),
+                text=f"已暂缓 3 天，直到 {until}",
                 save_history=False,
             )
             self._notify_next_queued_show()
@@ -736,12 +894,13 @@ class SubscribePlus(_PluginBase):
                 else:
                     self._post_callback_message(
                         event_data,
-                        title=f"SubscribePlus: {diagnosis.get('title')}",
+                        title=self._notification_title(diagnosis),
                         text="插件 PT 范围搜索没有可下载候选资源。",
                         buttons=build_main_menu(
                             token,
                             self._plugin_config.allow_tg_rule_update,
                             can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                            candidate_count=len(diagnosis.get("candidates") or []),
                         ),
                         save_history=False,
                     )
@@ -750,7 +909,7 @@ class SubscribePlus(_PluginBase):
             self._ensure_store().delete_interaction(token)
             self._post_callback_message(
                 event_data,
-                title=f"SubscribePlus: {diagnosis.get('title')}",
+                title=self._notification_title(diagnosis),
                 text=result.get("message") or ("Started MP subscribe search" if result.get("success") else "Failed to start MP subscribe search"),
                 save_history=False,
             )
@@ -763,12 +922,13 @@ class SubscribePlus(_PluginBase):
             self._ensure_store().save_interaction(token, state)
             self._post_callback_message(
                 event_data,
-                title=f"订阅下载增强：{diagnosis.get('title')}",
+                title=self._notification_title(diagnosis),
                 text=render_notification_text(diagnosis),
                 buttons=build_main_menu(
                     token,
                     self._plugin_config.allow_tg_rule_update,
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
                 ),
                 save_history=False,
             )
@@ -912,12 +1072,13 @@ class SubscribePlus(_PluginBase):
         if op == "back":
             self._post_callback_message(
                 event_data,
-                title=f"订阅下载增强：{diagnosis.get('title')}",
+                title=self._notification_title(diagnosis),
                 text=render_notification_text(diagnosis),
                 buttons=build_main_menu(
                     token,
                     self._plugin_config.allow_tg_rule_update,
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
                 ),
                 save_history=False,
             )
@@ -1804,7 +1965,7 @@ class SubscribePlus(_PluginBase):
             lines.extend(errors[:5])
         self.post_message(
             mtype=NotificationType.Plugin if NotificationType else None,
-            title=f"SubscribePlus: {title}",
+            title=self._notification_title(title),
             text="\n".join(lines),
             save_history=False,
         )
@@ -1850,7 +2011,7 @@ class SubscribePlus(_PluginBase):
             lines.extend(errors[:5])
         self.post_message(
             mtype=NotificationType.Plugin if NotificationType else None,
-            title=f"SubscribePlus: {title}",
+            title=self._notification_title(title),
             text="\n".join(lines),
             save_history=False,
         )
@@ -1861,6 +2022,49 @@ class SubscribePlus(_PluginBase):
         episodes = getattr(history, "episodes", None) or ""
         history_id = getattr(history, "id", None)
         return f"{title} {episodes}#{history_id}"
+
+    def _handle_sp_command_text(self, text: str, event_data: Dict[str, Any]):
+        store = self._ensure_store()
+        items = []
+        for item in store.load_scan_results():
+            ignore_key = self._ignore_key(item)
+            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
+                continue
+            items.append(item)
+
+        if not items:
+            self._post_callback_message(
+                event_data,
+                title="订阅下载增强",
+                text="当前没有待处理诊断结果。",
+                save_history=False,
+            )
+            return
+
+        menu_items = []
+        lines = [f"当前待处理诊断：{len(items)} 部"]
+        for item in items[:20]:
+            token = self._save_interaction(item)
+            menu_items.append((token, item))
+            episodes = item.get("episodes") or []
+            episode_text = "/".join(
+                f"E{safe_int(episode.get('episode'), 0):02d}"
+                for episode in episodes[:3]
+                if safe_int(episode.get("episode"), 0)
+            )
+            season = safe_int(item.get("season"), 0)
+            suffix = f" S{season:02d} {episode_text}" if season or episode_text else ""
+            lines.append(f"- {item.get('title') or '未命名'}{suffix}")
+        if len(items) > 20:
+            lines.append(f"... 还有 {len(items) - 20} 部未列出")
+
+        self._post_callback_message(
+            event_data,
+            title="订阅下载增强待处理诊断",
+            text="\n".join(lines),
+            buttons=build_pending_menu(menu_items),
+            save_history=False,
+        )
 
     def _handle_ci_command_text(self, text: str, event_data: Dict[str, Any]):
         raw = str(text or "").strip()
@@ -2196,6 +2400,53 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强读取 TMDB 剧集失败 TMDB={tmdbid} S{season}: {exc}")
             return []
 
+    @staticmethod
+    def _season_labels(season: int) -> List[str]:
+        value = safe_int(season, 0)
+        if not value:
+            return []
+        return list(dict.fromkeys([f"S{value:02d}", f"S{value}"]))
+
+    @staticmethod
+    def _history_status_ok(history: Any) -> bool:
+        return getattr(history, "status", True) is not False
+
+    @staticmethod
+    def _history_identity(history: Any) -> str:
+        return str(getattr(history, "id", None) or getattr(history, "dest", None) or id(history))
+
+    def _load_transfer_history_dicts(self, tmdbid: int, season: Optional[int] = None) -> List[Dict[str, Any]]:
+        from app.db.transferhistory_oper import TransferHistoryOper
+
+        oper = TransferHistoryOper()
+        histories = []
+        seen = set()
+
+        def add(items: List[Any]):
+            for history in items or []:
+                if not self._history_status_ok(history):
+                    continue
+                key = self._history_identity(history)
+                if key in seen:
+                    continue
+                seen.add(key)
+                histories.append(history)
+
+        if season:
+            for label in self._season_labels(season):
+                add(oper.get_by(tmdbid=tmdbid, mtype=MediaType.TV.value, season=label) or [])
+        if not histories:
+            add(oper.get_by(tmdbid=tmdbid, mtype=MediaType.TV.value) or [])
+
+        return [
+            {
+                "tmdbid": getattr(history, "tmdbid", None),
+                "season": getattr(history, "seasons", None),
+                "episodes": getattr(history, "episodes", None),
+            }
+            for history in histories
+        ]
+
     def _is_episode_downloaded(self, tmdbid: int, season: int, episode: int) -> tuple[bool, str]:
         try:
             from app.db.mediaserver_oper import MediaServerOper
@@ -2208,17 +2459,7 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强查询媒体库缓存失败: {exc}")
 
         try:
-            from app.db.transferhistory_oper import TransferHistoryOper
-
-            histories = TransferHistoryOper().get_by(tmdbid=tmdbid, mtype=MediaType.TV.value, season=f"S{season}") or []
-            history_dicts = [
-                {
-                    "tmdbid": getattr(history, "tmdbid", None),
-                    "season": getattr(history, "seasons", None),
-                    "episodes": getattr(history, "episodes", None),
-                }
-                for history in histories
-            ]
+            history_dicts = self._load_transfer_history_dicts(tmdbid, season)
             if episode_in_transfer_history(history_dicts, tmdbid, season, episode):
                 return True, "整理历史已命中"
         except Exception as exc:
@@ -2238,17 +2479,7 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强读取媒体库已下载集失败: {exc}")
 
         try:
-            from app.db.transferhistory_oper import TransferHistoryOper
-
-            histories = TransferHistoryOper().get_by(tmdbid=tmdbid, mtype=MediaType.TV.value) or []
-            history_dicts = [
-                {
-                    "tmdbid": getattr(history, "tmdbid", None),
-                    "season": getattr(history, "seasons", None),
-                    "episodes": getattr(history, "episodes", None),
-                }
-                for history in histories
-            ]
+            history_dicts = self._load_transfer_history_dicts(tmdbid, season)
             episodes.update(episodes_in_transfer_history(history_dicts, tmdbid, season))
         except Exception as exc:
             logger.warning(f"订阅下载增强读取整理历史已下载集失败: {exc}")

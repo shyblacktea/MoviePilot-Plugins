@@ -7,6 +7,8 @@ from typing import Any, Dict, List
 
 PLUGIN_ID = "SubscribePlus"
 MAX_CALLBACK_BYTES = 64
+CANDIDATE_PAGE_SIZE = 3
+RESOURCE_PAGE_SIZE = 5
 
 
 def make_token(payload: Dict[str, Any]) -> str:
@@ -21,13 +23,38 @@ def make_callback(action: str, token: str) -> str:
     return callback
 
 
+def _page_count(total: int, page_size: int) -> int:
+    if total <= 0:
+        return 1
+    return max(1, (total + page_size - 1) // page_size)
+
+
+def _clamp_page(page: int, total: int, page_size: int) -> int:
+    return max(0, min(int(page or 0), _page_count(total, page_size) - 1))
+
+
 def build_main_menu(
-    token: str, allow_rule_update: bool, can_identifier_fix: bool = False
+    token: str,
+    allow_rule_update: bool,
+    can_identifier_fix: bool = False,
+    candidate_count: int = 0,
+    candidate_page: int = 0,
+    candidate_page_size: int = CANDIDATE_PAGE_SIZE,
 ) -> List[List[Dict[str, str]]]:
     first_row = [{"text": "下载", "callback_data": make_callback("download", token)}]
     if allow_rule_update:
         first_row.append({"text": "调整规则", "callback_data": make_callback("rule", token)})
     rows = [first_row]
+    pages = _page_count(candidate_count, candidate_page_size)
+    if candidate_count > candidate_page_size and pages > 1:
+        page = _clamp_page(candidate_page, candidate_count, candidate_page_size)
+        pager = []
+        if page > 0:
+            pager.append({"text": "候选上一页", "callback_data": make_callback(f"cand{page}", token)})
+        if page < pages - 1:
+            pager.append({"text": "候选下一页", "callback_data": make_callback(f"cand{page + 2}", token)})
+        if pager:
+            rows.append(pager)
     rows.append([{"text": "PT范围搜索", "callback_data": make_callback("ptscope", token)}])
     rows.append([{"text": "暂缓3天", "callback_data": make_callback("snooze3d", token)}])
     rows.append(
@@ -39,9 +66,17 @@ def build_main_menu(
     return rows
 
 
-def build_resource_menu(token: str, candidates: List[Dict[str, Any]]) -> List[List[Dict[str, str]]]:
+def build_resource_menu(
+    token: str,
+    candidates: List[Dict[str, Any]],
+    page: int = 0,
+    page_size: int = RESOURCE_PAGE_SIZE,
+) -> List[List[Dict[str, str]]]:
     buttons: List[List[Dict[str, str]]] = []
-    for index, item in enumerate(candidates[:8], start=1):
+    page = _clamp_page(page, len(candidates or []), page_size)
+    start = page * page_size
+    end = start + page_size
+    for index, item in enumerate((candidates or [])[start:end], start=start + 1):
         site = item.get("site_name") or item.get("site") or "PT"
         seeders = item.get("seeders", 0)
         buttons.append(
@@ -52,12 +87,38 @@ def build_resource_menu(token: str, candidates: List[Dict[str, Any]]) -> List[Li
                 }
             ]
         )
+    pages = _page_count(len(candidates or []), page_size)
+    if len(candidates or []) > page_size and pages > 1:
+        pager = []
+        if page > 0:
+            pager.append({"text": "上一页", "callback_data": make_callback(f"rpage{page}", token)})
+        if page < pages - 1:
+            pager.append({"text": "下一页", "callback_data": make_callback(f"rpage{page + 2}", token)})
+        if pager:
+            buttons.append(pager)
     buttons.append(
         [
             {"text": "返回", "callback_data": make_callback("back", token)},
             {"text": "结束", "callback_data": make_callback("close", token)},
         ]
     )
+    return buttons
+
+
+def build_pending_menu(items: List[tuple[str, Dict[str, Any]]]) -> List[List[Dict[str, str]]]:
+    buttons: List[List[Dict[str, str]]] = []
+    for token, item in items[:20]:
+        title = _short_title(item.get("title") or "未命名", limit=28)
+        season = int(item.get("season") or 0)
+        episodes = item.get("episodes") or []
+        episode_text = "/".join(
+            f"E{int(episode.get('episode') or 0):02d}"
+            for episode in episodes[:3]
+            if int(episode.get("episode") or 0)
+        )
+        suffix = f" S{season:02d} {episode_text}" if season or episode_text else ""
+        buttons.append([{"text": f"{title}{suffix}", "callback_data": make_callback("open", token)}])
+    buttons.append([{"text": "结束", "callback_data": make_callback("close", "spmenu")}])
     return buttons
 
 
@@ -234,9 +295,20 @@ def _short_title(title: str, limit: int = 96) -> str:
     return f"{title[:limit - 1]}…"
 
 
-def _candidate_detail_lines(candidates: List[Dict[str, Any]], limit: int = 3) -> List[str]:
+def _candidate_detail_lines(
+    candidates: List[Dict[str, Any]],
+    limit: int = CANDIDATE_PAGE_SIZE,
+    page: int = 0,
+) -> List[str]:
     lines = []
-    for index, candidate in enumerate((candidates or [])[:limit], start=1):
+    total = len(candidates or [])
+    page = _clamp_page(page, total, limit)
+    pages = _page_count(total, limit)
+    start = page * limit
+    end = start + limit
+    if total > limit:
+        lines.append(f"候选资源第 {page + 1}/{pages} 页")
+    for index, candidate in enumerate((candidates or [])[start:end], start=start + 1):
         site = candidate.get("site_name") or candidate.get("site") or "未知站点"
         title = _short_title(candidate.get("title") or "-")
         platforms = _join_values(candidate.get("platforms")) or "-"
@@ -253,12 +325,16 @@ def _candidate_detail_lines(candidates: List[Dict[str, Any]], limit: int = 3) ->
             extras.append(f"优惠：{volume}")
         lines.append(f"{index}. [{site}] {title}")
         lines.append(meta + (f"；{'；'.join(extras)}" if extras else ""))
-    if candidates and len(candidates) > limit:
-        lines.append(f"... 还有 {len(candidates) - limit} 个候选，插件页可查看完整列表")
+    if total > end:
+        lines.append(f"... 还有 {total - end} 个候选，可点下一页查看")
     return lines
 
 
-def render_notification_text(item: Dict[str, Any]) -> str:
+def render_notification_text(
+    item: Dict[str, Any],
+    candidate_page: int = 0,
+    candidate_page_size: int = CANDIDATE_PAGE_SIZE,
+) -> str:
     episodes = item.get("episodes") or []
     episode_text = ", ".join(
         f"E{episode.get('episode')}({episode.get('air_date')})" for episode in episodes[:10]
@@ -285,6 +361,6 @@ def render_notification_text(item: Dict[str, Any]) -> str:
     if candidates and progress:
         lines.append("其他站点候选：")
     if candidates:
-        lines.extend(_candidate_detail_lines(candidates))
+        lines.extend(_candidate_detail_lines(candidates, limit=candidate_page_size, page=candidate_page))
     lines.append(f"搜索站点：{sites}")
     return "\n".join(lines)
