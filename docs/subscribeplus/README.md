@@ -67,6 +67,10 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 ## 版本
 
+### v0.8
+
+- 修复最近缺失集数闭环：当后一集先完成下载或整理时，前一集若仍未入库会继续通知，例如 E206 先到时仍会提示 E205 未入库。
+
 ### v0.7
 
 - 最终集命中整季包时，可自动将 qBittorrent 当前种子的全部文件设为下载。
@@ -122,9 +126,9 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.7`
-- Release tag：`SubscribePlus_v0.7`
-- Release 资产：`subscribeplus_v0.7.zip`
+- 当前版本：`0.8`
+- Release tag：`SubscribePlus_v0.8`
+- Release 资产：`subscribeplus_v0.8.zip`
 
 ## 致谢
 

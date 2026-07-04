@@ -8,6 +8,9 @@ from .models import DiagnosisInput, PluginConfig, StaleEpisode
 from .sites import SiteResolver
 
 
+RECENT_GAP_LOOKBACK = 2
+
+
 UNCATEGORIZED = "未分类"
 TV_TYPE_VALUES = {"电视剧", "tv", "episode"}
 
@@ -158,7 +161,7 @@ class SubscriptionScanner:
             downloaded_episodes = self._downloaded_episodes(tmdbid, season)
             start_episode = int(getattr(subscribe, "start_episode", 0) or 0)
             latest_downloaded_episode = max(downloaded_episodes or {0})
-            recent_threshold = max(start_episode - 1, latest_downloaded_episode)
+            recent_threshold = max(start_episode - 1, latest_downloaded_episode - RECENT_GAP_LOOKBACK)
             episode_group = getattr(subscribe, "episode_group", None)
             for episode in self.load_tmdb_episodes(tmdbid, season, episode_group):
                 air_date = parse_air_date(episode.get("air_date"))

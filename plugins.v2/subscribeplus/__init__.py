@@ -121,7 +121,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.7"
+    plugin_version = "0.8"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
