@@ -332,7 +332,8 @@ class SubscribePlus(_PluginBase):
         if mp_diagnosis.candidates:
             if mp_diagnosis.reason == "downloadable":
                 logger.info(
-                    f"订阅下载增强：{item.title} 在 MP 订阅搜索范围内已有可匹配资源，交给 MP 订阅搜索处理"
+                    "订阅下载增强触发 MP 订阅搜索后发现可匹配资源，已交给 MP 下载处理："
+                    f"{self._format_item_log_context(item)}"
                 )
                 return None
             return mp_diagnosis
@@ -1012,6 +1013,67 @@ class SubscribePlus(_PluginBase):
             return safe_int(match.group(1), 0), 0
         return 0, 0
 
+    @staticmethod
+    def _format_episode_number(episode: int) -> str:
+        return f"E{episode:02d}" if episode else ""
+
+    @classmethod
+    def _format_episode_summary(cls, episodes: List[Any]) -> str:
+        values: List[str] = []
+        for raw in episodes or []:
+            if isinstance(raw, dict):
+                episode = safe_int(raw.get("episode"), 0)
+            else:
+                episode = safe_int(getattr(raw, "episode", 0), 0)
+            label = cls._format_episode_number(episode)
+            if label and label not in values:
+                values.append(label)
+        return "/".join(values)
+
+    @classmethod
+    def _format_download_log_context(
+        cls,
+        title: str,
+        subscribe_id: int = 0,
+        tmdbid: int = 0,
+        season: int = 0,
+        episodes: Optional[List[Any]] = None,
+    ) -> str:
+        fields = [f"剧名={str(title or '').strip() or '未知'}"]
+        if subscribe_id:
+            fields.append(f"订阅ID={subscribe_id}")
+        if tmdbid:
+            fields.append(f"TMDB={tmdbid}")
+        if season:
+            fields.append(f"S{season:02d}")
+        episode_summary = cls._format_episode_summary(episodes or [])
+        if episode_summary:
+            fields.append(f"缺失={episode_summary}")
+        return "，".join(fields)
+
+    @classmethod
+    def _format_item_log_context(cls, item: DiagnosisInput) -> str:
+        return cls._format_download_log_context(
+            title=item.title,
+            subscribe_id=safe_int(item.subscribe_id, 0),
+            tmdbid=safe_int(item.tmdbid, 0),
+            season=safe_int(item.season, 0),
+            episodes=list(item.episodes or []),
+        )
+
+    @classmethod
+    def _format_diagnosis_log_context(cls, diagnosis: Dict[str, Any], candidate: Optional[Dict[str, Any]] = None) -> str:
+        episodes = list(diagnosis.get("episodes") or [])
+        if candidate and safe_int(candidate.get("episode"), 0):
+            episodes.append(candidate)
+        return cls._format_download_log_context(
+            title=str(diagnosis.get("title") or ""),
+            subscribe_id=safe_int(diagnosis.get("subscribe_id"), 0),
+            tmdbid=safe_int(diagnosis.get("tmdbid") or diagnosis.get("tmdb_id"), 0),
+            season=safe_int((candidate or {}).get("season") or diagnosis.get("season"), 0),
+            episodes=episodes,
+        )
+
     def _record_identifier_failure(
         self,
         diagnosis: Dict[str, Any],
@@ -1275,6 +1337,10 @@ class SubscribePlus(_PluginBase):
                 state=None,
                 manual=True,
             )
+            logger.info(
+                "订阅下载增强触发 MP 原生订阅搜索成功："
+                f"{self._format_diagnosis_log_context(diagnosis)}"
+            )
             return {
                 "success": True,
                 "message": f"已触发 MP 原生订阅搜索：{diagnosis.get('title') or subscribe_id}",
@@ -1309,6 +1375,12 @@ class SubscribePlus(_PluginBase):
             from app.chain.download import DownloadChain
 
             DownloadChain().download_single(context=context, username=PLUGIN_ID)
+            logger.info(
+                "订阅下载增强提交候选资源下载成功："
+                f"{self._format_diagnosis_log_context(diagnosis, candidate)}，"
+                f"站点={candidate.get('site_name') or candidate.get('site') or '未知'}，"
+                f"候选={candidate.get('title') or candidate_id or '未知'}"
+            )
             self._post_callback_message(event_data, title="订阅下载增强", text="已提交下载任务。", save_history=False)
         except Exception as exc:
             log_exception = getattr(logger, "exception", None)
