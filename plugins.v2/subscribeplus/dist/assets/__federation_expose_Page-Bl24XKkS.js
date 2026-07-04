@@ -10,30 +10,36 @@ const _hoisted_3 = { class: "summary-item" };
 const _hoisted_4 = { class: "summary-item" };
 const _hoisted_5 = { class: "summary-item" };
 const _hoisted_6 = { class: "summary-item" };
-const _hoisted_7 = { class: "result-title" };
-const _hoisted_8 = { class: "text-subtitle-1" };
-const _hoisted_9 = { class: "text-caption text-medium-emphasis" };
-const _hoisted_10 = { class: "episode-line" };
-const _hoisted_11 = { class: "text-caption text-medium-emphasis mb-2" };
-const _hoisted_12 = { class: "candidate-title" };
-const _hoisted_13 = { class: "text-right" };
-const _hoisted_14 = {
+const _hoisted_7 = {
   key: 3,
   class: "empty-panel"
 };
-const _hoisted_15 = {
+const _hoisted_8 = {
   key: 1,
   class: "empty-panel"
 };
-const _hoisted_16 = {
+const _hoisted_9 = { class: "result-title" };
+const _hoisted_10 = { class: "text-subtitle-1" };
+const _hoisted_11 = { class: "text-caption text-medium-emphasis" };
+const _hoisted_12 = { class: "episode-line" };
+const _hoisted_13 = { class: "text-caption text-medium-emphasis mb-2" };
+const _hoisted_14 = {
+  key: 0,
+  class: "candidate-table-wrap mt-2"
+};
+const _hoisted_15 = { class: "candidate-site" };
+const _hoisted_16 = { class: "candidate-title" };
+const _hoisted_17 = { class: "candidate-seeders" };
+const _hoisted_18 = { class: "text-right candidate-actions" };
+const _hoisted_19 = {
   key: 1,
   class: "suggestion-panel"
 };
-const _hoisted_17 = {
+const _hoisted_20 = {
   key: 2,
   class: "preview-box"
 };
-const _hoisted_18 = { key: 0 };
+const _hoisted_21 = { key: 0 };
 
 const {computed,onMounted,ref} = await importShared('vue');
 
@@ -111,6 +117,12 @@ function reasonColor(reason) {
     downloadable: 'success',
     search_failed: 'error',
   }[reason] || 'grey'
+}
+
+function formatPreviewSites(value, emptyText = '-') {
+  const items = Array.isArray(value) ? value : [];
+  const text = items.filter(item => item !== undefined && item !== null && String(item).trim()).map(item => String(item)).join(', ');
+  return text || emptyText
 }
 
 function identifierModeText(mode) {
@@ -256,7 +268,7 @@ async function previewRule(item, candidate) {
     }
     ruleSuggestions.value = data.items || [];
     if (!ruleSuggestions.value.length) {
-      previewError.value = '没有可添加的官组或平台建议';
+      previewError.value = '没有可添加的官组、平台或 PT 站点建议';
     } else if (ruleSuggestions.value.length === 1) {
       await previewRuleSuggestion(ruleSuggestions.value[0]);
     }
@@ -314,12 +326,12 @@ return (_ctx, _cache) => {
   const _component_v_card_text = _resolveComponent("v-card-text");
   const _component_v_card = _resolveComponent("v-card");
   const _component_v_chip = _resolveComponent("v-chip");
-  const _component_v_table = _resolveComponent("v-table");
   const _component_v_text_field = _resolveComponent("v-text-field");
   const _component_v_divider = _resolveComponent("v-divider");
   const _component_v_select = _resolveComponent("v-select");
   const _component_v_list_item = _resolveComponent("v-list-item");
   const _component_v_list = _resolveComponent("v-list");
+  const _component_v_table = _resolveComponent("v-table");
   const _component_v_container = _resolveComponent("v-container");
   const _component_v_footer = _resolveComponent("v-footer");
   const _component_v_card_actions = _resolveComponent("v-card-actions");
@@ -448,102 +460,6 @@ return (_ctx, _cache) => {
         ]),
         _: 1
       }),
-      (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(items.value, (item) => {
-        return (_openBlock(), _createBlock(_component_v_card, {
-          key: `${item.subscribe_id}-${item.created_at}`,
-          flat: "",
-          class: "rounded border mb-3 result-card"
-        }, {
-          default: _withCtx(() => [
-            _createVNode(_component_v_card_title, { class: "result-header" }, {
-              default: _withCtx(() => [
-                _createElementVNode("div", _hoisted_7, [
-                  _createElementVNode("div", _hoisted_8, _toDisplayString(item.title), 1),
-                  _createElementVNode("div", _hoisted_9, "TMDB " + _toDisplayString(item.tmdbid) + " / S" + _toDisplayString(item.season) + " / " + _toDisplayString(item.category), 1)
-                ]),
-                _createVNode(_component_v_spacer),
-                _createVNode(_component_v_chip, {
-                  color: reasonColor(item.reason),
-                  size: "small",
-                  variant: "tonal"
-                }, {
-                  default: _withCtx(() => [
-                    _createTextVNode(_toDisplayString(reasonText(item.reason)), 1)
-                  ]),
-                  _: 2
-                }, 1032, ["color"])
-              ]),
-              _: 2
-            }, 1024),
-            _createVNode(_component_v_card_text, { class: "content" }, {
-              default: _withCtx(() => [
-                _createElementVNode("div", _hoisted_10, [
-                  (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(item.episodes || [], (episode) => {
-                    return (_openBlock(), _createBlock(_component_v_chip, {
-                      key: episode.episode,
-                      size: "small",
-                      variant: "tonal",
-                      class: "mr-1 mb-1"
-                    }, {
-                      default: _withCtx(() => [
-                        _createTextVNode(" E" + _toDisplayString(episode.episode) + " / " + _toDisplayString(episode.air_date), 1)
-                      ]),
-                      _: 2
-                    }, 1024))
-                  }), 128))
-                ]),
-                _createElementVNode("div", _hoisted_11, _toDisplayString(item.message), 1),
-                (item.candidates?.length)
-                  ? (_openBlock(), _createBlock(_component_v_table, {
-                      key: 0,
-                      density: "compact",
-                      class: "mt-2"
-                    }, {
-                      default: _withCtx(() => [
-                        _cache[14] || (_cache[14] = _createElementVNode("thead", null, [
-                          _createElementVNode("tr", null, [
-                            _createElementVNode("th", null, "站点"),
-                            _createElementVNode("th", null, "标题"),
-                            _createElementVNode("th", null, "做种"),
-                            _createElementVNode("th", { class: "text-right" }, "操作")
-                          ])
-                        ], -1)),
-                        _createElementVNode("tbody", null, [
-                          (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(item.candidates.slice(0, 8), (candidate) => {
-                            return (_openBlock(), _createElementBlock("tr", {
-                              key: candidate.candidate_id || candidate.title
-                            }, [
-                              _createElementVNode("td", null, _toDisplayString(candidate.site_name || candidate.site), 1),
-                              _createElementVNode("td", _hoisted_12, _toDisplayString(candidate.title), 1),
-                              _createElementVNode("td", null, _toDisplayString(candidate.seeders || 0), 1),
-                              _createElementVNode("td", _hoisted_13, [
-                                _createVNode(_component_v_btn, {
-                                  color: "primary",
-                                  variant: "text",
-                                  size: "small",
-                                  "prepend-icon": "mdi-file-eye-outline",
-                                  onClick: $event => (previewRule(item, candidate))
-                                }, {
-                                  default: _withCtx(() => [...(_cache[13] || (_cache[13] = [
-                                    _createTextVNode(" 规则预览 ", -1)
-                                  ]))]),
-                                  _: 1
-                                }, 8, ["onClick"])
-                              ])
-                            ]))
-                          }), 128))
-                        ])
-                      ]),
-                      _: 2
-                    }, 1024))
-                  : _createCommentVNode("", true)
-              ]),
-              _: 2
-            }, 1024)
-          ]),
-          _: 2
-        }, 1024))
-      }), 128)),
       _createVNode(_component_v_card, {
         flat: "",
         class: "rounded border mb-3"
@@ -556,7 +472,7 @@ return (_ctx, _cache) => {
                 color: "primary",
                 size: "small"
               }),
-              _cache[15] || (_cache[15] = _createElementVNode("span", null, "自定义识别词", -1)),
+              _cache[13] || (_cache[13] = _createElementVNode("span", null, "自定义识别词", -1)),
               _createVNode(_component_v_spacer),
               _createVNode(_component_v_chip, {
                 size: "small",
@@ -638,7 +554,7 @@ return (_ctx, _cache) => {
                         loading: identifierBusy.value === 'auto',
                         onClick: runIdentifierAuto
                       }, {
-                        default: _withCtx(() => [...(_cache[16] || (_cache[16] = [
+                        default: _withCtx(() => [...(_cache[14] || (_cache[14] = [
                           _createTextVNode(" 自动处理 ", -1)
                         ]))]),
                         _: 1
@@ -721,7 +637,7 @@ return (_ctx, _cache) => {
                         loading: identifierBusy.value === 'manual',
                         onClick: runIdentifierManual
                       }, {
-                        default: _withCtx(() => [...(_cache[17] || (_cache[17] = [
+                        default: _withCtx(() => [...(_cache[15] || (_cache[15] = [
                           _createTextVNode(" 手动处理 ", -1)
                         ]))]),
                         _: 1
@@ -764,7 +680,7 @@ return (_ctx, _cache) => {
                     ]),
                     _: 1
                   }))
-                : (_openBlock(), _createElementBlock("div", _hoisted_14, "暂无识别词记录"))
+                : (_openBlock(), _createElementBlock("div", _hoisted_7, "暂无识别词记录"))
             ]),
             _: 1
           })
@@ -783,7 +699,7 @@ return (_ctx, _cache) => {
                 color: "primary",
                 size: "small"
               }),
-              _cache[18] || (_cache[18] = _createElementVNode("span", null, "规则修改记录", -1))
+              _cache[16] || (_cache[16] = _createElementVNode("span", null, "规则修改记录", -1))
             ]),
             _: 1
           }),
@@ -806,13 +722,110 @@ return (_ctx, _cache) => {
                     ]),
                     _: 1
                   }))
-                : (_openBlock(), _createElementBlock("div", _hoisted_15, "暂无记录"))
+                : (_openBlock(), _createElementBlock("div", _hoisted_8, "暂无记录"))
             ]),
             _: 1
           })
         ]),
         _: 1
-      })
+      }),
+      (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(items.value, (item) => {
+        return (_openBlock(), _createBlock(_component_v_card, {
+          key: `${item.subscribe_id}-${item.created_at}`,
+          flat: "",
+          class: "rounded border mb-3 result-card"
+        }, {
+          default: _withCtx(() => [
+            _createVNode(_component_v_card_title, { class: "result-header" }, {
+              default: _withCtx(() => [
+                _createElementVNode("div", _hoisted_9, [
+                  _createElementVNode("div", _hoisted_10, _toDisplayString(item.title), 1),
+                  _createElementVNode("div", _hoisted_11, "TMDB " + _toDisplayString(item.tmdbid) + " / S" + _toDisplayString(item.season) + " / " + _toDisplayString(item.category), 1)
+                ]),
+                _createVNode(_component_v_spacer),
+                _createVNode(_component_v_chip, {
+                  color: reasonColor(item.reason),
+                  size: "small",
+                  variant: "tonal"
+                }, {
+                  default: _withCtx(() => [
+                    _createTextVNode(_toDisplayString(reasonText(item.reason)), 1)
+                  ]),
+                  _: 2
+                }, 1032, ["color"])
+              ]),
+              _: 2
+            }, 1024),
+            _createVNode(_component_v_card_text, { class: "content" }, {
+              default: _withCtx(() => [
+                _createElementVNode("div", _hoisted_12, [
+                  (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(item.episodes || [], (episode) => {
+                    return (_openBlock(), _createBlock(_component_v_chip, {
+                      key: episode.episode,
+                      size: "small",
+                      variant: "tonal",
+                      class: "mr-1 mb-1"
+                    }, {
+                      default: _withCtx(() => [
+                        _createTextVNode(" E" + _toDisplayString(episode.episode) + " / " + _toDisplayString(episode.air_date), 1)
+                      ]),
+                      _: 2
+                    }, 1024))
+                  }), 128))
+                ]),
+                _createElementVNode("div", _hoisted_13, _toDisplayString(item.message), 1),
+                (item.candidates?.length)
+                  ? (_openBlock(), _createElementBlock("div", _hoisted_14, [
+                      _createVNode(_component_v_table, {
+                        density: "compact",
+                        class: "candidate-table"
+                      }, {
+                        default: _withCtx(() => [
+                          _cache[18] || (_cache[18] = _createElementVNode("thead", null, [
+                            _createElementVNode("tr", null, [
+                              _createElementVNode("th", null, "站点"),
+                              _createElementVNode("th", null, "标题"),
+                              _createElementVNode("th", null, "做种"),
+                              _createElementVNode("th", { class: "text-right" }, "操作")
+                            ])
+                          ], -1)),
+                          _createElementVNode("tbody", null, [
+                            (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(item.candidates.slice(0, 8), (candidate) => {
+                              return (_openBlock(), _createElementBlock("tr", {
+                                key: candidate.candidate_id || candidate.title
+                              }, [
+                                _createElementVNode("td", _hoisted_15, _toDisplayString(candidate.site_name || candidate.site), 1),
+                                _createElementVNode("td", _hoisted_16, _toDisplayString(candidate.title), 1),
+                                _createElementVNode("td", _hoisted_17, _toDisplayString(candidate.seeders || 0), 1),
+                                _createElementVNode("td", _hoisted_18, [
+                                  _createVNode(_component_v_btn, {
+                                    color: "primary",
+                                    variant: "text",
+                                    size: "small",
+                                    "prepend-icon": "mdi-file-eye-outline",
+                                    onClick: $event => (previewRule(item, candidate))
+                                  }, {
+                                    default: _withCtx(() => [...(_cache[17] || (_cache[17] = [
+                                      _createTextVNode(" 规则预览 ", -1)
+                                    ]))]),
+                                    _: 1
+                                  }, 8, ["onClick"])
+                                ])
+                              ]))
+                            }), 128))
+                          ])
+                        ]),
+                        _: 2
+                      }, 1024)
+                    ]))
+                  : _createCommentVNode("", true)
+              ]),
+              _: 2
+            }, 1024)
+          ]),
+          _: 2
+        }, 1024))
+      }), 128))
     ]),
     _createVNode(_component_v_footer, { class: "footer-bar" }, {
       default: _withCtx(() => [
@@ -919,8 +932,8 @@ return (_ctx, _cache) => {
                     }))
                   : _createCommentVNode("", true),
                 (ruleSuggestions.value.length && !preview.value)
-                  ? (_openBlock(), _createElementBlock("div", _hoisted_16, [
-                      _cache[25] || (_cache[25] = _createElementVNode("div", { class: "text-caption text-medium-emphasis mb-2" }, "请选择要添加到订阅包含规则的关键词", -1)),
+                  ? (_openBlock(), _createElementBlock("div", _hoisted_19, [
+                      _cache[25] || (_cache[25] = _createElementVNode("div", { class: "text-caption text-medium-emphasis mb-2" }, "请选择要添加的官组、平台关键词或 PT 站点", -1)),
                       (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(ruleSuggestions.value, (suggestion) => {
                         return (_openBlock(), _createBlock(_component_v_btn, {
                           key: suggestion.pattern,
@@ -940,12 +953,19 @@ return (_ctx, _cache) => {
                     ]))
                   : _createCommentVNode("", true),
                 (preview.value)
-                  ? (_openBlock(), _createElementBlock("div", _hoisted_17, [
+                  ? (_openBlock(), _createElementBlock("div", _hoisted_20, [
                       (preview.value.selected_text)
-                        ? (_openBlock(), _createElementBlock("div", _hoisted_18, "已选择：" + _toDisplayString(preview.value.selected_text), 1))
+                        ? (_openBlock(), _createElementBlock("div", _hoisted_21, "已选择：" + _toDisplayString(preview.value.selected_text), 1))
                         : _createCommentVNode("", true),
-                      _createElementVNode("div", null, "旧 include：" + _toDisplayString(preview.value.old_include || '-'), 1),
-                      _createElementVNode("div", null, "新 include：" + _toDisplayString(preview.value.new_include || '-'), 1)
+                      (preview.value.field === 'sites')
+                        ? (_openBlock(), _createElementBlock(_Fragment, { key: 1 }, [
+                            _createElementVNode("div", null, "旧订阅站点：" + _toDisplayString(formatPreviewSites(preview.value.old_site_names || preview.value.old_sites, 'MP 默认搜索站点')), 1),
+                            _createElementVNode("div", null, "新订阅站点：" + _toDisplayString(formatPreviewSites(preview.value.new_site_names || preview.value.new_sites)), 1)
+                          ], 64))
+                        : (_openBlock(), _createElementBlock(_Fragment, { key: 2 }, [
+                            _createElementVNode("div", null, "旧 include：" + _toDisplayString(preview.value.old_include || '-'), 1),
+                            _createElementVNode("div", null, "新 include：" + _toDisplayString(preview.value.new_include || '-'), 1)
+                          ], 64))
                     ]))
                   : _createCommentVNode("", true)
               ]),
@@ -988,6 +1008,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Page = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-e3d0695c"]]);
+const Page = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-785ade56"]]);
 
 export { Page as default };

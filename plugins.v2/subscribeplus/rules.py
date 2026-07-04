@@ -107,6 +107,45 @@ def _suggestion_pattern(release_group: str = "", platform: str = "") -> str:
     return json.dumps(payload, ensure_ascii=False)
 
 
+def _site_pattern(site_id: str, site_name: str = "") -> str:
+    payload = {"site_id": str(site_id)}
+    if site_name:
+        payload["site_name"] = str(site_name)
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def _normalize_site_id(value: Any) -> int | None:
+    text = str(value or "").strip()
+    if not re.fullmatch(r"\d+", text):
+        return None
+    return int(text)
+
+
+def _normalize_site_ids(value: Any) -> List[int]:
+    if value is None:
+        return []
+    values = value if isinstance(value, (list, tuple, set)) else [value]
+    result: List[int] = []
+    seen = set()
+    for item in values:
+        site_id = _normalize_site_id(item)
+        if site_id is None or site_id in seen:
+            continue
+        seen.add(site_id)
+        result.append(site_id)
+    return result
+
+
+def _site_names(site_ids: List[int], selected_id: int | None = None, selected_name: str = "") -> List[str]:
+    names = []
+    for site_id in site_ids:
+        if selected_id is not None and site_id == selected_id and selected_name:
+            names.append(selected_name)
+        else:
+            names.append(str(site_id))
+    return names
+
+
 def build_rule_suggestions(
     candidates: List[Dict[str, Any]], release_groups: Iterable[str] | None = None
 ) -> List[Dict[str, str]]:
@@ -132,6 +171,17 @@ def build_rule_suggestions(
                 "value": group,
                 "text": f"添加官组：{group}",
                 "pattern": _suggestion_pattern(release_group=group),
+            }
+            if suggestion not in found:
+                found.append(suggestion)
+        site_id = _normalize_site_id(site)
+        if site_id is not None:
+            site_name = str(item.get("site_name") or site_id).strip()
+            suggestion = {
+                "kind": "site",
+                "value": str(site_id),
+                "text": f"添加PT站点：{site_name}",
+                "pattern": _site_pattern(str(site_id), site_name),
             }
             if suggestion not in found:
                 found.append(suggestion)
@@ -195,6 +245,35 @@ def build_include_preview(subscribe: Any, pattern: str, source: str = "vue") -> 
     }
 
 
+def build_site_preview(subscribe: Any, site_id: str, site_name: str = "", source: str = "vue") -> Dict[str, Any]:
+    normalized_site_id = _normalize_site_id(site_id)
+    if normalized_site_id is None:
+        raise ValueError("站点建议无效：缺少可写入订阅站点的 PT 站点 ID")
+    old_sites = _normalize_site_ids(getattr(subscribe, "sites", None))
+    new_sites = list(old_sites)
+    if normalized_site_id not in new_sites:
+        new_sites.append(normalized_site_id)
+    clean_site_name = str(site_name or normalized_site_id).strip()
+    return {
+        "subscribe_id": int(getattr(subscribe, "id")),
+        "field": "sites",
+        "old_sites": old_sites,
+        "new_sites": new_sites,
+        "old_site_names": _site_names(old_sites, normalized_site_id, clean_site_name),
+        "new_site_names": _site_names(new_sites, normalized_site_id, clean_site_name),
+        "source": source,
+    }
+
+
+def build_rule_preview(subscribe: Any, pattern: str, source: str = "vue") -> Dict[str, Any]:
+    payload = _parse_suggestion_pattern(pattern)
+    clean_pattern = str(pattern or "").strip()
+    site_id = payload.get("site_id") or (clean_pattern if re.fullmatch(r"\d+", clean_pattern) else "")
+    if site_id:
+        return build_site_preview(subscribe, site_id, payload.get("site_name", ""), source=source)
+    return build_include_preview(subscribe, pattern, source=source)
+
+
 def apply_include_preview(
     preview: Dict[str, Any], update_subscribe: Callable[[int, Dict[str, Any]], Dict[str, Any]]
 ) -> Dict[str, Any]:
@@ -209,3 +288,29 @@ def apply_include_preview(
         "source": preview.get("source") or "vue",
         "created_at": datetime.now().isoformat(timespec="seconds"),
     }
+
+
+def apply_site_preview(
+    preview: Dict[str, Any], update_subscribe: Callable[[int, Dict[str, Any]], Dict[str, Any]]
+) -> Dict[str, Any]:
+    subscribe_id = int(preview["subscribe_id"])
+    new_sites = _normalize_site_ids(preview.get("new_sites"))
+    update_subscribe(subscribe_id, {"sites": new_sites})
+    old_value = ", ".join(preview.get("old_site_names") or [str(item) for item in preview.get("old_sites") or []])
+    new_value = ", ".join(preview.get("new_site_names") or [str(item) for item in new_sites])
+    return {
+        "subscribe_id": subscribe_id,
+        "field": "sites",
+        "old_value": old_value,
+        "new_value": new_value,
+        "source": preview.get("source") or "vue",
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+    }
+
+
+def apply_rule_preview(
+    preview: Dict[str, Any], update_subscribe: Callable[[int, Dict[str, Any]], Dict[str, Any]]
+) -> Dict[str, Any]:
+    if preview.get("field") == "sites":
+        return apply_site_preview(preview, update_subscribe)
+    return apply_include_preview(preview, update_subscribe)

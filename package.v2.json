@@ -27,12 +27,18 @@
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
-    "version": "0.4",
+    "version": "0.5",
     "author": "shyblacktea,Codex",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "0.5": [
+        "feat: 诊断流程优先复用 MoviePilot 原生订阅搜索结果，MP 可直接匹配下载时不再重复通知",
+        "feat: Telegram 通知新增 PT 范围搜索入口，可按插件配置的 PT 站点范围手动补充候选资源",
+        "feat: PT 范围搜索结果支持候选下载、规则调整和返回菜单联动",
+        "ui: 配置页补充 PT 搜索范围多选，数据页候选表格适配移动端横向查看"
+      ],
       "0.4": [
         "fix: 扫描不再按订阅启用/暂停状态过滤，暂停订阅也会按 TMDB 单集播出日期参与检测",
         "fix: 订阅列表加载改为读取全部状态，避免仅读取启用订阅导致超期剧集漏扫"
