@@ -109,7 +109,7 @@ jobs:
               # Re-running a version replaces the release asset for that plugin.
               if gh release view "$tag" >/dev/null 2>&1; then
                 echo "Release $tag exists, deleting..."
-                gh release delete "$tag" -y
+                gh release delete "$tag" -y --cleanup-tag
                 git push origin :refs/tags/"$tag" || true
               fi
 
