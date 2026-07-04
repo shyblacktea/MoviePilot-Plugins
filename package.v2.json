@@ -27,12 +27,16 @@
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
-    "version": "0.8",
+    "version": "0.9",
     "author": "shyblacktea,Codex",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "0.9": [
+        "feat: 订阅站点暂无目标集时自动检查插件 PT 搜索范围里的其他站点",
+        "feat: Telegram 通知展示订阅站点最新疑似集数和其他站点目标集候选"
+      ],
       "0.8": [
         "fix: 最近缺失集数保留近邻缺口，避免 E206 先完成时漏掉未入库的 E205",
         "feat: 增强下载触发日志，记录 Telegram 下载、候选资源提交和 MP 订阅搜索接管信息"

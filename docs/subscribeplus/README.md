@@ -67,6 +67,11 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 ## 版本
 
+### v0.9
+
+- 订阅站点暂无目标集时，会自动检查插件 `PT搜索范围` 中的其他站点。
+- Telegram 通知会展示订阅站点最新疑似集数，以及其他站点覆盖目标缺失集的候选资源。
+
 ### v0.8
 
 - 修复最近缺失集数闭环：当后一集先完成下载或整理时，前一集若仍未入库会继续通知，例如 E206 先到时仍会提示 E205 未入库。
@@ -127,9 +132,9 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.8`
-- Release tag：`SubscribePlus_v0.8`
-- Release 资产：`subscribeplus_v0.8.zip`
+- 当前版本：`0.9`
+- Release tag：`SubscribePlus_v0.9`
+- Release 资产：`subscribeplus_v0.9.zip`
 
 ## 致谢
 

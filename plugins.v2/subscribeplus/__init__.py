@@ -69,7 +69,7 @@ except Exception:  # pragma: no cover - lets local unit tests import this packag
         IndexerSites = "IndexerSites"
         CustomIdentifiers = "CustomIdentifiers"
 
-from .diagnosis import TorrentDiagnoser
+from .diagnosis import TorrentDiagnoser, normalize_search_result
 from .identifiers import (
     build_identifier_lines,
     build_identifier_record,
@@ -80,7 +80,7 @@ from .identifiers import (
     safe_int,
     validate_identifier_rule,
 )
-from .models import DiagnosisInput, PluginConfig, StaleEpisode
+from .models import DiagnosisInput, DiagnosisItem, PluginConfig, StaleEpisode
 from .rules import (
     apply_rule_preview,
     build_rule_preview,
@@ -121,7 +121,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.8"
+    plugin_version = "0.9"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -337,11 +337,14 @@ class SubscribePlus(_PluginBase):
                 )
                 return None
             return mp_diagnosis
+        other_site_diagnosis = self._diagnose_other_sites_when_subscription_scope_missing(item, mp_search, mp_diagnosis)
+        if other_site_diagnosis and other_site_diagnosis.candidates:
+            return other_site_diagnosis
         logger.info(f"订阅下载增强：{item.title} 在 MP 订阅搜索范围内没有候选资源，不再执行插件 PT 范围兜底搜索")
         return None
 
     def _run_moviepilot_subscribe_search_for_item(self, item: DiagnosisInput) -> Dict[str, Any]:
-        captured: Dict[str, Any] = {"matched_contexts": [], "diagnostic_contexts": [], "errors": []}
+        captured: Dict[str, Any] = {"matched_contexts": [], "diagnostic_contexts": [], "raw_torrents": [], "errors": []}
         subscribe_id = safe_int(item.subscribe_id, 0)
         if not subscribe_id:
             return captured
@@ -362,6 +365,7 @@ class SubscribePlus(_PluginBase):
                 filter_params=None,
             ):
                 raw_torrents = list(torrents or [])
+                captured["raw_torrents"].extend(raw_torrents)
                 try:
                     diagnostic_contexts = original_parse_result(
                         search_self,
@@ -438,6 +442,119 @@ class SubscribePlus(_PluginBase):
             episodes=[episode.to_dict() for episode in scoped_item.episodes],
             sites=scoped_item.sites,
         )
+
+    @staticmethod
+    def _episode_numbers_from_item(item: DiagnosisInput) -> List[int]:
+        values: List[int] = []
+        for episode in item.episodes or []:
+            number = safe_int(getattr(episode, "episode", 0), 0)
+            if number and number not in values:
+                values.append(number)
+        return values
+
+    @staticmethod
+    def _raw_torrent_to_search_result(raw: Any, item: DiagnosisInput) -> Dict[str, Any]:
+        if isinstance(raw, dict):
+            return raw
+        torrent = getattr(raw, "torrent_info", raw)
+        meta_info = getattr(raw, "meta_info", None)
+        media_info = getattr(raw, "media_info", None)
+        episodes = list(getattr(meta_info, "episode_list", None) or [])
+        season_list = list(getattr(meta_info, "season_list", None) or [])
+        title = getattr(torrent, "title", None) or getattr(torrent, "name", None) or ""
+        tmdb_id = safe_int(getattr(media_info, "tmdb_id", None), 0) if media_info else 0
+        return {
+            "site": str(getattr(torrent, "site", "") or ""),
+            "site_name": getattr(torrent, "site_name", None),
+            "title": title,
+            "recognized": bool(
+                getattr(raw, "candidate_recognized", False)
+                or getattr(raw, "media_info_is_target", False)
+                or (tmdb_id and tmdb_id == safe_int(item.tmdbid, 0))
+            ),
+            "season": season_list[0] if season_list else item.season,
+            "episode": episodes[0] if episodes else 0,
+            "episodes": episodes,
+            "seeders": getattr(torrent, "seeders", 0),
+            "size": getattr(torrent, "size", ""),
+        }
+
+    def _build_subscription_site_progress(
+        self, item: DiagnosisInput, mp_search: Dict[str, Any], subscription_sites: List[str]
+    ) -> List[Dict[str, Any]]:
+        target_episode = max(self._episode_numbers_from_item(item) or [0])
+        if not target_episode:
+            return []
+        subscription_set = {str(site) for site in subscription_sites or []}
+        latest_by_site: Dict[str, Dict[str, Any]] = {}
+        for raw in mp_search.get("raw_torrents") or []:
+            normalized = normalize_search_result(self._raw_torrent_to_search_result(raw, item))
+            site = str(normalized.get("site") or "")
+            if subscription_set and site not in subscription_set:
+                continue
+            if safe_int(normalized.get("season"), item.season) not in (0, safe_int(item.season, 0)):
+                continue
+            episodes = [
+                safe_int(episode, 0)
+                for episode in (normalized.get("episodes") or [])
+                if safe_int(episode, 0)
+            ]
+            if not episodes and safe_int(normalized.get("episode"), 0):
+                episodes = [safe_int(normalized.get("episode"), 0)]
+            latest_episode = max(episodes or [0])
+            if not latest_episode or latest_episode >= target_episode:
+                continue
+            current = latest_by_site.get(site)
+            if current and safe_int(current.get("latest_episode"), 0) >= latest_episode:
+                continue
+            latest_by_site[site] = {
+                "site": site,
+                "site_name": normalized.get("site_name") or site or "订阅站点",
+                "latest_episode": latest_episode,
+                "target_episode": target_episode,
+                "seeders": safe_int(normalized.get("seeders"), 0),
+            }
+        return sorted(
+            latest_by_site.values(),
+            key=lambda item: (safe_int(item.get("latest_episode"), 0), str(item.get("site_name") or "")),
+            reverse=True,
+        )
+
+    def _diagnose_other_sites_when_subscription_scope_missing(
+        self, item: DiagnosisInput, mp_search: Dict[str, Any], mp_diagnosis: DiagnosisItem
+    ) -> Optional[DiagnosisItem]:
+        subscription_sites = [str(site) for site in (mp_diagnosis.sites or self._load_moviepilot_subscribe_sites(item))]
+        configured_sites = self._ensure_site_resolver().resolve_for_category(self._plugin_config, item.category)
+        subscription_set = set(subscription_sites)
+        other_sites = [str(site) for site in configured_sites if str(site) not in subscription_set]
+        if not other_sites:
+            return None
+
+        scoped_item = replace(item, sites=other_sites)
+        result = TorrentDiagnoser(self._search_torrents).diagnose(scoped_item)
+        if not result.candidates:
+            return None
+
+        original_reason = result.reason
+        if result.reason in {"downloadable", "rule_blocked"}:
+            result.reason = "site_scope_blocked"
+            result.message = "订阅站点暂无目标集，其他 PT 站点存在目标集资源"
+            if original_reason == "rule_blocked":
+                result.message += "，但可能仍被订阅包含规则拦截"
+        elif result.reason == "recognition_issue":
+            result.message = "订阅站点暂无目标集，其他 PT 站点存在目标集资源，但识别异常"
+
+        result.source = "plugin_pt_scope"
+        result.original_reason = original_reason
+        result.sites = other_sites
+        result.subscription_sites = subscription_sites
+        result.subscription_site_progress = self._build_subscription_site_progress(item, mp_search, subscription_sites)
+        logger.info(
+            "订阅下载增强发现订阅站点缺集但其他站点存在目标集："
+            f"{self._format_item_log_context(item)}，订阅站点={','.join(subscription_sites) or '-'}，"
+            f"其他站点={','.join(other_sites)}，候选={len(result.candidates)}"
+        )
+        return result
 
     def _manual_pt_scope_diagnosis(self, diagnosis: Dict[str, Any]) -> Dict[str, Any]:
         subscribe_id = safe_int(diagnosis.get("subscribe_id"), 0)

@@ -271,6 +271,19 @@ def render_notification_text(item: Dict[str, Any]) -> str:
         f"诊断：{item.get('message') or item.get('reason')}",
         f"候选资源：{len(candidates)} 个",
     ]
+    progress = item.get("subscription_site_progress") or []
+    if progress:
+        lines.append("订阅站点：")
+        for row in progress[:5]:
+            site_name = row.get("site_name") or row.get("site") or "订阅站点"
+            latest = int(row.get("latest_episode") or 0)
+            target = int(row.get("target_episode") or 0)
+            if latest and target:
+                lines.append(f"- {site_name}：最新疑似 E{latest:02d}，未发现 E{target:02d}")
+            elif latest:
+                lines.append(f"- {site_name}：最新疑似 E{latest:02d}")
+    if candidates and progress:
+        lines.append("其他站点候选：")
     if candidates:
         lines.extend(_candidate_detail_lines(candidates))
     lines.append(f"搜索站点：{sites}")
