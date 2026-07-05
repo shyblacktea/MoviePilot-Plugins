@@ -12,7 +12,7 @@ CLEANUP_MODES = {CLEANUP_OFF, CLEANUP_RECORD, CLEANUP_SOURCE}
 
 _EPISODE_RE = re.compile(r"E(\d{1,4})(?:\s*[-~]\s*E?(\d{1,4}))?", re.IGNORECASE)
 _SEASON_RE = re.compile(r"S(\d{1,2})(?!\s*E\d)", re.IGNORECASE)
-_SINGLE_EPISODE_RE = re.compile(r"S\d{1,2}\s*E\d{1,4}", re.IGNORECASE)
+_SINGLE_EPISODE_RE = re.compile(r"S\d{1,2}[\s._\-]*E\d{1,4}", re.IGNORECASE)
 
 
 @dataclass
@@ -94,6 +94,8 @@ def is_season_pack_title(title: str, season: int) -> bool:
         return True
     if _SINGLE_EPISODE_RE.search(text):
         return False
+    if _EPISODE_RE.search(text):
+        return False
     for match in _SEASON_RE.finditer(text):
         if int(match.group(1)) == int(season):
             return True
@@ -123,7 +125,7 @@ def _same_show_and_season(current: Any, history: Any, season: int) -> bool:
     return parse_season_number(getattr(history, "seasons", None)) == season
 
 
-def build_season_pack_match(current: Any, total_episode: int) -> SeasonPackMatch:
+def build_season_pack_match(current: Any, total_episode: int, subscribe_completed: bool = True) -> SeasonPackMatch:
     season = parse_season_number(getattr(current, "seasons", None))
     if not season:
         return SeasonPackMatch(reason="missing season")
@@ -134,18 +136,21 @@ def build_season_pack_match(current: Any, total_episode: int) -> SeasonPackMatch
     if int(total_episode) not in current_episodes:
         return SeasonPackMatch(reason="not finale", season=season)
 
+    if not subscribe_completed:
+        return SeasonPackMatch(reason="subscribe not completed", season=season)
+
     if not is_season_pack_title(_history_title(current), season):
         return SeasonPackMatch(reason="not season pack", season=season)
 
     return SeasonPackMatch(matched=True, reason="finale season pack", season=season)
 
 
-def build_cleanup_plan(current: Any, histories: Iterable[Any], total_episode: int, mode: Any) -> CleanupPlan:
+def build_cleanup_plan(current: Any, histories: Iterable[Any], total_episode: int, mode: Any, subscribe_completed: bool = True) -> CleanupPlan:
     normalized_mode = normalize_cleanup_mode(mode)
     if normalized_mode == CLEANUP_OFF:
         return CleanupPlan(mode=normalized_mode, reason="disabled")
 
-    match = build_season_pack_match(current, total_episode)
+    match = build_season_pack_match(current, total_episode, subscribe_completed=subscribe_completed)
     if not match.matched:
         return CleanupPlan(mode=normalized_mode, reason=match.reason)
     season = match.season

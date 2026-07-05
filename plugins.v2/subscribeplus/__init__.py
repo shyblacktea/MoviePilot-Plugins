@@ -122,7 +122,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.10"
+    plugin_version = "0.11"
     plugin_author = "shyblacktea,Codex"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -1703,7 +1703,8 @@ class SubscribePlus(_PluginBase):
             return
         self._attach_cleanup_torrent_name(current, event_data)
         total_episode = self._resolve_total_episode_for_cleanup(current, event_data)
-        match = build_season_pack_match(current, total_episode)
+        subscribe_completed = self._resolve_subscribe_completed_for_cleanup(current, event_data, total_episode)
+        match = build_season_pack_match(current, total_episode, subscribe_completed=subscribe_completed)
         if not match.matched:
             logger.info(
                 f"订阅下载增强全集最终集处理跳过：{self._cleanup_history_label(current)}，原因={match.reason}"
@@ -1716,6 +1717,7 @@ class SubscribePlus(_PluginBase):
             histories=histories,
             total_episode=total_episode,
             mode=mode,
+            subscribe_completed=subscribe_completed,
         )
         download_result = None
         if full_download:
@@ -1764,6 +1766,17 @@ class SubscribePlus(_PluginBase):
                 }
 
             files = list(qbittorrent.get_files(download_hash) or [])
+            if len(files) <= 1:
+                logger.info(
+                    f"订阅下载增强跳过整季包全包下载：单文件种子非整季包，hash={download_hash}，files={len(files)}"
+                )
+                return {
+                    "ok": False,
+                    "reason": "single-file torrent, skip full download",
+                    "file_count": len(files),
+                    "downloader": downloader,
+                    "hash": download_hash,
+                }
             file_ids = []
             for position, fileitem in enumerate(files):
                 file_index = self._torrent_file_index(fileitem, position)
@@ -1921,6 +1934,39 @@ class SubscribePlus(_PluginBase):
             if total:
                 return total
         return 0
+
+    def _resolve_subscribe_completed_for_cleanup(self, current, event_data: Dict[str, Any], total_episode: int) -> bool:
+        """判断该季订阅是否真正完结。
+
+        仅当能确认整季已完结时才返回 True，避免未完结剧集在“刚补到 TMDB
+        当前最后一集”时被误判为完结整季包。判定依据（满足其一即视为完结）：
+        - 存在活跃订阅且 lack_episode == 0（订阅已收齐本季全部集数）；
+        - 存在活跃订阅且其 total_episode 与已入库最新集吻合，且订阅状态为已完成('S')。
+        无法确认时返回 False（保守，不触发整季包清理/全包下载）。
+        """
+        tmdbid = safe_int(getattr(current, "tmdbid", 0), 0)
+        season = parse_season_number(getattr(current, "seasons", None))
+        if not (tmdbid and season):
+            return False
+        try:
+            from app.db.subscribe_oper import SubscribeOper
+
+            subscribes = SubscribeOper().list_by_tmdbid(tmdbid=tmdbid, season=season) or []
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取订阅完结状态失败：TMDB={tmdbid} S{season}，{exc}")
+            return False
+
+        for subscribe in subscribes:
+            state = str(getattr(subscribe, "state", "") or "").upper()
+            lack = safe_int(getattr(subscribe, "lack_episode", None), -1)
+            sub_total = safe_int(getattr(subscribe, "total_episode", 0), 0)
+            # 已完成订阅
+            if state in ("S", "C"):
+                return True
+            # 订阅已收齐（缺失为 0）且总集数确定
+            if lack == 0 and sub_total > 0:
+                return True
+        return False
 
     def _delete_transfer_history_for_cleanup(self, history, delete_source: bool) -> bool:
         from app import schemas

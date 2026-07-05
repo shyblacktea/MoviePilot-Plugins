@@ -142,7 +142,87 @@ class SeasonPackCleanupTest(unittest.TestCase):
         self.assertFalse(plan.should_cleanup)
         self.assertIn("not finale", plan.reason)
 
-    def test_transfer_complete_cleanup_deletes_selected_old_histories(self):
+    def test_incomplete_subscribe_final_episode_does_not_cleanup(self):
+        # 回归：未完结剧集（11/12），种子名是裸 S01 单集，恰好补到 TMDB 当前最后一集，
+        # 不应被误判为完结整季包。
+        current = history(
+            id=99,
+            episodes="E11",
+            download_hash="single-e11",
+            torrent_name="Reborn.Rookie.S01.2026.1080p.FriDay.WEB-DL.H.264.AAC2.0-HHWEB",
+        )
+
+        plan = build_cleanup_plan(
+            current=current,
+            histories=[history(id=10, episodes="E10"), current],
+            total_episode=11,
+            mode=CLEANUP_SOURCE,
+            subscribe_completed=False,
+        )
+
+        self.assertFalse(plan.should_cleanup)
+        self.assertIn("subscribe not completed", plan.reason)
+
+    def test_single_episode_torrent_name_with_dot_separator_not_season_pack(self):
+        # 回归：点分隔的单集种子名不应被判为整季包。
+        current = history(
+            id=99,
+            episodes="E13",
+            download_hash="single",
+            torrent_name="Reborn.Rookie.S01.E13.2026.1080p.HHWEB",
+        )
+
+        plan = build_cleanup_plan(
+            current=current,
+            histories=[history(id=12, episodes="E12"), current],
+            total_episode=13,
+            mode=CLEANUP_SOURCE,
+            subscribe_completed=True,
+        )
+
+        self.assertFalse(plan.should_cleanup)
+        self.assertIn("not season pack", plan.reason)
+
+    def test_full_download_skips_single_file_torrent(self):
+        # 回归：单文件种子（单集）不应被 qB 全选重下。
+        plugin = SubscribePlus()
+        calls = []
+
+        class FakeQBittorrent:
+            def get_files(self, torrent_hash):
+                calls.append(("get_files", torrent_hash))
+                return [SimpleNamespace(index=0, name="Reborn.Rookie.S01E11.mkv")]
+
+            def set_files(self, torrent_hash, file_ids, priority):
+                calls.append(("set_files", torrent_hash, file_ids, priority))
+
+            def start_torrents(self, ids):
+                calls.append(("start_torrents", ids))
+
+        class FakeDownloaderHelper:
+            def get_service(self, name=None, type_filter=None):
+                calls.append(("get_service", name, type_filter))
+                return SimpleNamespace(instance=FakeQBittorrent())
+
+        fake_modules = {
+            "app": fake_module("app"),
+            "app.helper": fake_module("app.helper"),
+            "app.helper.downloader": fake_module("app.helper.downloader", DownloaderHelper=FakeDownloaderHelper),
+        }
+
+        with patch.dict("sys.modules", fake_modules):
+            result = plugin._ensure_season_pack_full_download(
+                history(download_hash="single-e11", downloader="qb-main"),
+                {"download_hash": "single-e11", "downloader": "qb-main"},
+            )
+
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["file_count"], 1)
+        self.assertIn("single-file", result["reason"])
+        # 不应调用 set_files / start_torrents
+        self.assertNotIn(("set_files", "single-e11", "0", 1), calls)
+        self.assertFalse(any(c[0] == "set_files" for c in calls))
+        self.assertFalse(any(c[0] == "start_torrents" for c in calls))
         plugin = SubscribePlus()
         plugin._plugin_config = PluginConfig(season_pack_cleanup=CLEANUP_SOURCE)
         current = history(
@@ -156,6 +236,7 @@ class SeasonPackCleanupTest(unittest.TestCase):
 
         plugin._get_transfer_history_for_cleanup = lambda history_id: current if history_id == 99 else None
         plugin._resolve_total_episode_for_cleanup = lambda _history, _event_data: 13
+        plugin._resolve_subscribe_completed_for_cleanup = lambda _history, _event_data, _total: True
         plugin._load_transfer_histories_for_cleanup = lambda _history: [old, current]
         plugin._delete_transfer_history_for_cleanup = lambda item, delete_source: calls.append((item.id, delete_source)) or True
         plugin._notify_season_cleanup = lambda *_args, **_kwargs: None
@@ -191,6 +272,7 @@ class SeasonPackCleanupTest(unittest.TestCase):
 
         plugin._get_transfer_history_for_cleanup = lambda history_id: current if history_id == 99 else None
         plugin._resolve_total_episode_for_cleanup = lambda _history, _event_data: 13
+        plugin._resolve_subscribe_completed_for_cleanup = lambda _history, _event_data, _total: True
         plugin._load_transfer_histories_for_cleanup = lambda _history: []
         plugin._ensure_season_pack_full_download = lambda item, event_data: calls.append(
             (item.id, event_data.get("download_hash"))
