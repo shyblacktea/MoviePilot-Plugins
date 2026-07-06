@@ -84,6 +84,12 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 ## 版本
 
+### v0.14
+
+- 规则修改记录页面展示订阅名称与改动类型（增加站点/修改包含词），站点显示为站点名称。
+- 配置页新增 `候选缓存天数` 输入框，可视化设置候选下载缓存有效期。
+- 前端重新构建 `dist`，使 v0.12 的规则记录展示优化与 v0.13 的缓存天数配置在界面生效。
+
 ### v0.13
 
 - 新增候选下载本地缓存，插件重载或 MoviePilot 重启后 `/sp` 仍可直接下载候选，不再动辄提示「候选下载上下文已失效」。
@@ -175,9 +181,9 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.13`
-- Release tag：`SubscribePlus_v0.13`
-- Release 资产：`subscribeplus_v0.13.zip`
+- 当前版本：`0.14`
+- Release tag：`SubscribePlus_v0.14`
+- Release 资产：`subscribeplus_v0.14.zip`
 
 ## 致谢
 
