@@ -55,11 +55,36 @@ def build_main_menu(
             pager.append({"text": "候选下一页", "callback_data": make_callback(f"cand{page + 2}", token)})
         if pager:
             rows.append(pager)
-    rows.append([{"text": "PT范围搜索", "callback_data": make_callback("ptscope", token)}])
+    rows.append([{"text": "搜索其他站点", "callback_data": make_callback("ptscope", token)}])
     rows.append([{"text": "暂缓3天", "callback_data": make_callback("snooze3d", token)}])
     rows.append(
         [
             {"text": "忽略本次", "callback_data": make_callback("ignore", token)},
+            {"text": "结束", "callback_data": make_callback("close", token)},
+        ]
+    )
+    return rows
+
+
+def build_other_sites_menu(
+    token: str,
+    other_sites: List[Dict[str, str]],
+) -> List[List[Dict[str, str]]]:
+    """其他站点选择菜单：单选各站点 + 全部其他站点 + 返回。
+
+    other_sites: [{"id": "13", "name": "春天"}, ...]，顺序即索引，回调用 pts<idx> 避免超长。
+    """
+    rows: List[List[Dict[str, str]]] = []
+    if other_sites:
+        rows.append([{"text": "全部其他站点", "callback_data": make_callback("ptsall", token)}])
+    for idx, site in enumerate(other_sites[:16]):
+        name = str(site.get("name") or site.get("id") or "站点")
+        rows.append([{"text": name, "callback_data": make_callback(f"pts{idx}", token)}])
+    if not other_sites:
+        rows.append([{"text": "（无其他站点可搜）", "callback_data": make_callback("open", token)}])
+    rows.append(
+        [
+            {"text": "返回", "callback_data": make_callback("open", token)},
             {"text": "结束", "callback_data": make_callback("close", token)},
         ]
     )
@@ -351,7 +376,8 @@ def render_notification_text(
     episode_text = ", ".join(
         f"E{episode.get('episode')}({episode.get('air_date')})" for episode in episodes[:10]
     )
-    sites = ", ".join(item.get("sites") or []) or "MP 默认搜索站点"
+    site_display = item.get("site_names") or item.get("sites") or []
+    sites = ", ".join(str(s) for s in site_display) or "MP 默认搜索站点"
     candidates = item.get("candidates") or []
     lines = [
         f"剧名：{item.get('title')}",
