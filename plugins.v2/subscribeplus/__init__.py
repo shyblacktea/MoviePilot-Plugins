@@ -103,6 +103,7 @@ from .telegram import (
     build_ci_mode_menu,
     build_ci_wait_tmdb_menu,
     build_main_menu,
+    build_other_sites_menu,
     build_pending_menu,
     build_resource_menu,
     build_rule_confirm_menu,
@@ -122,7 +123,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.14"
+    plugin_version = "0.15"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -211,6 +212,9 @@ class SubscribePlus(_PluginBase):
             {"path": "/scan", "endpoint": self.run_scan_api, "methods": ["POST"], "auth": "bear", "summary": "手动扫描订阅"},
             {"path": "/results", "endpoint": self.get_results_api, "methods": ["GET"], "auth": "bear", "summary": "获取最近诊断结果"},
             {"path": "/results/clear", "endpoint": self.clear_results_api, "methods": ["POST"], "auth": "bear", "summary": "清除最近诊断结果"},
+            {"path": "/results/delete", "endpoint": self.delete_result_api, "methods": ["POST"], "auth": "bear", "summary": "删除单条诊断结果"},
+            {"path": "/rule_records/clear", "endpoint": self.clear_rule_records_api, "methods": ["POST"], "auth": "bear", "summary": "清空规则修改记录"},
+            {"path": "/rule_records/delete", "endpoint": self.delete_rule_record_api, "methods": ["POST"], "auth": "bear", "summary": "删除单条规则修改记录"},
             {"path": "/identifier_auto", "endpoint": self.identifier_auto_api, "methods": ["POST"], "auth": "bear", "summary": "自动识别并写入自定义识别词"},
             {"path": "/identifier_manual", "endpoint": self.identifier_manual_api, "methods": ["POST"], "auth": "bear", "summary": "按 TMDB 手动写入自定义识别词"},
             {"path": "/identifier_fix", "endpoint": self.identifier_fix_api, "methods": ["POST"], "auth": "bear", "summary": "兼容旧版识别修正入口"},
@@ -274,6 +278,26 @@ class SubscribePlus(_PluginBase):
     def clear_results_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         self._ensure_store().clear_scan_results()
         return {"success": True}
+
+    def delete_result_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        data = self._extract_payload(payload)
+        result_id = str(data.get("result_id") or "").strip()
+        if not result_id:
+            return {"success": False, "message": "缺少 result_id"}
+        ok = self._ensure_store().delete_scan_result(result_id)
+        return {"success": ok, "message": "" if ok else "未找到对应诊断结果"}
+
+    def clear_rule_records_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        self._ensure_store().clear_rule_records()
+        return {"success": True}
+
+    def delete_rule_record_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        data = self._extract_payload(payload)
+        record_id = str(data.get("record_id") or "").strip()
+        if not record_id:
+            return {"success": False, "message": "缺少 record_id"}
+        ok = self._ensure_store().delete_rule_record(record_id)
+        return {"success": ok, "message": "" if ok else "未找到对应规则记录"}
 
     def run_scan_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         return self.run_scan(source="manual")
@@ -649,7 +673,9 @@ class SubscribePlus(_PluginBase):
         result.source = "plugin_pt_scope"
         result.original_reason = original_reason
         result.sites = other_sites
+        result.site_names = self._ensure_site_resolver().names_for(other_sites)
         result.subscription_sites = subscription_sites
+        result.subscription_site_names = self._ensure_site_resolver().names_for(subscription_sites)
         result.subscription_site_progress = self._build_subscription_site_progress(item, mp_search, subscription_sites)
         logger.info(
             "订阅下载增强发现订阅站点缺集但其他站点存在目标集："
@@ -658,7 +684,23 @@ class SubscribePlus(_PluginBase):
         )
         return result
 
-    def _manual_pt_scope_diagnosis(self, diagnosis: Dict[str, Any]) -> Dict[str, Any]:
+    def _compute_other_sites(self, diagnosis: Dict[str, Any]) -> List[Dict[str, str]]:
+        """计算"其他站点"（PT 搜索范围 - 订阅站点），返回 [{id, name}]。"""
+        resolver = self._ensure_site_resolver()
+        category = str(diagnosis.get("category") or "")
+        configured = resolver.resolve_for_category(self._plugin_config, category)
+        subscription_sites = set(str(s) for s in (diagnosis.get("subscription_sites") or []))
+        name_map = resolver.name_map()
+        others = []
+        for site_id in configured:
+            if str(site_id) in subscription_sites:
+                continue
+            others.append({"id": str(site_id), "name": name_map.get(str(site_id), str(site_id))})
+        return others
+
+    def _manual_pt_scope_diagnosis(
+        self, diagnosis: Dict[str, Any], only_sites: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
         subscribe_id = safe_int(diagnosis.get("subscribe_id"), 0)
         season = safe_int(diagnosis.get("season"), 0)
         tmdbid = safe_int(diagnosis.get("tmdbid"), 0)
@@ -681,7 +723,7 @@ class SubscribePlus(_PluginBase):
             failed.update(
                 {
                     "reason": "search_failed",
-                    "message": "插件 PT 范围搜索失败：当前通知缺少订阅、TMDB、季或缺失集信息",
+                    "message": "搜索其他站点失败：当前通知缺少订阅、TMDB、季或缺失集信息",
                     "candidates": [],
                 }
             )
@@ -690,7 +732,12 @@ class SubscribePlus(_PluginBase):
         subscribe = self._get_subscribe(subscribe_id)
         include = str(getattr(subscribe, "include", "") or diagnosis.get("include") or "")
         category = str(diagnosis.get("category") or getattr(subscribe, "media_category", "") or "")
-        sites = self._ensure_site_resolver().resolve_for_category(self._plugin_config, category)
+        resolver = self._ensure_site_resolver()
+        if only_sites:
+            sites = [str(s) for s in only_sites]
+        else:
+            # 默认搜"其他站点"（PT 搜索范围 - 订阅站点），与自动诊断语义一致
+            sites = [str(s.get("id")) for s in self._compute_other_sites(diagnosis)]
         item = DiagnosisInput(
             subscribe_id=subscribe_id,
             title=title,
@@ -703,7 +750,12 @@ class SubscribePlus(_PluginBase):
         )
         result = TorrentDiagnoser(self._search_torrents).diagnose(item).to_dict()
         result["source"] = "plugin_pt_scope"
-        result["message"] = f"插件 PT 范围搜索结果：{result.get('message') or result.get('reason')}"
+        result["sites"] = sites
+        result["site_names"] = resolver.names_for(sites)
+        site_label = "、".join(result["site_names"]) or "无其他站点"
+        stamp = datetime.now().strftime("%H:%M")
+        base = result.get("message") or result.get("reason") or ""
+        result["message"] = f"搜索其他站点完成（{stamp}）：{site_label}，命中 {len(result.get('candidates') or [])} 个候选"
         return result
 
     def _notify_each_show(self, results: List[Dict[str, Any]]):
@@ -916,7 +968,32 @@ class SubscribePlus(_PluginBase):
             self._notify_next_queued_show()
             return
         if op == "ptscope":
-            diagnosis = self._manual_pt_scope_diagnosis(diagnosis)
+            # 弹出"其他站点"选择菜单（PT 搜索范围 - 订阅站点），不立即搜索
+            other_sites = self._compute_other_sites(diagnosis)
+            state["other_sites"] = other_sites
+            state["expires_at"] = (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds")
+            self._ensure_store().save_interaction(token, state)
+            if other_sites:
+                site_label = "、".join(s.get("name") for s in other_sites)
+                text = f"选择要搜索的其他站点（订阅站点之外）：\n可搜站点：{site_label}"
+            else:
+                text = "没有可搜索的其他站点。订阅站点已覆盖 PT 搜索范围内的全部站点。"
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=text,
+                buttons=build_other_sites_menu(token, other_sites),
+                save_history=False,
+            )
+            return
+        if op == "ptsall" or (op.startswith("pts") and op[3:].isdigit()):
+            other_sites = state.get("other_sites") or self._compute_other_sites(diagnosis)
+            if op == "ptsall":
+                only_sites = [str(s.get("id")) for s in other_sites]
+            else:
+                idx = int(op[3:])
+                only_sites = [str(other_sites[idx].get("id"))] if 0 <= idx < len(other_sites) else []
+            diagnosis = self._manual_pt_scope_diagnosis(diagnosis, only_sites=only_sites)
             state["diagnosis"] = diagnosis
             state["expires_at"] = (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds")
             self._ensure_store().save_interaction(token, state)
