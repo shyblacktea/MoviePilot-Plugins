@@ -30,3 +30,16 @@ class SiteResolver:
             return available
         selected_set = set(selected)
         return [site_id for site_id in available if site_id in selected_set]
+
+    def name_map(self) -> Dict[str, str]:
+        """返回 站点ID -> 站点名称 的映射。"""
+        return {site["id"]: site["name"] for site in self.available_sites()}
+
+    def names_for(self, site_ids: List[Any]) -> List[str]:
+        """把站点ID列表转换为站点名称列表，找不到名称时回退为原ID。"""
+        mapping = self.name_map()
+        names = []
+        for site_id in site_ids or []:
+            key = str(site_id)
+            names.append(mapping.get(key, key))
+        return names
