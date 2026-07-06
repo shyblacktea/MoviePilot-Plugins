@@ -98,9 +98,11 @@ class DiagnosisItem:
     episodes: List[Dict[str, Any]] = field(default_factory=list)
     candidates: List[Dict[str, Any]] = field(default_factory=list)
     sites: List[str] = field(default_factory=list)
+    site_names: List[str] = field(default_factory=list)
     source: str = ""
     original_reason: str = ""
     subscription_sites: List[str] = field(default_factory=list)
+    subscription_site_names: List[str] = field(default_factory=list)
     subscription_site_progress: List[Dict[str, Any]] = field(default_factory=list)
     created_at: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
 
