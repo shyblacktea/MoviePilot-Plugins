@@ -142,6 +142,28 @@
             </v-row>
           </section>
 
+          <section class="config-section">
+            <div class="section-title">
+              <v-icon icon="mdi-download-box-outline" color="primary" size="small" />
+              <span>候选下载</span>
+            </div>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model.number="config.candidate_cache_days"
+                  type="number"
+                  min="0"
+                  label="候选缓存天数"
+                  hint="候选下载信息本地缓存有效期，0 关闭；重载/重启后仍可直接下载候选"
+                  persistent-hint
+                  variant="outlined"
+                  density="compact"
+                  hide-details="auto"
+                />
+              </v-col>
+            </v-row>
+          </section>
+
           <v-card-actions class="action-bar">
             <v-btn color="info" prepend-icon="mdi-view-dashboard-outline" variant="text" size="small" @click="emit('switch')">数据页</v-btn>
             <v-spacer class="action-spacer" />
@@ -193,6 +215,7 @@ const config = reactive({
   allow_tg_rule_update: false,
   season_pack_cleanup: 'off',
   season_pack_full_download: false,
+  candidate_cache_days: 3,
 })
 
 function unwrap(response) {
@@ -212,6 +235,10 @@ function applyInitialConfig() {
       : [],
     season_pack_cleanup: props.initialConfig.season_pack_cleanup || 'off',
     season_pack_full_download: Boolean(props.initialConfig.season_pack_full_download),
+    candidate_cache_days:
+      props.initialConfig.candidate_cache_days === undefined || props.initialConfig.candidate_cache_days === null
+        ? 3
+        : Number(props.initialConfig.candidate_cache_days),
   })
 }
 
@@ -261,6 +288,7 @@ function saveConfig() {
     ...config,
     delay_days: Number(config.delay_days),
     max_scan_subscribes: Number(config.max_scan_subscribes),
+    candidate_cache_days: Number(config.candidate_cache_days),
     search_sites: Array.isArray(config.search_sites) ? [...config.search_sites] : [],
   })
 }
