@@ -31,6 +31,9 @@ class JsonStore:
         )
 
     def save_scan_results(self, results: List[Dict[str, Any]]):
+        for result in results or []:
+            if isinstance(result, dict) and not result.get("result_id"):
+                result["result_id"] = self._new_record_id()
         self._write("scan_results.json", results)
         self._write("scan_meta.json", {"last_scan_at": datetime.now().isoformat(timespec="seconds")})
 
@@ -48,11 +51,41 @@ class JsonStore:
                 pass
 
     def append_rule_record(self, record: Dict[str, Any]):
+        if not record.get("record_id"):
+            record["record_id"] = self._new_record_id()
         records = [record] + self.load_rule_records()
         self._write("rule_records.json", records[: self.max_rule_records])
 
     def load_rule_records(self) -> List[Dict[str, Any]]:
         return self._read("rule_records.json", [])
+
+    def clear_rule_records(self):
+        try:
+            self._path("rule_records.json").unlink(missing_ok=True)
+        except OSError:
+            pass
+
+    def delete_rule_record(self, record_id: str) -> bool:
+        records = self.load_rule_records()
+        kept = [r for r in records if str(r.get("record_id")) != str(record_id)]
+        if len(kept) == len(records):
+            return False
+        self._write("rule_records.json", kept)
+        return True
+
+    def delete_scan_result(self, result_id: str) -> bool:
+        results = self.load_scan_results()
+        kept = [r for r in results if str(r.get("result_id")) != str(result_id)]
+        if len(kept) == len(results):
+            return False
+        self._write("scan_results.json", kept)
+        return True
+
+    @staticmethod
+    def _new_record_id() -> str:
+        import uuid
+
+        return uuid.uuid4().hex[:12]
 
     def append_identifier_record(self, record: Dict[str, Any]):
         records = [record] + self.load_identifier_records()
