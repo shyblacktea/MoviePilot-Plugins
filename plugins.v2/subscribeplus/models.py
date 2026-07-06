@@ -29,6 +29,7 @@ class PluginConfig:
     allow_tg_rule_update: bool = False
     season_pack_cleanup: str = "off"
     season_pack_full_download: bool = False
+    candidate_cache_days: int = 3
 
     @classmethod
     def from_dict(cls, raw: Optional[Dict[str, Any]]) -> "PluginConfig":
@@ -46,6 +47,7 @@ class PluginConfig:
         config.notify_tg = bool(config.notify_tg)
         config.allow_tg_rule_update = bool(config.allow_tg_rule_update)
         config.season_pack_full_download = bool(config.season_pack_full_download)
+        config.candidate_cache_days = max(0, int(config.candidate_cache_days or 0))
         from .season_cleanup import normalize_cleanup_mode
 
         config.season_pack_cleanup = normalize_cleanup_mode(config.season_pack_cleanup)
