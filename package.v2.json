@@ -27,12 +27,17 @@
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
-    "version": "0.11",
-    "author": "shyblacktea,Codex",
+    "version": "0.12",
+    "author": "shyblacktea,MoviePilot助手",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "0.12": [
+        "ui: 规则修改记录站点显示为站点名称（如 猫站），不再显示站点数字ID",
+        "ui: 规则修改记录新增订阅名称与改动类型（增加站点/修改包含词）字段",
+        "chore: 作者署名调整为 shyblacktea,MoviePilot助手"
+      ],
       "0.11": [
         "fix: 整季包最终集清理增加订阅真完结校验，未完结剧集补到当前最后一集不再误触发",
         "fix: 整季包标题判定容忍分隔符并要求无单集集号，避免裸 Sxx 单集种子名误判整季包",
