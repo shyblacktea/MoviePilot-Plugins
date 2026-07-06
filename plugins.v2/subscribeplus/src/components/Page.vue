@@ -157,21 +157,44 @@
         <v-card-title class="small-title">
           <v-icon icon="mdi-history" color="primary" size="small" />
           <span>规则修改记录</span>
+          <v-spacer />
+          <v-btn
+            v-if="ruleRecords.length"
+            color="warning"
+            variant="text"
+            size="small"
+            prepend-icon="mdi-delete-sweep-outline"
+            :loading="clearingRules"
+            @click="clearRuleRecords"
+          >
+            清空
+          </v-btn>
         </v-card-title>
         <v-card-text class="content">
           <v-list v-if="ruleRecords.length" density="compact" lines="two">
             <v-list-item
               v-for="record in ruleRecords"
-              :key="`${record.subscribe_id}-${record.created_at}`"
+              :key="record.record_id || `${record.subscribe_id}-${record.created_at}`"
               :title="`【${record.subscribe_name || ('订阅#' + record.subscribe_id)}】${record.change_type || record.field}`"
               :subtitle="`${record.old_value || '-'} → ${record.new_value || '-'} （${record.source || '-'} / ${record.created_at || '-'}）`"
-            />
+            >
+              <template #append>
+                <v-btn
+                  icon="mdi-delete-outline"
+                  color="error"
+                  variant="text"
+                  size="small"
+                  :loading="deletingRuleId === record.record_id"
+                  @click="deleteRuleRecord(record)"
+                />
+              </template>
+            </v-list-item>
           </v-list>
           <div v-else class="empty-panel">暂无记录</div>
         </v-card-text>
       </v-card>
 
-      <v-card v-for="item in items" :key="`${item.subscribe_id}-${item.created_at}`" flat class="rounded border mb-3 result-card">
+      <v-card v-for="item in items" :key="item.result_id || `${item.subscribe_id}-${item.created_at}`" flat class="rounded border mb-3 result-card">
         <v-card-title class="result-header">
           <div class="result-title">
             <div class="text-subtitle-1">{{ item.title }}</div>
@@ -179,6 +202,15 @@
           </div>
           <v-spacer />
           <v-chip :color="reasonColor(item.reason)" size="small" variant="tonal">{{ reasonText(item.reason) }}</v-chip>
+          <v-btn
+            icon="mdi-delete-outline"
+            color="error"
+            variant="text"
+            size="small"
+            class="ml-2"
+            :loading="deletingResultId === item.result_id"
+            @click="deleteResult(item)"
+          />
         </v-card-title>
         <v-card-text class="content">
           <div class="episode-line">
@@ -220,7 +252,7 @@
         <v-btn color="info" prepend-icon="mdi-cog-outline" variant="text" size="small" @click="emit('switch')">配置页</v-btn>
         <v-spacer class="action-spacer" />
         <v-btn color="primary" prepend-icon="mdi-radar" variant="text" size="small" :loading="scanning" @click="runScan">手动扫描</v-btn>
-        <v-btn color="warning" prepend-icon="mdi-delete-sweep-outline" variant="text" size="small" :loading="clearing" @click="clearResults">清除</v-btn>
+        <v-btn color="warning" prepend-icon="mdi-delete-sweep-outline" variant="text" size="small" :loading="clearing" @click="clearResults">诊断结果清除</v-btn>
         <v-btn color="grey" prepend-icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadData">刷新</v-btn>
         <v-btn color="grey" prepend-icon="mdi-close" variant="text" size="small" @click="emit('close')">关闭</v-btn>
       </v-container>
@@ -283,6 +315,9 @@ const emit = defineEmits(['action', 'switch', 'close'])
 const loading = ref(false)
 const scanning = ref(false)
 const clearing = ref(false)
+const clearingRules = ref(false)
+const deletingRuleId = ref('')
+const deletingResultId = ref('')
 const error = ref('')
 const status = ref({})
 const items = ref([])
@@ -401,6 +436,53 @@ async function clearResults() {
     error.value = err?.message || '清除诊断结果失败'
   } finally {
     clearing.value = false
+  }
+}
+
+async function deleteResult(item) {
+  if (!item?.result_id) {
+    error.value = '该诊断结果缺少标识，无法删除，请先刷新'
+    return
+  }
+  deletingResultId.value = item.result_id
+  error.value = ''
+  try {
+    await props.api.post('plugin/SubscribePlus/results/delete', { result_id: item.result_id })
+    await loadData()
+  } catch (err) {
+    error.value = err?.message || '删除诊断结果失败'
+  } finally {
+    deletingResultId.value = ''
+  }
+}
+
+async function clearRuleRecords() {
+  clearingRules.value = true
+  error.value = ''
+  try {
+    await props.api.post('plugin/SubscribePlus/rule_records/clear', {})
+    await loadData()
+  } catch (err) {
+    error.value = err?.message || '清空规则修改记录失败'
+  } finally {
+    clearingRules.value = false
+  }
+}
+
+async function deleteRuleRecord(record) {
+  if (!record?.record_id) {
+    error.value = '该规则记录缺少标识，无法删除，请先刷新'
+    return
+  }
+  deletingRuleId.value = record.record_id
+  error.value = ''
+  try {
+    await props.api.post('plugin/SubscribePlus/rule_records/delete', { record_id: record.record_id })
+    await loadData()
+  } catch (err) {
+    error.value = err?.message || '删除规则记录失败'
+  } finally {
+    deletingRuleId.value = ''
   }
 }
 
