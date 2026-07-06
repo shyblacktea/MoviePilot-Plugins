@@ -122,7 +122,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.12"
+    plugin_version = "0.13"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -1645,6 +1645,16 @@ class SubscribePlus(_PluginBase):
         candidate = candidates[index]
         candidate_id = candidate.get("download_payload") or candidate.get("candidate_id")
         context = self._download_contexts.get(str(candidate_id))
+        from_cache = False
+        if not context:
+            # 内存上下文丢失（如插件重载/重启），尝试从本地缓存重建
+            try:
+                cached = self._ensure_store().load_candidate_cache(str(candidate_id))
+                if cached:
+                    context = self._rebuild_context_from_cache(cached)
+                    from_cache = bool(context)
+            except Exception as exc:
+                logger.warning(f"订阅下载增强读取候选缓存失败: {exc}")
         if not context:
             result = self._start_moviepilot_subscribe_search(diagnosis)
             text = result.get("message") or "已触发 MP 原生订阅搜索"
@@ -1662,9 +1672,11 @@ class SubscribePlus(_PluginBase):
                 "订阅下载增强提交候选资源下载成功："
                 f"{self._format_diagnosis_log_context(diagnosis, candidate)}，"
                 f"站点={candidate.get('site_name') or candidate.get('site') or '未知'}，"
-                f"候选={candidate.get('title') or candidate_id or '未知'}"
+                f"候选={candidate.get('title') or candidate_id or '未知'}，"
+                f"来源={'本地缓存重建' if from_cache else '内存上下文'}"
             )
-            self._post_callback_message(event_data, title="订阅下载增强", text="已提交下载任务。", save_history=False)
+            done_text = "已提交下载任务（缓存重建）。" if from_cache else "已提交下载任务。"
+            self._post_callback_message(event_data, title="订阅下载增强", text=done_text, save_history=False)
         except Exception as exc:
             log_exception = getattr(logger, "exception", None)
             if callable(log_exception):
@@ -2666,7 +2678,83 @@ class SubscribePlus(_PluginBase):
         if len(self._download_contexts) > 300:
             for old_key in list(self._download_contexts.keys())[:100]:
                 self._download_contexts.pop(old_key, None)
+        # 持久化候选下载所需的最小字段，供内存上下文丢失后重建下载
+        try:
+            self._save_candidate_download_cache(candidate_id, context, item, title)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强缓存候选下载信息失败: {exc}")
         return candidate_id
+
+    def _save_candidate_download_cache(self, candidate_id: str, context: Any, item: DiagnosisInput, title: str):
+        config = getattr(self, "_plugin_config", None)
+        cache_days = int(getattr(config, "candidate_cache_days", 3) or 0)
+        if cache_days <= 0:
+            return
+        torrent = getattr(context, "torrent_info", context)
+        meta_info = getattr(context, "meta_info", None)
+        payload = {
+            "candidate_id": candidate_id,
+            "subscribe_id": int(getattr(item, "subscribe_id", 0) or 0),
+            "tmdbid": int(getattr(item, "tmdbid", 0) or 0),
+            "season": int(getattr(item, "season", 0) or 0),
+            "title": title or getattr(torrent, "title", "") or "",
+            "site": getattr(torrent, "site", None),
+            "site_name": getattr(torrent, "site_name", None),
+            "enclosure": getattr(torrent, "enclosure", "") or "",
+            "page_url": getattr(torrent, "page_url", "") or "",
+            "size": getattr(torrent, "size", "") or "",
+            "seeders": getattr(torrent, "seeders", 0),
+            "pubdate": getattr(torrent, "pubdate", "") or "",
+            "description": getattr(torrent, "description", "") or "",
+            "imdbid": getattr(torrent, "imdbid", "") or "",
+            "episodes": list(getattr(meta_info, "episode_list", None) or []),
+            "cached_at": datetime.now().isoformat(timespec="seconds"),
+            "expires_at": (datetime.now() + timedelta(days=cache_days)).isoformat(timespec="seconds"),
+        }
+        if not payload["enclosure"]:
+            # 没有种子直链无法重建下载，跳过缓存
+            return
+        self._ensure_store().save_candidate_cache(candidate_id, payload)
+
+    def _rebuild_context_from_cache(self, cached: Dict[str, Any]) -> Any:
+        """用缓存的最小字段重建下载 Context。"""
+        from app.core.context import Context, TorrentInfo
+        from app.core.metainfo import MetaInfo
+
+        title = str(cached.get("title") or "")
+        if not cached.get("enclosure"):
+            return None
+        torrent = TorrentInfo()
+        torrent.title = title
+        torrent.enclosure = cached.get("enclosure") or ""
+        torrent.page_url = cached.get("page_url") or ""
+        torrent.site = cached.get("site")
+        torrent.site_name = cached.get("site_name")
+        torrent.size = cached.get("size") or 0
+        torrent.seeders = cached.get("seeders") or 0
+        torrent.pubdate = cached.get("pubdate") or ""
+        torrent.description = cached.get("description") or ""
+        try:
+            torrent.imdbid = cached.get("imdbid") or ""
+        except Exception:
+            pass
+        meta = MetaInfo(title)
+        media = None
+        try:
+            if cached.get("tmdbid"):
+                from app.schemas.types import MediaType
+
+                try:
+                    from app.chain.media import MediaChain
+                except Exception:
+                    from app.chain import MediaChain
+                media = MediaChain().recognize_media(
+                    meta=meta, tmdbid=int(cached.get("tmdbid")), mtype=MediaType.TV, cache=True
+                )
+        except Exception as exc:
+            logger.warning(f"订阅下载增强重建候选媒体信息失败，将按种子信息下载: {exc}")
+        context = Context(meta_info=meta, media_info=media, torrent_info=torrent)
+        return context
 
     @staticmethod
     def _extract_payload(payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
