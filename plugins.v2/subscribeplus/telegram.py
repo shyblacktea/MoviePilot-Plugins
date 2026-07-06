@@ -79,10 +79,22 @@ def build_resource_menu(
     for index, item in enumerate((candidates or [])[start:end], start=start + 1):
         site = item.get("site_name") or item.get("site") or "PT"
         seeders = item.get("seeders", 0)
+        groups = item.get("release_groups") or []
+        platforms = item.get("platforms") or []
+        reso = str(item.get("resolution") or "").strip()
+        parts = [str(site)]
+        if groups:
+            parts.append(str(groups[0]))
+        if platforms:
+            parts.append(str(platforms[0]))
+        if reso:
+            parts.append(reso)
+        parts.append(f"做种{seeders}")
+        text = _short_title(f"{index}." + "｜".join(parts), limit=40)
         buttons.append(
             [
                 {
-                    "text": f"{index}. {site} 做种 {seeders}",
+                    "text": text,
                     "callback_data": make_callback(f"pick{index}", token),
                 }
             ]
