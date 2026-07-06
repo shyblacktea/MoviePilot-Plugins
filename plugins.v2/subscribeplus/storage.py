@@ -136,3 +136,36 @@ class JsonStore:
         snoozes.pop(str(key), None)
         self._write("snoozes.json", snoozes)
         return False
+
+    def save_candidate_cache(self, candidate_id: str, payload: Dict[str, Any]):
+        """保存候选下载所需的最小字段，用于内存上下文丢失后重建下载。"""
+        cache = self._read("candidate_cache.json", {})
+        cache[str(candidate_id)] = payload
+        now = datetime.now()
+        for key in list(cache.keys()):
+            expires_at = (cache.get(key) or {}).get("expires_at")
+            if not expires_at:
+                continue
+            try:
+                if datetime.fromisoformat(expires_at) < now:
+                    cache.pop(key, None)
+            except ValueError:
+                cache.pop(key, None)
+        self._write("candidate_cache.json", cache)
+
+    def load_candidate_cache(self, candidate_id: str) -> Optional[Dict[str, Any]]:
+        """读取候选下载缓存，过期返回 None 并清除。"""
+        cache = self._read("candidate_cache.json", {})
+        payload = cache.get(str(candidate_id))
+        if not payload:
+            return None
+        expires_at = payload.get("expires_at")
+        if expires_at:
+            try:
+                if datetime.fromisoformat(expires_at) < datetime.now():
+                    cache.pop(str(candidate_id), None)
+                    self._write("candidate_cache.json", cache)
+                    return None
+            except ValueError:
+                return None
+        return payload
