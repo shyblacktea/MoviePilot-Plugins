@@ -163,8 +163,8 @@
             <v-list-item
               v-for="record in ruleRecords"
               :key="`${record.subscribe_id}-${record.created_at}`"
-              :title="`${record.field}: ${record.old_value || '-'} -> ${record.new_value || '-'}`"
-              :subtitle="`${record.source || '-'} / ${record.created_at || '-'}`"
+              :title="`【${record.subscribe_name || ('订阅#' + record.subscribe_id)}】${record.change_type || record.field}`"
+              :subtitle="`${record.old_value || '-'} → ${record.new_value || '-'} （${record.source || '-'} / ${record.created_at || '-'}）`"
             />
           </v-list>
           <div v-else class="empty-panel">暂无记录</div>
