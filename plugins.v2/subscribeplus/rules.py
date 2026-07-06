@@ -136,11 +136,19 @@ def _normalize_site_ids(value: Any) -> List[int]:
     return result
 
 
-def _site_names(site_ids: List[int], selected_id: int | None = None, selected_name: str = "") -> List[str]:
+def _site_names(
+    site_ids: List[int],
+    selected_id: int | None = None,
+    selected_name: str = "",
+    name_map: Dict[int, str] | None = None,
+) -> List[str]:
+    name_map = name_map or {}
     names = []
     for site_id in site_ids:
         if selected_id is not None and site_id == selected_id and selected_name:
             names.append(selected_name)
+        elif name_map.get(site_id):
+            names.append(name_map[site_id])
         else:
             names.append(str(site_id))
     return names
@@ -238,14 +246,22 @@ def build_include_preview(subscribe: Any, pattern: str, source: str = "vue") -> 
     compile_include(new_include)
     return {
         "subscribe_id": int(getattr(subscribe, "id")),
+        "subscribe_name": str(getattr(subscribe, "name", "") or ""),
         "field": "include",
+        "change_type": "修改包含词",
         "old_include": old_include,
         "new_include": new_include,
         "source": source,
     }
 
 
-def build_site_preview(subscribe: Any, site_id: str, site_name: str = "", source: str = "vue") -> Dict[str, Any]:
+def build_site_preview(
+    subscribe: Any,
+    site_id: str,
+    site_name: str = "",
+    source: str = "vue",
+    name_map: Dict[int, str] | None = None,
+) -> Dict[str, Any]:
     normalized_site_id = _normalize_site_id(site_id)
     if normalized_site_id is None:
         raise ValueError("站点建议无效：缺少可写入订阅站点的 PT 站点 ID")
@@ -253,24 +269,31 @@ def build_site_preview(subscribe: Any, site_id: str, site_name: str = "", source
     new_sites = list(old_sites)
     if normalized_site_id not in new_sites:
         new_sites.append(normalized_site_id)
-    clean_site_name = str(site_name or normalized_site_id).strip()
+    clean_site_name = str(site_name or (name_map or {}).get(normalized_site_id) or normalized_site_id).strip()
     return {
         "subscribe_id": int(getattr(subscribe, "id")),
+        "subscribe_name": str(getattr(subscribe, "name", "") or ""),
         "field": "sites",
+        "change_type": "增加站点",
+        "changed_site_name": clean_site_name,
         "old_sites": old_sites,
         "new_sites": new_sites,
-        "old_site_names": _site_names(old_sites, normalized_site_id, clean_site_name),
-        "new_site_names": _site_names(new_sites, normalized_site_id, clean_site_name),
+        "old_site_names": _site_names(old_sites, normalized_site_id, clean_site_name, name_map),
+        "new_site_names": _site_names(new_sites, normalized_site_id, clean_site_name, name_map),
         "source": source,
     }
 
 
-def build_rule_preview(subscribe: Any, pattern: str, source: str = "vue") -> Dict[str, Any]:
+def build_rule_preview(
+    subscribe: Any, pattern: str, source: str = "vue", name_map: Dict[int, str] | None = None
+) -> Dict[str, Any]:
     payload = _parse_suggestion_pattern(pattern)
     clean_pattern = str(pattern or "").strip()
     site_id = payload.get("site_id") or (clean_pattern if re.fullmatch(r"\d+", clean_pattern) else "")
     if site_id:
-        return build_site_preview(subscribe, site_id, payload.get("site_name", ""), source=source)
+        return build_site_preview(
+            subscribe, site_id, payload.get("site_name", ""), source=source, name_map=name_map
+        )
     return build_include_preview(subscribe, pattern, source=source)
 
 
@@ -282,7 +305,9 @@ def apply_include_preview(
     update_subscribe(subscribe_id, {"include": preview.get("new_include") or ""})
     return {
         "subscribe_id": subscribe_id,
+        "subscribe_name": preview.get("subscribe_name") or "",
         "field": "include",
+        "change_type": preview.get("change_type") or "修改包含词",
         "old_value": preview.get("old_include") or "",
         "new_value": preview.get("new_include") or "",
         "source": preview.get("source") or "vue",
@@ -300,7 +325,10 @@ def apply_site_preview(
     new_value = ", ".join(preview.get("new_site_names") or [str(item) for item in new_sites])
     return {
         "subscribe_id": subscribe_id,
+        "subscribe_name": preview.get("subscribe_name") or "",
         "field": "sites",
+        "change_type": preview.get("change_type") or "增加站点",
+        "changed_site_name": preview.get("changed_site_name") or "",
         "old_value": old_value,
         "new_value": new_value,
         "source": preview.get("source") or "vue",
