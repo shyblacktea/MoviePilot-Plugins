@@ -122,8 +122,8 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.11"
-    plugin_author = "shyblacktea,Codex"
+    plugin_version = "0.12"
+    plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
     plugin_order = 998
@@ -1090,7 +1090,12 @@ class SubscribePlus(_PluginBase):
         if not subscribe:
             return {"success": False, "message": "订阅不存在"}
         try:
-            preview = build_rule_preview(subscribe, pattern, source=source)
+            name_map: Dict[int, str] = {}
+            for site in self._ensure_site_resolver().available_sites():
+                sid = str(site.get("id") or "")
+                if sid.isdigit():
+                    name_map[int(sid)] = site.get("name") or sid
+            preview = build_rule_preview(subscribe, pattern, source=source, name_map=name_map)
         except ValueError as exc:
             return {"success": False, "message": str(exc)}
         token = make_token(preview)
