@@ -2,12 +2,13 @@
   "CleanInvalidPlugin": {
     "name": "清理无效插件",
     "description": "扫描、清理或重新安装数据库中无法加载的插件记录。（shyblacktea 自用版）",
-    "version": "1.4",
+    "version": "1.5",
     "author": "cddjr,shyblacktea",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "1.5": "ui: 配置页与数据页改用左侧导航 + 卡片式布局，参考豆瓣中心 UI 风格重做；perf: 前端构建过滤多余的 Vuetify 共享样式，减小 dist 体积",
       "1.4": "fix: 修复市场重装失败，改用 PluginHelper.install 替换已移除的 get_plugin_by_id/download_plugin 接口",
       "1.3": "fix: 补齐 plugins.v2 官方目录，避免 Release API 失败回退文件列表安装时缺少前端资源；fix: 插件初始化时修正 dist 静态资源权限，兼容 Docker 非 root 或严格 umask 环境",
       "1.2": "feat: 使用 Vue 联邦组件重做配置页与详情页；ui: 参考路径名称格式化插件重构分组卡片、紧凑表单与底部操作栏；fix: 优化手机端布局与关闭入口，避免小屏幕无法退出插件页面；fix: 重装失败时保留安装记录，避免记录丢失；feat: 重新安装时优先尝试本地插件源",
@@ -17,12 +18,13 @@
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
-    "version": "0.16",
+    "version": "0.17",
     "author": "shyblacktea,MoviePilot助手",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "0.17": "ui: 配置页与数据页改用左侧导航 + 卡片式布局，参考豆瓣中心 UI 风格重做；perf: 前端构建过滤多余的 Vuetify 共享样式，减小 dist 体积；fix: Telegram 通知「搜索站点」由站点 ID 显示为站点名称",
       "0.16": "refactor: 抽取统一 LLM 同步调用入口，修复已有事件循环下 AI 识别可能报 event loop is already running 的问题；chore: 类成员改为纯类型注解，消除类级可变默认值共享隐患",
       "0.15": "feat: 规则修改记录支持一键清空与逐条删除，修复数据页“清除”按钮清不到规则记录的问题；feat: 诊断结果支持逐条删除，底部“清除”按钮更名为“诊断结果清除”；feat: Telegram“PT范围搜索”更名为“搜索其他站点”，点击后弹出订阅站点之外的可搜站点菜单（单选各站/全部其他站点/返回）；ui: 通知与站点菜单以站点名称展示，替代原站点 ID",
       "0.14": "ui: 规则修改记录页面展示订阅名称与改动类型（增加站点/修改包含词），站点显示名称；ui: 配置页新增“候选缓存天数”输入框，可视化设置候选下载缓存有效期；chore: 前端重新构建 dist，使 0.12/0.13 的界面优化生效",
