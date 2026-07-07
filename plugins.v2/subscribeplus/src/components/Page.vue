@@ -1,226 +1,159 @@
 <template>
-  <div class="main-container">
-    <div class="scroll-content">
-      <v-card flat class="rounded border mb-3">
-        <v-card-title class="title-bar">
-          <v-icon icon="mdi-television-play" color="primary" size="small" />
-          <span>订阅下载增强</span>
-          <v-spacer />
-          <v-btn icon="mdi-refresh" variant="text" size="small" :loading="loading" aria-label="刷新" @click="loadData" />
-        </v-card-title>
-
-        <v-card-text class="content">
-          <v-alert v-if="error" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable>
+  <div class="sp-page">
+    <div class="sp-scroll">
+      <VCard flat class="sp-card mb-3">
+        <VCardItem class="sp-header">
+          <template #prepend>
+            <VAvatar color="primary" variant="tonal" size="42" rounded="lg">
+              <VIcon icon="mdi-television-play" size="23" />
+            </VAvatar>
+          </template>
+          <VCardTitle class="text-h6">订阅下载增强</VCardTitle>
+          <VCardSubtitle class="text-caption">已播出未入库订阅的诊断与处理</VCardSubtitle>
+          <template #append>
+            <VBtn icon="mdi-refresh" variant="text" size="small" :loading="loading" aria-label="刷新" @click="loadData" />
+          </template>
+        </VCardItem>
+        <VDivider />
+        <VCardText class="pa-3">
+          <VAlert v-if="error" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="error = ''">
             {{ error }}
-          </v-alert>
+          </VAlert>
+          <div class="sp-stat-grid">
+            <div class="sp-stat">
+              <div class="d-flex align-center ga-2 mb-1">
+                <VAvatar color="primary" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-calendar-clock" size="17" /></VAvatar>
+                <div class="text-caption text-medium-emphasis">最近扫描</div>
+              </div>
+              <div class="text-subtitle-2 font-weight-bold sp-stat-value">{{ status.last_scan || '-' }}</div>
+            </div>
+            <div class="sp-stat">
+              <div class="d-flex align-center ga-2 mb-1">
+                <VAvatar color="warning" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-alert-decagram-outline" size="17" /></VAvatar>
+                <div class="text-caption text-medium-emphasis">待处理</div>
+              </div>
+              <div class="text-subtitle-1 font-weight-bold">{{ items.length }}</div>
+            </div>
+            <div class="sp-stat">
+              <div class="d-flex align-center ga-2 mb-1">
+                <VAvatar color="success" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-download-circle-outline" size="17" /></VAvatar>
+                <div class="text-caption text-medium-emphasis">可下载</div>
+              </div>
+              <div class="text-subtitle-1 font-weight-bold">{{ reasonCount.downloadable || 0 }}</div>
+            </div>
+            <div class="sp-stat">
+              <div class="d-flex align-center ga-2 mb-1">
+                <VAvatar color="info" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-file-document-edit-outline" size="17" /></VAvatar>
+                <div class="text-caption text-medium-emphasis">规则修改</div>
+              </div>
+              <div class="text-subtitle-1 font-weight-bold">{{ ruleRecords.length }}</div>
+            </div>
+          </div>
+        </VCardText>
+      </VCard>
 
-          <v-row>
-            <v-col cols="12" md="3">
-              <div class="summary-item">
-                <v-icon icon="mdi-calendar-clock" color="primary" size="small" />
-                <span>最近扫描</span>
-                <strong>{{ status.last_scan || '-' }}</strong>
-              </div>
-            </v-col>
-            <v-col cols="12" md="3">
-              <div class="summary-item">
-                <v-icon icon="mdi-alert-decagram-outline" color="warning" size="small" />
-                <span>待处理</span>
-                <strong>{{ items.length }}</strong>
-              </div>
-            </v-col>
-            <v-col cols="12" md="3">
-              <div class="summary-item">
-                <v-icon icon="mdi-download-circle-outline" color="success" size="small" />
-                <span>可下载</span>
-                <strong>{{ reasonCount.downloadable || 0 }}</strong>
-              </div>
-            </v-col>
-            <v-col cols="12" md="3">
-              <div class="summary-item">
-                <v-icon icon="mdi-file-document-edit-outline" color="info" size="small" />
-                <span>规则修改</span>
-                <strong>{{ ruleRecords.length }}</strong>
-              </div>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-
-      <v-card flat class="rounded border mb-3">
-        <v-card-title class="small-title">
-          <v-icon icon="mdi-tag-plus-outline" color="primary" size="small" />
-          <span>自定义识别词</span>
-          <v-spacer />
-          <v-chip size="small" variant="tonal">{{ identifierRecords.length }}</v-chip>
-        </v-card-title>
-        <v-card-text class="content">
-          <v-alert v-if="identifierError" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable>
+      <VCard flat class="sp-card mb-3">
+        <VCardItem class="sp-subheader">
+          <template #prepend><VIcon icon="mdi-tag-plus-outline" color="primary" size="20" /></template>
+          <VCardTitle class="text-subtitle-1">自定义识别词</VCardTitle>
+          <template #append><VChip size="small" variant="tonal">{{ identifierRecords.length }}</VChip></template>
+        </VCardItem>
+        <VDivider />
+        <VCardText class="pa-3">
+          <VAlert v-if="identifierError" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="identifierError = ''">
             {{ identifierError }}
-          </v-alert>
-          <v-alert v-if="identifierMessage" type="success" density="compact" variant="tonal" class="mb-3 text-caption" closable>
+          </VAlert>
+          <VAlert v-if="identifierMessage" type="success" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="identifierMessage = ''">
             {{ identifierMessage }}
-          </v-alert>
+          </VAlert>
 
-          <v-row class="identifier-row" align="center">
-            <v-col cols="12" md="8">
-              <v-text-field
-                v-model="identifierAutoTitle"
-                label="媒体文件名"
-                density="compact"
-                variant="outlined"
-                hide-details
-                clearable
-              />
-            </v-col>
-            <v-col cols="12" md="4" class="identifier-action-col">
-              <v-btn
-                color="primary"
-                prepend-icon="mdi-auto-fix"
-                variant="text"
-                size="small"
-                :loading="identifierBusy === 'auto'"
-                @click="runIdentifierAuto"
-              >
-                自动处理
-              </v-btn>
-            </v-col>
-          </v-row>
+          <VRow class="sp-id-row" align="center">
+            <VCol cols="12" md="8">
+              <VTextField v-model="identifierAutoTitle" label="媒体文件名" density="compact" variant="outlined" hide-details clearable />
+            </VCol>
+            <VCol cols="12" md="4" class="sp-id-action">
+              <VBtn color="primary" prepend-icon="mdi-auto-fix" variant="text" size="small" :loading="identifierBusy === 'auto'" @click="runIdentifierAuto">自动处理</VBtn>
+            </VCol>
+          </VRow>
 
-          <v-divider class="my-3" />
+          <VDivider class="my-3" />
 
-          <v-row class="identifier-row" align="center">
-            <v-col cols="12" md="5">
-              <v-text-field
-                v-model="identifierManualTitle"
-                label="媒体文件名"
-                density="compact"
-                variant="outlined"
-                hide-details
-                clearable
-              />
-            </v-col>
-            <v-col cols="6" md="2">
-              <v-select
-                v-model="identifierManualType"
-                :items="mediaTypeOptions"
-                label="类型"
-                density="compact"
-                variant="outlined"
-                hide-details
-              />
-            </v-col>
-            <v-col cols="6" md="3">
-              <v-text-field
-                v-model="identifierManualTmdbid"
-                label="TMDB ID"
-                placeholder="填写 TMDB 的 ID"
-                density="compact"
-                variant="outlined"
-                hide-details
-                clearable
-              />
-            </v-col>
-            <v-col cols="12" md="2" class="identifier-action-col">
-              <v-btn
-                color="primary"
-                prepend-icon="mdi-pencil-plus-outline"
-                variant="text"
-                size="small"
-                :loading="identifierBusy === 'manual'"
-                @click="runIdentifierManual"
-              >
-                手动处理
-              </v-btn>
-            </v-col>
-          </v-row>
+          <VRow class="sp-id-row" align="center">
+            <VCol cols="12" md="5">
+              <VTextField v-model="identifierManualTitle" label="媒体文件名" density="compact" variant="outlined" hide-details clearable />
+            </VCol>
+            <VCol cols="6" md="2">
+              <VSelect v-model="identifierManualType" :items="mediaTypeOptions" label="类型" density="compact" variant="outlined" hide-details />
+            </VCol>
+            <VCol cols="6" md="3">
+              <VTextField v-model="identifierManualTmdbid" label="TMDB ID" placeholder="填写 TMDB 的 ID" density="compact" variant="outlined" hide-details clearable />
+            </VCol>
+            <VCol cols="12" md="2" class="sp-id-action">
+              <VBtn color="primary" prepend-icon="mdi-pencil-plus-outline" variant="text" size="small" :loading="identifierBusy === 'manual'" @click="runIdentifierManual">手动处理</VBtn>
+            </VCol>
+          </VRow>
 
-          <v-list v-if="identifierRecords.length" density="compact" lines="two" class="mt-2">
-            <v-list-item
+          <VList v-if="identifierRecords.length" density="compact" lines="two" class="mt-2">
+            <VListItem
               v-for="record in identifierRecords"
               :key="`${record.mode}-${record.candidate_title}-${record.created_at}`"
               :title="`${identifierModeText(record.mode)}：${record.candidate_title || record.title || '-'}`"
               :subtitle="`${record.message || '-'} / ${record.created_at || '-'}`"
             >
               <template #append>
-                <v-chip :color="identifierStatusColor(record.status)" size="small" variant="tonal">
-                  {{ identifierStatusText(record.status) }}
-                </v-chip>
+                <VChip :color="identifierStatusColor(record.status)" size="small" variant="tonal">{{ identifierStatusText(record.status) }}</VChip>
               </template>
-            </v-list-item>
-          </v-list>
-          <div v-else class="empty-panel">暂无识别词记录</div>
-        </v-card-text>
-      </v-card>
+            </VListItem>
+          </VList>
+          <div v-else class="sp-empty">暂无识别词记录</div>
+        </VCardText>
+      </VCard>
 
-      <v-card flat class="rounded border mb-3">
-        <v-card-title class="small-title">
-          <v-icon icon="mdi-history" color="primary" size="small" />
-          <span>规则修改记录</span>
-          <v-spacer />
-          <v-btn
-            v-if="ruleRecords.length"
-            color="warning"
-            variant="text"
-            size="small"
-            prepend-icon="mdi-delete-sweep-outline"
-            :loading="clearingRules"
-            @click="clearRuleRecords"
-          >
-            清空
-          </v-btn>
-        </v-card-title>
-        <v-card-text class="content">
-          <v-list v-if="ruleRecords.length" density="compact" lines="two">
-            <v-list-item
+      <VCard flat class="sp-card mb-3">
+        <VCardItem class="sp-subheader">
+          <template #prepend><VIcon icon="mdi-history" color="primary" size="20" /></template>
+          <VCardTitle class="text-subtitle-1">规则修改记录</VCardTitle>
+          <template #append>
+            <VBtn v-if="ruleRecords.length" color="warning" variant="text" size="small" prepend-icon="mdi-delete-sweep-outline" :loading="clearingRules" @click="clearRuleRecords">清空</VBtn>
+          </template>
+        </VCardItem>
+        <VDivider />
+        <VCardText class="pa-3">
+          <VList v-if="ruleRecords.length" density="compact" lines="two">
+            <VListItem
               v-for="record in ruleRecords"
               :key="record.record_id || `${record.subscribe_id}-${record.created_at}`"
               :title="`【${record.subscribe_name || ('订阅#' + record.subscribe_id)}】${record.change_type || record.field}`"
               :subtitle="`${record.old_value || '-'} → ${record.new_value || '-'} （${record.source || '-'} / ${record.created_at || '-'}）`"
             >
               <template #append>
-                <v-btn
-                  icon="mdi-delete-outline"
-                  color="error"
-                  variant="text"
-                  size="small"
-                  :loading="deletingRuleId === record.record_id"
-                  @click="deleteRuleRecord(record)"
-                />
+                <VBtn icon="mdi-delete-outline" color="error" variant="text" size="small" :loading="deletingRuleId === record.record_id" @click="deleteRuleRecord(record)" />
               </template>
-            </v-list-item>
-          </v-list>
-          <div v-else class="empty-panel">暂无记录</div>
-        </v-card-text>
-      </v-card>
+            </VListItem>
+          </VList>
+          <div v-else class="sp-empty">暂无记录</div>
+        </VCardText>
+      </VCard>
 
-      <v-card v-for="item in items" :key="item.result_id || `${item.subscribe_id}-${item.created_at}`" flat class="rounded border mb-3 result-card">
-        <v-card-title class="result-header">
-          <div class="result-title">
-            <div class="text-subtitle-1">{{ item.title }}</div>
-            <div class="text-caption text-medium-emphasis">TMDB {{ item.tmdbid }} / S{{ item.season }} / {{ item.category }}</div>
-          </div>
-          <v-spacer />
-          <v-chip :color="reasonColor(item.reason)" size="small" variant="tonal">{{ reasonText(item.reason) }}</v-chip>
-          <v-btn
-            icon="mdi-delete-outline"
-            color="error"
-            variant="text"
-            size="small"
-            class="ml-2"
-            :loading="deletingResultId === item.result_id"
-            @click="deleteResult(item)"
-          />
-        </v-card-title>
-        <v-card-text class="content">
-          <div class="episode-line">
-            <v-chip v-for="episode in item.episodes || []" :key="episode.episode" size="small" variant="tonal" class="mr-1 mb-1">
+      <VCard v-for="item in items" :key="item.result_id || `${item.subscribe_id}-${item.created_at}`" flat class="sp-card mb-3">
+        <VCardItem class="sp-result-header">
+          <VCardTitle class="text-subtitle-1">{{ item.title }}</VCardTitle>
+          <VCardSubtitle class="text-caption">TMDB {{ item.tmdbid }} / S{{ item.season }} / {{ item.category }}</VCardSubtitle>
+          <template #append>
+            <VChip :color="reasonColor(item.reason)" size="small" variant="tonal" class="mr-2">{{ reasonText(item.reason) }}</VChip>
+            <VBtn icon="mdi-delete-outline" color="error" variant="text" size="small" :loading="deletingResultId === item.result_id" @click="deleteResult(item)" />
+          </template>
+        </VCardItem>
+        <VDivider />
+        <VCardText class="pa-3">
+          <div class="mb-2">
+            <VChip v-for="episode in item.episodes || []" :key="episode.episode" size="small" variant="tonal" class="mr-1 mb-1">
               E{{ episode.episode }} / {{ episode.air_date }}
-            </v-chip>
+            </VChip>
           </div>
           <div class="text-caption text-medium-emphasis mb-2">{{ item.message }}</div>
-          <div v-if="item.candidates?.length" class="candidate-table-wrap mt-2">
-            <v-table density="compact" class="candidate-table">
+          <div v-if="item.candidates?.length" class="sp-candidate-wrap mt-2">
+            <VTable density="compact" class="sp-candidate-table">
               <thead>
                 <tr>
                   <th>站点</th>
@@ -231,41 +164,39 @@
               </thead>
               <tbody>
                 <tr v-for="candidate in item.candidates.slice(0, 8)" :key="candidate.candidate_id || candidate.title">
-                  <td class="candidate-site">{{ candidate.site_name || candidate.site }}</td>
-                  <td class="candidate-title">{{ candidate.title }}</td>
-                  <td class="candidate-seeders">{{ candidate.seeders || 0 }}</td>
-                  <td class="text-right candidate-actions">
-                    <v-btn color="primary" variant="text" size="small" prepend-icon="mdi-file-eye-outline" @click="previewRule(item, candidate)">
-                      规则预览
-                    </v-btn>
+                  <td class="sp-cand-site">{{ candidate.site_name || candidate.site }}</td>
+                  <td class="sp-cand-title">{{ candidate.title }}</td>
+                  <td class="sp-cand-seed">{{ candidate.seeders || 0 }}</td>
+                  <td class="text-right sp-cand-act">
+                    <VBtn color="primary" variant="text" size="small" prepend-icon="mdi-file-eye-outline" @click="previewRule(item, candidate)">规则预览</VBtn>
                   </td>
                 </tr>
               </tbody>
-            </v-table>
+            </VTable>
           </div>
-        </v-card-text>
-      </v-card>
+        </VCardText>
+      </VCard>
     </div>
 
-    <v-footer class="footer-bar">
-      <v-container class="d-flex align-center action-bar">
-        <v-btn color="info" prepend-icon="mdi-cog-outline" variant="text" size="small" @click="emit('switch')">配置页</v-btn>
-        <v-spacer class="action-spacer" />
-        <v-btn color="primary" prepend-icon="mdi-radar" variant="text" size="small" :loading="scanning" @click="runScan">手动扫描</v-btn>
-        <v-btn color="warning" prepend-icon="mdi-delete-sweep-outline" variant="text" size="small" :loading="clearing" @click="clearResults">诊断结果清除</v-btn>
-        <v-btn color="grey" prepend-icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadData">刷新</v-btn>
-        <v-btn color="grey" prepend-icon="mdi-close" variant="text" size="small" @click="emit('close')">关闭</v-btn>
-      </v-container>
-    </v-footer>
+    <VFooter class="sp-footer">
+      <VContainer class="d-flex align-center flex-wrap ga-1 pa-0">
+        <VBtn color="info" prepend-icon="mdi-cog-outline" variant="text" size="small" @click="emit('switch')">配置页</VBtn>
+        <VSpacer class="sp-footer-spacer" />
+        <VBtn color="primary" prepend-icon="mdi-radar" variant="text" size="small" :loading="scanning" @click="runScan">手动扫描</VBtn>
+        <VBtn color="warning" prepend-icon="mdi-delete-sweep-outline" variant="text" size="small" :loading="clearing" @click="clearResults">诊断结果清除</VBtn>
+        <VBtn color="grey" prepend-icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadData">刷新</VBtn>
+        <VBtn color="grey" prepend-icon="mdi-close" variant="text" size="small" @click="emit('close')">关闭</VBtn>
+      </VContainer>
+    </VFooter>
 
-    <v-dialog v-model="previewDialog" max-width="720">
-      <v-card>
-        <v-card-title class="text-subtitle-1">规则修改预览</v-card-title>
-        <v-card-text>
-          <v-alert v-if="previewError" type="error" density="compact" variant="tonal" class="mb-2">{{ previewError }}</v-alert>
-          <div v-if="ruleSuggestions.length && !preview" class="suggestion-panel">
+    <VDialog v-model="previewDialog" max-width="720">
+      <VCard>
+        <VCardTitle class="text-subtitle-1">规则修改预览</VCardTitle>
+        <VCardText>
+          <VAlert v-if="previewError" type="error" density="compact" variant="tonal" class="mb-2">{{ previewError }}</VAlert>
+          <div v-if="ruleSuggestions.length && !preview" class="sp-suggestion">
             <div class="text-caption text-medium-emphasis mb-2">请选择要添加的官组、平台关键词或 PT 站点</div>
-            <v-btn
+            <VBtn
               v-for="suggestion in ruleSuggestions"
               :key="suggestion.pattern"
               color="primary"
@@ -276,9 +207,9 @@
               @click="previewRuleSuggestion(suggestion)"
             >
               {{ suggestion.text }}
-            </v-btn>
+            </VBtn>
           </div>
-          <div v-if="preview" class="preview-box">
+          <div v-if="preview" class="sp-preview-box">
             <div v-if="preview.selected_text">已选择：{{ preview.selected_text }}</div>
             <template v-if="preview.field === 'sites'">
               <div>旧订阅站点：{{ formatPreviewSites(preview.old_site_names || preview.old_sites, 'MP 默认搜索站点') }}</div>
@@ -289,14 +220,14 @@
               <div>新 include：{{ preview.new_include || '-' }}</div>
             </template>
           </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn variant="text" @click="previewDialog = false">返回</v-btn>
-          <v-btn color="primary" variant="text" :disabled="!preview?.token" @click="confirmRule">确认修改</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn variant="text" @click="previewDialog = false">返回</VBtn>
+          <VBtn color="primary" variant="text" :disabled="!preview?.token" @click="confirmRule">确认修改</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
 </template>
 
@@ -619,175 +550,39 @@ onMounted(loadData)
 </script>
 
 <style scoped>
-.main-container {
-  height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+.sp-page { height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+.sp-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px; width: min(1120px, 100%); margin: 0 auto; }
+.sp-card { border-radius: 14px; overflow: hidden; border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); }
+.sp-header { padding: 12px 16px; }
+.sp-subheader { padding: 10px 16px; }
+.sp-result-header { padding: 10px 16px; }
+.sp-stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.sp-stat { border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); border-radius: 8px; padding: 10px; min-width: 0; }
+.sp-stat-value { overflow-wrap: anywhere; }
+.sp-id-row { row-gap: 0.5rem; }
+.sp-id-action { display: flex; justify-content: flex-end; }
+.sp-empty { min-height: 88px; display: flex; align-items: center; justify-content: center; color: rgba(var(--v-theme-on-surface), 0.62); }
+.sp-candidate-wrap { max-width: 100%; overflow-x: auto; }
+.sp-candidate-table { min-width: 42rem; }
+.sp-cand-site { width: 7rem; white-space: nowrap; }
+.sp-cand-title { overflow-wrap: anywhere; }
+.sp-cand-seed { width: 4.5rem; }
+.sp-cand-act { width: 6.5rem; white-space: nowrap; }
+.sp-footer { flex-shrink: 0; padding: 6px 12px; border-top: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); }
+.sp-suggestion { padding: 0.75rem; border: 1px solid rgba(var(--v-theme-primary), 0.16); border-radius: 8px; }
+.sp-preview-box { display: grid; gap: 0.5rem; overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 0.875rem; }
+@media (max-width: 760px) {
+  .sp-page { height: 100dvh; }
+  .sp-scroll { padding: 8px; }
+  .sp-card { border-radius: 10px; }
+  .sp-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sp-footer-spacer { display: none; }
+  .sp-footer :deep(.v-btn) { flex: 1 1 auto; min-width: max-content; }
+  .sp-candidate-table { min-width: 36rem; }
+  .sp-id-action { justify-content: stretch; }
+  .sp-id-action :deep(.v-btn) { flex: 1 1 auto; }
 }
-
-.scroll-content {
-  height: 75vh;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.footer-bar {
-  flex-shrink: 0;
-  padding: 0 5px;
-}
-
-.title-bar,
-.small-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background-color: rgba(var(--v-theme-primary), 0.07);
-}
-
-.title-bar {
-  font-size: 1rem;
-}
-
-.small-title {
-  font-size: 0.875rem;
-}
-
-.content {
-  padding: 0.75rem;
-}
-
-.border {
-  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
-}
-
-.summary-item {
-  border-radius: 8px;
-  min-height: 56px;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: rgba(var(--v-theme-primary), 0.03);
-}
-
-.summary-item strong {
-  margin-left: auto;
-  font-size: 0.875rem;
-  overflow-wrap: anywhere;
-  text-align: right;
-}
-
-.result-card {
-  overflow: hidden;
-}
-
-.result-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-}
-
-.result-title {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.candidate-title,
-.path-line {
-  overflow-wrap: anywhere;
-}
-
-.candidate-table-wrap {
-  max-width: 100%;
-  overflow-x: auto;
-}
-
-.candidate-table {
-  min-width: 42rem;
-}
-
-.candidate-site {
-  width: 7rem;
-  white-space: nowrap;
-}
-
-.candidate-seeders {
-  width: 4.5rem;
-}
-
-.candidate-actions {
-  width: 6.5rem;
-  white-space: nowrap;
-}
-
-.identifier-row {
-  row-gap: 0.5rem;
-}
-
-.identifier-action-col {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.empty-panel {
-  min-height: 88px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(var(--v-theme-on-surface), 0.62);
-}
-
-.preview-box {
-  display: grid;
-  gap: 0.5rem;
-  overflow-wrap: anywhere;
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.875rem;
-}
-
-.suggestion-panel {
-  padding: 0.75rem;
-  border: 1px solid rgba(var(--v-theme-primary), 0.16);
-  border-radius: 8px;
-}
-
-.action-bar {
-  gap: 0.25rem;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 600px) {
-  .main-container {
-    height: 88vh;
-  }
-
-  .scroll-content {
-    height: 68vh;
-    padding: 8px;
-  }
-
-  .action-spacer {
-    display: none;
-  }
-
-  .action-bar :deep(.v-btn) {
-    flex: 1 1 auto;
-    min-width: max-content;
-  }
-
-  .candidate-table {
-    min-width: 36rem;
-  }
-
-  .identifier-action-col {
-    justify-content: stretch;
-  }
-
-  .identifier-action-col :deep(.v-btn) {
-    flex: 1 1 auto;
-  }
+@media (max-width: 480px) {
+  .sp-stat-grid { grid-template-columns: 1fr; }
 }
 </style>
