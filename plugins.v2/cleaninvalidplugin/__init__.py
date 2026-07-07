@@ -19,7 +19,7 @@ class CleanInvalidPlugin(_PluginBase):
     # 插件图标
     plugin_icon = "delete.jpg"
     # 插件版本
-    plugin_version = "1.3"
+    plugin_version = "1.4"
     # 插件作者
     plugin_author = "cddjr,shyblacktea"
     # 作者主页
@@ -134,6 +134,9 @@ class CleanInvalidPlugin(_PluginBase):
         selected_plugins = set(self._invalid_plugin_ids)
         next_plugins = [p for p in all_plugins if p not in selected_plugins]
 
+        # 构建 plugin_id -> repo_url 映射（用于市场重装）
+        repo_url_map = self.__build_repo_url_map(plugin_manager)
+
         reinstalled_plugins = []
         skipped_plugins = []
         failed_plugins = []
@@ -164,15 +167,21 @@ class CleanInvalidPlugin(_PluginBase):
                     logger.info(f"已从本地插件源重装 {plugin_id}: {local_source_dir}")
                     continue
 
-                plugin_info = plugin_helper.get_plugin_by_id(plugin_id)
-                if plugin_info:
-                    plugin_helper.download_plugin(
-                        plugin_id=plugin_id,
-                        plugin_info=plugin_info,
+                repo_url = repo_url_map.get(plugin_id)
+                if repo_url:
+                    state, msg = plugin_helper.install(
+                        pid=plugin_id,
+                        repo_url=repo_url,
+                        force_install=True,
                     )
-                    next_plugins.append(plugin_id)
-                    reinstalled_plugins.append(plugin_id)
-                    logger.info(f"插件 {plugin_id} 已从插件市场重装")
+                    if state:
+                        next_plugins.append(plugin_id)
+                        reinstalled_plugins.append(plugin_id)
+                        logger.info(f"插件 {plugin_id} 已从插件市场重装：{repo_url}")
+                    else:
+                        next_plugins.append(plugin_id)
+                        failed_plugins.append(plugin_id)
+                        logger.warning(f"插件 {plugin_id} 从插件市场重装失败：{msg}")
                 else:
                     next_plugins.append(plugin_id)
                     failed_plugins.append(plugin_id)
@@ -349,6 +358,33 @@ class CleanInvalidPlugin(_PluginBase):
         config_oper = config_oper or SystemConfigOper()
         plugins = config_oper.get(SystemConfigKey.UserInstalledPlugins) or []
         return [str(plugin_id) for plugin_id in plugins if plugin_id]
+
+    @staticmethod
+    def __build_repo_url_map(plugin_manager: PluginManager) -> Dict[str, str]:
+        """
+        构建 plugin_id -> repo_url 映射，用于从市场或本地仓库重装。
+        """
+        repo_url_map: Dict[str, str] = {}
+        try:
+            online_plugins = plugin_manager.get_online_plugins() or []
+        except Exception as e:
+            online_plugins = []
+            logger.warning(f"获取在线插件列表失败: {e}")
+        try:
+            local_repo_plugins = plugin_manager.get_local_repo_plugins() or []
+        except Exception as e:
+            local_repo_plugins = []
+            logger.warning(f"获取本地仓库插件列表失败: {e}")
+
+        for plugin in list(online_plugins) + list(local_repo_plugins):
+            try:
+                pid = getattr(plugin, "id", None)
+                repo_url = getattr(plugin, "repo_url", None)
+                if pid and repo_url and pid not in repo_url_map:
+                    repo_url_map[pid] = repo_url
+            except Exception:
+                continue
+        return repo_url_map
 
     @staticmethod
     def __find_local_source_dir(plugin_id: str) -> Optional[Path]:
