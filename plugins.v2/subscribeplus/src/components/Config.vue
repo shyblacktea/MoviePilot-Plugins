@@ -1,184 +1,117 @@
 <template>
-  <div class="plugin-config">
-    <v-card flat class="rounded border">
-      <v-card-title class="title-bar">
-        <v-icon icon="mdi-playlist-star" color="primary" size="small" />
-        <span>订阅下载增强</span>
-        <v-spacer />
-        <v-btn icon="mdi-refresh" variant="text" size="small" :loading="loading" aria-label="刷新" @click="loadOptions" />
-      </v-card-title>
+  <div class="sp-config">
+    <VCard flat class="sp-card">
+      <VCardItem class="sp-header">
+        <template #prepend>
+          <VAvatar color="primary" variant="tonal" size="44" rounded="lg" class="sp-header-avatar">
+            <VIcon icon="mdi-playlist-star" size="24" />
+          </VAvatar>
+        </template>
+        <VCardTitle class="text-h6 sp-header-title">订阅下载增强</VCardTitle>
+        <VCardSubtitle class="text-caption sp-header-subtitle">{{ currentMain.desc }}</VCardSubtitle>
+        <template #append>
+          <VSwitch v-model="config.enabled" color="success" hide-details inset class="sp-enable-switch" :label="config.enabled ? '已启用' : '已停用'" />
+        </template>
+      </VCardItem>
+      <VDivider />
 
-      <v-card-text class="content">
-        <v-alert v-if="error" type="error" variant="tonal" density="compact" class="mb-3 text-caption" closable>
-          {{ error }}
-        </v-alert>
+      <div class="sp-body">
+        <nav class="sp-nav">
+          <VList density="comfortable" nav class="py-2 sp-nav-list">
+            <VListItem
+              v-for="item in mainTabs"
+              :key="item.key"
+              :active="activeMain === item.key"
+              color="primary"
+              rounded="lg"
+              class="sp-nav-item"
+              @click="activeMain = item.key"
+            >
+              <template #prepend><VIcon :icon="item.icon" class="sp-nav-icon" /></template>
+              <VListItemTitle class="sp-nav-title">{{ item.title }}</VListItemTitle>
+            </VListItem>
+          </VList>
+        </nav>
 
-        <v-form @submit.prevent="saveConfig">
-          <section class="config-section">
-            <div class="section-title">
-              <v-icon icon="mdi-tune-variant" color="primary" size="small" />
-              <span>扫描设置</span>
+        <section class="sp-content">
+          <VAlert v-if="error" type="error" variant="tonal" density="compact" class="ma-3 mb-0 text-caption" closable @click:close="error = ''">
+            {{ error }}
+          </VAlert>
+
+          <div class="sp-window">
+            <div v-show="activeMain === 'scan'" class="sp-pane">
+              <div class="sp-section-title">扫描设置</div>
+              <VRow>
+                <VCol cols="12" md="4">
+                  <VTextField v-model.number="config.delay_days" type="number" min="0" label="宽限天数" variant="outlined" density="compact" hide-details="auto" />
+                </VCol>
+                <VCol cols="12" md="4">
+                  <VTextField v-model="config.cron" label="Cron" variant="outlined" density="compact" hide-details="auto" :error-messages="cronError" hint="每 6 小时建议写 0 */6 * * *" persistent-hint />
+                </VCol>
+                <VCol cols="12" md="4">
+                  <VTextField v-model.number="config.max_scan_subscribes" type="number" min="1" label="订阅部数通知上限" variant="outlined" density="compact" hide-details="auto" />
+                </VCol>
+                <VCol cols="12" md="6">
+                  <VSelect v-model="config.selected_categories" :items="categories" item-title="title" item-value="value" label="二级分类" variant="outlined" density="compact" multiple chips closable-chips hide-details="auto" />
+                </VCol>
+                <VCol cols="12" md="6">
+                  <VSelect v-model="config.search_sites" :items="siteOptions" item-title="title" item-value="value" label="PT搜索范围" variant="outlined" density="compact" multiple chips closable-chips clearable hide-details="auto" />
+                </VCol>
+              </VRow>
             </div>
-            <v-row>
-              <v-col cols="12" md="4">
-                <v-switch v-model="config.enabled" color="primary" label="启用" density="compact" hide-details />
-              </v-col>
-              <v-col cols="12" md="4">
-                <v-text-field
-                  v-model.number="config.delay_days"
-                  type="number"
-                  min="0"
-                  label="宽限天数"
-                  variant="outlined"
-                  density="compact"
-                  hide-details="auto"
-                />
-              </v-col>
-              <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="config.cron"
-                  label="Cron"
-                  variant="outlined"
-                  density="compact"
-                  hide-details="auto"
-                  :error-messages="cronError"
-                  hint="每 6 小时建议写 0 */6 * * *"
-                  persistent-hint
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-select
-                  v-model="config.selected_categories"
-                  :items="categories"
-                  item-title="title"
-                  item-value="value"
-                  label="二级分类"
-                  variant="outlined"
-                  density="compact"
-                  multiple
-                  chips
-                  closable-chips
-                  hide-details="auto"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-select
-                  v-model="config.search_sites"
-                  :items="siteOptions"
-                  item-title="title"
-                  item-value="value"
-                  label="PT搜索范围"
-                  variant="outlined"
-                  density="compact"
-                  multiple
-                  chips
-                  closable-chips
-                  clearable
-                  hide-details="auto"
-                />
-              </v-col>
-              <v-col cols="12" md="3">
-                <v-text-field
-                  v-model.number="config.max_scan_subscribes"
-                  type="number"
-                  min="1"
-                  label="订阅部数通知上限"
-                  variant="outlined"
-                  density="compact"
-                  hide-details="auto"
-                />
-              </v-col>
-            </v-row>
-          </section>
 
-          <section class="config-section">
-            <div class="section-title">
-              <v-icon icon="mdi-message-badge-outline" color="primary" size="small" />
-              <span>通知权限</span>
+            <div v-show="activeMain === 'notify'" class="sp-pane">
+              <div class="sp-section-title">通知权限</div>
+              <VRow>
+                <VCol cols="12" md="6">
+                  <VSwitch v-model="config.notify_tg" color="primary" inset hide-details label="Telegram 独立通知" />
+                </VCol>
+                <VCol cols="12" md="6">
+                  <VSwitch v-model="config.allow_tg_rule_update" color="warning" inset hide-details label="允许 TG 修改订阅规则" />
+                </VCol>
+              </VRow>
+              <VAlert class="mt-3" type="info" variant="tonal" density="compact" text="开启「允许 TG 修改订阅规则」后，可通过 Telegram 交互直接调整订阅过滤规则，请谨慎授权。" />
             </div>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-switch v-model="config.notify_tg" color="primary" label="Telegram 独立通知" density="compact" hide-details />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-switch
-                  v-model="config.allow_tg_rule_update"
-                  color="warning"
-                  label="允许 TG 修改订阅规则"
-                  density="compact"
-                  hide-details
-                />
-              </v-col>
-            </v-row>
-          </section>
 
-          <section class="config-section">
-            <div class="section-title">
-              <v-icon icon="mdi-broom" color="warning" size="small" />
-              <span>全集包清理</span>
+            <div v-show="activeMain === 'cleanup'" class="sp-pane">
+              <div class="sp-section-title">全集包清理</div>
+              <VRow>
+                <VCol cols="12" md="6">
+                  <VSelect v-model="config.season_pack_cleanup" :items="seasonPackCleanupOptions" item-title="title" item-value="value" label="最终集整季包清理" variant="outlined" density="compact" hide-details="auto" />
+                </VCol>
+                <VCol cols="12" md="6">
+                  <VSwitch v-model="config.season_pack_full_download" color="warning" inset hide-details label="qB 整季包全选下载" />
+                </VCol>
+              </VRow>
+              <VAlert class="mt-3" type="info" variant="tonal" density="compact" text="当整季包下载到最终集时，可按策略清理旧的分集转移记录或源文件，避免媒体库重复。" />
             </div>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-select
-                  v-model="config.season_pack_cleanup"
-                  :items="seasonPackCleanupOptions"
-                  item-title="title"
-                  item-value="value"
-                  label="最终集整季包清理"
-                  variant="outlined"
-                  density="compact"
-                  hide-details="auto"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-switch
-                  v-model="config.season_pack_full_download"
-                  color="warning"
-                  label="qB 整季包全选下载"
-                  density="compact"
-                  hide-details
-                />
-              </v-col>
-            </v-row>
-          </section>
 
-          <section class="config-section">
-            <div class="section-title">
-              <v-icon icon="mdi-download-box-outline" color="primary" size="small" />
-              <span>候选下载</span>
+            <div v-show="activeMain === 'candidate'" class="sp-pane">
+              <div class="sp-section-title">候选下载</div>
+              <VRow>
+                <VCol cols="12" md="6">
+                  <VTextField v-model.number="config.candidate_cache_days" type="number" min="0" label="候选缓存天数" hint="候选下载信息本地缓存有效期，0 关闭；重载/重启后仍可直接下载候选" persistent-hint variant="outlined" density="compact" hide-details="auto" />
+                </VCol>
+              </VRow>
             </div>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model.number="config.candidate_cache_days"
-                  type="number"
-                  min="0"
-                  label="候选缓存天数"
-                  hint="候选下载信息本地缓存有效期，0 关闭；重载/重启后仍可直接下载候选"
-                  persistent-hint
-                  variant="outlined"
-                  density="compact"
-                  hide-details="auto"
-                />
-              </v-col>
-            </v-row>
-          </section>
+          </div>
 
-          <v-card-actions class="action-bar">
-            <v-btn color="info" prepend-icon="mdi-view-dashboard-outline" variant="text" size="small" @click="emit('switch')">数据页</v-btn>
-            <v-spacer class="action-spacer" />
-            <v-btn color="grey" prepend-icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadOptions">刷新</v-btn>
-            <v-btn color="primary" prepend-icon="mdi-content-save" variant="text" size="small" @click="saveConfig">保存</v-btn>
-            <v-btn color="grey" prepend-icon="mdi-close" variant="text" size="small" @click="emit('close')">关闭</v-btn>
-          </v-card-actions>
-        </v-form>
-      </v-card-text>
-    </v-card>
+          <VDivider />
+          <div class="sp-actions d-flex align-center flex-wrap ga-1">
+            <VBtn color="info" prepend-icon="mdi-view-dashboard-outline" variant="text" size="small" @click="emit('switch')">数据页</VBtn>
+            <VSpacer class="sp-action-spacer" />
+            <VBtn color="grey" prepend-icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadOptions">刷新</VBtn>
+            <VBtn color="primary" prepend-icon="mdi-content-save" variant="text" size="small" @click="saveConfig">保存</VBtn>
+            <VBtn color="grey" prepend-icon="mdi-close" variant="text" size="small" @click="emit('close')">关闭</VBtn>
+          </div>
+        </section>
+      </div>
+    </VCard>
   </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 
 const props = defineProps({
   initialConfig: {
@@ -198,6 +131,17 @@ const error = ref('')
 const categories = ref([])
 const siteOptions = ref([])
 const cronError = ref('')
+const activeMain = ref('scan')
+
+const mainTabs = [
+  { key: 'scan', title: '扫描设置', icon: 'mdi-tune-variant', desc: '订阅扫描周期、宽限天数与站点范围。' },
+  { key: 'notify', title: '通知权限', icon: 'mdi-message-badge-outline', desc: 'Telegram 通知与规则修改授权。' },
+  { key: 'cleanup', title: '全集包清理', icon: 'mdi-broom', desc: '整季包下载完成后的清理策略。' },
+  { key: 'candidate', title: '候选下载', icon: 'mdi-download-box-outline', desc: '候选资源本地缓存有效期。' },
+]
+
+const currentMain = computed(() => mainTabs.find(i => i.key === activeMain.value) || mainTabs[0])
+
 const seasonPackCleanupOptions = [
   { title: '关闭', value: 'off' },
   { title: '仅删转移记录', value: 'record' },
@@ -283,7 +227,10 @@ function validateCron(value) {
 
 function saveConfig() {
   cronError.value = validateCron(config.cron)
-  if (cronError.value) return
+  if (cronError.value) {
+    activeMain.value = 'scan'
+    return
+  }
   emit('save', {
     ...config,
     delay_days: Number(config.delay_days),
@@ -300,75 +247,37 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.plugin-config {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 0.5rem;
-}
-
-.title-bar,
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.title-bar {
-  padding: 0.5rem 0.75rem;
-  background-color: rgba(var(--v-theme-primary), 0.07);
-  font-size: 1rem;
-}
-
-.content {
-  padding: 0.75rem;
-}
-
-.border {
-  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
-}
-
-.config-section {
-  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 8px;
-  padding: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.section-title {
-  min-height: 32px;
-  margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.action-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  padding: 0.25rem 0;
-}
-
-.plugin-config :deep(.v-field__input),
-.plugin-config :deep(.v-select__selection) {
-  min-width: 0;
-}
-
-@media (max-width: 600px) {
-  .plugin-config {
-    padding: 0.25rem;
-  }
-
-  .action-spacer {
-    display: none;
-  }
-
-  .action-bar :deep(.v-btn) {
-    flex: 1 1 auto;
-    min-width: max-content;
-  }
-
-  .plugin-config :deep(.v-chip) {
-    max-width: 100%;
-  }
+.sp-config { width: min(1120px, calc(100vw - 48px)); max-width: 100%; padding: 8px; margin: 0 auto; }
+.sp-card { width: 100%; display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); }
+.sp-header { padding: 14px 18px; }
+.sp-header-subtitle { max-width: min(560px, 52vw); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-body { flex: 1 1 auto; min-height: 0; display: flex; }
+.sp-nav { width: 160px; flex: 0 0 160px; border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); background: rgba(var(--v-theme-on-surface), .02); }
+.sp-nav-item { margin: 2px 8px; }
+.sp-content { flex: 1 1 auto; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.sp-window { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.sp-pane { padding: 18px 20px; }
+.sp-section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: rgb(var(--v-theme-primary)); }
+.sp-actions { padding: 10px 18px; }
+@media (max-width: 760px) {
+  .sp-config { width: 100%; padding: 0; }
+  .sp-card { border-radius: 0; border: none; }
+  .sp-header { padding: 8px 10px; }
+  .sp-header-avatar { width: 34px !important; height: 34px !important; }
+  .sp-header-title { font-size: 15px; line-height: 1.25; }
+  .sp-header-subtitle { max-width: 100%; }
+  .sp-enable-switch { flex: 0 0 46px; width: 46px; min-width: 46px; overflow: hidden; }
+  .sp-body { flex-direction: column; }
+  .sp-nav { width: 100%; flex: 0 0 auto; border-right: none; border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .sp-nav::-webkit-scrollbar { display: none; }
+  .sp-nav-list { display: flex; flex-wrap: nowrap; gap: 4px; min-width: max-content; padding: 5px 8px !important; }
+  .sp-nav-item { flex: 0 0 auto; min-width: 86px; min-height: 34px !important; margin: 0; padding-inline: 8px; }
+  .sp-nav-title { font-size: 12px; white-space: nowrap; }
+  .sp-nav-icon { font-size: 17px; }
+  .sp-pane { padding: 12px 12px; }
+  .sp-section-title { margin-bottom: 8px; }
+  .sp-actions { padding: 6px 10px; }
+  .sp-action-spacer { display: none; }
+  .sp-actions :deep(.v-btn) { flex: 1 1 auto; min-width: max-content; }
 }
 </style>
