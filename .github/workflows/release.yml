@@ -44,7 +44,7 @@ jobs:
             echo "Processing $pkg_file"
 
             # Only entries explicitly marked release=true are packaged.
-            mapfile -t entries < <(jq -r 'to_entries | map(select(.value.release == true)) | .[] | "\(.key)|\(.value.version)"' "$pkg_file")
+            mapfile -t entries < <(jq -r 'to_entries | map(select(.value.release == true)) | .[] | "\(.key)|\(.value.version)|\(.value.name // .key)"' "$pkg_file")
 
             if [ "${#entries[@]}" -eq 0 ]; then
               echo "No plugins with release=true in $pkg_file"
@@ -53,7 +53,11 @@ jobs:
 
             for entry in "${entries[@]}"; do
               plugin_id="${entry%%|*}"
-              plugin_version="${entry##*|}"
+              rest="${entry#*|}"
+              plugin_version="${rest%%|*}"
+              plugin_name="${rest#*|}"
+              [ -n "$plugin_name" ] || plugin_name="$plugin_id"
+              release_title="${plugin_name} v${plugin_version}"
               plugin_id_lc="$(echo "$plugin_id" | tr '[:upper:]' '[:lower:]')"
 
               dir1="plugins/${plugin_id_lc}"
@@ -96,7 +100,7 @@ jobs:
               if [ "$changed" -eq 0 ]; then
                 echo "No changes in $plugin_dir since $prev_tag, skip packaging $plugin_id."
                 if gh release view "$tag" >/dev/null 2>&1; then
-                  gh release edit "$tag" --notes "$release_notes"
+                  gh release edit "$tag" --title "$release_title" --notes "$release_notes"
                 fi
                 echo "$tag" >> processed_tags.txt
                 continue
@@ -116,7 +120,7 @@ jobs:
               git tag -d "$tag" >/dev/null 2>&1 || true
 
               echo "Creating release $tag"
-              gh release create "$tag" "$asset" --title "$tag" --notes "$release_notes" --latest --target "$GITHUB_SHA"
+              gh release create "$tag" "$asset" --title "$release_title" --notes "$release_notes" --latest --target "$GITHUB_SHA"
 
               echo "$tag" >> processed_tags.txt
             done
