@@ -1,251 +1,156 @@
 <template>
-  <div class="plugin-config">
-    <v-card flat class="rounded border">
-      <v-card-title class="text-subtitle-1 d-flex align-center px-3 py-2 bg-primary-lighten-5">
-        <v-icon icon="mdi-delete-sweep" class="mr-2" color="primary" size="small" />
-        <span>清理无效插件配置</span>
-      </v-card-title>
+  <div class="cip-config">
+    <VCard flat class="cip-card">
+      <VCardItem class="cip-header">
+        <template #prepend>
+          <VAvatar color="primary" variant="tonal" size="44" rounded="lg">
+            <VIcon icon="mdi-delete-sweep" size="24" />
+          </VAvatar>
+        </template>
+        <VCardTitle class="text-h6">清理无效插件</VCardTitle>
+        <VCardSubtitle class="text-caption">{{ currentMain.desc }}</VCardSubtitle>
+        <template #append>
+          <VBtn icon="mdi-refresh" variant="text" size="small" :loading="loading" aria-label="刷新" @click="loadInvalidPlugins" />
+        </template>
+      </VCardItem>
+      <VDivider />
 
-      <v-card-text class="px-3 py-2">
-        <v-alert
-          v-if="error"
-          type="error"
-          density="compact"
-          class="mb-2 text-caption"
-          variant="tonal"
-          closable
-        >
-          {{ error }}
-        </v-alert>
+      <div class="cip-body">
+        <nav class="cip-nav">
+          <VList density="comfortable" nav class="py-2 cip-nav-list">
+            <VListItem
+              v-for="item in mainTabs"
+              :key="item.key"
+              :active="activeMain === item.key"
+              color="primary"
+              rounded="lg"
+              class="cip-nav-item"
+              @click="activeMain = item.key"
+            >
+              <template #prepend><VIcon :icon="item.icon" class="cip-nav-icon" /></template>
+              <VListItemTitle class="cip-nav-title">{{ item.title }}</VListItemTitle>
+            </VListItem>
+          </VList>
+        </nav>
 
-        <v-alert
-          v-else-if="!loading && invalidItems.length === 0"
-          type="success"
-          density="compact"
-          class="mb-2 text-caption"
-          variant="tonal"
-        >
-          当前没有需要处理的无效插件。
-        </v-alert>
+        <section class="cip-content">
+          <VAlert v-if="error" type="error" density="compact" variant="tonal" class="ma-3 mb-0 text-caption" closable @click:close="error = ''">
+            {{ error }}
+          </VAlert>
+          <VAlert v-else-if="!loading && invalidItems.length === 0" type="success" density="compact" variant="tonal" class="ma-3 mb-0 text-caption">
+            当前没有需要处理的无效插件。
+          </VAlert>
 
-        <v-form @submit.prevent="saveConfig">
-          <v-card flat class="rounded mb-3 border config-card">
-            <v-card-title class="text-caption d-flex align-center px-3 py-2 bg-primary-lighten-5">
-              <v-icon icon="mdi-chart-box-outline" class="mr-2" color="primary" size="small" />
-              <span>状态概览</span>
-            </v-card-title>
-            <v-card-text class="px-3 py-2">
-              <v-row>
-                <v-col cols="12" md="4">
-                  <div class="setting-item stat-item">
-                    <v-icon icon="mdi-alert-circle-outline" size="small" color="error" class="mr-3" />
-                    <div class="stat-copy">
-                      <span class="text-subtitle-2">无效插件</span>
-                      <strong>{{ invalidItems.length }}</strong>
-                    </div>
-                  </div>
-                </v-col>
-                <v-col cols="12" md="4">
-                  <div class="setting-item stat-item">
-                    <v-icon icon="mdi-checkbox-marked-circle-outline" size="small" color="primary" class="mr-3" />
-                    <div class="stat-copy">
-                      <span class="text-subtitle-2">已选择</span>
-                      <strong>{{ selectedCount }}</strong>
-                    </div>
-                  </div>
-                </v-col>
-                <v-col cols="12" md="4">
-                  <div class="setting-item stat-item">
-                    <v-icon icon="mdi-source-branch-check" size="small" color="success" class="mr-3" />
-                    <div class="stat-copy">
-                      <span class="text-subtitle-2">本地源</span>
-                      <strong>{{ localSourceCount }}</strong>
-                    </div>
-                  </div>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
+          <div class="cip-window">
+            <div class="cip-stat-grid ma-4 mb-0">
+              <div class="cip-stat">
+                <div class="d-flex align-center ga-2 mb-1">
+                  <VAvatar color="error" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-alert-circle-outline" size="17" /></VAvatar>
+                  <div class="text-caption text-medium-emphasis">无效插件</div>
+                </div>
+                <div class="text-subtitle-1 font-weight-bold">{{ invalidItems.length }}</div>
+              </div>
+              <div class="cip-stat">
+                <div class="d-flex align-center ga-2 mb-1">
+                  <VAvatar color="primary" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-checkbox-marked-circle-outline" size="17" /></VAvatar>
+                  <div class="text-caption text-medium-emphasis">已选择</div>
+                </div>
+                <div class="text-subtitle-1 font-weight-bold">{{ selectedCount }}</div>
+              </div>
+              <div class="cip-stat">
+                <div class="d-flex align-center ga-2 mb-1">
+                  <VAvatar color="success" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-source-branch-check" size="17" /></VAvatar>
+                  <div class="text-caption text-medium-emphasis">本地源</div>
+                </div>
+                <div class="text-subtitle-1 font-weight-bold">{{ localSourceCount }}</div>
+              </div>
+            </div>
 
-          <v-card flat class="rounded mb-3 border config-card">
-            <v-card-title class="text-caption d-flex align-center px-3 py-2 bg-primary-lighten-5">
-              <v-icon icon="mdi-playlist-check" class="mr-2" color="primary" size="small" />
-              <span>处理对象</span>
-            </v-card-title>
-            <v-card-text class="px-3 py-2">
-              <v-row>
-                <v-col cols="12">
-                  <div class="setting-item select-item">
-                    <v-select
-                      v-model="config.invalid_plugin_ids"
-                      :items="invalidItems"
-                      item-title="title"
-                      item-value="id"
-                      label="插件"
-                      variant="outlined"
-                      density="compact"
-                      multiple
-                      chips
-                      closable-chips
-                      clearable
-                      :loading="loading"
-                      :disabled="loading || invalidItems.length === 0"
-                      hide-details="auto"
-                    >
-                      <template #item="{ props: itemProps, item }">
-                        <v-list-item v-bind="itemProps">
-                          <template #append>
-                            <v-chip
-                              :color="item.raw.local_source_path ? 'success' : 'warning'"
-                              size="small"
-                              variant="tonal"
-                            >
-                              {{ item.raw.local_source_path ? '可重装' : '需清理' }}
-                            </v-chip>
-                          </template>
-                        </v-list-item>
-                      </template>
-                    </v-select>
-                  </div>
-                </v-col>
-              </v-row>
+            <div v-show="activeMain === 'target'" class="cip-pane">
+              <div class="cip-section-title">处理对象</div>
+              <VSelect
+                v-model="config.invalid_plugin_ids"
+                :items="invalidItems"
+                item-title="title"
+                item-value="id"
+                label="插件"
+                variant="outlined"
+                density="compact"
+                multiple
+                chips
+                closable-chips
+                clearable
+                :loading="loading"
+                :disabled="loading || invalidItems.length === 0"
+                hide-details="auto"
+              >
+                <template #item="{ props: itemProps, item }">
+                  <VListItem v-bind="itemProps">
+                    <template #append>
+                      <VChip :color="item.raw.local_source_path ? 'success' : 'warning'" size="small" variant="tonal">
+                        {{ item.raw.local_source_path ? '可重装' : '需清理' }}
+                      </VChip>
+                    </template>
+                  </VListItem>
+                </template>
+              </VSelect>
 
-              <div class="plugin-list mt-2">
-                <v-list v-if="invalidItems.length" lines="two" density="compact">
-                  <v-list-item
+              <div class="cip-plugin-list mt-3">
+                <VList v-if="invalidItems.length" lines="two" density="compact">
+                  <VListItem
                     v-for="plugin in invalidItems"
                     :key="plugin.id"
                     :title="plugin.id"
                     :subtitle="plugin.status"
                   >
                     <template #prepend>
-                      <v-checkbox-btn
-                        :model-value="config.invalid_plugin_ids.includes(plugin.id)"
-                        @update:model-value="togglePlugin(plugin.id)"
-                      />
+                      <VCheckboxBtn :model-value="config.invalid_plugin_ids.includes(plugin.id)" @update:model-value="togglePlugin(plugin.id)" />
                     </template>
                     <template #append>
-                      <v-chip
-                        :color="plugin.runtime_exists ? 'warning' : 'error'"
-                        size="small"
-                        variant="tonal"
-                      >
+                      <VChip :color="plugin.runtime_exists ? 'warning' : 'error'" size="small" variant="tonal">
                         {{ plugin.runtime_exists ? '目录异常' : '目录缺失' }}
-                      </v-chip>
+                      </VChip>
                     </template>
-                  </v-list-item>
-                </v-list>
-                <div v-else class="empty-panel">
-                  <v-icon icon="mdi-check-circle-outline" size="36" color="success" />
+                  </VListItem>
+                </VList>
+                <div v-else class="cip-empty">
+                  <VIcon icon="mdi-check-circle-outline" size="36" color="success" />
                   <span>没有待处理记录</span>
                 </div>
               </div>
-            </v-card-text>
-          </v-card>
+            </div>
 
-          <v-card flat class="rounded mb-3 border config-card">
-            <v-card-title class="text-caption d-flex align-center px-3 py-2 bg-primary-lighten-5">
-              <v-icon icon="mdi-tune" class="mr-2" color="primary" size="small" />
-              <span>操作方式</span>
-            </v-card-title>
-            <v-card-text class="px-3 py-2">
-              <v-row>
-                <v-col cols="12" md="7">
-                  <div class="setting-item mode-item">
-                    <v-radio-group
-                      v-model="config.action_mode"
-                      inline
-                      density="compact"
-                      hide-details
-                      :disabled="invalidItems.length === 0"
-                    >
-                      <v-radio label="清理记录" value="clean" color="error" />
-                      <v-radio label="重新安装" value="reinstall" color="primary" />
-                    </v-radio-group>
-                  </div>
-                </v-col>
-                <v-col cols="12" md="5">
-                  <div class="setting-item quick-actions">
-                    <v-btn
-                      color="primary"
-                      variant="text"
-                      size="small"
-                      prepend-icon="mdi-check-all"
-                      :disabled="invalidItems.length === 0"
-                      @click="selectAll"
-                    >
-                      全选
-                    </v-btn>
-                    <v-btn
-                      color="secondary"
-                      variant="text"
-                      size="small"
-                      prepend-icon="mdi-close"
-                      :disabled="selectedCount === 0"
-                      @click="clearSelection"
-                    >
-                      清空
-                    </v-btn>
-                  </div>
-                </v-col>
-              </v-row>
-
-              <v-alert
-                :type="config.action_mode === 'reinstall' ? 'warning' : 'info'"
-                variant="tonal"
-                density="compact"
-                icon="mdi-information"
-                class="text-caption"
-              >
+            <div v-show="activeMain === 'action'" class="cip-pane">
+              <div class="cip-section-title">操作方式</div>
+              <VRow align="center">
+                <VCol cols="12" md="7">
+                  <VRadioGroup v-model="config.action_mode" inline density="compact" hide-details :disabled="invalidItems.length === 0">
+                    <VRadio label="清理记录" value="clean" color="error" />
+                    <VRadio label="重新安装" value="reinstall" color="primary" />
+                  </VRadioGroup>
+                </VCol>
+                <VCol cols="12" md="5" class="d-flex justify-end ga-2 flex-wrap">
+                  <VBtn color="primary" variant="text" size="small" prepend-icon="mdi-check-all" :disabled="invalidItems.length === 0" @click="selectAll">全选</VBtn>
+                  <VBtn color="secondary" variant="text" size="small" prepend-icon="mdi-close" :disabled="selectedCount === 0" @click="clearSelection">清空</VBtn>
+                </VCol>
+              </VRow>
+              <VAlert :type="config.action_mode === 'reinstall' ? 'warning' : 'info'" variant="tonal" density="compact" icon="mdi-information" class="text-caption mt-3">
                 {{ actionHint }}
-              </v-alert>
-            </v-card-text>
-          </v-card>
+              </VAlert>
+            </div>
+          </div>
 
-          <v-card-actions class="px-2 py-1 action-bar">
-            <v-btn
-              color="info"
-              prepend-icon="mdi-view-dashboard"
-              variant="text"
-              size="small"
-              @click="emit('switch')"
-            >
-              数据页
-            </v-btn>
-            <v-spacer class="action-spacer" />
-            <v-btn
-              color="grey"
-              prepend-icon="mdi-refresh"
-              variant="text"
-              size="small"
-              :loading="loading"
-              @click="loadInvalidPlugins"
-            >
-              刷新
-            </v-btn>
-            <v-btn
-              color="primary"
-              prepend-icon="mdi-content-save"
-              variant="text"
-              size="small"
-              :disabled="selectedCount === 0"
-              @click="saveConfig"
-            >
-              保存并执行
-            </v-btn>
-            <v-btn
-              color="grey"
-              prepend-icon="mdi-close"
-              variant="text"
-              size="small"
-              @click="emit('close')"
-            >
-              关闭
-            </v-btn>
-          </v-card-actions>
-        </v-form>
-      </v-card-text>
-    </v-card>
+          <VDivider />
+          <div class="cip-actions d-flex align-center flex-wrap ga-1">
+            <VBtn color="info" prepend-icon="mdi-view-dashboard" variant="text" size="small" @click="emit('switch')">数据页</VBtn>
+            <VSpacer class="cip-action-spacer" />
+            <VBtn color="grey" prepend-icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadInvalidPlugins">刷新</VBtn>
+            <VBtn color="primary" prepend-icon="mdi-content-save" variant="text" size="small" :disabled="selectedCount === 0" @click="saveConfig">保存并执行</VBtn>
+            <VBtn color="grey" prepend-icon="mdi-close" variant="text" size="small" @click="emit('close')">关闭</VBtn>
+          </div>
+        </section>
+      </div>
+    </VCard>
   </div>
 </template>
 
@@ -268,6 +173,14 @@ const emit = defineEmits(['save', 'close', 'switch'])
 const loading = ref(false)
 const error = ref('')
 const invalidItems = ref([])
+const activeMain = ref('target')
+
+const mainTabs = [
+  { key: 'target', title: '处理对象', icon: 'mdi-playlist-check', desc: '选择需要清理或重装的无效插件。' },
+  { key: 'action', title: '操作方式', icon: 'mdi-tune', desc: '清理记录或从本地源重新安装。' },
+]
+
+const currentMain = computed(() => mainTabs.find(i => i.key === activeMain.value) || mainTabs[0])
 
 const config = reactive({
   invalid_plugin_ids: [],
@@ -336,139 +249,34 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.plugin-config {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 0.5rem;
-}
-
-.bg-primary-lighten-5 {
-  background-color: rgba(var(--v-theme-primary), 0.07);
-}
-
-.border {
-  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
-}
-
-.config-card {
-  background-image:
-    linear-gradient(
-      to right,
-      rgba(var(--v-theme-surface), 0.98),
-      rgba(var(--v-theme-surface), 0.95)
-    ),
-    repeating-linear-gradient(
-      45deg,
-      rgba(var(--v-theme-primary), 0.03),
-      rgba(var(--v-theme-primary), 0.03) 10px,
-      transparent 10px,
-      transparent 20px
-    );
-  background-attachment: fixed;
-  box-shadow: 0 1px 2px rgba(var(--v-border-color), 0.05) !important;
-  transition: all 0.3s ease;
-}
-
-.config-card:hover {
-  box-shadow: 0 3px 6px rgba(var(--v-border-color), 0.1) !important;
-}
-
-.setting-item {
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  padding: 0.5rem;
-  min-height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.setting-item:hover {
-  background-color: rgba(var(--v-theme-primary), 0.03);
-}
-
-.stat-item {
-  justify-content: flex-start;
-}
-
-.stat-copy {
-  display: flex;
-  min-width: 0;
-  flex: 1;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.stat-copy strong {
-  font-size: 1.35rem;
-  line-height: 1;
-}
-
-.text-subtitle-2 {
-  font-size: 0.875rem !important;
-  font-weight: 500;
-  white-space: nowrap;
-  margin-right: 0.5rem;
-}
-
-.select-item {
-  display: block;
-}
-
-.plugin-list {
-  max-height: 320px;
-  overflow-y: auto;
-  border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 8px;
-}
-
-.empty-panel {
-  min-height: 112px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: rgba(var(--v-theme-on-surface), 0.68);
-  font-size: 0.875rem;
-}
-
-.mode-item :deep(.v-selection-control-group) {
-  gap: 1rem;
-}
-
-.quick-actions {
-  justify-content: flex-end;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.action-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-@media (max-width: 600px) {
-  .plugin-config {
-    padding: 0.25rem;
-  }
-
-  .stat-copy {
-    justify-content: flex-start;
-  }
-
-  .quick-actions {
-    justify-content: flex-start;
-  }
-
-  .action-spacer {
-    display: none;
-  }
-
-  .action-bar :deep(.v-btn) {
-    flex: 1 1 auto;
-    min-width: max-content;
-  }
+.cip-config { width: min(1120px, calc(100vw - 48px)); max-width: 100%; padding: 8px; margin: 0 auto; }
+.cip-card { width: 100%; display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); }
+.cip-header { padding: 14px 18px; }
+.cip-body { flex: 1 1 auto; min-height: 0; display: flex; }
+.cip-nav { width: 160px; flex: 0 0 160px; border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); background: rgba(var(--v-theme-on-surface), .02); }
+.cip-nav-item { margin: 2px 8px; }
+.cip-content { flex: 1 1 auto; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.cip-window { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.cip-pane { padding: 16px 20px; }
+.cip-section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: rgb(var(--v-theme-primary)); }
+.cip-stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.cip-stat { border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); border-radius: 8px; padding: 10px; min-width: 0; }
+.cip-plugin-list { max-height: 320px; overflow-y: auto; border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); border-radius: 8px; }
+.cip-empty { min-height: 112px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: rgba(var(--v-theme-on-surface), 0.68); font-size: 0.875rem; }
+.cip-actions { padding: 10px 18px; }
+@media (max-width: 760px) {
+  .cip-config { width: 100%; padding: 0; }
+  .cip-card { border-radius: 0; border: none; }
+  .cip-header { padding: 8px 10px; }
+  .cip-body { flex-direction: column; }
+  .cip-nav { width: 100%; flex: 0 0 auto; border-right: none; border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .cip-nav::-webkit-scrollbar { display: none; }
+  .cip-nav-list { display: flex; flex-wrap: nowrap; gap: 4px; min-width: max-content; padding: 5px 8px !important; }
+  .cip-nav-item { flex: 0 0 auto; min-width: 96px; min-height: 34px !important; margin: 0; padding-inline: 8px; }
+  .cip-nav-title { font-size: 12px; white-space: nowrap; }
+  .cip-stat-grid { grid-template-columns: 1fr; }
+  .cip-pane { padding: 12px 12px; }
+  .cip-action-spacer { display: none; }
+  .cip-actions :deep(.v-btn) { flex: 1 1 auto; min-width: max-content; }
 }
 </style>
