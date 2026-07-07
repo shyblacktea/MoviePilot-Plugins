@@ -123,7 +123,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.16"
+    plugin_version = "0.17"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -233,7 +233,24 @@ class SubscribePlus(_PluginBase):
         return None
 
     def stop_service(self):
-        pass
+        """插件停止/重载时清理内存态资源。
+
+        定时任务由 MoviePilot 调度器统一注销；JsonStore 为即时落盘，无需 flush。
+        这里主要清空插件持有的内存引用（下载上下文、分类/压制组缓存及各组件），
+        避免重载后残留旧状态或对象引用无法回收。
+        """
+        try:
+            if isinstance(getattr(self, "_download_contexts", None), dict):
+                self._download_contexts.clear()
+            if isinstance(getattr(self, "_category_cache", None), dict):
+                self._category_cache.clear()
+            if isinstance(getattr(self, "_custom_release_groups_cache", None), list):
+                self._custom_release_groups_cache.clear()
+        except Exception as exc:
+            logger.warning(f"订阅下载增强停止服务清理缓存失败：{exc}")
+        self._scanner = None
+        self._diagnoser = None
+        self._site_resolver = None
 
     def get_status_api(self) -> Dict[str, Any]:
         store = self._ensure_store()
@@ -455,6 +472,21 @@ class SubscribePlus(_PluginBase):
         return inputs[0], ""
 
     def _diagnose_item(self, item: DiagnosisInput) -> Optional[DiagnosisItem]:
+        result = self._diagnose_item_inner(item)
+        if result is not None:
+            self._fill_site_names(result)
+        return result
+
+    def _fill_site_names(self, result: DiagnosisItem) -> None:
+        """将诊断结果里的站点 ID 解析为站点名称，供通知展示。"""
+        try:
+            resolver = self._ensure_site_resolver()
+            if getattr(result, "sites", None) and not getattr(result, "site_names", None):
+                result.site_names = resolver.names_for(result.sites)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强解析搜索站点名称失败：{exc}")
+
+    def _diagnose_item_inner(self, item: DiagnosisInput) -> Optional[DiagnosisItem]:
         mp_search = self._run_moviepilot_subscribe_search_for_item(item)
         mp_diagnosis = self._diagnose_with_moviepilot_subscription_scope(item, mp_search)
         if mp_diagnosis.candidates:
