@@ -47,6 +47,10 @@
 
 ## 更新日志
 
+### 1.4
+
+- 修复市场重装失败：改用 `PluginHelper.install` 替换已移除的 `get_plugin_by_id` / `download_plugin` 接口。
+
 ### 1.3
 
 - 补齐仓库 `plugins.v2/cleaninvalidplugin` 官方目录，避免 GitHub Release API 失败或限流后回退文件列表安装时缺少前端资源。
