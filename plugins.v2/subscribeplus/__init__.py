@@ -123,22 +123,24 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.15"
+    plugin_version = "0.16"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
     plugin_order = 998
     auth_level = 1
 
-    _config: Dict[str, Any] = {}
-    _plugin_config: PluginConfig = PluginConfig()
-    _store: Optional[JsonStore] = None
-    _site_resolver: Optional[SiteResolver] = None
-    _scanner: Optional[SubscriptionScanner] = None
-    _diagnoser: Optional[TorrentDiagnoser] = None
-    _download_contexts: Dict[str, Any] = {}
-    _category_cache: Dict[str, str] = {}
-    _custom_release_groups_cache: List[str] = []
+    # 说明：这些成员在 init_plugin 中初始化实例属性；此处仅做类型注解，
+    # 避免使用类级可变默认值（dict/list）导致多实例间状态共享的隐患。
+    _config: Dict[str, Any]
+    _plugin_config: PluginConfig
+    _store: Optional[JsonStore]
+    _site_resolver: Optional[SiteResolver]
+    _scanner: Optional[SubscriptionScanner]
+    _diagnoser: Optional[TorrentDiagnoser]
+    _download_contexts: Dict[str, Any]
+    _category_cache: Dict[str, str]
+    _custom_release_groups_cache: List[str]
 
     def init_plugin(self, config: dict = None):
         self._config = config or {}
@@ -1530,7 +1532,32 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强校验 TMDB 目标失败 TMDB={tmdbid}: {exc}")
             return {"success": False, "message": f"TMDB 校验失败：{exc}"}
 
-    def _identify_target_by_ai(self, title: str) -> Dict[str, Any]:
+    @staticmethod
+    def _run_coro_sync(coro: Any) -> Any:
+        """同步执行协程，兼容当前线程已存在运行中事件循环的情况。
+
+        asyncio.run 在已有运行中的事件循环里会抛 RuntimeError；此时
+        loop.run_until_complete 同样会因为循环正在运行而失败，因此改用独立
+        线程运行 asyncio.run，避免 "event loop is already running"。
+        """
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            # 当前线程没有运行中的事件循环，直接同步执行
+            return asyncio.run(coro)
+        # 已在运行中的事件循环里，切换到独立线程执行，避免阻塞/报错
+        import concurrent.futures
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            return executor.submit(lambda: asyncio.run(coro)).result()
+
+    @classmethod
+    def _get_llm_sync(cls):
+        """获取可同步调用的 LLM 实例。
+
+        兼容 app.helper.llm 与 app.agent.llm 两个导入路径，并在 get_llm
+        返回协程时安全地同步等待其结果。
+        """
         try:
             from app.helper.llm import LLMHelper
         except Exception:
@@ -1541,11 +1568,11 @@ class SubscribePlus(_PluginBase):
 
         llm = LLMHelper.get_llm(streaming=False)
         if hasattr(llm, "__await__"):
-            try:
-                llm = asyncio.run(llm)
-            except RuntimeError:
-                loop = asyncio.get_event_loop()
-                llm = loop.run_until_complete(llm)
+            llm = cls._run_coro_sync(llm)
+        return llm
+
+    def _identify_target_by_ai(self, title: str) -> Dict[str, Any]:
+        llm = self._get_llm_sync()
         prompt = "\n".join(
             [
                 "你是 MoviePilot 媒体识别助手。",
@@ -1600,21 +1627,7 @@ class SubscribePlus(_PluginBase):
             return {"success": False, "message": f"再次识别失败：{exc}", "reason": "recognize_failed"}
 
     def _suggest_identifier_lines_by_ai(self, title: str, target: Dict[str, Any]) -> List[str]:
-        try:
-            from app.helper.llm import LLMHelper
-        except Exception:
-            try:
-                from app.agent.llm import LLMHelper
-            except Exception as exc:
-                raise RuntimeError("AI 未配置或 LLMHelper 不可用") from exc
-
-        llm = LLMHelper.get_llm(streaming=False)
-        if hasattr(llm, "__await__"):
-            try:
-                llm = asyncio.run(llm)
-            except RuntimeError:
-                loop = asyncio.get_event_loop()
-                llm = loop.run_until_complete(llm)
+        llm = self._get_llm_sync()
         prompt = "\n".join(
             [
                 "你是 MoviePilot 自定义识别词规则助手。",
