@@ -84,6 +84,12 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 ## 版本
 
+### v0.16
+
+- 抽取统一的 LLM 同步调用入口，修复在已有事件循环下 AI 识别可能报 `event loop is already running` 的问题。
+- 类成员由类级可变默认值改为纯类型注解，消除多实例状态共享隐患。
+- `stop_service` 补充内存态资源清理（下载上下文、分类/压制组缓存及组件引用），插件重载更干净。
+
 ### v0.15
 
 - 规则修改记录支持一键清空与逐条删除，修复数据页「清除」按钮清不到规则修改记录的问题。
@@ -188,9 +194,9 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.15`
-- Release tag：`SubscribePlus_v0.15`
-- Release 资产：`subscribeplus_v0.15.zip`
+- 当前版本：`0.16`
+- Release tag：`SubscribePlus_v0.16`
+- Release 资产：`subscribeplus_v0.16.zip`
 
 ## 致谢
 
