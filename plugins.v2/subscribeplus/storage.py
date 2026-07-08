@@ -40,6 +40,10 @@ class JsonStore:
     def load_scan_results(self) -> List[Dict[str, Any]]:
         return self._read("scan_results.json", [])
 
+    def replace_scan_results(self, results: List[Dict[str, Any]]):
+        """仅覆写诊断结果本身，不刷新最后扫描时间，用于入库后剔除已完成的集。"""
+        self._write("scan_results.json", results or [])
+
     def load_scan_meta(self) -> Dict[str, Any]:
         return self._read("scan_meta.json", {})
 
