@@ -84,6 +84,12 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 ## 版本
 
+### v0.17
+
+- 配置页与数据页改用左侧主导航 + 卡片式布局，参考豆瓣中心 UI 风格重做界面。
+- 前端构建过滤多余的 Vuetify 共享样式并移除冗余资源，减小 dist 体积。
+- Telegram 通知「搜索站点」由站点 ID 显示改为站点名称。
+
 ### v0.16
 
 - 抽取统一的 LLM 同步调用入口，修复在已有事件循环下 AI 识别可能报 `event loop is already running` 的问题。
@@ -194,9 +200,9 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.16`
-- Release tag：`SubscribePlus_v0.16`
-- Release 资产：`subscribeplus_v0.16.zip`
+- 当前版本：`0.17`
+- Release tag：`SubscribePlus_v0.17`
+- Release 资产：`subscribeplus_v0.17.zip`
 
 ## 致谢
 
