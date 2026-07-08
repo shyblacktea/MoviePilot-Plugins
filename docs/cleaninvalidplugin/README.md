@@ -47,6 +47,11 @@
 
 ## 更新日志
 
+### 1.5
+
+- 配置页与数据页改用左侧主导航 + 卡片式布局，参考豆瓣中心 UI 风格重做界面。
+- 前端构建过滤多余的 Vuetify 共享样式并移除冗余资源，减小 dist 体积。
+
 ### 1.4
 
 - 修复市场重装失败：改用 `PluginHelper.install` 替换已移除的 `get_plugin_by_id` / `download_plugin` 接口。
