@@ -123,7 +123,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.17"
+    plugin_version = "0.18"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -287,7 +287,7 @@ class SubscribePlus(_PluginBase):
         return {
             "success": True,
             "data": {
-                "items": store.load_scan_results(),
+                "items": self._prune_downloaded_scan_results(),
                 "last_scan": store.load_scan_meta().get("last_scan_at"),
                 "identifier_records": store.load_identifier_records()[:50],
                 "rule_records": store.load_rule_records()[:50],
@@ -873,6 +873,10 @@ class SubscribePlus(_PluginBase):
 
         @eventmanager.register(EventType.TransferComplete)
         def handle_transfer_complete(self, event):
+            try:
+                self._prune_downloaded_scan_results()
+            except Exception as exc:
+                logger.warning(f"订阅下载增强入库后刷新诊断结果失败: {exc}")
             self._handle_transfer_complete_cleanup(event)
 
     @staticmethod
@@ -2211,7 +2215,7 @@ class SubscribePlus(_PluginBase):
     def _handle_sp_command_text(self, text: str, event_data: Dict[str, Any]):
         store = self._ensure_store()
         items = []
-        for item in store.load_scan_results():
+        for item in self._prune_downloaded_scan_results():
             ignore_key = self._ignore_key(item)
             if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
                 continue
@@ -2378,6 +2382,52 @@ class SubscribePlus(_PluginBase):
     def _ignore_key(item: Dict[str, Any]) -> str:
         episodes = ",".join(str(episode.get("episode")) for episode in item.get("episodes") or [])
         return f"{item.get('subscribe_id')}:{item.get('season')}:{episodes}"
+
+    def _refresh_scan_result_item(self, item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """按当前媒体库/整理历史复核单条诊断结果，剔除已入库的集。
+
+        返回值：仍有缺集时返回更新后的诊断项；全部已入库时返回 None。
+        """
+        tmdbid = safe_int(item.get("tmdbid"), 0)
+        season = safe_int(item.get("season"), 0)
+        episodes = item.get("episodes") or []
+        if not tmdbid or not season or not episodes:
+            return item
+        try:
+            downloaded = self._load_downloaded_episodes(tmdbid, season)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强复核已入库集失败: {exc}")
+            return item
+        if not downloaded:
+            return item
+        remaining = [ep for ep in episodes if safe_int(ep.get("episode"), 0) not in downloaded]
+        if not remaining:
+            return None
+        if len(remaining) == len(episodes):
+            return item
+        updated = dict(item)
+        updated["episodes"] = remaining
+        return updated
+
+    def _prune_downloaded_scan_results(self) -> List[Dict[str, Any]]:
+        """遍历诊断快照，剔除已入库的集与已完成的诊断项，并回写存储。"""
+        store = self._ensure_store()
+        results = store.load_scan_results()
+        if not results:
+            return results
+        refreshed: List[Dict[str, Any]] = []
+        changed = False
+        for item in results:
+            updated = self._refresh_scan_result_item(item)
+            if updated is None:
+                changed = True
+                continue
+            if updated is not item:
+                changed = True
+            refreshed.append(updated)
+        if changed:
+            store.replace_scan_results(refreshed)
+        return refreshed
 
     def _load_subscribes(self) -> List[Any]:
         try:
