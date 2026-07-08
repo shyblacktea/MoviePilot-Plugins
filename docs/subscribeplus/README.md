@@ -84,17 +84,21 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 ## 版本
 
+### v0.18
+
+- 修复剧集已下载入库后，`/sp` 待处理列表与数据页仍显示该剧的问题：诊断结果读取时会按媒体库缓存 / 整理历史实时复核，剔除已入库的集。
+- 入库完成事件（TransferComplete）触发后自动刷新诊断快照，移除已完成的诊断项，避免残留旧结果。
+
 ### v0.17
 
-- 配置页与数据页改用左侧主导航 + 卡片式布局，参考豆瓣中心 UI 风格重做界面。
-- 前端构建过滤多余的 Vuetify 共享样式并移除冗余资源，减小 dist 体积。
-- Telegram 通知「搜索站点」由站点 ID 显示改为站点名称。
+- 配置页与数据页改用左侧导航 + 卡片式布局，参考豆瓣中心 UI 风格重做。
+- 前端构建过滤多余的 Vuetify 共享样式，减小 dist 体积。
+- Telegram 通知「搜索站点」由站点 ID 显示为站点名称。
 
 ### v0.16
 
-- 抽取统一的 LLM 同步调用入口，修复在已有事件循环下 AI 识别可能报 `event loop is already running` 的问题。
-- 类成员由类级可变默认值改为纯类型注解，消除多实例状态共享隐患。
-- `stop_service` 补充内存态资源清理（下载上下文、分类/压制组缓存及组件引用），插件重载更干净。
+- 抽取统一的 LLM 同步调用入口，修复已有事件循环下 AI 识别可能报 `event loop is already running` 的问题。
+- 类成员改为纯类型注解，消除类级可变默认值共享隐患。
 
 ### v0.15
 
@@ -200,9 +204,9 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.17`
-- Release tag：`SubscribePlus_v0.17`
-- Release 资产：`subscribeplus_v0.17.zip`
+- 当前版本：`0.18`
+- Release tag：`SubscribePlus_v0.18`
+- Release 资产：`subscribeplus_v0.18.zip`
 
 ## 致谢
 
