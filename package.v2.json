@@ -43,5 +43,19 @@
       "0.2": "feat: Telegram 规则调整改为只添加官组或平台，避免官组+平台组合误扩大匹配范围；feat: 规则菜单、确认页和完成页新增结束按钮，确认后可返回规则菜单继续处理；feat: 支持从 MoviePilot 自定义识别词和订阅自定义词中提取制作组/官组；feat: 配置页新增独立搜索 PT 站点范围，数据页新增清除最近诊断结果按钮；feat: PT 候选资源只保留最近缺失集数，Telegram 结束按钮会尝试删除当前通知消息；fix: 平台关键词按边界匹配，避免 BluRay 等标题片段误判平台",
       "0.1": "feat: 初版支持 TMDB 播出日期停更检测、PT 搜索诊断、Telegram 独立通知和 Vue 配置详情页；feat: 二级分类读取 MoviePilot 分类策略，并支持订阅无分类时按 TMDB 信息识别分类；feat: 搜索站点范围同步 MoviePilot 搜索站点设置；ui: 移除固定规则模式配置，规则调整改为 Telegram 菜单动态选择；docs: 更新作者为 shyblacktea,Codex"
     }
+  },
+  "Plex302ReverseProxy": {
+    "name": "PLEX 302 反向代理",
+    "description": "Plex 302 反向代理，自动代理 HTTP 链接，跳转最终地址，支持 STRM 与路径规则直链。",
+    "labels": "媒体服务器",
+    "version": "0.2.1",
+    "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
+    "author": "shyblacktea",
+    "level": 1,
+    "history": {
+      "v0.2.1": "优化起播速度：并发相同播放请求单飞合并只解析一次直链；收敛热路径上游超时至 5s。",
+      "v0.2.0": "修复 Plex 官方客户端 STRM 播放：补齐 .mpd/.m3u8 转码路由，增强 STRM 解析与直链缓存。",
+      "v0.1.0": "初始版本：Plex 播放/下载流 302 直链、STRM 解析、顶置路径规则、强制 DirectPlay、WebSocket 代理"
+    }
   }
 }
