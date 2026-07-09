@@ -35,13 +35,24 @@ docker run -d --name plex-mediainfo-helper \
   -e PTH_DB_PATH="/db/com.plexapp.plugins.library.db" \
   -e PTH_TOKEN="换成一个自定义密码" \
   -e PTH_PLEX_URL="http://192.168.0.122:32400" \
-  -e PTH_PLEX_TOKEN="JB2KvNa_6QgcPPbzm8oU" \
+  -e PTH_PLEX_TOKEN="你的PlexToken" \
   plex-mediainfo-helper:latest
 ```
 
 > 把 `/path/to/plex/config` 换成 122 上 Plex 实际的配置目录。
 > `PTH_TOKEN` 自定义一个密码，稍后填进插件。
 > `PTH_PLEX_TOKEN` 用于「Plex 繁忙时拒绝写入」的检测，可留空则跳过检测。
+
+### 方式 A2：docker compose（更省事）
+
+`helper/` 目录内已提供 `docker-compose.yml`。改好里面的挂载路径与 token 后：
+
+```bash
+cd helper
+docker compose up -d
+```
+
+需要修改的地方：`volumes` 左侧换成 122 上 Plex 实际的 `Databases` 目录，`PTH_TOKEN` 自定义密码，`PTH_PLEX_TOKEN` 填你的 Plex token（留空则跳过繁忙检测）。
 
 ### 3. 验证
 
@@ -63,7 +74,7 @@ curl -H "X-PTH-Token: 换成一个自定义密码" http://192.168.0.122:9001/dbi
 PTH_DB_PATH="/实际路径/com.plexapp.plugins.library.db" \
 PTH_TOKEN="换成一个自定义密码" \
 PTH_PLEX_URL="http://127.0.0.1:32400" \
-PTH_PLEX_TOKEN="JB2KvNa_6QgcPPbzm8oU" \
+PTH_PLEX_TOKEN="你的PlexToken" \
 python3 plex_mediainfo_helper.py
 ```
 
