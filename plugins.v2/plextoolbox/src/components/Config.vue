@@ -48,6 +48,11 @@
           <!-- 媒体信息补全 -->
           <div v-show="activeTab === 'mediainfo'" class="ptb-pane">
             <div class="ptb-section-title">STRM 媒体流信息补全</div>
+            <VAlert type="info" variant="tonal" density="compact" class="mb-3 text-caption">
+              媒体信息补全需先在 Plex 主机部署 helper 写库服务。
+              <a :href="helperDocUrl" target="_blank" rel="noopener" class="ptb-doc-link">查看部署说明</a>
+              <VIcon icon="mdi-open-in-new" size="12" class="ml-1" />
+            </VAlert>
             <VRow>
               <VCol cols="12"><VSwitch v-model="config.mediainfo_enabled" color="primary" hide-details inset label="启用媒体信息补全" /></VCol>
               <VCol cols="12" md="8"><VTextField v-model="config.plex_direct_host" label="Plex 直连地址（写库/枚举用，留空则用反代地址）" placeholder="http://192.168.0.122:32400" variant="outlined" density="compact" hide-details="auto" /></VCol>
@@ -110,6 +115,8 @@ const loadingSections = ref(false)
 const helperInfo = ref('')
 const sectionOptions = ref([])
 const activeTab = ref('proxy')
+
+const helperDocUrl = 'https://github.com/shyblacktea/MoviePilot-Plugins/blob/main/plugins.v2/plextoolbox/helper/README.md'
 
 const tabs = [
   { key: 'proxy', title: '反向代理', icon: 'mdi-swap-horizontal-bold', desc: 'Plex 播放流 302 直链跳转' },
@@ -181,5 +188,6 @@ onMounted(() => {
 .ptb-content { flex: 1 1 auto; min-width: 0; }
 .ptb-pane { padding: 16px; }
 .ptb-section-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; opacity: 0.8; }
+.ptb-doc-link { color: rgb(var(--v-theme-primary)); text-decoration: underline; font-weight: 600; }
 .ptb-actions { padding: 8px 16px; }
 </style>
