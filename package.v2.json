@@ -69,6 +69,7 @@
     "level": 1,
     "history": {
       "v0.3.0": "由 PLEX 302 反向代理升级为工具箱：新增 STRM 媒体流信息补全（Emby MediaStreams/ffprobe 探测直链，经 helper 安全写入 Plex 库），保留原 302 反代能力。"
-    }
+    },
+    "release": true
   }
 }
