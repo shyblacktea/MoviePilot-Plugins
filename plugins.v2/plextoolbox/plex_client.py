@@ -44,6 +44,109 @@ class PlexClient:
             logger.warning("Plex API 请求失败 %s: %s", path, e)
         return None
 
+    def _put(self, path: str) -> bool:
+        """
+        发起 PUT 请求（用于 unmatch 等写操作）。
+
+        :param path: 相对路径（含查询串）
+        :return: 2xx 返回 True
+        """
+        sep = "&" if "?" in path else "?"
+        url = f"{self._base}{path}{sep}X-Plex-Token={quote(self._token, safe='')}"
+        try:
+            with Client(timeout=self._timeout) as client:
+                resp = client.put(url, headers={"Accept": "application/json"})
+                if 200 <= resp.status_code < 300:
+                    return True
+                logger.warning("Plex PUT %s 返回 %s", path, resp.status_code)
+        except Exception as e:
+            logger.warning("Plex PUT 请求失败 %s: %s", path, e)
+        return False
+
+    def section_type(self, section_key: str) -> str:
+        """
+        获取分区类型（movie/show 等）。
+
+        :param section_key: 分区 key
+        :return: 类型字符串，未知返回空串
+        """
+        for s in self.list_sections():
+            if str(s.get("key")) == str(section_key):
+                return s.get("type") or ""
+        return ""
+
+    def iter_top_items(self, section_key: str) -> List[Dict[str, Any]]:
+        """
+        列出分区下顶层条目（电影或剧集），带封面标记与文件路径信息。
+
+        :param section_key: 分区 key
+        :return: [{rating_key, type, title, has_thumb, has_art}]
+        """
+        data = self._get(f"/library/sections/{section_key}/all")
+        if not data:
+            return []
+        items = data.get("MediaContainer", {}).get("Metadata", [])
+        result: List[Dict[str, Any]] = []
+        for m in items:
+            if not m.get("ratingKey"):
+                continue
+            result.append(
+                {
+                    "rating_key": m.get("ratingKey"),
+                    "type": m.get("type"),
+                    "title": m.get("title"),
+                    "has_thumb": bool(m.get("thumb")),
+                    "has_art": bool(m.get("art")),
+                }
+            )
+        return result
+
+    def unmatch(self, rating_key: str) -> bool:
+        """
+        取消某条目的匹配（打回未匹配，重读时按当前代理识别）。
+
+        :param rating_key: 条目 ratingKey
+        :return: 成功返回 True
+        """
+        return self._put(f"/library/metadata/{rating_key}/unmatch")
+
+    def refresh_metadata(self, rating_key: str) -> bool:
+        """
+        触发条目按当前代理刷新元数据（用于 unmatch 后重读 NFO）。
+
+        :param rating_key: 条目 ratingKey
+        :return: 成功返回 True
+        """
+        return self._put(f"/library/metadata/{rating_key}/refresh")
+
+    def first_file_path(self, rating_key: str, item_type: str) -> str:
+        """
+        取条目第一个媒体文件的真实路径（用于定位 STRM 目录）。
+
+        电影直接取自身 Part；剧集下钻到第一集取 Part。
+
+        :param rating_key: 条目 ratingKey
+        :param item_type: 条目类型（movie/show）
+        :return: 文件路径，取不到返回空串
+        """
+        metas: List[Dict[str, Any]] = []
+        if item_type == "show":
+            for season in self._children(rating_key):
+                skey = season.get("ratingKey")
+                if not skey:
+                    continue
+                eps = self._children(skey)
+                if eps:
+                    metas = self._metadata(eps[0].get("ratingKey"))
+                    break
+        else:
+            metas = self._metadata(rating_key)
+        for meta in metas:
+            for p in self._extract_parts(meta):
+                if p.get("file"):
+                    return p["file"]
+        return ""
+
     def list_sections(self) -> List[Dict[str, Any]]:
         """
         列出所有媒体库分区。
@@ -106,15 +209,48 @@ class PlexClient:
         return data.get("MediaContainer", {}).get("Metadata", [])
 
     @staticmethod
+    def _build_label(metadata: Dict[str, Any]) -> str:
+        """
+        构建条目的人类可读标签：剧集为「剧名 SxxExx 集名」，电影为「片名 (年份)」。
+
+        :param metadata: 条目 Metadata
+        :return: 标签字符串
+        """
+        title = metadata.get("title") or ""
+        if metadata.get("type") == "episode":
+            show = metadata.get("grandparentTitle") or ""
+            s, e = metadata.get("parentIndex"), metadata.get("index")
+            se = ""
+            try:
+                if s is not None and e is not None:
+                    se = f"S{int(s):02d}E{int(e):02d}"
+            except (TypeError, ValueError):
+                se = ""
+            return " ".join(x for x in (show, se, title) if x)
+        year = metadata.get("year")
+        return f"{title} ({year})" if year else title
+
+    def item_label(self, rating_key: str) -> str:
+        """
+        取单个条目的可读标签（用于补全结果展示）。
+
+        :param rating_key: 条目 ratingKey
+        :return: 标签，取不到返回空串
+        """
+        metas = self._metadata(rating_key)
+        return self._build_label(metas[0]) if metas else ""
+
+    @staticmethod
     def _extract_parts(metadata: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
         从单个条目元数据中抽取所有 Part 的关键字段。
 
         :param metadata: 条目 Metadata
-        :return: [{part_id, file, container, title, duration_hint}]
+        :return: [{part_id, file, container, title, label, duration_hint}]
         """
         result: List[Dict[str, Any]] = []
         title = metadata.get("title") or ""
+        label = PlexClient._build_label(metadata)
         for media in metadata.get("Media", []) or []:
             for part in media.get("Part", []) or []:
                 pid = part.get("id")
@@ -126,7 +262,14 @@ class PlexClient:
                             "file": pfile,
                             "container": part.get("container"),
                             "title": title,
+                            "label": label,
                             "existing_duration": part.get("duration"),
+                            # children 列表接口的 Part 不含 Stream 字段，
+                            # 置 None 表示未知，区别于确认为空的 0
+                            "existing_streams": (
+                                len(part.get("Stream") or [])
+                                if "Stream" in part else None
+                            ),
                         }
                     )
         return result
@@ -158,17 +301,105 @@ class PlexClient:
                         parts.extend(self._collect_from_meta(episode, only_missing))
             else:
                 for meta in self._metadata(rating_key):
-                    parts.extend(self._collect_from_meta(meta, only_missing))
+                    parts.extend(
+                        self._collect_from_meta(meta, only_missing, detailed=True)
+                    )
         return parts
 
+    def collect_strm_parts_by_rating_key(
+        self, rating_key: str, only_missing: bool = True
+    ) -> List[Dict[str, Any]]:
+        """
+        按单个条目 ratingKey 枚举其 STRM part（用于播放停止后的针对性补全）。
+
+        播放上报/Webhook 给到的 ratingKey 通常是叶子条目（电影或单集），
+        直接取其元数据 Part 即可，无需下钻季/集。
+
+        :param rating_key: 条目 ratingKey
+        :param only_missing: 是否仅返回缺失媒体信息的 part
+        :return: STRM part 列表
+        """
+        parts: List[Dict[str, Any]] = []
+        for meta in self._metadata(rating_key):
+            parts.extend(self._collect_from_meta(meta, only_missing, detailed=True))
+        return parts
+
+    def collect_window_parts_by_rating_key(
+        self,
+        rating_key: str,
+        forward: int = 5,
+        only_missing: bool = True,
+    ) -> List[Dict[str, Any]]:
+        """
+        播放驱动的增量窗口收集：给定当前播放条目，返回需补全的 STRM part。
+
+        规则：
+        - 电影：仅收当前这一条（不做预取）。
+        - 单集：以当前集为起点，向后取 forward 集（含当前集，共 forward+1 集）
+          组成窗口，收集窗口内各集的 STRM part。窗口不跨季，季末即止。
+        - only_missing=True 时，窗口内已有媒体信息（已补全）的集自动跳过，
+          从而实现「命中已写过的跳过、只写新缺集」的增量效果。
+
+        :param rating_key: 当前播放条目的 ratingKey（电影或单集）
+        :param forward: 单集场景下向后预取的集数
+        :param only_missing: 是否仅返回缺失媒体信息的 part
+        :return: 窗口内待补全的 STRM part 列表
+        """
+        metas = self._metadata(rating_key)
+        if not metas:
+            return []
+        meta = metas[0]
+        itype = meta.get("type")
+
+        # 电影或非剧集叶子：仅当前条目
+        if itype != "episode":
+            parts: List[Dict[str, Any]] = []
+            for m in metas:
+                parts.extend(self._collect_from_meta(m, only_missing, detailed=True))
+            return parts
+
+        # 单集：定位所在季，按集号取「当前集 + 后 forward 集」窗口
+        season_key = meta.get("parentRatingKey")
+        cur_index = meta.get("index")
+        if not season_key or cur_index is None:
+            # 缺少定位信息时退化为仅当前集
+            return self._collect_from_meta(meta, only_missing, detailed=True)
+
+        siblings = self._children(season_key)
+        # 按集号排序，过滤出当前集及其后 forward 集
+        indexed = [
+            e for e in siblings
+            if e.get("ratingKey") and e.get("index") is not None
+        ]
+        indexed.sort(key=lambda e: e.get("index"))
+        window = [
+            e for e in indexed
+            if cur_index <= e.get("index") <= cur_index + forward
+        ]
+        if not window:
+            window = [meta]
+
+        parts = []
+        for e in window:
+            ek = e.get("ratingKey")
+            if not ek:
+                continue
+            for m in self._metadata(ek):
+                parts.extend(self._collect_from_meta(m, only_missing, detailed=True))
+        return parts
+
+
     def _collect_from_meta(
-        self, metadata: Dict[str, Any], only_missing: bool
+        self, metadata: Dict[str, Any], only_missing: bool, detailed: bool = False
     ) -> List[Dict[str, Any]]:
         """
         从条目元数据抽取 STRM part，按需过滤已有媒体信息的项。
 
         :param metadata: 条目 Metadata
         :param only_missing: 是否仅返回缺失媒体信息的 part
+        :param detailed: metadata 是否来自详情接口（/library/metadata/{rk}）。
+            详情接口会返回 Stream；缺失即代表真的没有流（如被 Plex 清空），
+            需要重写。列表/children 接口不含 Stream，缺失代表未知。
         :return: STRM part 列表
         """
         out: List[Dict[str, Any]] = []
@@ -177,7 +408,14 @@ class PlexClient:
             if not fpath.endswith(".strm"):
                 continue
             if only_missing and p.get("existing_duration"):
-                # 已有时长视为已补全，跳过
-                continue
+                streams = p.get("existing_streams")
+                if detailed:
+                    # 详情数据：有时长且流数 >0 才算已补全
+                    if streams:
+                        continue
+                else:
+                    # 列表数据：流数未知(None)时沿用时长判断，避免全库重扫
+                    if streams is None or streams > 0:
+                        continue
             out.append(p)
         return out
