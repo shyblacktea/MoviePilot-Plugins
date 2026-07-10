@@ -1,7 +1,7 @@
 from asyncio import Lock, create_task, gather, get_event_loop
 from contextlib import asynccontextmanager
 from time import monotonic
-from typing import Any, Dict, List, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 from urllib.parse import quote, urlparse
 
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
@@ -33,6 +33,16 @@ PART_INFO_CACHE_MAX_SIZE = 2000
 PREWARM_MAX_PARTS = 5
 # 热路径（起播关键路径）上游请求超时（秒）：收敛以避免拖慢起播
 HOT_PATH_TIMEOUT_SECONDS = 5.0
+
+# 非关键路径前缀：上游连接失败时静默降级为 DEBUG 日志（客户端高频轮询，失败无碍）
+SILENT_FAIL_PATH_PREFIXES = (
+    "/photo/:/transcode",
+    "/hubs",
+    "/statistics",
+    "/updater",
+    "/media/providers",
+    "/:/prefs",
+)
 
 # Plex Token 的可能来源
 PLEX_TOKEN_QUERY_KEY = "X-Plex-Token"
@@ -67,6 +77,7 @@ def create_app(
     plex_token: str = "",
     pin_rules: List[Tuple[str, str]] | None = None,
     force_direct_play: bool = True,
+    on_play_stop: Optional[Callable[[str], None]] = None,
 ) -> FastAPI:
     """
     创建 Plex 302 反向代理 FastAPI 应用
@@ -75,6 +86,8 @@ def create_app(
     :param plex_token (str): 备用 X-Plex-Token；请求自带 token 时优先使用请求中的
     :param pin_rules (List): 顶置路径规则列表 (路径前缀, 目标URL)；命中时先替换再 302
     :param force_direct_play (bool): 是否在 decision 请求中强制 DirectPlay，避免转码使 302 失效
+    :param on_play_stop (Callable): 播放停止回调，参数为 ratingKey；用于嗅探
+        /:/timeline?state=stopped 后触发针对性媒体信息补全
 
     :return FastAPI: 配置好的 FastAPI 应用实例
     """
@@ -182,7 +195,7 @@ def create_app(
         """
         FastAPI 生命周期管理器：创建共享 httpx 客户端及缓存，关闭时清理资源
         """
-        limits = Limits(max_keepalive_connections=20, keepalive_expiry=30.0)
+        limits = Limits(max_keepalive_connections=50, keepalive_expiry=60.0)
         app.state.http_client_follow = AsyncClient(follow_redirects=True, limits=limits)
         app.state.http_client_no_follow = AsyncClient(
             follow_redirects=False, limits=limits
@@ -880,7 +893,11 @@ def create_app(
             )
             resp = await client.send(req, stream=True)
         except Exception:
-            logger.warning("无法连接到 Plex: %s", target_url, exc_info=True)
+            # 高频非关键路径（图片转码/推荐位等）失败降为 DEBUG，避免日志刷屏
+            if path.startswith(SILENT_FAIL_PATH_PREFIXES):
+                logger.debug("Plex 非关键路径请求失败: %s", path)
+            else:
+                logger.warning("无法连接到 Plex: %s", target_url)
             return JSONResponse(
                 status_code=502,
                 content={
@@ -910,6 +927,46 @@ def create_app(
             status_code=resp.status_code,
             headers=resp_headers,
         )
+
+    # ---------- 播放状态嗅探（方案A：timeline 停止触发补全） ----------
+
+    def _sniff_timeline_stop(request: Request) -> None:
+        """
+        从 /:/timeline 请求参数中嗅探播放停止事件并回调。
+
+        Plex 客户端播放状态经 /:/timeline?state=stopped&ratingKey=xxx 上报，
+        命中停止状态时提取 ratingKey 触发针对性补全（去重由回调侧处理）。
+
+        :param request: 当前请求
+        """
+        if on_play_stop is None:
+            return
+        try:
+            q = request.query_params
+            if q.get("state") != "stopped":
+                return
+            rating_key = q.get("ratingKey") or ""
+            if not rating_key:
+                return
+            on_play_stop(str(rating_key))
+        except Exception as exc:
+            logger.debug("timeline 嗅探异常: %s", exc)
+
+    async def _handle_timeline(request: Request):
+        """
+        代理 /:/timeline 并嗅探播放停止事件。
+
+        :param request: 当前请求
+        :return: 反代响应
+        """
+        _sniff_timeline_stop(request)
+        return await _reverse_proxy(request)
+
+    app.api_route(
+        "/:/timeline",
+        methods=["GET", "POST", "HEAD"],
+        response_model=None,
+    )(_handle_timeline)
 
     @app.api_route(
         "/{path:path}",
