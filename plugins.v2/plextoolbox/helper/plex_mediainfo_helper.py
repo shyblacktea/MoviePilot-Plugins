@@ -36,6 +36,9 @@ BACKUP_KEEP = int(os.environ.get("PTH_BACKUP_KEEP", "10"))
 PLEX_LOCAL_URL = os.environ.get("PTH_PLEX_URL", "http://127.0.0.1:32400").rstrip("/")
 PLEX_TOKEN = os.environ.get("PTH_PLEX_TOKEN", "").strip()
 REFUSE_WHEN_PLAYING = os.environ.get("PTH_REFUSE_WHEN_PLAYING", "1") == "1"
+# 每次写入前是否备份数据库。全量备份大库耗时高（写慢的主因之一），默认关闭；
+# 需要兜底时置 PTH_BACKUP_ON_WRITE=1。
+BACKUP_ON_WRITE = os.environ.get("PTH_BACKUP_ON_WRITE", "0") == "1"
 
 DB_CANDIDATES = [
     "/config/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db",
@@ -233,15 +236,28 @@ def _upsert(
     return "insert"
 
 
-def write_media_info(db_path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+def _open_conn(db_path: str) -> sqlite3.Connection:
     """
-    将归一化的媒体流信息写入 Plex 数据库。
+    打开写库连接并设置 WAL/busy_timeout。
+
+    :param db_path: 数据库路径
+    :return: 数据库连接
+    """
+    conn = sqlite3.connect(db_path, timeout=30.0)
+    conn.execute("PRAGMA busy_timeout=30000")
+    conn.execute("PRAGMA journal_mode=WAL")
+    return conn
+
+
+def _write_one(conn: sqlite3.Connection, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    在已开启事务的连接上写入单条媒体信息（用 SAVEPOINT 隔离失败项）。
 
     payload 关键字段：part_id（必填，media_parts.id）、media_item_id（可选）、
     container/duration/size/bitrate/width/height/video_codec/audio_codec、
     streams（逐条流列表，含 stream_type 1视频/2音频/3字幕）、overwrite_streams。
 
-    :param db_path: 数据库路径
+    :param conn: 已建立的数据库连接（外层负责 BEGIN/COMMIT）
     :param payload: 媒体信息载荷
     :return: 写入结果统计
     """
@@ -256,12 +272,8 @@ def write_media_info(db_path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         "streams_deleted": 0,
         "streams_written": 0,
     }
-    conn = sqlite3.connect(db_path, timeout=30.0)
+    conn.execute("SAVEPOINT item_write")
     try:
-        conn.execute("PRAGMA busy_timeout=30000")
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("BEGIN IMMEDIATE")
-
         media_item_id = payload.get("media_item_id")
         if not media_item_id:
             cur = conn.execute(
@@ -271,7 +283,7 @@ def write_media_info(db_path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
             if row:
                 media_item_id = row[0]
         if not media_item_id:
-            conn.rollback()
+            conn.execute("ROLLBACK TO item_write")
             result["error"] = f"无法定位 part_id={part_id} 的 media_item_id"
             return result
 
@@ -289,6 +301,7 @@ def write_media_info(db_path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
                 "display_aspect_ratio": payload.get("display_aspect_ratio"),
                 "frames_per_second": payload.get("frame_rate"),
                 "audio_channels": payload.get("audio_channels"),
+                "media_analysis_version": 6,
             },
             mi_cols,
         )
@@ -349,15 +362,78 @@ def write_media_info(db_path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
                     written += 1
             result["streams_written"] = written
 
-        conn.commit()
+        conn.execute("RELEASE item_write")
         result["success"] = True
         return result
     except Exception as e:
-        conn.rollback()
+        try:
+            conn.execute("ROLLBACK TO item_write")
+        except sqlite3.Error:
+            pass
         result["error"] = f"写入异常: {e}"
         return result
+
+
+def write_media_info(db_path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    单条写入入口：建连接、开事务、写入并提交。
+
+    :param db_path: 数据库路径
+    :param payload: 媒体信息载荷
+    :return: 写入结果统计
+    """
+    conn = _open_conn(db_path)
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        result = _write_one(conn, payload)
+        if result.get("success"):
+            conn.commit()
+        else:
+            conn.rollback()
+        return result
+    except Exception as e:
+        conn.rollback()
+        return {"success": False, "part_id": payload.get("part_id"), "error": f"写入异常: {e}"}
     finally:
         conn.close()
+
+
+def write_media_info_batch(
+    db_path: str, items: List[Dict[str, Any]]
+) -> Tuple[int, List[Dict[str, Any]]]:
+    """
+    批量写入：整批共用一个连接一个事务，单条失败用 SAVEPOINT 回滚不影响其余。
+
+    :param db_path: 数据库路径
+    :param items: 媒体信息载荷列表
+    :return: (成功条数, 每条结果列表)
+    """
+    results: List[Dict[str, Any]] = []
+    ok = 0
+    conn = _open_conn(db_path)
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        for it in items:
+            r = _write_one(conn, it)
+            if r.get("success"):
+                ok += 1
+            results.append(r)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        # 整批事务级失败：未产生结果的项标记失败
+        while len(results) < len(items):
+            results.append(
+                {
+                    "success": False,
+                    "part_id": items[len(results)].get("part_id"),
+                    "error": f"批量事务异常: {e}",
+                }
+            )
+        ok = sum(1 for r in results if r.get("success"))
+    finally:
+        conn.close()
+    return ok, results
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -441,7 +517,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
         with _WRITE_LOCK:
-            backup = backup_db(db)
+            backup = backup_db(db) if BACKUP_ON_WRITE else ""
             if self.path == "/write":
                 res = write_media_info(db, payload)
                 res["backup"] = backup
@@ -449,15 +525,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == "/write_batch":
                 items = payload.get("items") or []
-                results = []
-                ok = 0
-                for it in items:
-                    if force:
-                        it["force"] = True
-                    r = write_media_info(db, it)
-                    if r.get("success"):
-                        ok += 1
-                    results.append(r)
+                ok, results = write_media_info_batch(db, items)
                 self._send(
                     200,
                     {
@@ -487,6 +555,7 @@ def main() -> None:
             print(f"  - {c}")
         print("请通过环境变量 PTH_DB_PATH 指定数据库路径。")
     print(f"备份保留: {BACKUP_KEEP} 份")
+    print(f"写前备份: {'开' if BACKUP_ON_WRITE else '关（PTH_BACKUP_ON_WRITE=1 可开启）'}")
     print(f"繁忙拒写: {'开' if REFUSE_WHEN_PLAYING else '关'}")
     print("=" * 60)
     ThreadingHTTPServer((LISTEN_HOST, LISTEN_PORT), Handler).serve_forever()
