@@ -1,8 +1,11 @@
 """PLEX 工具箱插件：Plex 302 反向代理 + STRM 媒体流信息补全。"""
 
-from threading import Thread
+import json
+from threading import Lock, Thread
+from time import monotonic
 from typing import Any, Dict, List, Optional, Tuple
 
+from fastapi import Request
 from uvicorn import Config, Server
 
 from app.log import logger
@@ -19,6 +22,8 @@ from .emby_client import EmbyClient
 from .helper_client import HelperClient
 from .mediainfo import MediaInfoCompleter
 from .plex_client import PlexClient
+from .poster_fixer import PosterFixer
+from .scrape_tools import ScrapeTools
 
 
 PIN_RULES_SEP = " => "
@@ -56,9 +61,9 @@ class PlexToolbox(_PluginBase):
     """PLEX 工具箱：302 反向代理与 STRM 媒体流信息补全。"""
 
     plugin_name = "PLEX 工具箱"
-    plugin_desc = "Plex 302 反向代理 + STRM 媒体流信息补全（Emby/ffprobe 数据源写入 Plex 库）。"
+    plugin_desc = "Plex 302 反向代理 + STRM 媒体流信息补全（Emby 数据源写入 Plex 库）。"
     plugin_icon = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png"
-    plugin_version = "0.3.0"
+    plugin_version = "0.6.0"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "plextoolbox_"
@@ -86,7 +91,6 @@ class PlexToolbox(_PluginBase):
     _emby_url = ""
     _emby_apikey = ""
     _use_emby = True
-    _use_ffprobe = True
     _overwrite_streams = True
     _only_missing = True
     _concurrency = 3
@@ -94,12 +98,43 @@ class PlexToolbox(_PluginBase):
     _cron = ""
     _running = False
 
+    # ---- 自动补全触发配置 ----
+    _auto_full_on_enable = False
+    _play_stop_complete = False
+    _webhook_enabled = False
+    _dedup_window = 300
+    _forward_episodes = 5
+    # ratingKey -> 上次触发的单调时间戳，用于去重
+    _recent_triggers: Dict[str, float] = {}
+    _trigger_lock = Lock()
+
+    def _proxy_signature(self) -> Tuple:
+        """
+        构建反代相关配置的签名，用于判断保存配置后是否需要重启代理。
+
+        :return: 反代配置签名元组
+        """
+        return (
+            self._enabled,
+            self._proxy_enabled,
+            self._plex_host,
+            self._plex_token,
+            self._host,
+            self._port,
+            self._pin_rules_raw,
+            self._force_direct_play,
+        )
+
     def init_plugin(self, config: Optional[Dict[str, Any]] = None) -> None:
         """
         初始化插件：解析配置，按需启动 302 代理。
 
+        仅当反代相关配置发生变化（或代理未在运行）时才重启代理，
+        避免每次保存补全配置都导致 Plex 播放断链。
+
         :param config: 插件配置字典
         """
+        old_sig = self._proxy_signature()
         if config:
             self._enabled = config.get("enabled", False)
             # 反代
@@ -122,7 +157,6 @@ class PlexToolbox(_PluginBase):
             self._emby_url = (config.get("emby_url") or "").strip()
             self._emby_apikey = (config.get("emby_apikey") or "").strip()
             self._use_emby = config.get("use_emby", True)
-            self._use_ffprobe = config.get("use_ffprobe", True)
             self._overwrite_streams = config.get("overwrite_streams", True)
             self._only_missing = config.get("only_missing", True)
             try:
@@ -131,10 +165,45 @@ class PlexToolbox(_PluginBase):
                 self._concurrency = 3
             self._sections = (config.get("sections") or "").strip()
             self._cron = (config.get("cron") or "").strip()
+            # 自动补全触发
+            self._auto_full_on_enable = config.get("auto_full_on_enable", False)
+            self._play_stop_complete = config.get("play_stop_complete", False)
+            self._webhook_enabled = config.get("webhook_enabled", False)
+            try:
+                self._dedup_window = int(config.get("dedup_window") or 300)
+            except (TypeError, ValueError):
+                self._dedup_window = 300
+            try:
+                self._forward_episodes = int(config.get("forward_episodes") or 5)
+            except (TypeError, ValueError):
+                self._forward_episodes = 5
             self._update_config()
 
-        self.stop_service()
-        self._start_proxy()
+        # 仅当反代相关配置变化或代理未运行时才重启代理，避免保存补全配置导致断链
+        new_sig = self._proxy_signature()
+        proxy_running = self._server is not None
+        if new_sig != old_sig or not proxy_running:
+            self.stop_service()
+            self._start_proxy()
+        self._maybe_auto_full()
+
+    def _maybe_auto_full(self) -> None:
+        """插件启用且开启「启用后自动全量」时，后台跑一次全量补全。"""
+        if not (self._enabled and self._mediainfo_enabled and self._auto_full_on_enable):
+            return
+        if not self._sections:
+            logger.info("PlexToolbox 自动全量已开启但未指定媒体库，跳过")
+            return
+
+        def _worker() -> None:
+            """后台线程执行一次全量补全，避免阻塞插件初始化。"""
+            try:
+                logger.info("PlexToolbox 启用后自动全量补全开始")
+                self.run_completion(source="auto_enable")
+            except Exception as exc:
+                logger.error("PlexToolbox 自动全量补全异常: %s", exc, exc_info=True)
+
+        Thread(target=_worker, daemon=True).start()
 
     def _start_proxy(self) -> None:
         """按配置启动 302 反向代理服务。"""
@@ -149,6 +218,7 @@ class PlexToolbox(_PluginBase):
             plex_token=self._plex_token,
             pin_rules=self._pin_rules,
             force_direct_play=self._force_direct_play,
+            on_play_stop=self._on_play_stop_from_proxy,
         )
         try:
             uv_config = Config(app=app, host=self._host, port=self._port, log_config=None)
@@ -183,12 +253,16 @@ class PlexToolbox(_PluginBase):
                 "emby_url": self._emby_url,
                 "emby_apikey": self._emby_apikey,
                 "use_emby": self._use_emby,
-                "use_ffprobe": self._use_ffprobe,
                 "overwrite_streams": self._overwrite_streams,
                 "only_missing": self._only_missing,
                 "concurrency": self._concurrency,
                 "sections": self._sections,
                 "cron": self._cron,
+                "auto_full_on_enable": self._auto_full_on_enable,
+                "play_stop_complete": self._play_stop_complete,
+                "webhook_enabled": self._webhook_enabled,
+                "dedup_window": self._dedup_window,
+                "forward_episodes": self._forward_episodes,
             }
         )
 
@@ -218,7 +292,6 @@ class PlexToolbox(_PluginBase):
             helper=helper,
             emby=emby,
             use_emby=self._use_emby,
-            use_ffprobe=self._use_ffprobe,
             overwrite_streams=self._overwrite_streams,
             concurrency=self._concurrency,
             force_write=force_write,
@@ -259,6 +332,116 @@ class PlexToolbox(_PluginBase):
             return {"success": False, "error": str(e)}
         finally:
             self._running = False
+
+    def _should_trigger(self, rating_key: str) -> bool:
+        """
+        判断某 ratingKey 是否可触发补全（去重窗口内不重复触发）。
+
+        :param rating_key: Plex 条目 ratingKey
+        :return: True 表示允许触发并已记录时间戳
+        """
+        now = monotonic()
+        with self._trigger_lock:
+            # 顺带清理过期记录
+            expired = [
+                k for k, ts in self._recent_triggers.items()
+                if now - ts > self._dedup_window
+            ]
+            for k in expired:
+                self._recent_triggers.pop(k, None)
+            last = self._recent_triggers.get(rating_key)
+            if last is not None and now - last <= self._dedup_window:
+                return False
+            self._recent_triggers[rating_key] = now
+            return True
+
+    def _append_play_history(self, summary: Dict[str, Any]) -> None:
+        """
+        将一次增量补全结果追加到播放补全历史（保留最近若干条），供数据页展示。
+
+        :param summary: run_rating_key 的汇总结果
+        """
+        try:
+            history = self.get_data("play_history") or []
+            if not isinstance(history, list):
+                history = []
+            from time import time as _t
+            entry = {
+                "ts": int(_t()),
+                "rating_key": summary.get("rating_key"),
+                "label": summary.get("label") or "",
+                "source": summary.get("source"),
+                "strm_parts": summary.get("strm_parts", 0),
+                "resolved": summary.get("resolved", 0),
+                "emby_hits": summary.get("emby_hits", 0),
+                "written_ok": summary.get("written_ok", 0),
+                "write_failed": summary.get("write_failed", 0),
+                "unresolved": summary.get("unresolved", 0),
+                "helper_busy": summary.get("helper_busy", False),
+                # 逐条明细（label+状态），最多留 20 条防膨胀
+                "items": (summary.get("items") or [])[:20],
+            }
+            history.insert(0, entry)
+            self.save_data("play_history", history[:50])
+        except Exception as exc:
+            logger.debug("PlexToolbox 记录播放补全历史失败: %s", exc)
+
+    def complete_rating_key(self, rating_key: str, source: str = "play_stop") -> None:
+        """
+        针对单个条目 ratingKey 触发补全，带去重，在后台线程执行。
+
+        :param rating_key: Plex 条目 ratingKey
+        :param source: 触发来源（play_stop/webhook）
+        """
+        if not rating_key:
+            return
+        if not (self._enabled and self._mediainfo_enabled):
+            return
+        if not self._should_trigger(str(rating_key)):
+            logger.debug("PlexToolbox 去重窗口内跳过 ratingKey=%s", rating_key)
+            return
+
+        def _worker() -> None:
+            """后台线程执行单条补全。"""
+            completer = self._build_completer(force_write=False)
+            if not completer:
+                return
+            try:
+                summary = completer.run_rating_key(
+                    str(rating_key),
+                    only_missing=self._only_missing,
+                    forward=self._forward_episodes,
+                )
+                summary["success"] = True
+                summary["source"] = source
+                self.save_data("last_play_result", summary)
+                self._append_play_history(summary)
+                logger.info(
+                    "PlexToolbox 播放停止补全完成 (%s) %s: 处理 %s, 写入 %s, 未命中 %s",
+                    source,
+                    summary.get("label") or f"ratingKey={rating_key}",
+                    summary.get("strm_parts", 0),
+                    summary.get("written_ok", 0),
+                    summary.get("unresolved", 0),
+                )
+            except Exception as exc:
+                logger.error(
+                    "PlexToolbox 单条补全异常 ratingKey=%s: %s",
+                    rating_key, exc, exc_info=True,
+                )
+
+        Thread(target=_worker, daemon=True).start()
+
+    def _on_play_stop_from_proxy(self, rating_key: str) -> None:
+        """
+        反代嗅探到播放停止时的回调：对本次播放条目做增量补全。
+
+        增量补全默认常开（启用插件且启用媒体信息补全即生效），
+        去重与「本集+后N集」窗口逻辑在 complete_rating_key / run_rating_key 内。
+
+        :param rating_key: 本次播放条目的 ratingKey
+        """
+        self.complete_rating_key(rating_key, source="play_stop")
 
     def get_state(self) -> bool:
         """返回插件启用状态。"""
@@ -311,6 +494,12 @@ class PlexToolbox(_PluginBase):
             {"path": "/helper_check", "endpoint": self.helper_check_api, "methods": ["GET"], "auth": "bear", "summary": "检查 helper 连通与数据库"},
             {"path": "/complete", "endpoint": self.complete_api, "methods": ["POST"], "auth": "bear", "summary": "手动触发媒体信息补全"},
             {"path": "/result", "endpoint": self.result_api, "methods": ["GET"], "auth": "bear", "summary": "获取最近补全结果"},
+            {"path": "/webhook", "endpoint": self.webhook_api, "methods": ["POST"], "auth": "apikey", "summary": "Plex Webhook 接收（播放停止触发补全）"},
+            {"path": "/unmatch", "endpoint": self.unmatch_api, "methods": ["POST"], "auth": "bear", "summary": "一键取消匹配（重读 NFO）"},
+            {"path": "/scan_cover", "endpoint": self.scan_cover_api, "methods": ["POST"], "auth": "bear", "summary": "扫描缺封面条目"},
+            {"path": "/scrape", "endpoint": self.scrape_api, "methods": ["POST"], "auth": "bear", "summary": "对缺封面条目触发 MP 刮削"},
+            {"path": "/fix_poster", "endpoint": self.fix_poster_api, "methods": ["POST"], "auth": "bear", "summary": "补全缺失的 poster.jpg（季海报复制/TMDB）"},
+            {"path": "/clear_completion_data", "endpoint": self.clear_completion_data_api, "methods": ["POST"], "auth": "bear", "summary": "一键清理补全结果/播放补全历史"},
         ]
 
     def status_api(self) -> Dict[str, Any]:
@@ -323,7 +512,6 @@ class PlexToolbox(_PluginBase):
             "mediainfo_enabled": self._mediainfo_enabled,
             "running": self._running,
             "use_emby": self._use_emby,
-            "use_ffprobe": self._use_ffprobe,
         }
 
     def sections_api(self) -> Dict[str, Any]:
@@ -357,8 +545,223 @@ class PlexToolbox(_PluginBase):
         return self.run_completion(source="api", force_write=force, section_keys=keys)
 
     def result_api(self) -> Dict[str, Any]:
-        """获取最近一次补全结果。"""
-        return {"success": True, "result": self.get_data("last_result") or {}}
+        """获取最近一次补全结果与播放增量补全历史。"""
+        return {
+            "success": True,
+            "result": self.get_data("last_result") or {},
+            "last_play_result": self.get_data("last_play_result") or {},
+            "play_history": self.get_data("play_history") or [],
+        }
+
+    async def webhook_api(self, request: Request) -> Dict[str, Any]:
+        """
+        接收 Plex Webhook，识别 media.stop 事件并触发针对性补全。
+
+        Plex Webhook 以 multipart/form-data 提交，payload 字段为 JSON 文本。
+        仅当 webhook 开关开启时处理；只对 media.stop（可选 media.scrobble）触发。
+
+        :param request: FastAPI 请求对象
+        :return: 处理结果
+        """
+        if not (self._enabled and self._mediainfo_enabled and self._webhook_enabled):
+            return {"success": False, "error": "webhook 未启用"}
+        payload_text = ""
+        try:
+            form = await request.form()
+            payload_text = form.get("payload") or ""
+        except Exception:
+            try:
+                payload_text = (await request.body()).decode("utf-8", "replace")
+            except Exception:
+                payload_text = ""
+        if not payload_text:
+            return {"success": False, "error": "空 payload"}
+        try:
+            data = json.loads(payload_text)
+        except Exception:
+            return {"success": False, "error": "payload 非 JSON"}
+        event = data.get("event") or ""
+        if event not in ("media.stop", "media.scrobble"):
+            return {"success": True, "skipped": event}
+        rating_key = (data.get("Metadata") or {}).get("ratingKey")
+        if not rating_key:
+            return {"success": False, "error": "无 ratingKey"}
+        self.complete_rating_key(str(rating_key), source="webhook")
+        return {"success": True, "event": event, "ratingKey": rating_key}
+
+    def _plex_direct(self) -> Optional[PlexClient]:
+        """构建用于枚举/写操作的 Plex 直连客户端。"""
+        plex_host = self._plex_direct_host or self._plex_host
+        if not plex_host or not self._plex_token:
+            return None
+        if not plex_host.startswith(("http://", "https://")):
+            plex_host = "http://" + plex_host
+        return PlexClient(plex_host, self._plex_token)
+
+    def _scrape_dir(self, dir_path: str) -> Dict[str, Any]:
+        """
+        调用 MoviePilot 对本地目录刮削生成 NFO+图片。
+
+        :param dir_path: STRM 媒体目录绝对路径
+        :return: {success: bool}
+        """
+        try:
+            from pathlib import Path
+            from app import schemas
+            from app.chain.media import MediaChain
+
+            p = Path(dir_path)
+            if not p.is_dir():
+                return {"success": False, "error": "目录不存在"}
+            chain = MediaChain()
+            context = chain.recognize_by_path(p.as_posix(), obtain_images=True)
+            if not context or not context.media_info:
+                return {"success": False, "error": "无法识别"}
+            chain.scrape_metadata(
+                fileitem=schemas.FileItem(
+                    storage="local",
+                    type="dir",
+                    path=p.as_posix() + "/",
+                    name=p.name,
+                    basename=p.stem,
+                    modify_time=p.stat().st_mtime,
+                ),
+                meta=context.meta_info,
+                mediainfo=context.media_info,
+                overwrite=False,
+            )
+            return {"success": True}
+        except Exception as exc:
+            logger.error("MP 刮削目录失败 %s: %s", dir_path, exc, exc_info=True)
+            return {"success": False, "error": str(exc)}
+
+    def unmatch_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        一键取消匹配 API：dry-run 统计或执行 unmatch（可选 rematch）。
+
+        :param payload: {section, dry_run, rematch, limit}
+        :return: 结果
+        """
+        payload = payload or {}
+        section = str(payload.get("section") or "").strip()
+        if not section:
+            return {"success": False, "error": "未指定分区"}
+        plex = self._plex_direct()
+        if not plex:
+            return {"success": False, "error": "未配置 Plex 直连地址或 token"}
+        tools = ScrapeTools(plex)
+        res = tools.unmatch_section(
+            section,
+            dry_run=bool(payload.get("dry_run", True)),
+            rematch=bool(payload.get("rematch", True)),
+            limit=int(payload.get("limit") or 0),
+        )
+        res["success"] = True
+        return res
+
+    def scan_cover_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        扫描分区缺封面条目 API。
+
+        :param payload: {section}
+        :return: 结果
+        """
+        payload = payload or {}
+        section = str(payload.get("section") or "").strip()
+        if not section:
+            return {"success": False, "error": "未指定分区"}
+        plex = self._plex_direct()
+        if not plex:
+            return {"success": False, "error": "未配置 Plex 直连地址或 token"}
+        tools = ScrapeTools(plex)
+        res = tools.scan_missing_cover(section)
+        res["success"] = True
+        # missing 列表可能较长，仅返回前 50 条明细
+        res["missing"] = res.get("missing", [])[:50]
+        return res
+
+    def scrape_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        对缺封面条目调用 MP 刮削 API：dry-run 列目录或执行。
+
+        :param payload: {section, dry_run, limit, unmatch_after}
+        :return: 结果
+        """
+        payload = payload or {}
+        section = str(payload.get("section") or "").strip()
+        if not section:
+            return {"success": False, "error": "未指定分区"}
+        plex = self._plex_direct()
+        if not plex:
+            return {"success": False, "error": "未配置 Plex 直连地址或 token"}
+        tools = ScrapeTools(plex)
+        res = tools.scrape_missing(
+            section,
+            scrape_cb=self._scrape_dir,
+            dry_run=bool(payload.get("dry_run", True)),
+            limit=int(payload.get("limit") or 0),
+            unmatch_after=bool(payload.get("unmatch_after", False)),
+        )
+        res["success"] = True
+        return res
+
+    def fix_poster_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        缺 poster.jpg 补全 API：dry-run 列出待修复条目或执行补全。
+
+        电影从 TMDB 取海报（原产语言→zh→无字→任意）；剧集优先复制季内
+        Season X/poster.jpg 到剧根，无则回退 TMDB。修复后自动 refresh。
+
+        :param payload: {section, dry_run, limit}
+        :return: 结果
+        """
+        payload = payload or {}
+        section = str(payload.get("section") or "").strip()
+        if not section:
+            return {"success": False, "error": "未指定分区"}
+        plex = self._plex_direct()
+        if not plex:
+            return {"success": False, "error": "未配置 Plex 直连地址或 token"}
+        try:
+            fixer = PosterFixer(plex)
+            res = fixer.fix(
+                section,
+                dry_run=bool(payload.get("dry_run", True)),
+                limit=int(payload.get("limit") or 0),
+            )
+            res["success"] = True
+            # 明细可能较长，限制返回条数
+            if "targets" in res:
+                res["targets"] = res["targets"][:50]
+            if "details" in res:
+                res["details"] = res["details"][:50]
+            return res
+        except Exception as exc:
+            logger.error("缺 poster 补全异常: %s", exc, exc_info=True)
+            return {"success": False, "error": str(exc)}
+
+    def clear_completion_data_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        清理补全数据 API：清理最近一次补全结果、播放补全结果或播放补全历史。
+
+        :param payload: {target}，target 可选 'last_result'、'last_play_result'、'play_history'、'all'
+        :return: 结果
+        """
+        payload = payload or {}
+        target = str(payload.get("target") or "all").strip()
+        cleared = []
+        if target in ("last_result", "all"):
+            self.save_data("last_result", None)
+            cleared.append("last_result")
+        if target in ("last_play_result", "all"):
+            self.save_data("last_play_result", None)
+            cleared.append("last_play_result")
+        if target in ("play_history", "all"):
+            self.save_data("play_history", [])
+            cleared.append("play_history")
+        if not cleared:
+            return {"success": False, "error": f"未知的清理目标: {target}"}
+        return {"success": True, "cleared": cleared, "message": f"已清理: {', '.join(cleared)}"}
 
     def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
         """Vue 模式下返回默认配置模型。"""
@@ -378,12 +781,16 @@ class PlexToolbox(_PluginBase):
             "emby_url": self._emby_url,
             "emby_apikey": self._emby_apikey,
             "use_emby": self._use_emby,
-            "use_ffprobe": self._use_ffprobe,
             "overwrite_streams": self._overwrite_streams,
             "only_missing": self._only_missing,
             "concurrency": self._concurrency,
             "sections": self._sections,
             "cron": self._cron,
+            "auto_full_on_enable": self._auto_full_on_enable,
+            "play_stop_complete": self._play_stop_complete,
+            "webhook_enabled": self._webhook_enabled,
+            "dedup_window": self._dedup_window,
+            "forward_episodes": self._forward_episodes,
         }
 
     def get_page(self) -> Optional[List[dict]]:
