@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import os
+import re
 from typing import Any, Dict, List, Optional
-from urllib.parse import quote
+from urllib.parse import quote, urlparse, unquote
 
 from httpx import Client
 
@@ -52,14 +53,61 @@ class EmbyClient:
 
     def find_streams_by_name(self, file_name: str) -> Optional[Dict[str, Any]]:
         """
-        按文件名（不含扩展名）搜索 Emby 条目并返回其归一化媒体流信息。
+        搜索 Emby 条目并返回其归一化媒体流信息。
 
-        :param file_name: STRM 文件名或媒体文件名
+        匹配策略（按优先级）：
+        1) 从 STRM 路径的 {tmdb-xxxxx} 提取 TMDB ID，用 AnyProviderIdEquals 精确定位
+           条目/剧集，再用文件名匹配具体 MediaSource（Emby 条目名是媒体标题而非
+           带画质标签的长文件名，用文件名当 SearchTerm 往往搜不到）。
+        2) 回退：用文件名 stem 作为 SearchTerm 模糊搜。
+
+        :param file_name: STRM 文件路径或文件名
         :return: 归一化后的媒体信息 dict，未找到返回 None
         """
         stem = os.path.splitext(os.path.basename(file_name))[0]
         if not stem:
             return None
+
+        # 策略1：按路径中的 TMDB ID 精确搜
+        tmdb_id = self._extract_tmdb_id(file_name)
+        if tmdb_id:
+            data = self._get(
+                "/Items",
+                {
+                    "Recursive": "true",
+                    "AnyProviderIdEquals": f"tmdb.{tmdb_id}",
+                    "Fields": "MediaSources,Path",
+                    "Limit": "50",
+                },
+            )
+            if data:
+                items = data.get("Items", []) or []
+                # 剧集的 tmdb-xxxx 是剧集级 ID，命中的是 Series 条目，本身没有
+                # MediaSources，真正带流信息的是每个 Episode。需下钻到集再按文件名匹配。
+                series_items = [
+                    it for it in items
+                    if it.get("Type") == "Series" or not (it.get("MediaSources"))
+                ]
+                for it in series_items:
+                    sid = it.get("Id")
+                    if not sid:
+                        continue
+                    info = self._find_in_series_episodes(sid, stem)
+                    if info:
+                        return info
+                # 电影/直接可播放条目：先按文件名精确匹配 MediaSource
+                for item in items:
+                    info = self._extract_from_item(item, stem)
+                    if info:
+                        return info
+                # 电影通常单条单源，未精确匹配上时取第一个有流的源兜底
+                for item in items:
+                    for src in item.get("MediaSources") or []:
+                        info = self._normalize_source(src)
+                        if info:
+                            return info
+
+        # 策略2：回退到文件名 SearchTerm 模糊搜
         data = self._get(
             "/Items",
             {
@@ -77,10 +125,72 @@ class EmbyClient:
                 return info
         return None
 
+    def _find_in_series_episodes(
+        self, series_id: str, want_stem: str
+    ) -> Optional[Dict[str, Any]]:
+        """
+        下钻某 Emby 剧集（Series）的所有集，按文件名 stem 精确匹配某一集的媒体流信息。
+
+        剧集路径里的 tmdb-xxxx 是剧集级 ID，命中的 Series 条目本身无 MediaSources，
+        真正带流信息的是每个 Episode，需用 /Shows/{id}/Episodes 下钻后匹配。
+
+        :param series_id: Emby Series 条目 Id
+        :param want_stem: 目标无扩展名文件名
+        :return: 归一化媒体信息，未匹配返回 None
+        """
+        data = self._get(
+            f"/Shows/{series_id}/Episodes",
+            {"Fields": "MediaSources,Path", "Limit": "2000"},
+        )
+        if not data:
+            return None
+        for ep in data.get("Items", []) or []:
+            info = self._extract_from_item(ep, want_stem)
+            if info:
+                return info
+        return None
+
+    @staticmethod
+    def _extract_tmdb_id(path: str) -> Optional[str]:
+        """
+        从 STRM 路径中提取 {tmdb-xxxxx} 里的 TMDB ID。
+
+        :param path: STRM 文件路径
+        :return: TMDB ID 字符串，未找到返回 None
+        """
+        if not path:
+            return None
+        m = re.search(r"tmdb-(\d+)", path, re.IGNORECASE)
+        return m.group(1) if m else None
+
     @staticmethod
     def _basename_stem(path: str) -> str:
-        """取路径的无扩展名文件名。"""
-        return os.path.splitext(os.path.basename(path or ""))[0]
+        """
+        取路径的无扩展名文件名。
+
+        兼容 STRM 直链场景：Emby 中 STRM 条目的 MediaSource.Path 常是
+        P115StrmHelper 等插件的 302 直链（形如
+        http://host/api/.../redirect_url?pickcode=xxx&file_name=真实文件名.mkv），
+        此时 basename 会取到 query 串，需优先从 file_name 参数还原真实文件名。
+
+        注意不能用 parse_qs：它按表单编码把 "+" 解成空格，会破坏
+        "Disney+" 这类含加号的文件名。这里手动切 query 并只做百分号解码。
+        """
+        if not path:
+            return ""
+        # 直链场景：优先取 query 中的 file_name 参数
+        if path.startswith(("http://", "https://")):
+            try:
+                query = urlparse(path).query
+                for kv in query.split("&"):
+                    for key in ("file_name=", "filename="):
+                        if kv.startswith(key):
+                            fname = unquote(kv[len(key):]).strip()
+                            if fname:
+                                return os.path.splitext(os.path.basename(fname))[0]
+            except Exception:
+                pass
+        return os.path.splitext(os.path.basename(path))[0]
 
     def _extract_from_item(
         self, item: Dict[str, Any], want_stem: str
