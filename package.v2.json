@@ -63,11 +63,14 @@
     "name": "PLEX 工具箱",
     "description": "Plex 302 反向代理 + STRM 媒体流信息补全（Emby/ffprobe 数据源写入 Plex 库）。",
     "labels": "媒体服务器",
-    "version": "0.3.0",
+    "version": "0.6.0",
     "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
     "author": "shyblacktea",
     "level": 1,
     "history": {
+      "v0.6.0": "数据页新增「最近一次补全/补全历史」一键清理按钮；反代稳定性优化：非关键路径（图片转码/推荐位等）连接失败降为 DEBUG 日志不再刷屏，连接池上限 20→50。",
+      "v0.5.0": "新增「目录匹配/刮削」栏：一键对指定 Plex 库取消匹配重读 NFO（支持 dry-run 预览与执行后自动 rematch）；扫描缺封面条目（Plex 无封面或目录仅含 strm）并调用 MoviePilot 刮削生成 NFO+封面，可选刮削后自动取消匹配让 Plex 重读。",
+      "v0.4.0": "新增媒体流信息补全自动触发：启用后自动全量、定时全量、播放停止后针对本次条目补全（反代嗅探/Plex Webhook 双方案开关，带去重窗口）。",
       "v0.3.0": "由 PLEX 302 反向代理升级为工具箱：新增 STRM 媒体流信息补全（Emby MediaStreams/ffprobe 探测直链，经 helper 安全写入 Plex 库），保留原 302 反代能力。"
     },
     "release": true
