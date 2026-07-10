@@ -80,8 +80,45 @@ class HelperClient:
                     json={"items": items, "force": force},
                 )
                 if resp.status_code in (200, 409):
-                    return resp.json()
-                logger.warning("helper /write_batch 返回 %s", resp.status_code)
+                    data = resp.json()
+                    self._log_batch_result(data, len(items))
+                    return data
+                logger.warning(
+                    "helper /write_batch 返回 %s，本批 %s 条全部未写入",
+                    resp.status_code, len(items),
+                )
         except Exception as e:
-            logger.warning("helper /write_batch 失败: %s", e)
+            logger.warning("helper /write_batch 失败: %s（本批 %s 条未写入）", e, len(items))
         return None
+
+    @staticmethod
+    def _log_batch_result(data: Dict[str, Any], sent: int) -> None:
+        """
+        按 helper 返回结果打印写入成功/失败明细。
+
+        :param data: helper /write_batch 响应体
+        :param sent: 本批发送的条目数
+        """
+        if data.get("busy"):
+            logger.warning(
+                "helper 检测到 Plex 繁忙，本批 %s 条全部未写入（可勾选强制写入或错峰重试）",
+                sent,
+            )
+            return
+        ok = data.get("ok", 0)
+        results = data.get("results") or []
+        failed = [
+            r for r in results
+            if not (r.get("success") or r.get("ok") or r.get("written"))
+        ]
+        if failed:
+            logger.warning("helper 写入完成：成功 %s / 共 %s，失败 %s 条明细：", ok, sent, len(failed))
+            for r in failed[:50]:
+                pid = r.get("part_id") or r.get("id") or "?"
+                reason = r.get("error") or r.get("message") or r.get("reason") or "未知原因"
+                logger.warning("  写入失败 part_id=%s：%s", pid, reason)
+            if len(failed) > 50:
+                logger.warning("  （另有 %s 条失败明细省略）", len(failed) - 50)
+        else:
+            logger.info("helper 写入完成：成功 %s / 共 %s，全部成功", ok, sent)
+
