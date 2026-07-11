@@ -33,3 +33,15 @@
 ### v0.1.0
 
 - 初始版本：Plex 播放/下载流 302 直链、STRM 解析、顶置路径规则、强制 DirectPlay、WebSocket 代理。
+
+-------
+
+## 致谢
+
+本插件的 302 直链跳转思路与实现参考了以下项目，特此感谢：
+
+- [chen3861229/embyExternalUrl](https://github.com/chen3861229/embyExternalUrl/blob/main/README.zh-Hans.md) — Emby/Plex 直链重定向方案的先行实现
+- [thsrite/MediaLinker](https://github.com/thsrite/MediaLinker/blob/main/README.md) — 媒体服务器直链代理方案
+- [DDSRem-Dev/MoviePilot-Plugins](https://github.com/DDSRem-Dev/MoviePilot-Plugins) — MoviePilot 插件生态与 115 直链相关实现
+
+本版本为小 k 自用维护版，感谢以上作者和 MoviePilot 社区。
