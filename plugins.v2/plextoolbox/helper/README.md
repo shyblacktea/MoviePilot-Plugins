@@ -16,24 +16,40 @@ Docker 版 Plex 一般把配置目录挂在宿主机某处（如 `/path/to/plex/
 
 helper 纯 Python 标准库、零依赖，直接在能访问数据库文件的那层（LXC 或宿主）用 systemd 常驻即可，比 Docker 少一层文件系统开销。
 
-### 一条龙部署（在 Plex 所在机器上执行）
+下文用到两个占位符，请全程替换成你自己的值：
 
-以下命令假设部署目录 `/opt/plex/helper`、数据库路径按你的实际情况修改：
+- `MySecretToken123`：helper 访问密码，自己随便设一串，稍后同样填进插件配置的「helper Token」
+- `YourPlexTokenHere`：你的 Plex Token（用于繁忙检测，可留空跳过）
+
+### 逐步部署（一条一条敲）
+
+**第 1 步：SSH 登录 Plex 所在机器**
 
 ```bash
-# ===== 0. 变量（按实际修改） =====
-HELPER_DIR="/opt/plex/helper"
-DB_PATH="/opt/plex/config/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
-PTH_TOKEN="换成一个自定义密码"
-PLEX_TOKEN="你的PlexToken"
+ssh root@192.168.0.122
+```
 
-# ===== 1. 放置脚本 =====
-mkdir -p "$HELPER_DIR"
-# 把 plex_mediainfo_helper.py 拷到 $HELPER_DIR/（scp/SFTP 均可），例如：
-# scp plex_mediainfo_helper.py root@192.168.0.122:$HELPER_DIR/
+**第 2 步：创建部署目录**
 
-# ===== 2. 写 systemd 服务 =====
-cat > /etc/systemd/system/plex-mediainfo-helper.service << EOF
+```bash
+mkdir -p /opt/plex/helper
+```
+
+**第 3 步：把脚本传上去**（这条在 MoviePilot 那台机器上敲，不是在 Plex 机器上）
+
+```bash
+scp plex_mediainfo_helper.py root@192.168.0.122:/opt/plex/helper/
+```
+
+**第 4 步：创建 systemd 服务文件**（回到 Plex 机器上，用 nano 编辑器）
+
+```bash
+nano /etc/systemd/system/plex-mediainfo-helper.service
+```
+
+打开编辑器后，把下面内容整段粘贴进去（改好两个 token 和数据库路径），然后按 `Ctrl+O` 回车保存、`Ctrl+X` 退出：
+
+```ini
 [Unit]
 Description=Plex MediaInfo Helper
 After=network.target
@@ -42,37 +58,59 @@ After=network.target
 Type=simple
 Environment=PTH_HOST=0.0.0.0
 Environment=PTH_PORT=9001
-Environment=PTH_TOKEN=${PTH_TOKEN}
-Environment=PTH_DB_PATH=${DB_PATH}
+Environment=PTH_TOKEN=MySecretToken123
+Environment="PTH_DB_PATH=/opt/plex/config/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 Environment=PTH_PLEX_URL=http://127.0.0.1:32400
-Environment=PTH_PLEX_TOKEN=${PLEX_TOKEN}
+Environment=PTH_PLEX_TOKEN=YourPlexTokenHere
 Environment=PTH_BACKUP_ON_WRITE=0
-ExecStart=/usr/bin/python3 ${HELPER_DIR}/plex_mediainfo_helper.py
+ExecStart=/usr/bin/python3 /opt/plex/helper/plex_mediainfo_helper.py
 Restart=always
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-EOF
-
-# ===== 3. 启动并开机自启 =====
-systemctl daemon-reload
-systemctl enable --now plex-mediainfo-helper
-
-# ===== 4. 验证 =====
-systemctl status plex-mediainfo-helper --no-pager
-curl -s http://127.0.0.1:9001/health
-curl -s -H "X-PTH-Token: ${PTH_TOKEN}" http://127.0.0.1:9001/dbinfo
 ```
 
-`/dbinfo` 返回 `"success": true` 且 `db_path` 正确即部署成功。
+> ⚠️ `PTH_DB_PATH` 那行因为路径带空格，整个 `KEY=value` 要用双引号包住（如上）。数据库路径改成你的实际路径。
 
-### 更新 helper（改了脚本后）
+**第 5 步：启动并设开机自启**（逐条敲）
 
 ```bash
-# 从 MoviePilot 侧上传新脚本（或 scp）后重启：
+systemctl daemon-reload
+```
+
+```bash
+systemctl enable --now plex-mediainfo-helper
+```
+
+**第 6 步：验证**（逐条敲，都在 Plex 机器上）
+
+```bash
+systemctl status plex-mediainfo-helper --no-pager
+```
+
+```bash
+curl http://127.0.0.1:9001/health
+```
+
+```bash
+curl -H "X-PTH-Token: MySecretToken123" http://127.0.0.1:9001/dbinfo
+```
+
+看到 `status` 显示 `active (running)`、`/health` 返回 `{"ok": true...}`、`/dbinfo` 返回 `"success": true` 即部署完成。
+
+### 日常更新 helper（改了脚本后）
+
+只需两条。第一条在 MoviePilot 机器上敲：
+
+```bash
 scp plex_mediainfo_helper.py root@192.168.0.122:/opt/plex/helper/
-ssh root@192.168.0.122 "systemctl restart plex-mediainfo-helper && systemctl status plex-mediainfo-helper --no-pager | head -5"
+```
+
+第二条在 Plex 机器上敲：
+
+```bash
+systemctl restart plex-mediainfo-helper
 ```
 
 ### 常用运维命令
