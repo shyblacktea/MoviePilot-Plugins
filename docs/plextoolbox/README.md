@@ -51,3 +51,15 @@
 ### v0.3.0
 
 - 由 Plex302ReverseProxy 改造为 PLEX 工具箱：302 反代作为子功能保留，新增 STRM 媒体流信息补全（Emby 数据源 + helper 写库），Vue 联邦前端配置页与数据页。
+
+-------
+
+## 致谢
+
+本插件的 302 直链跳转思路与实现参考了以下项目，特此感谢：
+
+- [chen3861229/embyExternalUrl](https://github.com/chen3861229/embyExternalUrl/blob/main/README.zh-Hans.md) — Emby/Plex 直链重定向方案的先行实现
+- [thsrite/MediaLinker](https://github.com/thsrite/MediaLinker/blob/main/README.md) — 媒体服务器直链代理方案
+- [DDSRem-Dev/MoviePilot-Plugins](https://github.com/DDSRem-Dev/MoviePilot-Plugins) — MoviePilot 插件生态与 115 直链相关实现
+
+本版本为小 k 自用维护版，感谢以上作者和 MoviePilot 社区。
