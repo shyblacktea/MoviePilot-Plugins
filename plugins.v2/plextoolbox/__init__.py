@@ -63,7 +63,7 @@ class PlexToolbox(_PluginBase):
     plugin_name = "PLEX 工具箱"
     plugin_desc = "Plex 302 反向代理 + STRM 媒体流信息补全（Emby 数据源写入 Plex 库）。"
     plugin_icon = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png"
-    plugin_version = "0.6.0"
+    plugin_version = "0.7.0"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "plextoolbox_"
@@ -219,6 +219,7 @@ class PlexToolbox(_PluginBase):
             pin_rules=self._pin_rules,
             force_direct_play=self._force_direct_play,
             on_play_stop=self._on_play_stop_from_proxy,
+            on_pre_play=self._on_pre_play_from_proxy,
         )
         try:
             uv_config = Config(app=app, host=self._host, port=self._port, log_config=None)
@@ -442,6 +443,34 @@ class PlexToolbox(_PluginBase):
         :param rating_key: 本次播放条目的 ratingKey
         """
         self.complete_rating_key(rating_key, source="play_stop")
+
+    def _on_pre_play_from_proxy(self, rating_key: str) -> None:
+        """
+        反代播前回调（同步阻塞）：播放/继续观看起播前，先补全该条目媒体流信息。
+
+        覆盖「继续观看」点击即播不经过详情页的场景。仅补当前条目本身
+        （forward=0），确保写库量最小、耗时最短；后续集数由播放停止后的
+        增量补全接管。反代侧带等待预算，超时自动放行播放。
+
+        :param rating_key: 即将播放条目的 ratingKey
+        """
+        if not (self._enabled and self._mediainfo_enabled):
+            return
+        completer = self._build_completer(force_write=True)
+        if not completer:
+            return
+        try:
+            summary = completer.run_rating_key(
+                str(rating_key), only_missing=True, forward=0,
+            )
+            if summary.get("written_ok"):
+                logger.info(
+                    "PlexToolbox 播前补全 %s: 写入 %s 条",
+                    summary.get("label") or f"ratingKey={rating_key}",
+                    summary.get("written_ok"),
+                )
+        except Exception as exc:
+            logger.debug("PlexToolbox 播前补全异常 ratingKey=%s: %s", rating_key, exc)
 
     def get_state(self) -> bool:
         """返回插件启用状态。"""
