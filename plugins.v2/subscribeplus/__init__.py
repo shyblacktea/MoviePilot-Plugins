@@ -123,7 +123,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "tv.png"
-    plugin_version = "0.18"
+    plugin_version = "0.19"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -209,6 +209,8 @@ class SubscribePlus(_PluginBase):
     def get_api(self) -> List[Dict[str, Any]]:
         return [
             {"path": "/status", "endpoint": self.get_status_api, "methods": ["GET"], "auth": "bear", "summary": "订阅下载增强状态"},
+            {"path": "/config", "endpoint": self.get_config_api, "methods": ["GET"], "auth": "bear", "summary": "获取插件配置"},
+            {"path": "/config", "endpoint": self.save_config_api, "methods": ["POST"], "auth": "bear", "summary": "保存插件配置"},
             {"path": "/categories", "endpoint": self.get_categories_api, "methods": ["GET"], "auth": "bear", "summary": "获取订阅二级分类"},
             {"path": "/sites", "endpoint": self.get_site_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取可搜索 PT 站点"},
             {"path": "/scan", "endpoint": self.run_scan_api, "methods": ["POST"], "auth": "bear", "summary": "手动扫描订阅"},
@@ -251,6 +253,33 @@ class SubscribePlus(_PluginBase):
         self._scanner = None
         self._diagnoser = None
         self._site_resolver = None
+
+    def get_config_api(self) -> Dict[str, Any]:
+        """
+        获取当前插件配置（数据页入口复用配置 UI 时读取初始值）。
+
+        :return: {success, data: 配置字典}
+        """
+        return {"success": True, "data": self._plugin_config.to_dict()}
+
+    def save_config_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        保存插件配置（数据页入口复用配置 UI 时的保存通道）。
+
+        与宿主配置页保存等效：持久化后重新初始化插件使新配置生效。
+
+        :param payload: 完整配置字典
+        :return: {success, message}
+        """
+        payload = payload or {}
+        try:
+            merged = {**self._plugin_config.to_dict(), **payload}
+            self.update_config(merged)
+            self.init_plugin(merged)
+            return {"success": True, "message": "配置已保存"}
+        except Exception as exc:
+            logger.error(f"订阅下载增强保存配置失败：{exc}", exc_info=True)
+            return {"success": False, "message": str(exc)}
 
     def get_status_api(self) -> Dict[str, Any]:
         store = self._ensure_store()
