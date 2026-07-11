@@ -12,13 +12,85 @@
 
 Docker 版 Plex 一般把配置目录挂在宿主机某处（如 `/path/to/plex/config`）。找到后，数据库就在该目录下的 `Library/Application Support/.../Databases/`。
 
-## 方式 A：Docker 运行（推荐）
+## 方式 A：直接跑 Python + systemd（推荐，实际部署方式）
 
-在 192.168.0.122 上，把 Plex 的 **配置目录** 挂进 helper 容器（只需能读写到数据库文件即可）。
+helper 纯 Python 标准库、零依赖，直接在能访问数据库文件的那层（LXC 或宿主）用 systemd 常驻即可，比 Docker 少一层文件系统开销。
+
+### 一条龙部署（在 Plex 所在机器上执行）
+
+以下命令假设部署目录 `/opt/plex/helper`、数据库路径按你的实际情况修改：
+
+```bash
+# ===== 0. 变量（按实际修改） =====
+HELPER_DIR="/opt/plex/helper"
+DB_PATH="/opt/plex/config/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+PTH_TOKEN="换成一个自定义密码"
+PLEX_TOKEN="你的PlexToken"
+
+# ===== 1. 放置脚本 =====
+mkdir -p "$HELPER_DIR"
+# 把 plex_mediainfo_helper.py 拷到 $HELPER_DIR/（scp/SFTP 均可），例如：
+# scp plex_mediainfo_helper.py root@192.168.0.122:$HELPER_DIR/
+
+# ===== 2. 写 systemd 服务 =====
+cat > /etc/systemd/system/plex-mediainfo-helper.service << EOF
+[Unit]
+Description=Plex MediaInfo Helper
+After=network.target
+
+[Service]
+Type=simple
+Environment=PTH_HOST=0.0.0.0
+Environment=PTH_PORT=9001
+Environment=PTH_TOKEN=${PTH_TOKEN}
+Environment=PTH_DB_PATH=${DB_PATH}
+Environment=PTH_PLEX_URL=http://127.0.0.1:32400
+Environment=PTH_PLEX_TOKEN=${PLEX_TOKEN}
+Environment=PTH_BACKUP_ON_WRITE=0
+ExecStart=/usr/bin/python3 ${HELPER_DIR}/plex_mediainfo_helper.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# ===== 3. 启动并开机自启 =====
+systemctl daemon-reload
+systemctl enable --now plex-mediainfo-helper
+
+# ===== 4. 验证 =====
+systemctl status plex-mediainfo-helper --no-pager
+curl -s http://127.0.0.1:9001/health
+curl -s -H "X-PTH-Token: ${PTH_TOKEN}" http://127.0.0.1:9001/dbinfo
+```
+
+`/dbinfo` 返回 `"success": true` 且 `db_path` 正确即部署成功。
+
+### 更新 helper（改了脚本后）
+
+```bash
+# 从 MoviePilot 侧上传新脚本（或 scp）后重启：
+scp plex_mediainfo_helper.py root@192.168.0.122:/opt/plex/helper/
+ssh root@192.168.0.122 "systemctl restart plex-mediainfo-helper && systemctl status plex-mediainfo-helper --no-pager | head -5"
+```
+
+### 常用运维命令
+
+```bash
+systemctl restart plex-mediainfo-helper     # 重启
+systemctl stop plex-mediainfo-helper        # 停止
+journalctl -u plex-mediainfo-helper -f      # 看实时日志
+journalctl -u plex-mediainfo-helper -n 100  # 看最近 100 行日志
+```
+
+## 方式 B：Docker 运行（备选）
+
+在 Plex 所在机器上，把 Plex 的 **配置目录** 挂进 helper 容器（只需能读写到数据库文件即可）。
 
 ### 1. 构建镜像
 
-把 `helper/` 目录（含 `plex_mediainfo_helper.py` 和 `Dockerfile`）拷到 122 机器，然后：
+把 `helper/` 目录（含 `plex_mediainfo_helper.py` 和 `Dockerfile`）拷到目标机器，然后：
 
 ```bash
 cd helper
@@ -39,11 +111,11 @@ docker run -d --name plex-mediainfo-helper \
   plex-mediainfo-helper:latest
 ```
 
-> 把 `/path/to/plex/config` 换成 122 上 Plex 实际的配置目录。
+> 把 `/path/to/plex/config` 换成 Plex 实际的配置目录。
 > `PTH_TOKEN` 自定义一个密码，稍后填进插件。
 > `PTH_PLEX_TOKEN` 用于「Plex 繁忙时拒绝写入」的检测，可留空则跳过检测。
 
-### 方式 A2：docker compose（更省事）
+### 方式 B2：docker compose
 
 `helper/` 目录内已提供 `docker-compose.yml`。改好里面的挂载路径与 token 后：
 
@@ -52,7 +124,7 @@ cd helper
 docker compose up -d
 ```
 
-需要修改的地方：`volumes` 左侧换成 122 上 Plex 实际的 `Databases` 目录，`PTH_TOKEN` 自定义密码，`PTH_PLEX_TOKEN` 填你的 Plex token（留空则跳过繁忙检测）。
+需要修改的地方：`volumes` 左侧换成 Plex 实际的 `Databases` 目录，`PTH_TOKEN` 自定义密码，`PTH_PLEX_TOKEN` 填你的 Plex token（留空则跳过繁忙检测）。
 
 ### 3. 验证
 
@@ -62,20 +134,6 @@ curl http://192.168.0.122:9001/health
 
 # 确认找到数据库（需 token）
 curl -H "X-PTH-Token: 换成一个自定义密码" http://192.168.0.122:9001/dbinfo
-```
-
-`/dbinfo` 返回 `"success": true` 且 `db_path` 正确即部署成功。
-
-## 方式 B：直接跑 Python（无 Docker）
-
-在能访问数据库文件的那层（LXC 或宿主）：
-
-```bash
-PTH_DB_PATH="/实际路径/com.plexapp.plugins.library.db" \
-PTH_TOKEN="换成一个自定义密码" \
-PTH_PLEX_URL="http://127.0.0.1:32400" \
-PTH_PLEX_TOKEN="你的PlexToken" \
-python3 plex_mediainfo_helper.py
 ```
 
 ## 环境变量
@@ -90,10 +148,11 @@ python3 plex_mediainfo_helper.py
 | `PTH_PLEX_URL` | `http://127.0.0.1:32400` | 本地 Plex 地址（繁忙检测用） |
 | `PTH_PLEX_TOKEN` | 空 | Plex token（繁忙检测用）；留空跳过检测 |
 | `PTH_REFUSE_WHEN_PLAYING` | `1` | 有播放会话时拒绝写入 |
+| `PTH_BACKUP_ON_WRITE` | `0` | 每次写入前是否备份数据库；大库全量备份耗时高，默认关闭，需要兜底时置 `1` |
 
 ## 安全说明
 
-- **每次写入前自动备份** 数据库到同目录 `pth_backups/`，保留最近 N 份。
+- 写入前可选备份数据库到同目录 `pth_backups/`（`PTH_BACKUP_ON_WRITE=1` 开启，保留最近 N 份；默认关闭以提升写入速度）。
 - 写入前检测 Plex 是否在播放/扫描，繁忙则拒绝（可用 `force` 覆盖）。
 - 只写 Plex 数据库中 **实际存在的列**，不改表结构。
 - 写 Plex 库属于非官方操作，Plex 大版本升级可能改表结构；升级后先用 `/dbinfo` 验证。
