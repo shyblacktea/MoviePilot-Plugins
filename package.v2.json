@@ -18,12 +18,13 @@
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
-    "version": "0.18",
+    "version": "0.19",
     "author": "shyblacktea,MoviePilot助手",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "0.19": "UI 重构：不再区分配置页/数据页，两个入口统一为单页面左侧 tab 导航（运行概览/识别词工具/规则记录/扫描设置/通知权限/清理与候选）；配置字段元数据化（fields.js 声明自动渲染）；新增 /config 读写 API 支撑数据页入口保存配置。",
       "0.18": "fix: 修复剧集已下载入库后 /sp 待处理列表与数据页仍显示该剧的问题，诊断结果读取时按媒体库/整理历史实时复核并剔除已入库的集；feat: 入库完成事件触发后自动刷新诊断快照，移除已完成的诊断项",
       "0.17": "ui: 配置页与数据页改用左侧导航 + 卡片式布局，参考豆瓣中心 UI 风格重做；perf: 前端构建过滤多余的 Vuetify 共享样式，减小 dist 体积；fix: Telegram 通知「搜索站点」由站点 ID 显示为站点名称",
       "0.16": "refactor: 抽取统一 LLM 同步调用入口，修复已有事件循环下 AI 识别可能报 event loop is already running 的问题；chore: 类成员改为纯类型注解，消除类级可变默认值共享隐患",
