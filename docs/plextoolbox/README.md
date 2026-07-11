@@ -27,7 +27,7 @@
 
 ## helper 部署
 
-写库 helper（`helper/plex_mediainfo_helper.py`，纯标准库）需部署在 Plex 所在机器，提供 `/health`、`/dbinfo`、`/busy`、`/write`、`/write_batch` 接口，token 用 `X-PTH-Token` 头校验。详见 `helper/README.md`。
+写库 helper（`helper/plex_mediainfo_helper.py`，纯标准库）需部署在 Plex 所在机器，提供 `/health`、`/dbinfo`、`/busy`、`/write`、`/write_batch` 接口，token 用 `X-PTH-Token` 头校验。详见 [helper/README.md](../../plugins.v2/plextoolbox/helper/README.md)。
 
 ## 更新日志
 
