@@ -1,5 +1,6 @@
-from asyncio import Lock, create_task, gather, get_event_loop
+from asyncio import Lock, create_task, gather, get_event_loop, to_thread, wait_for
 from contextlib import asynccontextmanager
+from re import compile as re_compile
 from time import monotonic
 from typing import Any, Callable, Dict, List, Optional, Tuple
 from urllib.parse import quote, urlparse
@@ -44,6 +45,13 @@ SILENT_FAIL_PATH_PREFIXES = (
     "/:/prefs",
 )
 
+# 播前补全：同一 ratingKey 补全冷却时间（秒），避免反复播放同一条目重复写
+PREPLAY_COOLDOWN_SECONDS = 600
+# 播前补全：同步等待补全完成的最长时间（秒），超时后放行播放、补全转后台继续
+PREPLAY_WAIT_BUDGET_SECONDS = 3.0
+# playQueues 请求 uri 参数中的条目 ratingKey 提取
+_PLAYQUEUE_KEY_RE = re_compile(r"(?:library%2Fmetadata%2F|library/metadata/)(\d+)")
+
 # Plex Token 的可能来源
 PLEX_TOKEN_QUERY_KEY = "X-Plex-Token"
 PLEX_TOKEN_HEADER_KEY = "x-plex-token"
@@ -78,6 +86,7 @@ def create_app(
     pin_rules: List[Tuple[str, str]] | None = None,
     force_direct_play: bool = True,
     on_play_stop: Optional[Callable[[str], None]] = None,
+    on_pre_play: Optional[Callable[[str], Any]] = None,
 ) -> FastAPI:
     """
     创建 Plex 302 反向代理 FastAPI 应用
@@ -88,6 +97,8 @@ def create_app(
     :param force_direct_play (bool): 是否在 decision 请求中强制 DirectPlay，避免转码使 302 失效
     :param on_play_stop (Callable): 播放停止回调，参数为 ratingKey；用于嗅探
         /:/timeline?state=stopped 后触发针对性媒体信息补全
+    :param on_pre_play (Callable): 播前补全回调，参数为 ratingKey，同步阻塞执行；
+        在 playQueues 创建（含继续观看直接起播）时先补全该条目媒体流信息再放行
 
     :return FastAPI: 配置好的 FastAPI 应用实例
     """
@@ -747,6 +758,86 @@ def create_app(
             response_model=None,
         )(_handle_transcode_start)
 
+    # ---------- 播前补全（继续观看点击即播场景） ----------
+
+    # ratingKey -> 上次播前补全的单调时间戳
+    _preplay_recent: Dict[str, float] = {}
+    _preplay_lock = Lock()
+
+    async def _maybe_pre_play_complete(rating_key: str) -> None:
+        """
+        播前补全：在放行播放请求前，同步等待补全该条目媒体流信息。
+
+        带冷却窗口去重；等待预算内没完成就放行播放，补全在后台线程继续，
+        绝不为写库阻塞起播超过 PREPLAY_WAIT_BUDGET_SECONDS。
+
+        :param rating_key: 即将播放条目的 ratingKey
+        """
+        if on_pre_play is None or not rating_key:
+            return
+        now = monotonic()
+        async with _preplay_lock:
+            last = _preplay_recent.get(rating_key)
+            if last is not None and now - last < PREPLAY_COOLDOWN_SECONDS:
+                return
+            _preplay_recent[rating_key] = now
+            # 顺带清理过期记录
+            expired = [
+                k for k, ts in _preplay_recent.items()
+                if now - ts > PREPLAY_COOLDOWN_SECONDS
+            ]
+            for k in expired:
+                if k != rating_key:
+                    _preplay_recent.pop(k, None)
+        try:
+            await wait_for(
+                to_thread(on_pre_play, rating_key),
+                timeout=PREPLAY_WAIT_BUDGET_SECONDS,
+            )
+            logger.info("播前补全完成: ratingKey=%s", rating_key)
+        except TimeoutError:
+            # to_thread 里的补全线程会继续跑完（写库仍生效），只是不再阻塞起播
+            logger.info(
+                "播前补全超过 %ss 预算，先放行播放（补全后台继续）: ratingKey=%s",
+                PREPLAY_WAIT_BUDGET_SECONDS, rating_key,
+            )
+        except Exception as exc:
+            logger.debug("播前补全异常 ratingKey=%s: %s", rating_key, exc)
+
+    def _extract_rating_key_from_playqueue(request: Request) -> str:
+        """
+        从 playQueues 创建请求中提取目标条目 ratingKey。
+
+        「继续观看」点击即播时，客户端会 POST /playQueues，
+        uri 参数形如 server://xxx/com.plexapp.plugins.library/library/metadata/123。
+
+        :param request: 当前请求
+        :return: ratingKey，取不到返回空串
+        """
+        try:
+            uri = request.query_params.get("uri") or ""
+            key = request.query_params.get("key") or ""
+            m = _PLAYQUEUE_KEY_RE.search(key) or _PLAYQUEUE_KEY_RE.search(uri)
+            return m.group(1) if m else ""
+        except Exception:
+            return ""
+
+    async def _playqueue_proxy(request: Request):
+        """
+        代理 playQueues 创建：先尝试播前补全目标条目媒体流信息，再转发。
+
+        覆盖「继续观看」点击即播（不经过详情页）的场景；补全带预算超时，
+        不会明显拖慢起播。
+
+        :param request: 当前请求
+        :return: 上游响应
+        """
+        if request.method == "POST":
+            rating_key = _extract_rating_key_from_playqueue(request)
+            if rating_key:
+                await _maybe_pre_play_complete(rating_key)
+        return await _metadata_proxy(request)
+
     # ---------- 元数据 API：缓存 Part 信息 ----------
 
     async def _metadata_proxy(request: Request):
@@ -802,13 +893,17 @@ def create_app(
         "/library/metadata/{item_id}",
         "/library/metadata/{item_id}/children",
         "/library/sections/{section_id}/all",
-        "/playQueues",
         "/playQueues/{queue_id}",
         "/status/sessions",
     ):
         app.api_route(_meta_route, methods=["GET", "POST"], response_model=None)(
             _metadata_proxy
         )
+
+    # playQueues 创建单独走播前补全代理（继续观看点击即播场景）
+    app.api_route("/playQueues", methods=["GET", "POST"], response_model=None)(
+        _playqueue_proxy
+    )
 
     # ---------- WebSocket 代理 ----------
 
