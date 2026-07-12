@@ -47,8 +47,14 @@ class JsonStore:
     def load_scan_meta(self) -> Dict[str, Any]:
         return self._read("scan_meta.json", {})
 
+    def load_scan_cursor(self) -> int:
+        return int(self._read("scan_cursor.json", {}).get("cursor") or 0)
+
+    def save_scan_cursor(self, cursor: int):
+        self._write("scan_cursor.json", {"cursor": max(int(cursor or 0), 0)})
+
     def clear_scan_results(self):
-        for name in ("scan_results.json", "scan_meta.json"):
+        for name in ("scan_results.json", "scan_meta.json", "scan_cursor.json"):
             try:
                 self._path(name).unlink(missing_ok=True)
             except OSError:

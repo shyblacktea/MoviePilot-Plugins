@@ -24,8 +24,13 @@ export const groups = [
 export const fields = [
   // ---- 扫描设置 ----
   {
+    key: 'enabled', group: 'scan', section: '运行状态', type: 'switch',
+    label: '启用插件', color: 'success',
+    hint: '开启后插件将处于激活状态',
+  },
+  {
     key: 'delay_days', group: 'scan', section: '扫描窗口', type: 'number',
-    label: '宽限天数', min: 0, cols: { md: 4 },
+    label: '宽限天数', min: 0, unit: '天', cols: { md: 4 },
     hint: '单集播出超过 N 天仍未入库才触发诊断',
   },
   {
@@ -35,25 +40,30 @@ export const fields = [
   },
   {
     key: 'max_scan_subscribes', group: 'scan', section: '扫描窗口', type: 'number',
-    label: '订阅部数通知上限', min: 1, cols: { md: 4 },
+    label: '订阅部数通知上限', min: 1, unit: '部', cols: { md: 4 },
+    hint: '单次扫描最多通知的订阅部数',
   },
   {
     key: 'selected_categories', group: 'scan', section: '扫描范围', type: 'multiselect',
     label: '二级分类', optionsKey: 'categories', cols: { md: 6 },
+    hint: '仅检测所选二级分类下的电视剧订阅',
   },
   {
     key: 'search_sites', group: 'scan', section: '扫描范围', type: 'multiselect',
     label: 'PT搜索范围', optionsKey: 'sites', clearable: true, cols: { md: 6 },
+    hint: '插件诊断搜索的站点，留空用 MP 默认搜索站点',
   },
 
   // ---- 通知权限 ----
   {
     key: 'notify_tg', group: 'notify', section: '通知渠道', type: 'switch',
     label: 'Telegram 独立通知', color: 'primary', cols: { md: 6 },
+    hint: '每部剧单独发送 Telegram 诊断通知',
   },
   {
     key: 'allow_tg_rule_update', group: 'notify', section: '授权', type: 'switch',
     label: '允许 TG 修改订阅规则', color: 'warning', cols: { md: 6 },
+    hint: '开启后可在 Telegram 交互中直接写入订阅过滤规则',
     alert: '开启后可通过 Telegram 交互直接调整订阅过滤规则，请谨慎授权。',
   },
 
@@ -61,6 +71,7 @@ export const fields = [
   {
     key: 'season_pack_cleanup', group: 'cleanup', section: '全集包清理', type: 'select',
     label: '最终集整季包清理', cols: { md: 6 },
+    hint: '最终集来自整季包时清理旧拆包记录或源文件',
     options: [
       { title: '关闭', value: 'off' },
       { title: '仅删转移记录', value: 'record' },
@@ -71,10 +82,11 @@ export const fields = [
   {
     key: 'season_pack_full_download', group: 'cleanup', section: '全集包清理', type: 'switch',
     label: 'qB 整季包全选下载', color: 'warning', cols: { md: 6 },
+    hint: '最终集命中整季包时，把 qB 种子全部文件设为下载',
   },
   {
     key: 'candidate_cache_days', group: 'cleanup', section: '候选下载', type: 'number',
-    label: '候选缓存天数', min: 0, cols: { md: 6 },
+    label: '候选缓存天数', min: 0, unit: '天', cols: { md: 6 },
     hint: '候选下载信息本地缓存有效期，0 关闭；重载/重启后仍可直接下载候选',
   },
 ]

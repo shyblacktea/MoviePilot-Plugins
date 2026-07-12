@@ -1,5 +1,5 @@
 <template>
-  <Config :initial-config="initialConfig" :api="api" @save="onSave" @close="emit('close')" @switch="emit('switch')" />
+  <Config :initial-config="initialConfig" :api="api" @save="onSave" @close="emit('close')" @switch="emit('switch')" @layout="emit('layout', $event)" />
 </template>
 
 <script setup>
@@ -10,7 +10,7 @@ const props = defineProps({
   api: { type: Object, default: () => ({}) },
 })
 
-const emit = defineEmits(['action', 'switch', 'close'])
+const emit = defineEmits(['action', 'switch', 'close', 'layout'])
 
 // 数据页与配置页共用同一 UI；数据页入口自行拉取当前配置作为初始值
 const initialConfig = ref({})

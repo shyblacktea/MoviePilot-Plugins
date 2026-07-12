@@ -1,5 +1,5 @@
 import { importShared } from './__federation_fn_import-JrT3xvdd.js';
-import Config from './__federation_expose_Config-Djcwesef.js';
+import Config from './__federation_expose_Config-DVAoy0fV.js';
 
 const {openBlock:_openBlock,createBlock:_createBlock} = await importShared('vue');
 
@@ -12,7 +12,7 @@ const _sfc_main = {
   props: {
   api: { type: Object, default: () => ({}) },
 },
-  emits: ['action', 'switch', 'close'],
+  emits: ['action', 'switch', 'close', 'layout'],
   setup(__props, { emit: __emit }) {
 
 const props = __props;
@@ -51,7 +51,8 @@ return (_ctx, _cache) => {
     api: __props.api,
     onSave: onSave,
     onClose: _cache[0] || (_cache[0] = $event => (emit('close'))),
-    onSwitch: _cache[1] || (_cache[1] = $event => (emit('switch')))
+    onSwitch: _cache[1] || (_cache[1] = $event => (emit('switch'))),
+    onLayout: _cache[2] || (_cache[2] = $event => (emit('layout', $event)))
   }, null, 8, ["initial-config", "api"]))
 }
 }

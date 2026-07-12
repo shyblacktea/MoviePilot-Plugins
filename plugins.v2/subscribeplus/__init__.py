@@ -94,6 +94,7 @@ from .scanner import (
     episodes_in_seasoninfo,
     episodes_in_transfer_history,
 )
+from .scan_batch import select_scan_batch
 from .season_cleanup import CLEANUP_OFF, build_cleanup_plan, build_season_pack_match, normalize_cleanup_mode, parse_season_number
 from .sites import SiteResolver
 from .storage import JsonStore
@@ -122,8 +123,8 @@ PLUGIN_ID = "SubscribePlus"
 class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
-    plugin_icon = "tv.png"
-    plugin_version = "0.19"
+    plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
+    plugin_version = "0.20"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -417,7 +418,15 @@ class SubscribePlus(_PluginBase):
 
         results = []
         inputs = scanner.scan(config, resolver)
-        for item in inputs[: config.max_scan_subscribes]:
+        cursor = store.load_scan_cursor()
+        batch, next_cursor = select_scan_batch(inputs, config.max_scan_subscribes, cursor)
+        store.save_scan_cursor(next_cursor)
+        logger.info(
+            "订阅下载增强扫描批次："
+            f"候选={len(inputs)}，本批={len(batch)}，起点={cursor}，下次起点={next_cursor}，"
+            f"订阅={[item.title for item in batch]}"
+        )
+        for item in batch:
             diagnosis = self._diagnose_item(item)
             if not diagnosis:
                 continue
