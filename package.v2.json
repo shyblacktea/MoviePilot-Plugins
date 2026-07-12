@@ -51,7 +51,7 @@
     "labels": "媒体服务器",
     "version": "0.2.1",
     "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
-    "author": "shyblacktea",
+    "author": "shyblacktea,MoviePilot助手",
     "level": 1,
     "history": {
       "v0.2.1": "优化起播速度：并发相同播放请求单飞合并只解析一次直链；收敛热路径上游超时至 5s。",
@@ -66,7 +66,7 @@
     "labels": "媒体服务器",
     "version": "0.7.0",
     "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
-    "author": "shyblacktea",
+    "author": "shyblacktea,MoviePilot助手",
     "level": 1,
     "history": {
       "v0.7.0": "新增播前补全：拦截 playQueues 创建（覆盖「继续观看」点击即播场景），起播前同步补全该条目媒体流信息（3 秒预算，超时放行播放、补全后台继续；10 分钟冷却去重）。",
