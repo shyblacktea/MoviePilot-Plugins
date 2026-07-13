@@ -10,12 +10,12 @@ from uvicorn import Config, Server
 
 from app.log import logger
 from app.plugins import _PluginBase
-from app.schemas.types import EventType
+from app.schemas.types import EventType, NotificationType
 
 try:
-    from apscheduler.triggers.cron import CronTrigger
+    from apscheduler.triggers.interval import IntervalTrigger
 except Exception:
-    CronTrigger = None
+    IntervalTrigger = None
 
 from .proxy_app import create_app
 from .emby_client import EmbyClient
@@ -63,8 +63,8 @@ class PlexToolbox(_PluginBase):
     plugin_name = "PLEX 工具箱"
     plugin_desc = "Plex 302 反向代理 + STRM 媒体流信息补全（Emby 数据源写入 Plex 库）。"
     plugin_icon = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png"
-    plugin_version = "0.7.0"
-    plugin_author = "shyblacktea"
+    plugin_version = "0.7.1"
+    plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "plextoolbox_"
     plugin_order = 20
@@ -95,18 +95,18 @@ class PlexToolbox(_PluginBase):
     _only_missing = True
     _concurrency = 3
     _sections = ""
-    _cron = ""
     _running = False
 
     # ---- 自动补全触发配置 ----
-    _auto_full_on_enable = False
-    _play_stop_complete = False
     _webhook_enabled = False
     _dedup_window = 300
     _forward_episodes = 5
     # ratingKey -> 上次触发的单调时间戳，用于去重
     _recent_triggers: Dict[str, float] = {}
     _trigger_lock = Lock()
+    _helper_health_failures = 0
+    _helper_health_alerted = False
+    _helper_health_ok: Optional[bool] = None
 
     def _proxy_signature(self) -> Tuple:
         """
@@ -123,6 +123,7 @@ class PlexToolbox(_PluginBase):
             self._port,
             self._pin_rules_raw,
             self._force_direct_play,
+            self._dedup_window,
         )
 
     def init_plugin(self, config: Optional[Dict[str, Any]] = None) -> None:
@@ -164,10 +165,7 @@ class PlexToolbox(_PluginBase):
             except (TypeError, ValueError):
                 self._concurrency = 3
             self._sections = (config.get("sections") or "").strip()
-            self._cron = (config.get("cron") or "").strip()
             # 自动补全触发
-            self._auto_full_on_enable = config.get("auto_full_on_enable", False)
-            self._play_stop_complete = config.get("play_stop_complete", False)
             self._webhook_enabled = config.get("webhook_enabled", False)
             try:
                 self._dedup_window = int(config.get("dedup_window") or 300)
@@ -185,25 +183,6 @@ class PlexToolbox(_PluginBase):
         if new_sig != old_sig or not proxy_running:
             self.stop_service()
             self._start_proxy()
-        self._maybe_auto_full()
-
-    def _maybe_auto_full(self) -> None:
-        """插件启用且开启「启用后自动全量」时，后台跑一次全量补全。"""
-        if not (self._enabled and self._mediainfo_enabled and self._auto_full_on_enable):
-            return
-        if not self._sections:
-            logger.info("PlexToolbox 自动全量已开启但未指定媒体库，跳过")
-            return
-
-        def _worker() -> None:
-            """后台线程执行一次全量补全，避免阻塞插件初始化。"""
-            try:
-                logger.info("PlexToolbox 启用后自动全量补全开始")
-                self.run_completion(source="auto_enable")
-            except Exception as exc:
-                logger.error("PlexToolbox 自动全量补全异常: %s", exc, exc_info=True)
-
-        Thread(target=_worker, daemon=True).start()
 
     def _start_proxy(self) -> None:
         """按配置启动 302 反向代理服务。"""
@@ -218,7 +197,7 @@ class PlexToolbox(_PluginBase):
             plex_token=self._plex_token,
             pin_rules=self._pin_rules,
             force_direct_play=self._force_direct_play,
-            on_play_stop=self._on_play_stop_from_proxy,
+            preplay_cooldown_seconds=self._dedup_window,
             on_pre_play=self._on_pre_play_from_proxy,
         )
         try:
@@ -258,9 +237,6 @@ class PlexToolbox(_PluginBase):
                 "only_missing": self._only_missing,
                 "concurrency": self._concurrency,
                 "sections": self._sections,
-                "cron": self._cron,
-                "auto_full_on_enable": self._auto_full_on_enable,
-                "play_stop_complete": self._play_stop_complete,
                 "webhook_enabled": self._webhook_enabled,
                 "dedup_window": self._dedup_window,
                 "forward_episodes": self._forward_episodes,
@@ -387,16 +363,41 @@ class PlexToolbox(_PluginBase):
         except Exception as exc:
             logger.debug("PlexToolbox 记录播放补全历史失败: %s", exc)
 
-    def complete_rating_key(self, rating_key: str, source: str = "play_stop") -> None:
+    def _rating_key_in_selected_sections(self, rating_key: str) -> bool:
+        """检查单条播放补全是否属于用户已选择的 Plex 媒体库。"""
+        selected = {item.strip() for item in self._sections.split(",") if item.strip()}
+        if not selected:
+            logger.info("PlexToolbox 跳过单条补全：未选择 Plex 媒体库 ratingKey=%s", rating_key)
+            return False
+        plex_host = self._plex_direct_host or self._plex_host
+        if not plex_host or not self._plex_token:
+            return False
+        if not plex_host.startswith(("http://", "https://")):
+            plex_host = "http://" + plex_host
+        section_key = PlexClient(plex_host, self._plex_token).item_section_key(rating_key)
+        if not section_key:
+            logger.warning("PlexToolbox 无法确认条目所属媒体库，跳过补全 ratingKey=%s", rating_key)
+            return False
+        if section_key not in selected:
+            logger.info(
+                "PlexToolbox 跳过单条补全：条目不在已选媒体库 ratingKey=%s section=%s",
+                rating_key, section_key,
+            )
+            return False
+        return True
+
+    def complete_rating_key(self, rating_key: str, source: str = "webhook") -> None:
         """
         针对单个条目 ratingKey 触发补全，带去重，在后台线程执行。
 
         :param rating_key: Plex 条目 ratingKey
-        :param source: 触发来源（play_stop/webhook）
+        :param source: 触发来源（webhook）
         """
         if not rating_key:
             return
         if not (self._enabled and self._mediainfo_enabled):
+            return
+        if not self._rating_key_in_selected_sections(str(rating_key)):
             return
         if not self._should_trigger(str(rating_key)):
             logger.debug("PlexToolbox 去重窗口内跳过 ratingKey=%s", rating_key)
@@ -418,7 +419,7 @@ class PlexToolbox(_PluginBase):
                 self.save_data("last_play_result", summary)
                 self._append_play_history(summary)
                 logger.info(
-                    "PlexToolbox 播放停止补全完成 (%s) %s: 处理 %s, 写入 %s, 未命中 %s",
+                    "PlexToolbox 条目补全完成 (%s) %s: 处理 %s, 写入 %s, 未命中 %s",
                     source,
                     summary.get("label") or f"ratingKey={rating_key}",
                     summary.get("strm_parts", 0),
@@ -433,35 +434,26 @@ class PlexToolbox(_PluginBase):
 
         Thread(target=_worker, daemon=True).start()
 
-    def _on_play_stop_from_proxy(self, rating_key: str) -> None:
-        """
-        反代嗅探到播放停止时的回调：对本次播放条目做增量补全。
-
-        增量补全默认常开（启用插件且启用媒体信息补全即生效），
-        去重与「本集+后N集」窗口逻辑在 complete_rating_key / run_rating_key 内。
-
-        :param rating_key: 本次播放条目的 ratingKey
-        """
-        self.complete_rating_key(rating_key, source="play_stop")
-
     def _on_pre_play_from_proxy(self, rating_key: str) -> None:
         """
         反代播前回调（同步阻塞）：播放/继续观看起播前，先补全该条目媒体流信息。
 
         覆盖「继续观看」点击即播不经过详情页的场景。仅补当前条目本身
-        （forward=0），确保写库量最小、耗时最短；后续集数由播放停止后的
-        增量补全接管。反代侧带等待预算，超时自动放行播放。
+        当前条目与配置的后续集都在播放前处理。反代侧带等待预算，
+        超时自动放行播放，补全任务转后台继续。
 
         :param rating_key: 即将播放条目的 ratingKey
         """
         if not (self._enabled and self._mediainfo_enabled):
+            return
+        if not self._rating_key_in_selected_sections(str(rating_key)):
             return
         completer = self._build_completer(force_write=True)
         if not completer:
             return
         try:
             summary = completer.run_rating_key(
-                str(rating_key), only_missing=True, forward=0,
+                str(rating_key), only_missing=True, forward=self._forward_episodes,
             )
             if summary.get("written_ok"):
                 logger.info(
@@ -495,41 +487,72 @@ class PlexToolbox(_PluginBase):
         ]
 
     def get_service(self) -> List[Dict[str, Any]]:
-        """返回定时补全服务。"""
-        if not (self._enabled and self._mediainfo_enabled and self._cron):
+        """返回 Helper 健康检查服务。"""
+        if not (self._enabled and self._mediainfo_enabled and self._helper_url):
             return []
-        trigger = self._cron
-        if CronTrigger:
-            try:
-                trigger = CronTrigger.from_crontab(self._cron)
-            except Exception as exc:
-                logger.warning("PlexToolbox Cron 无效，跳过定时: %s", exc)
-                return []
+        trigger = IntervalTrigger(minutes=5) if IntervalTrigger else "*/5 * * * *"
         return [
             {
-                "id": "plextoolbox_complete",
-                "name": "PLEX 工具箱媒体信息补全",
+                "id": "plextoolbox_helper_health",
+                "name": "PLEX 工具箱 Helper 健康检查",
                 "trigger": trigger,
-                "func": self.run_completion,
-                "kwargs": {"source": "schedule"},
+                "func": self.check_helper_health,
             }
         ]
+
+    def check_helper_health(self) -> None:
+        """每 5 分钟检查 Helper；连续失败 3 次后仅告警一次。"""
+        healthy = HelperClient(self._helper_url, self._helper_token).health()
+        self._helper_health_ok = healthy
+        if healthy:
+            if self._helper_health_failures:
+                logger.info("PlexToolbox Helper 已恢复正常")
+            self._helper_health_failures = 0
+            self._helper_health_alerted = False
+            return
+        self._helper_health_failures += 1
+        logger.warning("PlexToolbox Helper 健康检查失败：连续 %s 次", self._helper_health_failures)
+        if self._helper_health_failures >= 3 and not self._helper_health_alerted:
+            self.post_message(
+                mtype=NotificationType.Plugin,
+                title="PLEX 工具箱 Helper 异常",
+                text="Helper 连续 3 次检测失败（约 15 分钟），请检查 Helper 服务和网络连接。",
+            )
+            self._helper_health_alerted = True
 
     def get_api(self) -> List[Dict[str, Any]]:
         """返回插件前端调用的 API 列表。"""
         return [
             {"path": "/status", "endpoint": self.status_api, "methods": ["GET"], "auth": "bear", "summary": "工具箱状态"},
+            {"path": "/config", "endpoint": self.get_config_api, "methods": ["GET"], "auth": "bear", "summary": "获取插件配置"},
+            {"path": "/config", "endpoint": self.save_config_api, "methods": ["POST"], "auth": "bear", "summary": "保存插件配置"},
             {"path": "/sections", "endpoint": self.sections_api, "methods": ["GET"], "auth": "bear", "summary": "获取 Plex 媒体库"},
             {"path": "/helper_check", "endpoint": self.helper_check_api, "methods": ["GET"], "auth": "bear", "summary": "检查 helper 连通与数据库"},
             {"path": "/complete", "endpoint": self.complete_api, "methods": ["POST"], "auth": "bear", "summary": "手动触发媒体信息补全"},
             {"path": "/result", "endpoint": self.result_api, "methods": ["GET"], "auth": "bear", "summary": "获取最近补全结果"},
-            {"path": "/webhook", "endpoint": self.webhook_api, "methods": ["POST"], "auth": "apikey", "summary": "Plex Webhook 接收（播放停止触发补全）"},
+            {"path": "/webhook", "endpoint": self.webhook_api, "methods": ["POST"], "auth": "apikey", "summary": "Plex Webhook 接收"},
             {"path": "/unmatch", "endpoint": self.unmatch_api, "methods": ["POST"], "auth": "bear", "summary": "一键取消匹配（重读 NFO）"},
             {"path": "/scan_cover", "endpoint": self.scan_cover_api, "methods": ["POST"], "auth": "bear", "summary": "扫描缺封面条目"},
             {"path": "/scrape", "endpoint": self.scrape_api, "methods": ["POST"], "auth": "bear", "summary": "对缺封面条目触发 MP 刮削"},
             {"path": "/fix_poster", "endpoint": self.fix_poster_api, "methods": ["POST"], "auth": "bear", "summary": "补全缺失的 poster.jpg（季海报复制/TMDB）"},
             {"path": "/clear_completion_data", "endpoint": self.clear_completion_data_api, "methods": ["POST"], "auth": "bear", "summary": "一键清理补全结果/播放补全历史"},
         ]
+
+    def get_config_api(self) -> Dict[str, Any]:
+        """返回当前完整配置，供配置页与数据页共用。"""
+        return {"success": True, "data": self.get_form()[1]}
+
+    def save_config_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """保存完整配置并重新初始化插件，使新配置立即生效。"""
+        payload = payload or {}
+        try:
+            merged = {**self.get_form()[1], **payload}
+            self.update_config(merged)
+            self.init_plugin(merged)
+            return {"success": True, "message": "配置已保存"}
+        except Exception as exc:
+            logger.error("PlexToolbox 保存配置失败: %s", exc, exc_info=True)
+            return {"success": False, "message": str(exc)}
 
     def status_api(self) -> Dict[str, Any]:
         """返回工具箱运行状态与配置概要。"""
@@ -541,6 +564,8 @@ class PlexToolbox(_PluginBase):
             "mediainfo_enabled": self._mediainfo_enabled,
             "running": self._running,
             "use_emby": self._use_emby,
+            "helper_health_ok": self._helper_health_ok,
+            "helper_health_failures": self._helper_health_failures,
         }
 
     def sections_api(self) -> Dict[str, Any]:
@@ -814,9 +839,6 @@ class PlexToolbox(_PluginBase):
             "only_missing": self._only_missing,
             "concurrency": self._concurrency,
             "sections": self._sections,
-            "cron": self._cron,
-            "auto_full_on_enable": self._auto_full_on_enable,
-            "play_stop_complete": self._play_stop_complete,
             "webhook_enabled": self._webhook_enabled,
             "dedup_window": self._dedup_window,
             "forward_episodes": self._forward_episodes,
