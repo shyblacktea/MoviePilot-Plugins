@@ -240,6 +240,18 @@ class PlexClient:
         metas = self._metadata(rating_key)
         return self._build_label(metas[0]) if metas else ""
 
+    def item_section_key(self, rating_key: str) -> str:
+        """返回单个条目所属的 Plex 媒体库 key。"""
+        metas = self._metadata(rating_key)
+        if not metas:
+            return ""
+        meta = metas[0]
+        return str(
+            meta.get("librarySectionID")
+            or meta.get("librarySectionKey")
+            or ""
+        ).strip()
+
     @staticmethod
     def _extract_parts(metadata: Dict[str, Any]) -> List[Dict[str, Any]]:
         """

@@ -46,7 +46,6 @@ SILENT_FAIL_PATH_PREFIXES = (
 )
 
 # 播前补全：同一 ratingKey 补全冷却时间（秒），避免反复播放同一条目重复写
-PREPLAY_COOLDOWN_SECONDS = 600
 # 播前补全：同步等待补全完成的最长时间（秒），超时后放行播放、补全转后台继续
 PREPLAY_WAIT_BUDGET_SECONDS = 3.0
 # playQueues 请求 uri 参数中的条目 ratingKey 提取
@@ -85,7 +84,7 @@ def create_app(
     plex_token: str = "",
     pin_rules: List[Tuple[str, str]] | None = None,
     force_direct_play: bool = True,
-    on_play_stop: Optional[Callable[[str], None]] = None,
+    preplay_cooldown_seconds: int = 600,
     on_pre_play: Optional[Callable[[str], Any]] = None,
 ) -> FastAPI:
     """
@@ -95,8 +94,6 @@ def create_app(
     :param plex_token (str): 备用 X-Plex-Token；请求自带 token 时优先使用请求中的
     :param pin_rules (List): 顶置路径规则列表 (路径前缀, 目标URL)；命中时先替换再 302
     :param force_direct_play (bool): 是否在 decision 请求中强制 DirectPlay，避免转码使 302 失效
-    :param on_play_stop (Callable): 播放停止回调，参数为 ratingKey；用于嗅探
-        /:/timeline?state=stopped 后触发针对性媒体信息补全
     :param on_pre_play (Callable): 播前补全回调，参数为 ratingKey，同步阻塞执行；
         在 playQueues 创建（含继续观看直接起播）时先补全该条目媒体流信息再放行
 
@@ -778,13 +775,13 @@ def create_app(
         now = monotonic()
         async with _preplay_lock:
             last = _preplay_recent.get(rating_key)
-            if last is not None and now - last < PREPLAY_COOLDOWN_SECONDS:
+            if last is not None and now - last < preplay_cooldown_seconds:
                 return
             _preplay_recent[rating_key] = now
             # 顺带清理过期记录
             expired = [
                 k for k, ts in _preplay_recent.items()
-                if now - ts > PREPLAY_COOLDOWN_SECONDS
+                if now - ts > preplay_cooldown_seconds
             ]
             for k in expired:
                 if k != rating_key:
@@ -1024,44 +1021,6 @@ def create_app(
         )
 
     # ---------- 播放状态嗅探（方案A：timeline 停止触发补全） ----------
-
-    def _sniff_timeline_stop(request: Request) -> None:
-        """
-        从 /:/timeline 请求参数中嗅探播放停止事件并回调。
-
-        Plex 客户端播放状态经 /:/timeline?state=stopped&ratingKey=xxx 上报，
-        命中停止状态时提取 ratingKey 触发针对性补全（去重由回调侧处理）。
-
-        :param request: 当前请求
-        """
-        if on_play_stop is None:
-            return
-        try:
-            q = request.query_params
-            if q.get("state") != "stopped":
-                return
-            rating_key = q.get("ratingKey") or ""
-            if not rating_key:
-                return
-            on_play_stop(str(rating_key))
-        except Exception as exc:
-            logger.debug("timeline 嗅探异常: %s", exc)
-
-    async def _handle_timeline(request: Request):
-        """
-        代理 /:/timeline 并嗅探播放停止事件。
-
-        :param request: 当前请求
-        :return: 反代响应
-        """
-        _sniff_timeline_stop(request)
-        return await _reverse_proxy(request)
-
-    app.api_route(
-        "/:/timeline",
-        methods=["GET", "POST", "HEAD"],
-        response_model=None,
-    )(_handle_timeline)
 
     @app.api_route(
         "/{path:path}",
