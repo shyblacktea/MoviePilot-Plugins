@@ -209,7 +209,7 @@ onMounted(async () => { emit('layout', layoutRequest); await loadConfig(); await
 </script>
 
 <style scoped>
-.ptb-config { container-type: inline-size; width: min(1120px, calc(100vw - 48px)); max-width: 100%; height: min(90dvh, 820px); max-height: calc(100dvh - 16px); padding: 8px; margin: 0 auto; display: flex; }
+.ptb-config { container-type: inline-size; width: min(1120px, calc(100vw - 48px)); max-width: 100%; height: calc(100dvh - 16px); max-height: calc(100dvh - 16px); padding: 8px; margin: 0 auto; display: flex; }
 .ptb-card { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); border-radius: 14px; overflow: hidden; }
 .ptb-header { padding: 14px 18px; }
 .ptb-header-subtitle { max-width: min(560px, 52vw); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
