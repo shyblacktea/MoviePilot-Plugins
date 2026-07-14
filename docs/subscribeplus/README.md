@@ -84,6 +84,14 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 ## 版本
 
+### v0.22
+
+- MP 原生订阅搜索没有可下载匹配时，自动读取 TMDB 罗马音别名并补搜。
+- 罗马音补搜严格沿用该订阅原有站点范围、缺失季集、过滤规则和自定义识别词，不扩大到其他 PT 站点。
+- 已配置订阅搜索关键词时完全沿用 MoviePilot 原行为，不重复补搜。
+- 补搜命中后 Telegram 展示建议搜索关键词；点击后再次确认，才会写入订阅的“搜索关键词”。
+- 写入时只修改订阅 `keyword` 字段，不改变站点、包含规则或其他订阅配置。
+
 ### v0.21
 
 - 自定义识别词工具改为两个明确的手动动作：`强制绑定` 与 `修正年份`。
@@ -228,9 +236,9 @@ Telegram 可发送 `/ci 媒体文件名` 打开自动/手动处理菜单。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.21`
-- Release tag：`SubscribePlus_v0.21`
-- Release 资产：`subscribeplus_v0.21.zip`
+- 当前版本：`0.22`
+- Release tag：`SubscribePlus_v0.22`
+- Release 资产：`subscribeplus_v0.22.zip`
 
 ## 致谢
 

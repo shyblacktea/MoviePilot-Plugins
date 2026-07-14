@@ -83,6 +83,7 @@ from .identifiers import (
     validate_identifier_rule,
 )
 from .models import DiagnosisInput, DiagnosisItem, PluginConfig, StaleEpisode
+from .romaji import select_romaji_aliases, should_try_romaji_fallback
 from .rules import (
     apply_rule_preview,
     build_rule_preview,
@@ -105,6 +106,7 @@ from .telegram import (
     build_ci_manual_type_menu,
     build_ci_mode_menu,
     build_ci_wait_tmdb_menu,
+    build_keyword_confirm_menu,
     build_main_menu,
     build_other_sites_menu,
     build_pending_menu,
@@ -126,7 +128,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "0.21"
+    plugin_version = "0.22"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -554,15 +556,24 @@ class SubscribePlus(_PluginBase):
         return None
 
     def _run_moviepilot_subscribe_search_for_item(self, item: DiagnosisInput) -> Dict[str, Any]:
-        captured: Dict[str, Any] = {"matched_contexts": [], "diagnostic_contexts": [], "raw_torrents": [], "errors": []}
+        captured: Dict[str, Any] = {
+            "matched_contexts": [],
+            "diagnostic_contexts": [],
+            "raw_torrents": [],
+            "errors": [],
+            "search_context": {},
+            "romaji_keyword": "",
+        }
         subscribe_id = safe_int(item.subscribe_id, 0)
         if not subscribe_id:
             return captured
         try:
             from app.chain.subscribe import SubscribeChain
             from app.chain.search import SearchChain
+            from app.db.subscribe_oper import SubscribeOper
 
             original_parse_result = getattr(SearchChain, "_SearchChain__parse_result")
+            subscribe = SubscribeOper().get(subscribe_id)
 
             def wrapped_parse_result(
                 search_self,
@@ -576,6 +587,13 @@ class SubscribePlus(_PluginBase):
             ):
                 raw_torrents = list(torrents or [])
                 captured["raw_torrents"].extend(raw_torrents)
+                captured["search_context"] = {
+                    "mediainfo": copy.deepcopy(mediainfo),
+                    "season_episodes": copy.deepcopy(season_episodes),
+                    "custom_words": copy.deepcopy(custom_words),
+                    "filter_params": copy.deepcopy(filter_params),
+                    "rule_groups": copy.deepcopy(rule_groups),
+                }
                 try:
                     diagnostic_contexts = original_parse_result(
                         search_self,
@@ -608,12 +626,100 @@ class SubscribePlus(_PluginBase):
             setattr(SearchChain, "_SearchChain__parse_result", wrapped_parse_result)
             try:
                 SubscribeChain().search(sid=subscribe_id, state=None, manual=False)
+                subscribe_keyword = str(getattr(subscribe, "keyword", "") or "").strip() if subscribe else ""
+                if subscribe and should_try_romaji_fallback(subscribe_keyword, captured["matched_contexts"]):
+                    self._append_romaji_fallback_results(
+                        item=item,
+                        captured=captured,
+                        subscribe=subscribe,
+                        search_chain=SearchChain(),
+                        original_parse_result=original_parse_result,
+                    )
             finally:
                 setattr(SearchChain, "_SearchChain__parse_result", original_parse_result)
         except Exception as exc:
             captured["errors"].append(str(exc))
             logger.warning(f"订阅下载增强触发 MP 订阅搜索失败：{item.title} ID={subscribe_id}，{exc}")
         return captured
+
+    def _append_romaji_fallback_results(
+        self,
+        item: DiagnosisInput,
+        captured: Dict[str, Any],
+        subscribe: Any,
+        search_chain: Any,
+        original_parse_result: Any,
+    ) -> None:
+        search_context = captured.get("search_context") or {}
+        mediainfo = search_context.get("mediainfo")
+        if not mediainfo:
+            return
+        aliases = list(getattr(mediainfo, "names", None) or [])
+        aliases.extend(
+            value
+            for value in (
+                getattr(mediainfo, "original_title", None),
+                getattr(mediainfo, "original_name", None),
+            )
+            if value
+        )
+        romaji_aliases = select_romaji_aliases(aliases)
+        if not romaji_aliases:
+            logger.info(f"订阅下载增强未找到可用罗马音别名：{self._format_item_log_context(item)}")
+            return
+
+        from app.chain.subscribe import SubscribeChain
+
+        site_ids = [
+            int(site)
+            for site in (SubscribeChain.get_sub_sites(subscribe) or [])
+            if str(site).isdigit()
+        ]
+        for alias in romaji_aliases:
+            try:
+                title_contexts = search_chain.search_by_title(
+                    title=alias,
+                    sites=site_ids or None,
+                    cache_local=False,
+                ) or []
+                torrents = [getattr(context, "torrent_info", context) for context in title_contexts]
+                if not torrents:
+                    continue
+                captured["raw_torrents"].extend(torrents)
+                diagnostic_contexts = original_parse_result(
+                    search_chain,
+                    list(torrents),
+                    copy.deepcopy(mediainfo),
+                    keyword=alias,
+                    rule_groups=[],
+                    season_episodes=copy.deepcopy(search_context.get("season_episodes")),
+                    custom_words=copy.deepcopy(search_context.get("custom_words")),
+                    filter_params=None,
+                ) or []
+                matched_contexts = original_parse_result(
+                    search_chain,
+                    list(torrents),
+                    copy.deepcopy(mediainfo),
+                    keyword=alias,
+                    rule_groups=copy.deepcopy(search_context.get("rule_groups")),
+                    season_episodes=copy.deepcopy(search_context.get("season_episodes")),
+                    custom_words=copy.deepcopy(search_context.get("custom_words")),
+                    filter_params=copy.deepcopy(search_context.get("filter_params")),
+                ) or []
+                captured["diagnostic_contexts"].extend(diagnostic_contexts)
+                captured["matched_contexts"].extend(matched_contexts)
+                if diagnostic_contexts or matched_contexts:
+                    captured["romaji_keyword"] = alias
+                    logger.info(
+                        "订阅下载增强罗马音补搜命中："
+                        f"{self._format_item_log_context(item)}，关键词={alias}，"
+                        f"匹配={len(matched_contexts)}，诊断={len(diagnostic_contexts)}"
+                    )
+                if matched_contexts:
+                    break
+            except Exception as exc:
+                captured["errors"].append(f"{alias}: {exc}")
+                logger.warning(f"订阅下载增强罗马音补搜失败：{item.title}，关键词={alias}，{exc}")
 
     def _diagnose_with_moviepilot_subscription_scope(self, item: DiagnosisInput, mp_search: Optional[Dict[str, Any]] = None) -> DiagnosisItem:
         mp_sites = self._load_moviepilot_subscribe_sites(item)
@@ -626,6 +732,12 @@ class SubscribePlus(_PluginBase):
         ]
         matched_diagnosis = TorrentDiagnoser(lambda _item: matched_candidates).diagnose(scoped_item)
         if matched_diagnosis.candidates:
+            if mp_search.get("romaji_keyword"):
+                matched_diagnosis.reason = "romaji_keyword_found"
+                matched_diagnosis.message = "自动使用 TMDB 罗马音别名补搜到符合订阅规则的资源"
+                matched_diagnosis.source = "romaji_fallback"
+                matched_diagnosis.search_keyword_suggestion = str(mp_search.get("romaji_keyword") or "")
+                return matched_diagnosis
             matched_diagnosis.reason = "downloadable"
             matched_diagnosis.message = "MP 订阅搜索结果中存在可匹配资源，已交给 MP 订阅搜索处理"
             return matched_diagnosis
@@ -639,6 +751,10 @@ class SubscribePlus(_PluginBase):
         if diagnostic_result.candidates:
             diagnostic_result.reason = "rule_blocked"
             diagnostic_result.message = "MP 订阅搜索结果中存在季集正确资源，但被订阅规则或过滤条件拦截"
+            if mp_search.get("romaji_keyword"):
+                diagnostic_result.source = "romaji_fallback"
+                diagnostic_result.search_keyword_suggestion = str(mp_search.get("romaji_keyword") or "")
+                diagnostic_result.message = "自动使用 TMDB 罗马音别名补搜到季集正确资源，但仍被订阅规则或过滤条件拦截"
             return diagnostic_result
 
         return DiagnosisItem(
@@ -881,6 +997,7 @@ class SubscribePlus(_PluginBase):
                         self._plugin_config.allow_tg_rule_update,
                         can_identifier_fix=item.get("reason") == "recognition_issue",
                         candidate_count=len(item.get("candidates") or []),
+                        search_keyword_suggestion=item.get("search_keyword_suggestion") or "",
                     ),
                     save_history=False,
                 )
@@ -978,6 +1095,7 @@ class SubscribePlus(_PluginBase):
                     self._plugin_config.allow_tg_rule_update,
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                     candidate_count=len(diagnosis.get("candidates") or []),
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                 ),
                 save_history=False,
             )
@@ -994,6 +1112,7 @@ class SubscribePlus(_PluginBase):
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                     candidate_count=len(diagnosis.get("candidates") or []),
                     candidate_page=page,
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                 ),
                 save_history=False,
             )
@@ -1020,8 +1139,75 @@ class SubscribePlus(_PluginBase):
             )
             self._notify_next_queued_show()
             return
+        if op == "keyword":
+            suggestion = str(diagnosis.get("search_keyword_suggestion") or "").strip()
+            if not suggestion:
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text="当前诊断没有可添加的罗马音搜索关键词。",
+                    save_history=False,
+                )
+                return
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=(
+                    "是否将以下罗马音写入该订阅的搜索关键词？\n"
+                    f"{suggestion}\n\n只修改搜索关键词，不修改站点、包含规则或其他订阅设置。"
+                ),
+                buttons=build_keyword_confirm_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "keyword-confirm":
+            suggestion = str(diagnosis.get("search_keyword_suggestion") or "").strip()
+            subscribe_id = safe_int(diagnosis.get("subscribe_id"), 0)
+            if not suggestion or not subscribe_id:
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text="缺少订阅或罗马音关键词，无法保存。",
+                    save_history=False,
+                )
+                return
+            try:
+                result = self._update_subscribe(subscribe_id, {"keyword": suggestion})
+                subscribe = self._get_subscribe(subscribe_id)
+                saved_keyword = str(getattr(subscribe, "keyword", "") or "").strip() if subscribe else ""
+                if not result.get("updated") or saved_keyword != suggestion:
+                    raise RuntimeError("MoviePilot 回读的搜索关键词与写入值不一致")
+                diagnosis["search_keyword_suggestion"] = ""
+                state["diagnosis"] = diagnosis
+                state["expires_at"] = (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds")
+                self._ensure_store().save_interaction(token, state)
+                logger.info(
+                    "订阅下载增强已写入订阅搜索关键词："
+                    f"订阅ID={subscribe_id}，关键词={suggestion}"
+                )
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text=f"已添加订阅搜索关键词：{suggestion}",
+                    buttons=build_main_menu(
+                        token,
+                        self._plugin_config.allow_tg_rule_update,
+                        can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                        candidate_count=len(diagnosis.get("candidates") or []),
+                    ),
+                    save_history=False,
+                )
+            except Exception as exc:
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text=f"添加订阅搜索关键词失败：{exc}",
+                    buttons=build_keyword_confirm_menu(token),
+                    save_history=False,
+                )
+            return
         if op == "download":
-            if diagnosis.get("source") == "plugin_pt_scope":
+            if diagnosis.get("source") in {"plugin_pt_scope", "romaji_fallback"}:
                 candidates = diagnosis.get("candidates") or []
                 if candidates:
                     self._post_callback_message(
@@ -1041,6 +1227,7 @@ class SubscribePlus(_PluginBase):
                             self._plugin_config.allow_tg_rule_update,
                             can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                             candidate_count=len(diagnosis.get("candidates") or []),
+                            search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                         ),
                         save_history=False,
                     )
@@ -1094,6 +1281,7 @@ class SubscribePlus(_PluginBase):
                     self._plugin_config.allow_tg_rule_update,
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                     candidate_count=len(diagnosis.get("candidates") or []),
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                 ),
                 save_history=False,
             )
@@ -1244,6 +1432,7 @@ class SubscribePlus(_PluginBase):
                     self._plugin_config.allow_tg_rule_update,
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                     candidate_count=len(diagnosis.get("candidates") or []),
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                 ),
                 save_history=False,
             )

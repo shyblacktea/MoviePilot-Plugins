@@ -40,6 +40,7 @@ def build_main_menu(
     candidate_count: int = 0,
     candidate_page: int = 0,
     candidate_page_size: int = CANDIDATE_PAGE_SIZE,
+    search_keyword_suggestion: str = "",
 ) -> List[List[Dict[str, str]]]:
     first_row = [{"text": "下载", "callback_data": make_callback("download", token)}]
     if allow_rule_update:
@@ -56,6 +57,8 @@ def build_main_menu(
         if pager:
             rows.append(pager)
     rows.append([{"text": "搜索其他站点", "callback_data": make_callback("ptscope", token)}])
+    if search_keyword_suggestion:
+        rows.append([{"text": "添加搜索关键词", "callback_data": make_callback("keyword", token)}])
     rows.append([{"text": "暂缓3天", "callback_data": make_callback("snooze3d", token)}])
     rows.append(
         [
@@ -64,6 +67,16 @@ def build_main_menu(
         ]
     )
     return rows
+
+
+def build_keyword_confirm_menu(token: str) -> List[List[Dict[str, str]]]:
+    return [
+        [{"text": "确认添加", "callback_data": make_callback("keyword-confirm", token)}],
+        [
+            {"text": "返回", "callback_data": make_callback("open", token)},
+            {"text": "结束", "callback_data": make_callback("close", token)},
+        ],
+    ]
 
 
 def build_other_sites_menu(
@@ -385,6 +398,8 @@ def render_notification_text(
         f"诊断：{item.get('message') or item.get('reason')}",
         f"候选资源：{len(candidates)} 个",
     ]
+    if item.get("search_keyword_suggestion"):
+        lines.append(f"建议搜索关键词：{item.get('search_keyword_suggestion')}")
     progress = item.get("subscription_site_progress") or []
     if progress:
         lines.append("订阅站点：")
