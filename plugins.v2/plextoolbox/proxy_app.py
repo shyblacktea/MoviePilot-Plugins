@@ -210,6 +210,7 @@ def create_app(
         )
         # part_key(如 /library/parts/1/2/file) -> (file_path, expiry)
         app.state.part_info_cache = {}
+        app.state.part_rating_cache = {}
         # part_path -> (strm_content_url, expiry)
         app.state.strm_content_cache = {}
         app.state.part_info_lock = Lock()
@@ -237,7 +238,7 @@ def create_app(
     # ---------- Part 路径缓存 ----------
 
     async def _cache_part_info(
-        request: Request, part_key: str, file_path: str
+        request: Request, part_key: str, file_path: str, rating_key: str = ""
     ) -> None:
         """
         缓存 Part.key -> 文件路径映射，供后续播放请求直接使用
@@ -260,6 +261,10 @@ def create_app(
             # part_key 可能带查询参数，只取 path 部分
             key = part_key.split("?", 1)[0]
             cache[key] = (file_path, monotonic() + PART_INFO_CACHE_TTL_SECONDS)
+            if rating_key:
+                request.app.state.part_rating_cache[key] = (
+                    str(rating_key), monotonic() + PART_INFO_CACHE_TTL_SECONDS
+                )
 
     async def _get_cached_part_path(request: Request, part_key: str) -> str:
         """
@@ -280,14 +285,27 @@ def create_app(
                 return ""
             return file_path
 
-    def _extract_parts_from_json(data: Any) -> List[Tuple[str, str]]:
+    async def _get_cached_part_rating_key(request: Request, part_key: str) -> str:
+        """读取 Part 对应的条目 ratingKey，供直接文件起播时补全兜底。"""
+        cache = request.app.state.part_rating_cache
+        async with request.app.state.part_info_lock:
+            entry = cache.get(part_key)
+            if not entry:
+                return ""
+            rating_key, expiry = entry
+            if monotonic() >= expiry:
+                cache.pop(part_key, None)
+                return ""
+            return str(rating_key)
+
+    def _extract_parts_from_json(data: Any) -> List[Tuple[str, str, str]]:
         """
         从 Plex JSON 响应的 MediaContainer 中抽取所有 Part 的 (key, file) 对
 
         :param data: Plex API JSON 响应
         :return: (part_key, file_path) 列表
         """
-        result: List[Tuple[str, str]] = []
+        result: List[Tuple[str, str, str]] = []
         if not isinstance(data, dict):
             return result
         container = data.get("MediaContainer")
@@ -306,6 +324,7 @@ def create_app(
                 m for m in container["Metadata"] if isinstance(m, dict)
             )
         for metadata in metadata_arr:
+            rating_key = str(metadata.get("ratingKey") or "")
             media_list = metadata.get("Media")
             if not isinstance(media_list, list):
                 continue
@@ -321,10 +340,10 @@ def create_app(
                     key = part.get("key")
                     file_path = part.get("file")
                     if isinstance(key, str) and isinstance(file_path, str):
-                        result.append((key, file_path))
+                        result.append((key, file_path, rating_key))
         return result
 
-    def _extract_parts_from_xml(text: str) -> List[Tuple[str, str]]:
+    def _extract_parts_from_xml(text: str) -> List[Tuple[str, str, str]]:
         """
         从 Plex XML 响应中抽取所有 Part 的 (key, file) 对
 
@@ -333,16 +352,20 @@ def create_app(
         """
         from xml.etree import ElementTree
 
-        result: List[Tuple[str, str]] = []
+        result: List[Tuple[str, str, str]] = []
         try:
             root = ElementTree.fromstring(text)
         except ElementTree.ParseError:
             return result
-        for part in root.iter("Part"):
-            key = part.get("key")
-            file_path = part.get("file")
-            if key and file_path:
-                result.append((key, file_path))
+        for metadata in root.iter():
+            rating_key = metadata.get("ratingKey") or ""
+            if not rating_key:
+                continue
+            for part in metadata.iter("Part"):
+                key = part.get("key")
+                file_path = part.get("file")
+                if key and file_path:
+                    result.append((key, file_path, str(rating_key)))
         return result
 
     async def _harvest_parts_from_response(
@@ -356,7 +379,7 @@ def create_app(
         :param body: 响应体字节串
         :return: 缓存的 Part 数量
         """
-        pairs: List[Tuple[str, str]] = []
+        pairs: List[Tuple[str, str, str]] = []
         try:
             if "application/json" in content_type:
                 from json import loads
@@ -367,11 +390,11 @@ def create_app(
         except Exception:
             logger.debug("解析元数据响应失败，跳过 Part 缓存", exc_info=True)
             return 0
-        for key, file_path in pairs:
-            await _cache_part_info(request, key, file_path)
+        for key, file_path, rating_key in pairs:
+            await _cache_part_info(request, key, file_path, rating_key)
         # 单集详情页（Part 数少）时后台预热 STRM 解析，正式播放可直接命中缓存
         if 0 < len(pairs) <= PREWARM_MAX_PARTS:
-            for key, file_path in pairs:
+            for key, file_path, _rating_key in pairs:
                 if file_path.lower().endswith(".strm"):
                     create_task(
                         _prewarm_strm(request, key.split("?", 1)[0])
@@ -433,8 +456,8 @@ def create_app(
             )
             if resp.status_code == 200:
                 pairs = _extract_parts_from_json(resp.json())
-                for key, file_path in pairs:
-                    await _cache_part_info(request, key, file_path)
+                for key, file_path, rating_key in pairs:
+                    await _cache_part_info(request, key, file_path, rating_key)
                     if key.split("?", 1)[0] == part_path:
                         return file_path
                 if pairs:
@@ -613,6 +636,13 @@ def create_app(
         :return: 重定向或反代响应
         """
         logger.info("播放请求: %s", request.scope.get("path", ""))
+        part_path = request.scope.get("path", "")
+        rating_key = await _get_cached_part_rating_key(request, part_path)
+        if not rating_key:
+            await _fetch_plex_file_path(request, part_path)
+            rating_key = await _get_cached_part_rating_key(request, part_path)
+        if rating_key:
+            await _maybe_pre_play_complete(rating_key)
         resp = await _try_redirect(request)
         if resp:
             return resp
@@ -716,8 +746,8 @@ def create_app(
                         else (pairs[0] if pairs else None)
                     )
                     if pair:
-                        part_key, file_path = pair
-                        await _cache_part_info(request, part_key, file_path)
+                        part_key, file_path, rating_key = pair
+                        await _cache_part_info(request, part_key, file_path, rating_key)
                         http_url = ""
                         replaced = _apply_pin_rules(file_path, pin_rules)
                         if _is_http_media_path(replaced):
