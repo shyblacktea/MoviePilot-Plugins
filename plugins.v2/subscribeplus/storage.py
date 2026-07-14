@@ -104,6 +104,12 @@ class JsonStore:
     def load_identifier_records(self) -> List[Dict[str, Any]]:
         return self._read("identifier_records.json", [])
 
+    def clear_identifier_records(self):
+        try:
+            self._path("identifier_records.json").unlink(missing_ok=True)
+        except OSError:
+            pass
+
     def save_interaction(self, token: str, state: Dict[str, Any]):
         states = self._read("interactions.json", {})
         states[token] = state

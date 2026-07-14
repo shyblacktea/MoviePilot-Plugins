@@ -72,6 +72,54 @@ def build_exact_identifier_rule(title: str, target: Dict[str, Any]) -> str:
     return normalize_identifier_line(f"{re.escape(raw_title)} => {replacement}")
 
 
+def identifier_title_stem(title: str, media_type: str) -> str:
+    raw_title = str(title or "").strip().replace("\\", "/").rsplit("/", 1)[-1]
+    raw_title = re.sub(r"\.(?:mkv|mp4|avi|mov|ts|m2ts|strm)$", "", raw_title, flags=re.IGNORECASE)
+    if normalize_media_type(media_type) == "tv":
+        match = re.search(r"(?i)(?:[.\s_-]+)S\d{1,3}(?:E\d{1,4}(?:-E?\d{1,4})?)?", raw_title)
+        if match:
+            raw_title = raw_title[: match.start()]
+    return raw_title.strip(" ._- ")
+
+
+def build_force_identifier_rule(title: str, target: Dict[str, Any]) -> str:
+    media_type = normalize_media_type(target.get("media_type") or target.get("type"))
+    tmdbid = target_tmdbid(target)
+    name = str(target.get("name") or target.get("title") or "").strip()
+    match_title = identifier_title_stem(title, media_type)
+    if not match_title or not name or not tmdbid or media_type == "unknown":
+        raise ValueError("缺少标题、TMDB 中文名、媒体类型或 TMDB ID")
+    return normalize_identifier_line(f"{match_title} => {name}{{[tmdbid={tmdbid};type={media_type}]}}")
+
+
+def build_year_identifier_rule(title: str, target: Dict[str, Any]) -> str:
+    raw_title = str(title or "").strip().replace("\\", "/").rsplit("/", 1)[-1]
+    raw_title = re.sub(r"\.(?:mkv|mp4|avi|mov|ts|m2ts|strm)$", "", raw_title, flags=re.IGNORECASE)
+    target_year = str(target.get("year") or "").strip()
+    if not (len(target_year) == 4 and target_year.isdigit()):
+        raise ValueError("TMDB 没有可用的首播年份")
+
+    season_match = re.search(r"(?i)(.*?[.\s_-]+S\d{1,3})(?:E\d{1,4}(?:-E?\d{1,4})?)?", raw_title)
+    if season_match:
+        prefix = season_match.group(1).strip(" ._- ")
+        search_start = season_match.end()
+    else:
+        prefix = identifier_title_stem(raw_title, target.get("media_type") or target.get("type"))
+        search_start = len(prefix)
+
+    source_year = ""
+    for match in re.finditer(r"(?<!\d)((?:19|20)\d{2})(?!\d)", raw_title[search_start:]):
+        candidate = match.group(1)
+        if candidate != target_year:
+            source_year = candidate
+            break
+    if not source_year:
+        raise ValueError(f"文件名中没有找到与 TMDB 年份 {target_year} 不同的年份")
+    if not prefix:
+        raise ValueError("无法从媒体文件名提取作品名或季号")
+    return normalize_identifier_line(f"(?<={prefix}.*?){source_year} => {target_year}")
+
+
 def build_identifier_lines(
     title: str,
     target: Dict[str, Any],

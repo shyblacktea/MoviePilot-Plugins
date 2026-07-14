@@ -71,8 +71,10 @@ except Exception:  # pragma: no cover - lets local unit tests import this packag
 
 from .diagnosis import TorrentDiagnoser, normalize_search_result
 from .identifiers import (
+    build_force_identifier_rule,
     build_identifier_lines,
     build_identifier_record,
+    build_year_identifier_rule,
     dedupe_identifier_lines,
     normalize_identifier_line,
     normalize_media_type,
@@ -124,7 +126,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "0.20"
+    plugin_version = "0.21"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -220,8 +222,10 @@ class SubscribePlus(_PluginBase):
             {"path": "/results/delete", "endpoint": self.delete_result_api, "methods": ["POST"], "auth": "bear", "summary": "删除单条诊断结果"},
             {"path": "/rule_records/clear", "endpoint": self.clear_rule_records_api, "methods": ["POST"], "auth": "bear", "summary": "清空规则修改记录"},
             {"path": "/rule_records/delete", "endpoint": self.delete_rule_record_api, "methods": ["POST"], "auth": "bear", "summary": "删除单条规则修改记录"},
+            {"path": "/identifier_records/clear", "endpoint": self.clear_identifier_records_api, "methods": ["POST"], "auth": "bear", "summary": "清空识别词操作记录"},
             {"path": "/identifier_auto", "endpoint": self.identifier_auto_api, "methods": ["POST"], "auth": "bear", "summary": "自动识别并写入自定义识别词"},
             {"path": "/identifier_manual", "endpoint": self.identifier_manual_api, "methods": ["POST"], "auth": "bear", "summary": "按 TMDB 手动写入自定义识别词"},
+            {"path": "/identifier_year", "endpoint": self.identifier_year_api, "methods": ["POST"], "auth": "bear", "summary": "按 TMDB 首播年份修正文件年份"},
             {"path": "/identifier_fix", "endpoint": self.identifier_fix_api, "methods": ["POST"], "auth": "bear", "summary": "兼容旧版识别修正入口"},
             {"path": "/rule_suggestions", "endpoint": self.rule_suggestions_api, "methods": ["POST"], "auth": "bear", "summary": "生成订阅规则建议"},
             {"path": "/rule_preview", "endpoint": self.rule_preview_api, "methods": ["POST"], "auth": "bear", "summary": "生成规则修改预览"},
@@ -340,6 +344,10 @@ class SubscribePlus(_PluginBase):
         self._ensure_store().clear_rule_records()
         return {"success": True}
 
+    def clear_identifier_records_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        self._ensure_store().clear_identifier_records()
+        return {"success": True}
+
     def delete_rule_record_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         data = self._extract_payload(payload)
         record_id = str(data.get("record_id") or "").strip()
@@ -387,6 +395,10 @@ class SubscribePlus(_PluginBase):
     def identifier_manual_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         payload = self._extract_payload(payload)
         return self._identifier_manual(payload, source="vue")
+
+    def identifier_year_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._identifier_year(payload, source="vue")
 
     def rule_suggestions_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         payload = self._extract_payload(payload)
@@ -1312,7 +1324,7 @@ class SubscribePlus(_PluginBase):
     def _identifier_manual(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
         title = self._identifier_title_from_payload(payload)
         if not title:
-            return self._record_identifier_tool_failure("", {}, "媒体文件名不能为空", "missing_title", source, "manual")
+            return self._record_identifier_tool_failure("", {}, "媒体文件名不能为空", "missing_title", source, "force")
         media_type = normalize_media_type(payload.get("media_type") or payload.get("type"))
         tmdbid = safe_int(payload.get("tmdbid") or payload.get("tmdb_id"), 0)
         if media_type == "unknown" or not tmdbid:
@@ -1322,15 +1334,109 @@ class SubscribePlus(_PluginBase):
                 "请填写 movie/tv 和 TMDB ID",
                 "missing_target",
                 source,
-                "manual",
+                "force",
             )
         target = {
             "media_type": media_type,
             "tmdbid": tmdbid,
-            "season": safe_int(payload.get("season"), 0),
-            "episode": safe_int(payload.get("episode"), 0),
         }
-        return self._apply_identifier_rule(title, target, source, mode="manual")
+        return self._apply_manual_identifier_rule(title, target, source, mode="force")
+
+    def _identifier_year(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        title = self._identifier_title_from_payload(payload)
+        if not title:
+            return self._record_identifier_tool_failure("", {}, "媒体文件名不能为空", "missing_title", source, "year")
+        media_type = normalize_media_type(payload.get("media_type") or payload.get("type"))
+        tmdbid = safe_int(payload.get("tmdbid") or payload.get("tmdb_id"), 0)
+        if media_type == "unknown" or not tmdbid:
+            return self._record_identifier_tool_failure(
+                title,
+                {},
+                "请填写 movie/tv 和 TMDB ID",
+                "missing_target",
+                source,
+                "year",
+            )
+        return self._apply_manual_identifier_rule(
+            title,
+            {"media_type": media_type, "tmdbid": tmdbid},
+            source,
+            mode="year",
+        )
+
+    def _apply_manual_identifier_rule(
+        self, title: str, target: Dict[str, Any], source: str, mode: str
+    ) -> Dict[str, Any]:
+        target = dict(target or {})
+        tmdb_summary = self._load_tmdb_target_summary(target)
+        if tmdb_summary.get("success") is False:
+            return self._record_identifier_tool_failure(
+                title,
+                target,
+                tmdb_summary.get("message") or "TMDB 没有查到可用数据",
+                "tmdb_unavailable",
+                source,
+                mode,
+            )
+        target["name"] = tmdb_summary.get("name") or ""
+        target["year"] = tmdb_summary.get("year") or ""
+        try:
+            if mode == "year":
+                rule = build_year_identifier_rule(title, target)
+            else:
+                rule = build_force_identifier_rule(title, target)
+        except ValueError as exc:
+            return self._record_identifier_tool_failure(
+                title, target, str(exc), "invalid_rule", source, mode
+            )
+
+        try:
+            applied = self._append_custom_identifiers([rule])
+        except Exception as exc:
+            return self._record_identifier_tool_failure(
+                title,
+                target,
+                f"写入自定义识别词失败：{exc}",
+                "write_failed",
+                source,
+                mode,
+            )
+
+        recheck = self._recognize_identifier_title(title, target)
+        success = bool(recheck.get("success"))
+        if success:
+            message = "已写入强制绑定规则" if mode == "force" else "已写入年份修正规则"
+            if not applied.get("added"):
+                message = "识别词已存在，再次识别已命中"
+            reason = ""
+            status = "success"
+        else:
+            message = recheck.get("message") or "识别词已写入，但再次识别未命中目标 TMDB"
+            reason = recheck.get("reason") or "recognize_failed"
+            status = "failed"
+
+        record = build_identifier_record(
+            subscribe_id=0,
+            title=str(target.get("name") or title),
+            candidate_title=title,
+            target=target,
+            added=applied.get("added") or [],
+            source=source,
+            status=status,
+            message=message,
+        )
+        record.update(
+            {
+                "mode": mode,
+                "rule": rule,
+                "total_count": applied.get("total_count"),
+                "recheck": recheck,
+            }
+        )
+        if reason:
+            record["reason"] = reason
+        self._ensure_store().append_identifier_record(record)
+        return {"success": success, "message": message, "reason": reason, "data": record}
 
     @staticmethod
     def _identifier_title_from_payload(payload: Dict[str, Any]) -> str:

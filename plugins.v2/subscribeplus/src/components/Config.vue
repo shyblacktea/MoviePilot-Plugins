@@ -146,35 +146,38 @@
                 <div class="sp-section-title mb-0">自定义识别词</div>
                 <VSpacer />
                 <VChip size="small" variant="tonal">{{ identifierRecords.length }}</VChip>
+                <VTooltip text="清空识别历史" location="top">
+                  <template #activator="{ props: tooltipProps }">
+                    <VBtn v-bind="tooltipProps" class="ml-1" icon="mdi-delete-sweep-outline" color="error" variant="text" size="small" :loading="clearingIdentifiers" :disabled="!identifierRecords.length" @click="clearIdentifierRecords" />
+                  </template>
+                </VTooltip>
               </div>
               <VAlert v-if="identifierError" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="identifierError = ''">{{ identifierError }}</VAlert>
               <VAlert v-if="identifierMessage" type="success" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="identifierMessage = ''">{{ identifierMessage }}</VAlert>
 
-              <div class="sp-subsection-title">自动处理</div>
               <VRow class="sp-id-row" align="center">
-                <VCol cols="12" md="8"><VTextField v-model="identifierAutoTitle" label="媒体文件名" density="compact" variant="outlined" hide-details clearable /></VCol>
-                <VCol cols="12" md="4" class="sp-id-action">
-                  <VBtn color="primary" prepend-icon="mdi-auto-fix" variant="tonal" size="small" :loading="identifierBusy === 'auto'" @click="runIdentifierAuto">自动处理</VBtn>
-                </VCol>
-              </VRow>
-              <VDivider class="my-3" />
-              <div class="sp-subsection-title">手动处理</div>
-              <VRow class="sp-id-row" align="center">
-                <VCol cols="12" md="5"><VTextField v-model="identifierManualTitle" label="媒体文件名" density="compact" variant="outlined" hide-details clearable /></VCol>
-                <VCol cols="6" md="2"><VSelect v-model="identifierManualType" :items="mediaTypeOptions" label="类型" density="compact" variant="outlined" hide-details /></VCol>
-                <VCol cols="6" md="3"><VTextField v-model="identifierManualTmdbid" label="TMDB ID" placeholder="填写 TMDB 的 ID" density="compact" variant="outlined" hide-details clearable /></VCol>
-                <VCol cols="12" md="2" class="sp-id-action">
-                  <VBtn color="primary" prepend-icon="mdi-pencil-plus-outline" variant="tonal" size="small" :loading="identifierBusy === 'manual'" @click="runIdentifierManual">手动处理</VBtn>
+                <VCol cols="12"><VTextField v-model="identifierTitle" label="媒体文件名" placeholder="填写完整文件名或发布标题" density="compact" variant="outlined" hide-details clearable /></VCol>
+                <VCol cols="5" md="3"><VSelect v-model="identifierType" :items="mediaTypeOptions" label="类型" density="compact" variant="outlined" hide-details /></VCol>
+                <VCol cols="7" md="4"><VTextField v-model="identifierTmdbid" label="TMDB ID" placeholder="填写 TMDB 的 ID" density="compact" variant="outlined" hide-details clearable /></VCol>
+                <VCol cols="12" md="5" class="sp-id-actions">
+                  <VBtn color="primary" prepend-icon="mdi-link-variant-plus" variant="tonal" size="small" :loading="identifierBusy === 'force'" :disabled="Boolean(identifierBusy)" @click="runIdentifierAction('force')">强制绑定</VBtn>
+                  <VBtn color="warning" prepend-icon="mdi-calendar-edit" variant="tonal" size="small" :loading="identifierBusy === 'year'" :disabled="Boolean(identifierBusy)" @click="runIdentifierAction('year')">修正年份</VBtn>
                 </VCol>
               </VRow>
 
-              <VList v-if="identifierRecords.length" density="compact" lines="two" class="mt-2">
+              <VList v-if="identifierRecords.length" density="compact" class="mt-2 sp-identifier-history">
                 <VListItem
                   v-for="record in identifierRecords"
                   :key="record.mode + '-' + record.candidate_title + '-' + record.created_at"
-                  :title="identifierModeText(record.mode) + '：' + (record.candidate_title || record.title || '-')"
-                  :subtitle="(record.message || '-') + ' / ' + (record.created_at || '-')"
+                  class="sp-identifier-record"
                 >
+                  <div class="sp-identifier-record-body">
+                    <div class="sp-identifier-record-title">
+                      <strong>{{ identifierModeText(record.mode) }}：</strong>{{ record.candidate_title || record.title || '-' }}
+                    </div>
+                    <div class="sp-identifier-record-meta">{{ record.message || '-' }} / {{ record.created_at || '-' }}</div>
+                    <code v-if="record.rule" class="sp-identifier-record-rule">{{ record.rule }}</code>
+                  </div>
                   <template #append>
                     <VChip :color="identifierStatusColor(record.status)" size="small" variant="tonal">{{ identifierStatusText(record.status) }}</VChip>
                   </template>
@@ -381,14 +384,14 @@ const identifierRecords = ref([])
 const scanning = ref(false)
 const clearing = ref(false)
 const clearingRules = ref(false)
+const clearingIdentifiers = ref(false)
 const deletingRuleId = ref('')
 const deletingResultId = ref('')
 
 // ===== 识别词 =====
-const identifierAutoTitle = ref('')
-const identifierManualTitle = ref('')
-const identifierManualType = ref('tv')
-const identifierManualTmdbid = ref('')
+const identifierTitle = ref('')
+const identifierType = ref('tv')
+const identifierTmdbid = ref('')
 const identifierBusy = ref('')
 const identifierError = ref('')
 const identifierMessage = ref('')
@@ -516,7 +519,7 @@ function formatPreviewSites(value, emptyText = '-') {
 }
 
 function identifierModeText(mode) {
-  return mode === 'manual' ? '手动' : '自动'
+  return { force: '强制绑定', manual: '强制绑定', year: '年份修正', auto: '旧版识别' }[mode] || '识别记录'
 }
 
 function identifierStatusText(statusValue) {
@@ -652,6 +655,20 @@ async function clearRuleRecords() {
   }
 }
 
+async function clearIdentifierRecords() {
+  clearingIdentifiers.value = true
+  identifierError.value = ''
+  try {
+    await props.api.post('plugin/SubscribePlus/identifier_records/clear', {})
+    identifierMessage.value = '识别历史已清空，已写入的自定义识别词不会被删除'
+    await loadData()
+  } catch (err) {
+    identifierError.value = err?.message || '清空识别历史失败'
+  } finally {
+    clearingIdentifiers.value = false
+  }
+}
+
 async function deleteRuleRecord(record) {
   if (!record?.record_id) {
     error.value = '该规则记录缺少标识，无法删除，请先刷新'
@@ -678,48 +695,24 @@ function readActionResponse(response, fallback) {
   return { success: true, message: body.message || data.message || fallback }
 }
 
-async function runIdentifierAuto() {
-  const title = identifierAutoTitle.value.trim()
-  identifierError.value = ''
-  identifierMessage.value = ''
-  if (!title) {
-    identifierError.value = '请填写媒体文件名'
-    return
-  }
-  identifierBusy.value = 'auto'
-  try {
-    const response = await props.api.post('plugin/SubscribePlus/identifier_auto', { title })
-    const result = readActionResponse(response, '已提交自动处理')
-    if (!result.success) {
-      identifierError.value = result.message
-      return
-    }
-    identifierMessage.value = result.message
-    await loadData()
-  } catch (err) {
-    identifierError.value = err?.message || '自动处理失败'
-  } finally {
-    identifierBusy.value = ''
-  }
-}
-
-async function runIdentifierManual() {
-  const title = identifierManualTitle.value.trim()
-  const tmdbid = identifierManualTmdbid.value.trim()
+async function runIdentifierAction(action) {
+  const title = identifierTitle.value.trim()
+  const tmdbid = identifierTmdbid.value.trim()
   identifierError.value = ''
   identifierMessage.value = ''
   if (!title || !tmdbid) {
     identifierError.value = '请填写媒体文件名和 TMDB ID'
     return
   }
-  identifierBusy.value = 'manual'
+  identifierBusy.value = action
   try {
-    const response = await props.api.post('plugin/SubscribePlus/identifier_manual', {
+    const endpoint = action === 'year' ? 'identifier_year' : 'identifier_manual'
+    const response = await props.api.post(`plugin/SubscribePlus/${endpoint}`, {
       title,
-      media_type: identifierManualType.value,
+      media_type: identifierType.value,
       tmdbid,
     })
-    const result = readActionResponse(response, '已提交手动处理')
+    const result = readActionResponse(response, action === 'year' ? '已提交年份修正' : '已提交强制绑定')
     if (!result.success) {
       identifierError.value = result.message
       return
@@ -727,7 +720,7 @@ async function runIdentifierManual() {
     identifierMessage.value = result.message
     await loadData()
   } catch (err) {
-    identifierError.value = err?.message || '手动处理失败'
+    identifierError.value = err?.message || (action === 'year' ? '年份修正失败' : '强制绑定失败')
   } finally {
     identifierBusy.value = ''
   }
@@ -902,7 +895,17 @@ onMounted(() => {
 .sp-stat { border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); border-radius: 8px; padding: 10px; min-width: 0; }
 .sp-stat-value { overflow-wrap: anywhere; }
 .sp-id-row { row-gap: .5rem; }
-.sp-id-action { display: flex; justify-content: flex-end; }
+.sp-id-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.sp-identifier-history { max-height: 320px; overflow-y: auto; overscroll-behavior: contain; border: 1px solid rgba(var(--v-border-color), calc(var(--v-border-opacity) * .7)); border-radius: 8px; }
+.sp-identifier-record { align-items: flex-start; padding-block: 10px; }
+.sp-identifier-record-body { min-width: 0; padding-right: 8px; }
+.sp-identifier-record-title,
+.sp-identifier-record-meta,
+.sp-identifier-record-rule { display: block; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+.sp-identifier-record-title { line-height: 1.45; }
+.sp-identifier-record-meta { margin-top: 2px; color: rgba(var(--v-theme-on-surface), .68); font-size: 12px; line-height: 1.4; }
+.sp-identifier-record-rule { margin-top: 6px; color: rgb(var(--v-theme-on-surface)); font-size: 12px; line-height: 1.45; }
+.sp-identifier-record :deep(.v-list-item__append) { align-self: flex-start; padding-top: 1px; }
 .sp-empty { min-height: 88px; display: flex; align-items: center; justify-content: center; color: rgba(var(--v-theme-on-surface), .62); }
 .sp-candidate-wrap { max-width: 100%; overflow-x: auto; }
 .sp-candidate-table { min-width: 42rem; }
@@ -948,8 +951,8 @@ onMounted(() => {
   .sp-ctl-number, .sp-ctl-text, .sp-ctl-select, .sp-ctl-multiselect { width: 100%; }
   .sp-ctl-switch { justify-content: flex-end; }
   .sp-candidate-table { min-width: 36rem; }
-  .sp-id-action { justify-content: stretch; }
-  .sp-id-action :deep(.v-btn) { flex: 1 1 auto; }
+  .sp-id-actions { justify-content: stretch; }
+  .sp-id-actions :deep(.v-btn) { flex: 1 1 0; }
 }
 @media (orientation: portrait) and (min-width: 761px) {
   .sp-config { height: calc(100dvh - 16px); }
