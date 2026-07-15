@@ -139,7 +139,7 @@ function normalizeValue(value) { if (Array.isArray(value)) return JSON.stringify
 const changedCount = computed(() => Object.keys(defaults).filter(key => normalizeValue(config[key]) !== normalizeValue(savedBaseline.value[key])).length);
 const triggerText = computed(() => !config.mediainfo_enabled ? '未启用' : '当前条目 + 后续集');
 const helperStatusText = computed(() => { if (helperInfo.value || status.value.helper_health_ok === true) return '正常'; if (status.value.helper_health_ok === false) return `异常（连续 ${status.value.helper_health_failures || 1} 次）`; return config.helper_url ? '等待检查' : '未配置' });
-const lastRunText = computed(() => lastPlay.value ? fmtTime(lastPlay.value.time || lastPlay.value.created_at) : '暂无');
+const lastRunText = computed(() => lastPlay.value ? fmtTime(lastPlay.value.ts || lastPlay.value.time || lastPlay.value.created_at) : '暂无');
 const lastWriteText = computed(() => lastPlay.value ? `${lastPlay.value.written_ok || 0} 成功 / ${lastPlay.value.write_failed || 0} 失败` : '暂无');
 
 const DashboardRow = defineComponent({ props: { icon: String, label: String, value: [String, Number] }, setup(rowProps) { return () => h('div', { class: 'ptb-dashboard-row' }, [h(VIconComponent, { icon: rowProps.icon, size: 18 }), h('span', rowProps.label), h('strong', String(rowProps.value ?? '-'))]) } });
@@ -949,7 +949,7 @@ return (_ctx, _cache) => {
                                   class: "ptb-row",
                                   onClick: $event => (expanded.value = expanded.value === index ? -1 : index)
                                 }, [
-                                  _createElementVNode("td", null, _toDisplayString(fmtTime(row.time || row.created_at)), 1),
+                                  _createElementVNode("td", null, _toDisplayString(fmtTime(row.ts || row.time || row.created_at)), 1),
                                   _createElementVNode("td", null, _toDisplayString(row.label || '-'), 1),
                                   _createElementVNode("td", null, _toDisplayString(row.written_ok || 0) + " 成功 / " + _toDisplayString(row.write_failed || 0) + " 失败", 1)
                                 ], 8, _hoisted_25),
@@ -1301,6 +1301,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-8dda4bac"]]);
+const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-e11206d4"]]);
 
 export { Config as default };

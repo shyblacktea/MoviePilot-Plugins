@@ -2,7 +2,7 @@
 
 import json
 from threading import Lock, Thread
-from time import monotonic
+from time import monotonic, time
 from typing import Any, Dict, List, Optional, Tuple
 
 from fastapi import Request
@@ -63,7 +63,7 @@ class PlexToolbox(_PluginBase):
     plugin_name = "PLEX 工具箱"
     plugin_desc = "Plex 302 反向代理 + STRM 媒体流信息补全（Emby 数据源写入 Plex 库）。"
     plugin_icon = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png"
-    plugin_version = "0.7.1"
+    plugin_version = "0.7.2"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "plextoolbox_"
@@ -342,9 +342,8 @@ class PlexToolbox(_PluginBase):
             history = self.get_data("play_history") or []
             if not isinstance(history, list):
                 history = []
-            from time import time as _t
             entry = {
-                "ts": int(_t()),
+                "ts": int(summary.get("ts") or time()),
                 "rating_key": summary.get("rating_key"),
                 "label": summary.get("label") or "",
                 "source": summary.get("source"),
@@ -455,6 +454,11 @@ class PlexToolbox(_PluginBase):
             summary = completer.run_rating_key(
                 str(rating_key), only_missing=True, forward=self._forward_episodes,
             )
+            summary["success"] = True
+            summary["source"] = "pre_play"
+            summary["ts"] = int(time())
+            self.save_data("last_play_result", summary)
+            self._append_play_history(summary)
             if summary.get("written_ok"):
                 logger.info(
                     "PlexToolbox 播前补全 %s: 写入 %s 条",

@@ -1,5 +1,5 @@
-import './__federation_expose_Config-7s88VuLL.js';
-import './__federation_expose_Page-iHV97XOu.js';
+import './__federation_expose_Config-DOW0Uurn.js';
+import './__federation_expose_Page-4bVLjqmt.js';
 
 true&&(function polyfill() {
   const relList = document.createElement("link").relList;
