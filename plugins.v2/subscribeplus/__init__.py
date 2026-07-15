@@ -72,10 +72,13 @@ except Exception:  # pragma: no cover - lets local unit tests import this packag
 from .diagnosis import TorrentDiagnoser, normalize_search_result
 from .identifiers import (
     build_force_identifier_rule,
+    build_force_identifier_block,
     build_identifier_lines,
     build_identifier_record,
     build_year_identifier_rule,
+    build_year_identifier_block,
     dedupe_identifier_lines,
+    dedupe_identifier_blocks,
     normalize_identifier_line,
     normalize_media_type,
     refresh_identifier_runtime_cache,
@@ -128,7 +131,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "0.22"
+    plugin_version = "0.23"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -1571,16 +1574,17 @@ class SubscribePlus(_PluginBase):
         target["year"] = tmdb_summary.get("year") or ""
         try:
             if mode == "year":
-                rule = build_year_identifier_rule(title, target)
+                block = build_year_identifier_block(title, target)
             else:
-                rule = build_force_identifier_rule(title, target)
+                block = build_force_identifier_block(title, target)
+            rule = block[-1]
         except ValueError as exc:
             return self._record_identifier_tool_failure(
                 title, target, str(exc), "invalid_rule", source, mode
             )
 
         try:
-            applied = self._append_custom_identifiers([rule])
+            applied = self._append_custom_identifiers(block)
         except Exception as exc:
             return self._record_identifier_tool_failure(
                 title,
@@ -1617,7 +1621,7 @@ class SubscribePlus(_PluginBase):
         record.update(
             {
                 "mode": mode,
-                "rule": rule,
+                "rule": "\n".join(block),
                 "total_count": applied.get("total_count"),
                 "recheck": recheck,
             }
@@ -2028,12 +2032,7 @@ class SubscribePlus(_PluginBase):
         key = getattr(SystemConfigKey, "CustomIdentifiers", "CustomIdentifiers")
         existing = oper.get(key) or []
         existing = self._flatten_words(existing)
-        cleaned = []
-        for line in lines:
-            normalized = str(line or "").rstrip()
-            if validate_identifier_rule(normalized):
-                cleaned.append(normalized)
-        added = dedupe_identifier_lines(existing, cleaned)
+        added = dedupe_identifier_blocks(existing, lines)
         if added:
             oper.set(key, added + existing)
             try:

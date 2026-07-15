@@ -92,6 +92,22 @@ def build_force_identifier_rule(title: str, target: Dict[str, Any]) -> str:
     return normalize_identifier_line(f"{match_title} => {name}{{[tmdbid={tmdbid};type={media_type}]}}")
 
 
+def _media_type_label(target: Dict[str, Any]) -> str:
+    return "电视剧" if normalize_media_type(target.get("media_type") or target.get("type")) == "tv" else "电影"
+
+
+def build_force_identifier_block(title: str, target: Dict[str, Any]) -> List[str]:
+    rule = build_force_identifier_rule(title, target)
+    name = str(target.get("name") or target.get("title") or "").strip()
+    year = str(target.get("year") or "").strip()
+    tmdbid = target_tmdbid(target)
+    comment_parts = [name]
+    if len(year) == 4 and year.isdigit():
+        comment_parts.append(year)
+    comment_parts.extend([f"强制绑定{_media_type_label(target)}", "TMDB", str(tmdbid)])
+    return [f"# {' '.join(comment_parts)}", rule]
+
+
 def build_year_identifier_rule(title: str, target: Dict[str, Any]) -> str:
     raw_title = str(title or "").strip().replace("\\", "/").rsplit("/", 1)[-1]
     raw_title = re.sub(r"\.(?:mkv|mp4|avi|mov|ts|m2ts|strm)$", "", raw_title, flags=re.IGNORECASE)
@@ -120,6 +136,22 @@ def build_year_identifier_rule(title: str, target: Dict[str, Any]) -> str:
     return normalize_identifier_line(f"(?<={prefix}.*?){source_year} => {target_year}")
 
 
+def build_year_identifier_block(title: str, target: Dict[str, Any]) -> List[str]:
+    rule = build_year_identifier_rule(title, target)
+    name = str(target.get("name") or target.get("title") or "").strip()
+    target_year = str(target.get("year") or "").strip()
+    tmdbid = target_tmdbid(target)
+    year_match = re.search(r"\)((?:19|20)\d{2}) => ((?:19|20)\d{2})$", rule)
+    if not year_match:
+        raise ValueError("无法从年份修正规则提取源年份和目标年份")
+    source_year = year_match.group(1)
+    comment = (
+        f"# {name} {source_year} → {target_year} "
+        f"修正年份{_media_type_label(target)} TMDB {tmdbid}"
+    )
+    return [comment, rule]
+
+
 def build_identifier_lines(
     title: str,
     target: Dict[str, Any],
@@ -137,6 +169,38 @@ def dedupe_identifier_lines(existing: Iterable[str], lines: Iterable[str]) -> Li
         if not normalized or normalized in existing_set or normalized in added:
             continue
         added.append(normalized)
+    return added
+
+
+def dedupe_identifier_blocks(existing: Iterable[str], lines: Iterable[str]) -> List[str]:
+    existing_rules = {
+        str(item or "").rstrip()
+        for item in existing or []
+        if validate_identifier_rule(str(item or ""))
+    }
+    added: List[str] = []
+    pending_comments: List[str] = []
+    for line in lines or []:
+        normalized = str(line or "").rstrip()
+        if not normalized:
+            continue
+        if normalized.lstrip().startswith("#"):
+            comment = clean_comment_line(normalized)
+            if comment:
+                pending_comments.append(comment)
+            continue
+        if not validate_identifier_rule(normalized):
+            pending_comments = []
+            continue
+        if normalized in existing_rules:
+            pending_comments = []
+            continue
+        for comment in pending_comments:
+            if comment not in added:
+                added.append(comment)
+        pending_comments = []
+        added.append(normalized)
+        existing_rules.add(normalized)
     return added
 
 
