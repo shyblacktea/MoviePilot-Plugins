@@ -1,6 +1,8 @@
 import shutil
+import threading
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from app.core.config import settings
 from app.core.plugin import PluginManager
@@ -8,6 +10,7 @@ from app.db.systemconfig_oper import SystemConfigOper
 from app.helper.plugin import PluginHelper
 from app.log import logger
 from app.plugins import _PluginBase
+from app.scheduler import Scheduler
 from app.schemas.types import SystemConfigKey
 
 
@@ -19,7 +22,7 @@ class CleanInvalidPlugin(_PluginBase):
     # 插件图标
     plugin_icon = "delete.jpg"
     # 插件版本
-    plugin_version = "1.5"
+    plugin_version = "1.6"
     # 插件作者
     plugin_author = "cddjr,shyblacktea"
     # 作者主页
@@ -37,6 +40,10 @@ class CleanInvalidPlugin(_PluginBase):
     _action_mode = "clean"
     # 最近一次执行结果
     _last_result: Optional[Dict[str, Any]] = None
+    # 后台重装任务
+    _job_lock = threading.RLock()
+    _job_thread: Optional[threading.Thread] = None
+    _reinstall_job: Dict[str, Any] = {}
 
     def init_plugin(self, config: dict = None):
         """
@@ -56,11 +63,12 @@ class CleanInvalidPlugin(_PluginBase):
             self._action_mode = config.get("action_mode") or "clean"
 
             if not self._invalid_plugin_ids:
-                self._last_result = None
+                if not self.__is_reinstall_running():
+                    self._last_result = None
                 return
 
             if self._action_mode == "reinstall":
-                self._last_result = self._reinstall_plugins()
+                self._start_reinstall_job(list(self._invalid_plugin_ids))
             else:
                 self._last_result = self._clean_plugins()
 
@@ -121,17 +129,116 @@ class CleanInvalidPlugin(_PluginBase):
             "message": message,
         }
 
-    def _reinstall_plugins(self) -> Dict[str, Any]:
+    def _start_reinstall_job(self, plugin_ids: List[str]) -> bool:
+        """启动单个后台重装任务，已有任务运行时复用当前任务。"""
+        with self._job_lock:
+            if self.__is_reinstall_running():
+                self._last_result = dict(self._reinstall_job)
+                logger.info("已有无效插件重装任务运行中，忽略重复提交")
+                return False
+
+            total = len(plugin_ids)
+            self._reinstall_job = {
+                "action": "reinstall",
+                "status": "queued",
+                "success": None,
+                "progress": 0,
+                "completed": 0,
+                "total": total,
+                "current": "",
+                "reinstalled_count": 0,
+                "skipped_count": 0,
+                "failed_count": 0,
+                "message": f"已提交 {total} 个插件到后台重装",
+                "started_at": self.__now_text(),
+                "finished_at": "",
+            }
+            self._last_result = dict(self._reinstall_job)
+            self._job_thread = threading.Thread(
+                target=self._run_reinstall_job,
+                args=(list(plugin_ids),),
+                name="CleanInvalidPlugin-Reinstall",
+                daemon=True,
+            )
+            self._job_thread.start()
+            return True
+
+    def _run_reinstall_job(self, plugin_ids: List[str]):
+        """执行后台重装并持续发布可轮询的进度状态。"""
+        self.__update_job(
+            status="running",
+            message=f"正在后台重装 0/{len(plugin_ids)}",
+        )
+        try:
+            result = self._reinstall_plugins(
+                plugin_ids=plugin_ids,
+                progress_callback=self._update_reinstall_progress,
+            )
+            final_status = "completed"
+            self.__update_job(
+                **result,
+                status=final_status,
+                progress=100,
+                completed=len(plugin_ids),
+                total=len(plugin_ids),
+                current="",
+                reinstalled_count=len(result.get("reinstalled") or []),
+                skipped_count=len(result.get("skipped") or []),
+                failed_count=len(result.get("failed") or []),
+                finished_at=self.__now_text(),
+            )
+        except Exception as e:
+            logger.error(f"后台重装无效插件异常: {e}", exc_info=True)
+            self.__update_job(
+                status="failed",
+                success=False,
+                current="",
+                message=f"后台重装失败：{e}",
+                finished_at=self.__now_text(),
+            )
+
+    def _update_reinstall_progress(
+        self,
+        current: str,
+        completed: int,
+        total: int,
+        reinstalled_count: int = 0,
+        skipped_count: int = 0,
+        failed_count: int = 0,
+    ):
+        """接收逐插件进度，供前端轮询展示。"""
+        progress = int(completed * 100 / total) if total else 100
+        message = f"正在后台重装 {completed}/{total}"
+        if current and completed < total:
+            message += f"：{current}"
+        self.__update_job(
+            status="running",
+            progress=progress,
+            completed=completed,
+            total=total,
+            current=current if completed < total else "",
+            reinstalled_count=reinstalled_count,
+            skipped_count=skipped_count,
+            failed_count=failed_count,
+            message=message,
+        )
+
+    def _reinstall_plugins(
+        self,
+        plugin_ids: Optional[List[str]] = None,
+        progress_callback: Optional[Callable[..., None]] = None,
+    ) -> Dict[str, Any]:
         """
         重新安装选中的无效插件
         """
+        target_plugin_ids = list(plugin_ids or self._invalid_plugin_ids)
         config_oper = SystemConfigOper()
         plugin_manager = PluginManager()
         plugin_helper = PluginHelper()
 
         valid_plugins = set(plugin_manager.get_plugin_ids() or [])
         all_plugins = self.__get_installed_plugins(config_oper)
-        selected_plugins = set(self._invalid_plugin_ids)
+        selected_plugins = set(target_plugin_ids)
         next_plugins = [p for p in all_plugins if p not in selected_plugins]
 
         # 构建 plugin_id -> repo_url 映射（用于市场重装）
@@ -141,7 +248,17 @@ class CleanInvalidPlugin(_PluginBase):
         skipped_plugins = []
         failed_plugins = []
 
-        for plugin_id in self._invalid_plugin_ids:
+        total = len(target_plugin_ids)
+        for index, plugin_id in enumerate(target_plugin_ids):
+            if progress_callback:
+                progress_callback(
+                    plugin_id,
+                    index,
+                    total,
+                    len(reinstalled_plugins),
+                    len(skipped_plugins),
+                    len(failed_plugins),
+                )
             try:
                 if plugin_id in valid_plugins:
                     next_plugins.append(plugin_id)
@@ -163,8 +280,11 @@ class CleanInvalidPlugin(_PluginBase):
                         ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store"),
                     )
                     next_plugins.append(plugin_id)
-                    reinstalled_plugins.append(plugin_id)
-                    logger.info(f"已从本地插件源重装 {plugin_id}: {local_source_dir}")
+                    if self.__reload_reinstalled_plugin(plugin_manager, plugin_id):
+                        reinstalled_plugins.append(plugin_id)
+                        logger.info(f"已从本地插件源重装并热重载 {plugin_id}: {local_source_dir}")
+                    else:
+                        failed_plugins.append(plugin_id)
                     continue
 
                 repo_url = repo_url_map.get(plugin_id)
@@ -176,8 +296,11 @@ class CleanInvalidPlugin(_PluginBase):
                     )
                     if state:
                         next_plugins.append(plugin_id)
-                        reinstalled_plugins.append(plugin_id)
-                        logger.info(f"插件 {plugin_id} 已从插件市场重装：{repo_url}")
+                        if self.__reload_reinstalled_plugin(plugin_manager, plugin_id):
+                            reinstalled_plugins.append(plugin_id)
+                            logger.info(f"插件 {plugin_id} 已从插件市场重装并热重载：{repo_url}")
+                        else:
+                            failed_plugins.append(plugin_id)
                     else:
                         next_plugins.append(plugin_id)
                         failed_plugins.append(plugin_id)
@@ -191,6 +314,16 @@ class CleanInvalidPlugin(_PluginBase):
                 next_plugins.append(plugin_id)
                 failed_plugins.append(plugin_id)
                 logger.warning(f"重装插件 {plugin_id} 产生异常: {e}", exc_info=True)
+            finally:
+                if progress_callback:
+                    progress_callback(
+                        plugin_id,
+                        index + 1,
+                        total,
+                        len(reinstalled_plugins),
+                        len(skipped_plugins),
+                        len(failed_plugins),
+                    )
 
         config_oper.set(SystemConfigKey.UserInstalledPlugins, self.__dedupe(next_plugins))
         self.__clear_pending_config()
@@ -260,7 +393,7 @@ class CleanInvalidPlugin(_PluginBase):
             "success": True,
             "data": {
                 "items": self.get_invalid_plugin_details(),
-                "last_result": self._last_result,
+                "last_result": self.__get_last_result(),
             },
         }
 
@@ -268,7 +401,7 @@ class CleanInvalidPlugin(_PluginBase):
         """
         获取最近执行结果API
         """
-        return {"success": True, "data": self._last_result or {}}
+        return {"success": True, "data": self.__get_last_result()}
 
     def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
         """
@@ -325,14 +458,19 @@ class CleanInvalidPlugin(_PluginBase):
             all_plugins = set(CleanInvalidPlugin.__get_installed_plugins(config_oper))
             valid_plugins = set(plugin_manager.get_plugin_ids() or [])
             invalid_plugins = sorted(all_plugins - valid_plugins, key=str.lower)
+            repo_url_map = CleanInvalidPlugin.__build_repo_url_map(plugin_manager)
 
             details = []
             for plugin_id in invalid_plugins:
                 plugin_dir = CleanInvalidPlugin.__get_runtime_plugin_dir(plugin_id)
                 source_dir = CleanInvalidPlugin.__find_local_source_dir(plugin_id)
+                repo_url = repo_url_map.get(plugin_id) or ""
+                source_type = "local" if source_dir else ("online" if repo_url else "missing")
                 status = "运行目录存在但未被加载" if plugin_dir.exists() else "运行目录缺失"
                 if source_dir:
                     status += "，本地源可用"
+                elif repo_url:
+                    status += "，在线源可用"
 
                 details.append(
                     {
@@ -342,6 +480,8 @@ class CleanInvalidPlugin(_PluginBase):
                         "runtime_path": str(plugin_dir),
                         "runtime_exists": plugin_dir.exists(),
                         "local_source_path": str(source_dir) if source_dir else "",
+                        "repo_url": repo_url,
+                        "source_type": source_type,
                     }
                 )
             return details
@@ -385,6 +525,23 @@ class CleanInvalidPlugin(_PluginBase):
             except Exception:
                 continue
         return repo_url_map
+
+    @staticmethod
+    def __reload_reinstalled_plugin(
+        plugin_manager: PluginManager, plugin_id: str
+    ) -> bool:
+        """重装完成后立即载入插件，并刷新它的调度任务。"""
+        try:
+            plugin_manager.reload_plugin(plugin_id)
+        except Exception as e:
+            logger.warning(f"插件 {plugin_id} 重装后热重载失败: {e}", exc_info=True)
+            return False
+
+        try:
+            Scheduler().update_plugin_job(plugin_id)
+        except Exception as e:
+            logger.warning(f"插件 {plugin_id} 热重载成功，但刷新调度任务失败: {e}")
+        return True
 
     @staticmethod
     def __find_local_source_dir(plugin_id: str) -> Optional[Path]:
@@ -461,3 +618,24 @@ class CleanInvalidPlugin(_PluginBase):
                 "action_mode": self._action_mode,
             }
         )
+
+    def __is_reinstall_running(self) -> bool:
+        thread = self._job_thread
+        return bool(
+            thread
+            and thread.is_alive()
+            and self._reinstall_job.get("status") in {"queued", "running"}
+        )
+
+    def __update_job(self, **changes):
+        with self._job_lock:
+            self._reinstall_job = {**self._reinstall_job, **changes}
+            self._last_result = dict(self._reinstall_job)
+
+    def __get_last_result(self) -> Dict[str, Any]:
+        with self._job_lock:
+            return dict(self._last_result or {})
+
+    @staticmethod
+    def __now_text() -> str:
+        return datetime.now().astimezone().isoformat(timespec="seconds")

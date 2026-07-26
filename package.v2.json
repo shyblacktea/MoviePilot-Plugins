@@ -2,12 +2,13 @@
   "CleanInvalidPlugin": {
     "name": "清理无效插件",
     "description": "扫描、清理或重新安装数据库中无法加载的插件记录。（shyblacktea 自用版）",
-    "version": "1.5",
+    "version": "1.6",
     "author": "cddjr,shyblacktea",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "1.6": "feat: 重新安装改为后台任务，关闭插件页面后仍可继续执行；feat: 重装支持本地源优先、在线源后备，并在安装成功后自动热重载插件及刷新调度任务；ui: 新增逐插件进度条、当前处理项及成功、跳过、失败统计；ui: 重装列表标识本地源、在线源和无可用源；fix: 防止重复提交重装任务，避免长时间请求占用插件界面。",
       "1.5": "Vuetify CSS 打包优化：vite 构建过滤未使用样式并清理共享资产，减小 dist 体积约 332KB；UI 细节改造。",
       "1.4": "fix: 修复市场重装失败，改用 PluginHelper.install 替换已移除的 get_plugin_by_id/download_plugin 接口",
       "1.3": "fix: 补齐 plugins.v2 官方目录，避免 Release API 失败回退文件列表安装时缺少前端资源；fix: 插件初始化时修正 dist 静态资源权限，兼容 Docker 非 root 或严格 umask 环境",
