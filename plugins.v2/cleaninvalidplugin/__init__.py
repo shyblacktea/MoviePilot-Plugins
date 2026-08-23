@@ -22,7 +22,7 @@ class CleanInvalidPlugin(_PluginBase):
     # 插件图标
     plugin_icon = "delete.jpg"
     # 插件版本
-    plugin_version = "1.6"
+    plugin_version = "1.7"
     # 插件作者
     plugin_author = "cddjr,shyblacktea"
     # 作者主页
@@ -118,7 +118,6 @@ class CleanInvalidPlugin(_PluginBase):
         message = f"已清理 {len(cleaned_plugins)} 个无效插件"
         if failed_plugins:
             message += f"，{len(failed_plugins)} 个失败"
-        self.post_message(title="无效插件清理完成", text=message)
 
         return {
             "action": "clean",
@@ -331,7 +330,6 @@ class CleanInvalidPlugin(_PluginBase):
         message = f"已重装 {len(reinstalled_plugins)} 个插件"
         if failed_plugins:
             message += f"，{len(failed_plugins)} 个失败并已保留记录"
-        self.post_message(title="无效插件重装完成", text=message)
 
         return {
             "action": "reinstall",
