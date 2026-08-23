@@ -8,7 +8,7 @@
 | 项目 | 内容 |
 | --- | --- |
 | 插件 ID | `CleanInvalidPlugin` |
-| 当前版本 | `1.6` |
+| 当前版本 | `1.2` |
 | 适配版本 | MoviePilot v2 |
 | 插件类型 | 本地插件 / Vue 联邦组件 |
 | 作者 | cddjr, shyblacktea |
