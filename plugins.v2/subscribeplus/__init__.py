@@ -25,7 +25,7 @@ try:
     from app.core.event import eventmanager
     from app.log import logger
     from app.plugins import _PluginBase
-    from app.schemas.types import EventType, MediaType, NotificationType, SystemConfigKey
+    from app.schemas.types import EventType, MediaType, MediaSource, NotificationType, SystemConfigKey
 except Exception:  # pragma: no cover - lets local unit tests import this package
     eventmanager = None
     NotificationType = None
@@ -131,7 +131,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "0.23"
+    plugin_version = "0.24"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -1893,7 +1893,7 @@ class SubscribePlus(_PluginBase):
             mtype = MediaType.TV
             if media_type == "movie" and hasattr(MediaType, "MOVIE"):
                 mtype = MediaType.MOVIE
-            mediainfo = MediaChain().recognize_media(mtype=mtype, tmdbid=tmdbid)
+            mediainfo = MediaChain().recognize_media(mtype=mtype, media_source=MediaSource.TMDB, media_id=str(tmdbid))
             if not mediainfo:
                 return {"success": False, "message": "TMDB 没有查到可用数据"}
             return {
@@ -2930,7 +2930,8 @@ class SubscribePlus(_PluginBase):
 
             mediainfo = MediaChain().recognize_media(
                 mtype=MediaType.TV,
-                tmdbid=tmdbid,
+                media_source=MediaSource.TMDB,
+                media_id=str(tmdbid),
                 episode_group=episode_group or None,
             )
             category = str(getattr(mediainfo, "category", "") or "").strip()
@@ -3253,7 +3254,7 @@ class SubscribePlus(_PluginBase):
                 except Exception:
                     from app.chain import MediaChain
                 media = MediaChain().recognize_media(
-                    meta=meta, tmdbid=int(cached.get("tmdbid")), mtype=MediaType.TV, cache=True
+                    meta=meta, media_source=MediaSource.TMDB, media_id=str(int(cached.get("tmdbid"))), mtype=MediaType.TV, cache=True
                 )
         except Exception as exc:
             logger.warning(f"订阅下载增强重建候选媒体信息失败，将按种子信息下载: {exc}")
