@@ -338,6 +338,29 @@ def _join_values(values: Any) -> str:
     return str(values).strip()
 
 
+def _safe_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return default
+
+
+def _candidate_recognition_text(candidate: Dict[str, Any]) -> str:
+    season = _safe_int(candidate.get("season"), 0)
+    episodes = []
+    for value in candidate.get("episodes") or []:
+        number = _safe_int(value, 0)
+        if number > 0 and number not in episodes:
+            episodes.append(number)
+    episode = _safe_int(candidate.get("episode"), 0)
+    if episode > 0 and episode not in episodes:
+        episodes.append(episode)
+    episodes.sort()
+    if not episodes:
+        return f"S{season:02d}（整季）" if season else ""
+    episode_text = "/".join(f"E{number:02d}" for number in episodes[:8])
+    return f"S{season:02d}{episode_text}" if season else episode_text
+
 def _short_title(title: str, limit: int = 96) -> str:
     title = str(title or "").strip()
     if len(title) <= limit:
@@ -374,6 +397,12 @@ def _candidate_detail_lines(
         if volume:
             extras.append(f"优惠：{volume}")
         lines.append(f"{index}. [{site}] {title}")
+        recognition = _candidate_recognition_text(candidate)
+        if recognition:
+            if candidate.get("recognized"):
+                lines.append(f"识别结果：{recognition}")
+            else:
+                lines.append(f"识别结果：{recognition}（未确认目标）")
         lines.append(meta + (f"；{'；'.join(extras)}" if extras else ""))
     if total > end:
         lines.append(f"... 还有 {total - end} 个候选，可点下一页查看")
