@@ -108,7 +108,7 @@ def _extract_release_groups(title: str) -> List[str]:
     match = re.search(r"-([A-Za-z][A-Za-z0-9_.-]{1,31})(?:\.[A-Za-z0-9]{2,5})?$", text)
     if match:
         groups.append(match.group(1))
-    for match in re.finditer(r"(?<![A-Za-z0-9])(HHWeb|MWeb|ADWeb|FROGWeb|CMCTV|ANi|LoliHouse|cctc)(?![A-Za-z0-9])", text, re.I):
+    for match in re.finditer(r"(?<![A-Za-z0-9])(HHWeb|MWeb|ADWeb|FROGWeb|CMCTV|CHDWeb|PTerWEB|ANi|LoliHouse|cctc)(?![A-Za-z0-9])", text, re.I):
         groups.append(match.group(1))
     result = []
     seen = set()
