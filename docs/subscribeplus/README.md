@@ -86,6 +86,17 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 ## 版本
 
+### v1.0.0
+
+- 迁移到 MoviePilot V3 专用实现（`plugins.v3` + `package.v3.json`），声明 `system_version: ">=3.0.0"`。
+- 旧导入 `app.core.*` / `app.helper.*` / `app.log` 统一迁移到 `app.sdk.*`（`events` / `logging` / `media` / `services` / `network`）与 `app.agent.llm`。
+- 版本号由 `0.24` 跃迁到 `1.0.0`，对应代际合同变化。
+
+### v0.24
+
+- 适配 MoviePilot v3 核心 API：`recognize_media` 不再接受 `tmdbid` 参数，改为 `media_source` + `media_id` 成对传入，修复 TMDB 校验、订阅分类识别、候选重建三处报错。
+- 内置制作组列表补上 `CHDWeb`、`FROGWeb`、`CMCTV`、`PTerWEB`，修复 `CHDWEB` 资源识别不到官组的问题。
+
 ### v0.23
 
 - `强制绑定` 写入规则时，自动添加包含媒体名、年份、媒体类型和 TMDB ID 的注释。
@@ -246,9 +257,9 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`0.23`
-- Release tag：`SubscribePlus_v0.23`
-- Release 资产：`subscribeplus_v0.23.zip`
+- 当前版本：`1.0.0`
+- Release tag：`SubscribePlus_v1.0.0`
+- Release 资产：`subscribeplus_v1.0.0.zip`
 
 ## 致谢
 
