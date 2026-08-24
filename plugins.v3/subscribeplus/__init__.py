@@ -1,0 +1,3297 @@
+from __future__ import annotations
+
+import asyncio
+import copy
+import hashlib
+import json
+import re
+from dataclasses import replace
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+try:
+    from fastapi import Body
+except Exception:  # pragma: no cover - local unit tests may not install FastAPI
+    def Body(default=None, **kwargs):
+        return default
+
+try:
+    from apscheduler.triggers.cron import CronTrigger
+except Exception:  # pragma: no cover - MoviePilot runtime dependency
+    CronTrigger = None
+
+try:
+    from app.sdk.events import eventmanager
+    from app.sdk.logging import logger
+    from app.plugins import _PluginBase
+    from app.schemas.types import EventType, MediaType, MediaSource, NotificationType, SystemConfigKey
+except Exception:  # pragma: no cover - lets local unit tests import this package
+    eventmanager = None
+    NotificationType = None
+
+    class _FallbackLogger:
+        @staticmethod
+        def info(*args, **kwargs):
+            pass
+
+        @staticmethod
+        def warning(*args, **kwargs):
+            pass
+
+        @staticmethod
+        def error(*args, **kwargs):
+            pass
+
+    logger = _FallbackLogger()
+
+    class _PluginBase:
+        def get_data_path(self, plugin_id: Optional[str] = None) -> Path:
+            path = Path(__file__).resolve().parent / ".data"
+            path.mkdir(parents=True, exist_ok=True)
+            return path
+
+        def post_message(self, **kwargs):
+            return None
+
+        def update_config(self, config: dict, plugin_id: Optional[str] = None) -> bool:
+            return True
+
+    class EventType:
+        MessageAction = "message.action"
+        PluginAction = "plugin.action"
+        TransferComplete = "transfer.complete"
+
+    class MediaType:
+        TV = type("TV", (), {"value": "电视剧"})()
+
+    class SystemConfigKey:
+        IndexerSites = "IndexerSites"
+        CustomIdentifiers = "CustomIdentifiers"
+
+from .diagnosis import TorrentDiagnoser, normalize_search_result
+from .identifiers import (
+    build_force_identifier_rule,
+    build_force_identifier_block,
+    build_identifier_lines,
+    build_identifier_record,
+    build_year_identifier_rule,
+    build_year_identifier_block,
+    dedupe_identifier_lines,
+    dedupe_identifier_blocks,
+    normalize_identifier_line,
+    normalize_media_type,
+    refresh_identifier_runtime_cache,
+    safe_int,
+    validate_identifier_rule,
+)
+from .models import DiagnosisInput, DiagnosisItem, PluginConfig, StaleEpisode
+from .romaji import select_romaji_aliases, should_try_romaji_fallback
+from .rules import (
+    apply_rule_preview,
+    build_rule_preview,
+    build_rule_suggestions,
+    extract_release_groups_from_words,
+)
+from .scanner import (
+    SubscriptionScanner,
+    episode_in_seasoninfo,
+    episode_in_transfer_history,
+    episodes_in_seasoninfo,
+    episodes_in_transfer_history,
+)
+from .scan_batch import select_scan_batch
+from .season_cleanup import CLEANUP_OFF, build_cleanup_plan, build_season_pack_match, normalize_cleanup_mode, parse_season_number
+from .sites import SiteResolver
+from .storage import JsonStore
+from .telegram import (
+    build_ci_done_menu,
+    build_ci_manual_type_menu,
+    build_ci_mode_menu,
+    build_ci_wait_tmdb_menu,
+    build_keyword_confirm_menu,
+    build_main_menu,
+    build_other_sites_menu,
+    build_pending_menu,
+    build_resource_menu,
+    build_rule_confirm_menu,
+    build_rule_done_menu,
+    build_rule_menu,
+    make_token,
+    render_identifier_fix_result_text,
+    render_notification_text,
+    render_rule_preview_text,
+)
+
+
+PLUGIN_ID = "SubscribePlus"
+
+
+class SubscribePlus(_PluginBase):
+    plugin_name = "订阅下载增强"
+    plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
+    plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
+    plugin_version = "1.0.0"
+    plugin_author = "shyblacktea,MoviePilot助手"
+    author_url = "https://github.com/shyblacktea"
+    plugin_config_prefix = "subscribeplus_"
+    plugin_order = 998
+    auth_level = 1
+
+    # 说明：这些成员在 init_plugin 中初始化实例属性；此处仅做类型注解，
+    # 避免使用类级可变默认值（dict/list）导致多实例间状态共享的隐患。
+    _config: Dict[str, Any]
+    _plugin_config: PluginConfig
+    _store: Optional[JsonStore]
+    _site_resolver: Optional[SiteResolver]
+    _scanner: Optional[SubscriptionScanner]
+    _diagnoser: Optional[TorrentDiagnoser]
+    _download_contexts: Dict[str, Any]
+    _category_cache: Dict[str, str]
+    _custom_release_groups_cache: List[str]
+
+    def init_plugin(self, config: dict = None):
+        self._config = config or {}
+        self._plugin_config = PluginConfig.from_dict(self._config)
+        self._store = JsonStore(self.get_data_path(PLUGIN_ID))
+        self._site_resolver = SiteResolver(self._load_moviepilot_search_sites)
+        self._scanner = SubscriptionScanner(
+            load_subscribes=self._load_subscribes,
+            load_tmdb_episodes=self._load_tmdb_episodes,
+            is_episode_downloaded=self._is_episode_downloaded,
+            load_categories=self._load_tv_categories,
+            resolve_subscribe_category=self._resolve_subscribe_category,
+            load_downloaded_episodes=self._load_downloaded_episodes,
+        )
+        self._diagnoser = TorrentDiagnoser(self._search_torrents)
+        self._download_contexts = {}
+        self._category_cache = {}
+        self._custom_release_groups_cache = []
+
+    def get_state(self) -> bool:
+        return bool(self._plugin_config.enabled)
+
+    @staticmethod
+    def get_render_mode() -> Tuple[str, Optional[str]]:
+        return "vue", "dist/assets"
+
+    @staticmethod
+    def get_command() -> List[Dict[str, Any]]:
+        return [
+            {
+                "cmd": "/ci",
+                "event": EventType.PluginAction,
+                "desc": "自定义识别词修正",
+                "category": "订阅下载增强",
+                "data": {"action": "subscribeplus_ci"},
+            },
+            {
+                "cmd": "/sp",
+                "event": EventType.PluginAction,
+                "desc": "订阅下载增强待处理列表",
+                "category": "订阅下载增强",
+                "data": {"action": "subscribeplus_pending"},
+            }
+        ]
+
+    def get_service(self) -> List[Dict[str, Any]]:
+        if not self._plugin_config.enabled:
+            return []
+        trigger = self._plugin_config.cron
+        if CronTrigger:
+            try:
+                trigger = CronTrigger.from_crontab(self._plugin_config.cron)
+            except Exception as exc:
+                logger.warning(f"订阅下载增强 Cron 配置无效，使用每日 9 点：{exc}")
+                trigger = CronTrigger.from_crontab("0 9 * * *")
+        return [
+            {
+                "id": "subscribeplus_scan",
+                "name": "订阅下载增强扫描",
+                "trigger": trigger,
+                "func": self.run_scan,
+                "kwargs": {"source": "schedule"},
+            }
+        ]
+
+    def get_api(self) -> List[Dict[str, Any]]:
+        return [
+            {"path": "/status", "endpoint": self.get_status_api, "methods": ["GET"], "auth": "bear", "summary": "订阅下载增强状态"},
+            {"path": "/config", "endpoint": self.get_config_api, "methods": ["GET"], "auth": "bear", "summary": "获取插件配置"},
+            {"path": "/config", "endpoint": self.save_config_api, "methods": ["POST"], "auth": "bear", "summary": "保存插件配置"},
+            {"path": "/categories", "endpoint": self.get_categories_api, "methods": ["GET"], "auth": "bear", "summary": "获取订阅二级分类"},
+            {"path": "/sites", "endpoint": self.get_site_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取可搜索 PT 站点"},
+            {"path": "/scan", "endpoint": self.run_scan_api, "methods": ["POST"], "auth": "bear", "summary": "手动扫描订阅"},
+            {"path": "/results", "endpoint": self.get_results_api, "methods": ["GET"], "auth": "bear", "summary": "获取最近诊断结果"},
+            {"path": "/results/clear", "endpoint": self.clear_results_api, "methods": ["POST"], "auth": "bear", "summary": "清除最近诊断结果"},
+            {"path": "/results/delete", "endpoint": self.delete_result_api, "methods": ["POST"], "auth": "bear", "summary": "删除单条诊断结果"},
+            {"path": "/rule_records/clear", "endpoint": self.clear_rule_records_api, "methods": ["POST"], "auth": "bear", "summary": "清空规则修改记录"},
+            {"path": "/rule_records/delete", "endpoint": self.delete_rule_record_api, "methods": ["POST"], "auth": "bear", "summary": "删除单条规则修改记录"},
+            {"path": "/identifier_records/clear", "endpoint": self.clear_identifier_records_api, "methods": ["POST"], "auth": "bear", "summary": "清空识别词操作记录"},
+            {"path": "/identifier_auto", "endpoint": self.identifier_auto_api, "methods": ["POST"], "auth": "bear", "summary": "自动识别并写入自定义识别词"},
+            {"path": "/identifier_manual", "endpoint": self.identifier_manual_api, "methods": ["POST"], "auth": "bear", "summary": "按 TMDB 手动写入自定义识别词"},
+            {"path": "/identifier_year", "endpoint": self.identifier_year_api, "methods": ["POST"], "auth": "bear", "summary": "按 TMDB 首播年份修正文件年份"},
+            {"path": "/identifier_fix", "endpoint": self.identifier_fix_api, "methods": ["POST"], "auth": "bear", "summary": "兼容旧版识别修正入口"},
+            {"path": "/rule_suggestions", "endpoint": self.rule_suggestions_api, "methods": ["POST"], "auth": "bear", "summary": "生成订阅规则建议"},
+            {"path": "/rule_preview", "endpoint": self.rule_preview_api, "methods": ["POST"], "auth": "bear", "summary": "生成规则修改预览"},
+            {"path": "/rule_confirm", "endpoint": self.rule_confirm_api, "methods": ["POST"], "auth": "bear", "summary": "确认规则修改"},
+            {"path": "/diagnose_one", "endpoint": self.diagnose_one_api, "methods": ["POST"], "auth": "bear", "summary": "manual single subscribe diagnosis"},
+        ]
+
+    def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
+        return None, self._plugin_config.to_dict()
+
+    def get_page(self) -> Optional[List[dict]]:
+        return None
+
+    def stop_service(self):
+        """插件停止/重载时清理内存态资源。
+
+        定时任务由 MoviePilot 调度器统一注销；JsonStore 为即时落盘，无需 flush。
+        这里主要清空插件持有的内存引用（下载上下文、分类/压制组缓存及各组件），
+        避免重载后残留旧状态或对象引用无法回收。
+        """
+        try:
+            if isinstance(getattr(self, "_download_contexts", None), dict):
+                self._download_contexts.clear()
+            if isinstance(getattr(self, "_category_cache", None), dict):
+                self._category_cache.clear()
+            if isinstance(getattr(self, "_custom_release_groups_cache", None), list):
+                self._custom_release_groups_cache.clear()
+        except Exception as exc:
+            logger.warning(f"订阅下载增强停止服务清理缓存失败：{exc}")
+        self._scanner = None
+        self._diagnoser = None
+        self._site_resolver = None
+
+    def get_config_api(self) -> Dict[str, Any]:
+        """
+        获取当前插件配置（数据页入口复用配置 UI 时读取初始值）。
+
+        :return: {success, data: 配置字典}
+        """
+        return {"success": True, "data": self._plugin_config.to_dict()}
+
+    def save_config_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        保存插件配置（数据页入口复用配置 UI 时的保存通道）。
+
+        与宿主配置页保存等效：持久化后重新初始化插件使新配置生效。
+
+        :param payload: 完整配置字典
+        :return: {success, message}
+        """
+        payload = payload or {}
+        try:
+            merged = {**self._plugin_config.to_dict(), **payload}
+            self.update_config(merged)
+            self.init_plugin(merged)
+            return {"success": True, "message": "配置已保存"}
+        except Exception as exc:
+            logger.error(f"订阅下载增强保存配置失败：{exc}", exc_info=True)
+            return {"success": False, "message": str(exc)}
+
+    def get_status_api(self) -> Dict[str, Any]:
+        store = self._ensure_store()
+        results = store.load_scan_results()
+        counts: Dict[str, int] = {}
+        for item in results:
+            reason = item.get("reason") or "unknown"
+            counts[reason] = counts.get(reason, 0) + 1
+        return {
+            "success": True,
+            "data": {
+                "enabled": self.get_state(),
+                "config": self._plugin_config.to_dict(),
+                "last_scan": store.load_scan_meta().get("last_scan_at"),
+                "count": len(results),
+                "counts": counts,
+                "rule_records": store.load_rule_records()[:20],
+                "identifier_records": store.load_identifier_records()[:20],
+            },
+        }
+
+    def get_categories_api(self) -> Dict[str, Any]:
+        categories = self._ensure_scanner().collect_categories()
+        return {
+            "success": True,
+            "data": {"items": [{"title": item, "value": item} for item in categories]},
+        }
+
+    def get_site_options_api(self) -> Dict[str, Any]:
+        return {"success": True, "data": {"items": self._ensure_site_resolver().available_sites()}}
+
+    def get_results_api(self) -> Dict[str, Any]:
+        store = self._ensure_store()
+        return {
+            "success": True,
+            "data": {
+                "items": self._prune_downloaded_scan_results(),
+                "last_scan": store.load_scan_meta().get("last_scan_at"),
+                "identifier_records": store.load_identifier_records()[:50],
+                "rule_records": store.load_rule_records()[:50],
+            },
+        }
+
+    def clear_results_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        self._ensure_store().clear_scan_results()
+        return {"success": True}
+
+    def delete_result_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        data = self._extract_payload(payload)
+        result_id = str(data.get("result_id") or "").strip()
+        if not result_id:
+            return {"success": False, "message": "缺少 result_id"}
+        ok = self._ensure_store().delete_scan_result(result_id)
+        return {"success": ok, "message": "" if ok else "未找到对应诊断结果"}
+
+    def clear_rule_records_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        self._ensure_store().clear_rule_records()
+        return {"success": True}
+
+    def clear_identifier_records_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        self._ensure_store().clear_identifier_records()
+        return {"success": True}
+
+    def delete_rule_record_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        data = self._extract_payload(payload)
+        record_id = str(data.get("record_id") or "").strip()
+        if not record_id:
+            return {"success": False, "message": "缺少 record_id"}
+        ok = self._ensure_store().delete_rule_record(record_id)
+        return {"success": ok, "message": "" if ok else "未找到对应规则记录"}
+
+    def run_scan_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        return self.run_scan(source="manual")
+
+    def diagnose_one_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        notify_value = payload.get("notify", True)
+        notify = str(notify_value).strip().lower() not in {"0", "false", "no", "off"}
+        item, error = self._build_single_diagnosis_input(payload)
+        if not item:
+            return {"success": False, "count": 0, "message": error or "no diagnosable subscription item"}
+
+        diagnosis = self._diagnose_item(item)
+        results = [diagnosis.to_dict()] if diagnosis else []
+        self._ensure_store().save_scan_results(results)
+        if notify and self._plugin_config.notify_tg and results:
+            self._notify_each_show(results)
+        return {
+            "success": True,
+            "count": len(results),
+            "source": "manual_one",
+            "message": "diagnosis completed" if results else "moviepilot handled it or no notifiable candidate found",
+            "data": results[0] if results else None,
+        }
+
+    def rule_preview_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._rule_preview(payload, source="vue")
+
+    def identifier_fix_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._identifier_fix(payload, source="vue")
+
+    def identifier_auto_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._identifier_auto(payload, source="vue")
+
+    def identifier_manual_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._identifier_manual(payload, source="vue")
+
+    def identifier_year_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        return self._identifier_year(payload, source="vue")
+
+    def rule_suggestions_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        diagnosis = payload.get("diagnosis") or {}
+        candidate = payload.get("candidate")
+        candidates = payload.get("candidates")
+        if candidate and not candidates:
+            candidates = [candidate]
+        if not candidates:
+            candidates = diagnosis.get("candidates") or []
+        suggestions = build_rule_suggestions(
+            candidates or [],
+            release_groups=self._release_groups_for_diagnosis(diagnosis),
+        )
+        return {"success": True, "data": {"items": suggestions}}
+
+    def rule_confirm_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        payload = self._extract_payload(payload)
+        token = payload.get("token") or payload.get("confirm_token")
+        if not token:
+            return {"success": False, "message": "缺少确认 token"}
+        return self._rule_confirm(str(token))
+
+    def run_scan(self, source: str = "manual") -> Dict[str, Any]:
+        config = self._plugin_config
+        store = self._ensure_store()
+        scanner = self._ensure_scanner()
+        resolver = self._ensure_site_resolver()
+
+        results = []
+        inputs = scanner.scan(config, resolver)
+        cursor = store.load_scan_cursor()
+        batch, next_cursor = select_scan_batch(inputs, config.max_scan_subscribes, cursor)
+        store.save_scan_cursor(next_cursor)
+        logger.info(
+            "订阅下载增强扫描批次："
+            f"候选={len(inputs)}，本批={len(batch)}，起点={cursor}，下次起点={next_cursor}，"
+            f"订阅={[item.title for item in batch]}"
+        )
+        for item in batch:
+            diagnosis = self._diagnose_item(item)
+            if not diagnosis:
+                continue
+            results.append(diagnosis.to_dict())
+
+        store.save_scan_results(results)
+        if config.notify_tg:
+            self._notify_each_show(results)
+        return {"success": True, "count": len(results), "source": source}
+
+    def _build_single_diagnosis_input(self, payload: Dict[str, Any]) -> Tuple[Optional[DiagnosisInput], str]:
+        subscribe_id = safe_int(payload.get("subscribe_id") or payload.get("sid") or payload.get("id"), 0)
+        if not subscribe_id:
+            return None, "missing subscribe_id"
+        subscribe = self._get_subscribe(subscribe_id)
+        if not subscribe:
+            return None, f"subscription not found: {subscribe_id}"
+
+        tmdbid = safe_int(getattr(subscribe, "tmdbid", 0), 0)
+        season = safe_int(getattr(subscribe, "season", 0), 0)
+        if not (tmdbid and season):
+            return None, f"subscription misses tmdbid or season: {self._describe_subscribe(subscribe)}"
+
+        title = str(getattr(subscribe, "name", "") or getattr(subscribe, "title", "") or "").strip()
+        category = str(
+            getattr(subscribe, "media_category", "")
+            or getattr(subscribe, "category", "")
+            or self._resolve_subscribe_category(subscribe)
+            or ""
+        ).strip()
+        include = str(getattr(subscribe, "include", "") or "")
+        episode_group = getattr(subscribe, "episode_group", None)
+        sites = self._ensure_site_resolver().resolve_for_category(self._plugin_config, category)
+        episode_number = safe_int(payload.get("episode") or payload.get("ep"), 0)
+
+        if episode_number:
+            downloaded, evidence = self._is_episode_downloaded(tmdbid, season, episode_number)
+            if downloaded:
+                return None, f"{title} S{season:02d}E{episode_number:02d} is already downloaded"
+            air_date = ""
+            for episode in self._load_tmdb_episodes(tmdbid, season, episode_group):
+                number = safe_int(episode.get("episode_number") or episode.get("episode"), 0)
+                if number == episode_number:
+                    air_date = str(episode.get("air_date") or "")
+                    break
+            return (
+                DiagnosisInput(
+                    subscribe_id=subscribe_id,
+                    title=title,
+                    tmdbid=tmdbid,
+                    season=season,
+                    category=category,
+                    include=include,
+                    sites=sites,
+                    episodes=[
+                        StaleEpisode(
+                            season=season,
+                            episode=episode_number,
+                            air_date=air_date,
+                            evidence=evidence or "manual single episode diagnosis",
+                        )
+                    ],
+                ),
+                "",
+            )
+
+        single_config = PluginConfig.from_dict(self._plugin_config.to_dict())
+        if category:
+            single_config.selected_categories = [category]
+        scanner = SubscriptionScanner(
+            lambda: [subscribe],
+            self._load_tmdb_episodes,
+            self._is_episode_downloaded,
+            load_categories=self._load_tv_categories,
+            resolve_subscribe_category=self._resolve_subscribe_category,
+            load_downloaded_episodes=self._load_downloaded_episodes,
+        )
+        inputs = scanner.scan(single_config, self._ensure_site_resolver())
+        if not inputs:
+            return None, f"{title or subscribe_id} has no stale episode to diagnose"
+        return inputs[0], ""
+
+    def _diagnose_item(self, item: DiagnosisInput) -> Optional[DiagnosisItem]:
+        result = self._diagnose_item_inner(item)
+        if result is not None:
+            self._fill_site_names(result)
+        return result
+
+    def _fill_site_names(self, result: DiagnosisItem) -> None:
+        """将诊断结果里的站点 ID 解析为站点名称，供通知展示。"""
+        try:
+            resolver = self._ensure_site_resolver()
+            if getattr(result, "sites", None) and not getattr(result, "site_names", None):
+                result.site_names = resolver.names_for(result.sites)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强解析搜索站点名称失败：{exc}")
+
+    def _diagnose_item_inner(self, item: DiagnosisInput) -> Optional[DiagnosisItem]:
+        mp_search = self._run_moviepilot_subscribe_search_for_item(item)
+        mp_diagnosis = self._diagnose_with_moviepilot_subscription_scope(item, mp_search)
+        if mp_diagnosis.candidates:
+            if mp_diagnosis.reason == "downloadable":
+                logger.info(
+                    "订阅下载增强触发 MP 订阅搜索后发现可匹配资源，已交给 MP 下载处理："
+                    f"{self._format_item_log_context(item)}"
+                )
+                return None
+            return mp_diagnosis
+        other_site_diagnosis = self._diagnose_other_sites_when_subscription_scope_missing(item, mp_search, mp_diagnosis)
+        if other_site_diagnosis and other_site_diagnosis.candidates:
+            return other_site_diagnosis
+        logger.info(f"订阅下载增强：{item.title} 在 MP 订阅搜索范围内没有候选资源，不再执行插件 PT 范围兜底搜索")
+        return None
+
+    def _run_moviepilot_subscribe_search_for_item(self, item: DiagnosisInput) -> Dict[str, Any]:
+        captured: Dict[str, Any] = {
+            "matched_contexts": [],
+            "diagnostic_contexts": [],
+            "raw_torrents": [],
+            "errors": [],
+            "search_context": {},
+            "romaji_keyword": "",
+        }
+        subscribe_id = safe_int(item.subscribe_id, 0)
+        if not subscribe_id:
+            return captured
+        try:
+            from app.chain.subscribe import SubscribeChain
+            from app.chain.search import SearchChain
+            from app.db.subscribe_oper import SubscribeOper
+
+            original_parse_result = getattr(SearchChain, "_SearchChain__parse_result")
+            subscribe = SubscribeOper().get(subscribe_id)
+
+            def wrapped_parse_result(
+                search_self,
+                torrents,
+                mediainfo,
+                keyword=None,
+                rule_groups=None,
+                season_episodes=None,
+                custom_words=None,
+                filter_params=None,
+            ):
+                raw_torrents = list(torrents or [])
+                captured["raw_torrents"].extend(raw_torrents)
+                captured["search_context"] = {
+                    "mediainfo": copy.deepcopy(mediainfo),
+                    "season_episodes": copy.deepcopy(season_episodes),
+                    "custom_words": copy.deepcopy(custom_words),
+                    "filter_params": copy.deepcopy(filter_params),
+                    "rule_groups": copy.deepcopy(rule_groups),
+                }
+                try:
+                    diagnostic_contexts = original_parse_result(
+                        search_self,
+                        list(raw_torrents),
+                        copy.deepcopy(mediainfo),
+                        keyword=keyword,
+                        rule_groups=[],
+                        season_episodes=season_episodes,
+                        custom_words=custom_words,
+                        filter_params=None,
+                    )
+                    captured["diagnostic_contexts"].extend(diagnostic_contexts or [])
+                except Exception as exc:
+                    captured["errors"].append(str(exc))
+                    logger.warning(f"订阅下载增强分析 MP 订阅搜索原始结果失败：{item.title}，{exc}")
+
+                matched_contexts = original_parse_result(
+                    search_self,
+                    torrents,
+                    mediainfo,
+                    keyword=keyword,
+                    rule_groups=rule_groups,
+                    season_episodes=season_episodes,
+                    custom_words=custom_words,
+                    filter_params=filter_params,
+                )
+                captured["matched_contexts"].extend(matched_contexts or [])
+                return matched_contexts
+
+            setattr(SearchChain, "_SearchChain__parse_result", wrapped_parse_result)
+            try:
+                SubscribeChain().search(sid=subscribe_id, state=None, manual=False)
+                subscribe_keyword = str(getattr(subscribe, "keyword", "") or "").strip() if subscribe else ""
+                if subscribe and should_try_romaji_fallback(subscribe_keyword, captured["matched_contexts"]):
+                    self._append_romaji_fallback_results(
+                        item=item,
+                        captured=captured,
+                        subscribe=subscribe,
+                        search_chain=SearchChain(),
+                        original_parse_result=original_parse_result,
+                    )
+            finally:
+                setattr(SearchChain, "_SearchChain__parse_result", original_parse_result)
+        except Exception as exc:
+            captured["errors"].append(str(exc))
+            logger.warning(f"订阅下载增强触发 MP 订阅搜索失败：{item.title} ID={subscribe_id}，{exc}")
+        return captured
+
+    def _append_romaji_fallback_results(
+        self,
+        item: DiagnosisInput,
+        captured: Dict[str, Any],
+        subscribe: Any,
+        search_chain: Any,
+        original_parse_result: Any,
+    ) -> None:
+        search_context = captured.get("search_context") or {}
+        mediainfo = search_context.get("mediainfo")
+        if not mediainfo:
+            return
+        aliases = list(getattr(mediainfo, "names", None) or [])
+        aliases.extend(
+            value
+            for value in (
+                getattr(mediainfo, "original_title", None),
+                getattr(mediainfo, "original_name", None),
+            )
+            if value
+        )
+        romaji_aliases = select_romaji_aliases(aliases)
+        if not romaji_aliases:
+            logger.info(f"订阅下载增强未找到可用罗马音别名：{self._format_item_log_context(item)}")
+            return
+
+        from app.chain.subscribe import SubscribeChain
+
+        site_ids = [
+            int(site)
+            for site in (SubscribeChain.get_sub_sites(subscribe) or [])
+            if str(site).isdigit()
+        ]
+        for alias in romaji_aliases:
+            try:
+                title_contexts = search_chain.search_by_title(
+                    title=alias,
+                    sites=site_ids or None,
+                    cache_local=False,
+                ) or []
+                torrents = [getattr(context, "torrent_info", context) for context in title_contexts]
+                if not torrents:
+                    continue
+                captured["raw_torrents"].extend(torrents)
+                diagnostic_contexts = original_parse_result(
+                    search_chain,
+                    list(torrents),
+                    copy.deepcopy(mediainfo),
+                    keyword=alias,
+                    rule_groups=[],
+                    season_episodes=copy.deepcopy(search_context.get("season_episodes")),
+                    custom_words=copy.deepcopy(search_context.get("custom_words")),
+                    filter_params=None,
+                ) or []
+                matched_contexts = original_parse_result(
+                    search_chain,
+                    list(torrents),
+                    copy.deepcopy(mediainfo),
+                    keyword=alias,
+                    rule_groups=copy.deepcopy(search_context.get("rule_groups")),
+                    season_episodes=copy.deepcopy(search_context.get("season_episodes")),
+                    custom_words=copy.deepcopy(search_context.get("custom_words")),
+                    filter_params=copy.deepcopy(search_context.get("filter_params")),
+                ) or []
+                captured["diagnostic_contexts"].extend(diagnostic_contexts)
+                captured["matched_contexts"].extend(matched_contexts)
+                if diagnostic_contexts or matched_contexts:
+                    captured["romaji_keyword"] = alias
+                    logger.info(
+                        "订阅下载增强罗马音补搜命中："
+                        f"{self._format_item_log_context(item)}，关键词={alias}，"
+                        f"匹配={len(matched_contexts)}，诊断={len(diagnostic_contexts)}"
+                    )
+                if matched_contexts:
+                    break
+            except Exception as exc:
+                captured["errors"].append(f"{alias}: {exc}")
+                logger.warning(f"订阅下载增强罗马音补搜失败：{item.title}，关键词={alias}，{exc}")
+
+    def _diagnose_with_moviepilot_subscription_scope(self, item: DiagnosisInput, mp_search: Optional[Dict[str, Any]] = None) -> DiagnosisItem:
+        mp_sites = self._load_moviepilot_subscribe_sites(item)
+        scoped_item = replace(item, sites=mp_sites)
+        mp_search = mp_search or {}
+
+        matched_candidates = [
+            self._context_to_candidate(context, scoped_item)
+            for context in (mp_search.get("matched_contexts") or [])
+        ]
+        matched_diagnosis = TorrentDiagnoser(lambda _item: matched_candidates).diagnose(scoped_item)
+        if matched_diagnosis.candidates:
+            if mp_search.get("romaji_keyword"):
+                matched_diagnosis.reason = "romaji_keyword_found"
+                matched_diagnosis.message = "自动使用 TMDB 罗马音别名补搜到符合订阅规则的资源"
+                matched_diagnosis.source = "romaji_fallback"
+                matched_diagnosis.search_keyword_suggestion = str(mp_search.get("romaji_keyword") or "")
+                return matched_diagnosis
+            matched_diagnosis.reason = "downloadable"
+            matched_diagnosis.message = "MP 订阅搜索结果中存在可匹配资源，已交给 MP 订阅搜索处理"
+            return matched_diagnosis
+
+        diagnostic_candidates = [
+            self._context_to_candidate(context, scoped_item)
+            for context in (mp_search.get("diagnostic_contexts") or [])
+        ]
+        diagnostic_item = replace(scoped_item, include="")
+        diagnostic_result = TorrentDiagnoser(lambda _item: diagnostic_candidates).diagnose(diagnostic_item)
+        if diagnostic_result.candidates:
+            diagnostic_result.reason = "rule_blocked"
+            diagnostic_result.message = "MP 订阅搜索结果中存在季集正确资源，但被订阅规则或过滤条件拦截"
+            if mp_search.get("romaji_keyword"):
+                diagnostic_result.source = "romaji_fallback"
+                diagnostic_result.search_keyword_suggestion = str(mp_search.get("romaji_keyword") or "")
+                diagnostic_result.message = "自动使用 TMDB 罗马音别名补搜到季集正确资源，但仍被订阅规则或过滤条件拦截"
+            return diagnostic_result
+
+        return DiagnosisItem(
+            subscribe_id=scoped_item.subscribe_id,
+            title=scoped_item.title,
+            tmdbid=scoped_item.tmdbid,
+            season=scoped_item.season,
+            category=scoped_item.category,
+            reason="no_pt_resource",
+            message="MP 订阅搜索结果中没有覆盖目标集的候选资源",
+            episodes=[episode.to_dict() for episode in scoped_item.episodes],
+            sites=scoped_item.sites,
+        )
+
+    @staticmethod
+    def _episode_numbers_from_item(item: DiagnosisInput) -> List[int]:
+        values: List[int] = []
+        for episode in item.episodes or []:
+            number = safe_int(getattr(episode, "episode", 0), 0)
+            if number and number not in values:
+                values.append(number)
+        return values
+
+    @staticmethod
+    def _raw_torrent_to_search_result(raw: Any, item: DiagnosisInput) -> Dict[str, Any]:
+        if isinstance(raw, dict):
+            return raw
+        torrent = getattr(raw, "torrent_info", raw)
+        meta_info = getattr(raw, "meta_info", None)
+        media_info = getattr(raw, "media_info", None)
+        episodes = list(getattr(meta_info, "episode_list", None) or [])
+        season_list = list(getattr(meta_info, "season_list", None) or [])
+        title = getattr(torrent, "title", None) or getattr(torrent, "name", None) or ""
+        tmdb_id = safe_int(getattr(media_info, "tmdb_id", None), 0) if media_info else 0
+        return {
+            "site": str(getattr(torrent, "site", "") or ""),
+            "site_name": getattr(torrent, "site_name", None),
+            "title": title,
+            "recognized": bool(
+                getattr(raw, "candidate_recognized", False)
+                or getattr(raw, "media_info_is_target", False)
+                or (tmdb_id and tmdb_id == safe_int(item.tmdbid, 0))
+            ),
+            "season": season_list[0] if season_list else item.season,
+            "episode": episodes[0] if episodes else 0,
+            "episodes": episodes,
+            "seeders": getattr(torrent, "seeders", 0),
+            "size": getattr(torrent, "size", ""),
+        }
+
+    def _build_subscription_site_progress(
+        self, item: DiagnosisInput, mp_search: Dict[str, Any], subscription_sites: List[str]
+    ) -> List[Dict[str, Any]]:
+        target_episode = max(self._episode_numbers_from_item(item) or [0])
+        if not target_episode:
+            return []
+        subscription_set = {str(site) for site in subscription_sites or []}
+        latest_by_site: Dict[str, Dict[str, Any]] = {}
+        for raw in mp_search.get("raw_torrents") or []:
+            normalized = normalize_search_result(self._raw_torrent_to_search_result(raw, item))
+            site = str(normalized.get("site") or "")
+            if subscription_set and site not in subscription_set:
+                continue
+            if safe_int(normalized.get("season"), item.season) not in (0, safe_int(item.season, 0)):
+                continue
+            episodes = [
+                safe_int(episode, 0)
+                for episode in (normalized.get("episodes") or [])
+                if safe_int(episode, 0)
+            ]
+            if not episodes and safe_int(normalized.get("episode"), 0):
+                episodes = [safe_int(normalized.get("episode"), 0)]
+            latest_episode = max(episodes or [0])
+            if not latest_episode or latest_episode >= target_episode:
+                continue
+            current = latest_by_site.get(site)
+            if current and safe_int(current.get("latest_episode"), 0) >= latest_episode:
+                continue
+            latest_by_site[site] = {
+                "site": site,
+                "site_name": normalized.get("site_name") or site or "订阅站点",
+                "latest_episode": latest_episode,
+                "target_episode": target_episode,
+                "seeders": safe_int(normalized.get("seeders"), 0),
+            }
+        return sorted(
+            latest_by_site.values(),
+            key=lambda item: (safe_int(item.get("latest_episode"), 0), str(item.get("site_name") or "")),
+            reverse=True,
+        )
+
+    def _diagnose_other_sites_when_subscription_scope_missing(
+        self, item: DiagnosisInput, mp_search: Dict[str, Any], mp_diagnosis: DiagnosisItem
+    ) -> Optional[DiagnosisItem]:
+        subscription_sites = [str(site) for site in (mp_diagnosis.sites or self._load_moviepilot_subscribe_sites(item))]
+        configured_sites = self._ensure_site_resolver().resolve_for_category(self._plugin_config, item.category)
+        subscription_set = set(subscription_sites)
+        other_sites = [str(site) for site in configured_sites if str(site) not in subscription_set]
+        if not other_sites:
+            return None
+
+        scoped_item = replace(item, sites=other_sites)
+        result = TorrentDiagnoser(self._search_torrents).diagnose(scoped_item)
+        if not result.candidates:
+            return None
+
+        original_reason = result.reason
+        if result.reason in {"downloadable", "rule_blocked"}:
+            result.reason = "site_scope_blocked"
+            result.message = "订阅站点暂无目标集，其他 PT 站点存在目标集资源"
+            if original_reason == "rule_blocked":
+                result.message += "，但可能仍被订阅包含规则拦截"
+        elif result.reason == "recognition_issue":
+            result.message = "订阅站点暂无目标集，其他 PT 站点存在目标集资源，但识别异常"
+
+        result.source = "plugin_pt_scope"
+        result.original_reason = original_reason
+        result.sites = other_sites
+        result.site_names = self._ensure_site_resolver().names_for(other_sites)
+        result.subscription_sites = subscription_sites
+        result.subscription_site_names = self._ensure_site_resolver().names_for(subscription_sites)
+        result.subscription_site_progress = self._build_subscription_site_progress(item, mp_search, subscription_sites)
+        logger.info(
+            "订阅下载增强发现订阅站点缺集但其他站点存在目标集："
+            f"{self._format_item_log_context(item)}，订阅站点={','.join(subscription_sites) or '-'}，"
+            f"其他站点={','.join(other_sites)}，候选={len(result.candidates)}"
+        )
+        return result
+
+    def _compute_other_sites(self, diagnosis: Dict[str, Any]) -> List[Dict[str, str]]:
+        """计算"其他站点"（PT 搜索范围 - 订阅站点），返回 [{id, name}]。"""
+        resolver = self._ensure_site_resolver()
+        category = str(diagnosis.get("category") or "")
+        configured = resolver.resolve_for_category(self._plugin_config, category)
+        subscription_sites = set(str(s) for s in (diagnosis.get("subscription_sites") or []))
+        name_map = resolver.name_map()
+        others = []
+        for site_id in configured:
+            if str(site_id) in subscription_sites:
+                continue
+            others.append({"id": str(site_id), "name": name_map.get(str(site_id), str(site_id))})
+        return others
+
+    def _manual_pt_scope_diagnosis(
+        self, diagnosis: Dict[str, Any], only_sites: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
+        subscribe_id = safe_int(diagnosis.get("subscribe_id"), 0)
+        season = safe_int(diagnosis.get("season"), 0)
+        tmdbid = safe_int(diagnosis.get("tmdbid"), 0)
+        title = str(diagnosis.get("title") or "").strip()
+        episodes = []
+        for raw in diagnosis.get("episodes") or []:
+            episode = safe_int(raw.get("episode"), 0) if isinstance(raw, dict) else 0
+            if not episode:
+                continue
+            episodes.append(
+                StaleEpisode(
+                    season=safe_int(raw.get("season"), season) if isinstance(raw, dict) else season,
+                    episode=episode,
+                    air_date=str(raw.get("air_date") or "") if isinstance(raw, dict) else "",
+                    evidence=str(raw.get("evidence") or "来自当前 Telegram 诊断记录") if isinstance(raw, dict) else "来自当前 Telegram 诊断记录",
+                )
+            )
+        if not (subscribe_id and season and tmdbid and title and episodes):
+            failed = dict(diagnosis)
+            failed.update(
+                {
+                    "reason": "search_failed",
+                    "message": "搜索其他站点失败：当前通知缺少订阅、TMDB、季或缺失集信息",
+                    "candidates": [],
+                }
+            )
+            return failed
+
+        subscribe = self._get_subscribe(subscribe_id)
+        include = str(getattr(subscribe, "include", "") or diagnosis.get("include") or "")
+        category = str(diagnosis.get("category") or getattr(subscribe, "media_category", "") or "")
+        resolver = self._ensure_site_resolver()
+        if only_sites:
+            sites = [str(s) for s in only_sites]
+        else:
+            # 默认搜"其他站点"（PT 搜索范围 - 订阅站点），与自动诊断语义一致
+            sites = [str(s.get("id")) for s in self._compute_other_sites(diagnosis)]
+        item = DiagnosisInput(
+            subscribe_id=subscribe_id,
+            title=title,
+            tmdbid=tmdbid,
+            season=season,
+            category=category,
+            include=include,
+            sites=sites,
+            episodes=episodes,
+        )
+        result = TorrentDiagnoser(self._search_torrents).diagnose(item).to_dict()
+        result["source"] = "plugin_pt_scope"
+        result["sites"] = sites
+        result["site_names"] = resolver.names_for(sites)
+        site_label = "、".join(result["site_names"]) or "无其他站点"
+        stamp = datetime.now().strftime("%H:%M")
+        base = result.get("message") or result.get("reason") or ""
+        result["message"] = f"搜索其他站点完成（{stamp}）：{site_label}，命中 {len(result.get('candidates') or [])} 个候选"
+        return result
+
+    def _notify_each_show(self, results: List[Dict[str, Any]]):
+        store = self._ensure_store()
+        pending = []
+        for item in results:
+            ignore_key = self._ignore_key(item)
+            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
+                continue
+            pending.append(item)
+        store.save_notification_queue(pending)
+        self._notify_next_queued_show()
+
+    @staticmethod
+    def _notification_title(item: Any = None) -> str:
+        if isinstance(item, dict):
+            title = str(item.get("title") or "").strip()
+        else:
+            title = str(item or "").strip()
+        return f"订阅下载增强：{title}" if title else "订阅下载增强"
+
+    def _notify_next_queued_show(self):
+        store = self._ensure_store()
+        while True:
+            item = store.pop_notification_queue()
+            if not item:
+                return
+            ignore_key = self._ignore_key(item)
+            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
+                continue
+            token = self._save_interaction(item)
+            try:
+                self.post_message(
+                    mtype=NotificationType.Plugin if NotificationType else None,
+                    title=self._notification_title(item),
+                    text=render_notification_text(item),
+                    buttons=build_main_menu(
+                        token,
+                        self._plugin_config.allow_tg_rule_update,
+                        can_identifier_fix=item.get("reason") == "recognition_issue",
+                        candidate_count=len(item.get("candidates") or []),
+                        search_keyword_suggestion=item.get("search_keyword_suggestion") or "",
+                    ),
+                    save_history=False,
+                )
+            except Exception as exc:
+                logger.warning(f"璁㈤槄涓嬭浇澧炲己鍙戦€侀€氱煡澶辫触: {exc}")
+            return
+
+    if eventmanager:
+        @eventmanager.register(EventType.MessageAction)
+        def handle_message_action(self, event):
+            event_data = getattr(event, "event_data", None) or {}
+            plugin_id = event_data.get("plugin_id")
+            if plugin_id and plugin_id != PLUGIN_ID:
+                return
+            action = event_data.get("text") or event_data.get("action") or event_data.get("callback_data") or ""
+            if str(action).strip().startswith("/ci"):
+                self._handle_ci_command_text(str(action), event_data)
+                return
+            if str(action).strip().startswith("/sp"):
+                self._handle_sp_command_text(str(action), event_data)
+                return
+            if not str(action).startswith(f"[PLUGIN]{PLUGIN_ID}|") and plugin_id != PLUGIN_ID:
+                return
+            self._handle_callback(str(action), event_data)
+
+        @eventmanager.register(EventType.PluginAction)
+        def handle_plugin_action(self, event):
+            event_data = getattr(event, "event_data", None) or {}
+            action = event_data.get("action") or (event_data.get("data") or {}).get("action")
+            if action == "subscribeplus_pending":
+                self._handle_sp_command_text("/sp", event_data)
+                return
+            if action != "subscribeplus_ci":
+                return
+            args = event_data.get("arg_str") or event_data.get("args") or event_data.get("text") or ""
+            if isinstance(args, (list, tuple)):
+                args = " ".join(str(item) for item in args)
+            text = str(args or "").strip()
+            self._handle_ci_command_text(f"/ci {text}".strip(), event_data)
+
+        @eventmanager.register(EventType.TransferComplete)
+        def handle_transfer_complete(self, event):
+            try:
+                self._prune_downloaded_scan_results()
+            except Exception as exc:
+                logger.warning(f"订阅下载增强入库后刷新诊断结果失败: {exc}")
+            self._handle_transfer_complete_cleanup(event)
+
+    @staticmethod
+    def _callback_post_kwargs(event_data: Dict[str, Any]) -> Dict[str, Any]:
+        kwargs: Dict[str, Any] = {}
+        for source_key, target_key in (
+            ("channel", "channel"),
+            ("source", "source"),
+            ("userid", "userid"),
+            ("user", "userid"),
+            ("original_message_id", "original_message_id"),
+            ("original_chat_id", "original_chat_id"),
+        ):
+            value = event_data.get(source_key)
+            if value is not None and target_key not in kwargs:
+                kwargs[target_key] = value
+        return kwargs
+
+    def _post_callback_message(self, event_data: Dict[str, Any], **kwargs):
+        kwargs.update(self._callback_post_kwargs(event_data))
+        self.post_message(**kwargs)
+
+    def _handle_callback(self, action: str, event_data: Dict[str, Any]):
+        command = action
+        if action.startswith(f"[PLUGIN]{PLUGIN_ID}|"):
+            command = action.split("|", 1)[1]
+        op, _, token = command.partition(":")
+        logger.info(f"订阅下载增强处理 Telegram 回调：{op}:{token}")
+        if op == "close":
+            self._ensure_store().delete_interaction(token)
+            if token != "spmenu":
+                self._notify_next_queued_show()
+            if not self._delete_callback_message(event_data):
+                self._post_callback_message(event_data, title="订阅下载增强", text="已关闭本次交互。", save_history=False)
+            return
+        state = self._ensure_store().load_interaction(token)
+        if not state:
+            self._post_callback_message(event_data, title="订阅下载增强", text="交互已过期，请重新扫描。", save_history=False)
+            return
+
+        diagnosis = state.get("diagnosis") or {}
+        if op == "open":
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=render_notification_text(diagnosis),
+                buttons=build_main_menu(
+                    token,
+                    self._plugin_config.allow_tg_rule_update,
+                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                ),
+                save_history=False,
+            )
+            return
+        if op.startswith("cand"):
+            page = max(safe_int(op.replace("cand", ""), 1) - 1, 0)
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=render_notification_text(diagnosis, candidate_page=page),
+                buttons=build_main_menu(
+                    token,
+                    self._plugin_config.allow_tg_rule_update,
+                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
+                    candidate_page=page,
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                ),
+                save_history=False,
+            )
+            return
+        if op.startswith("rpage"):
+            page = max(safe_int(op.replace("rpage", ""), 1) - 1, 0)
+            self._post_callback_message(
+                event_data,
+                title=f"选择下载：{diagnosis.get('title')}",
+                text="请选择要下载的候选资源。",
+                buttons=build_resource_menu(token, diagnosis.get("candidates") or [], page=page),
+                save_history=False,
+            )
+            return
+        if op == "snooze3d":
+            until = (datetime.now() + timedelta(days=3)).isoformat(timespec="seconds")
+            self._ensure_store().save_snooze(self._ignore_key(diagnosis), until)
+            self._ensure_store().delete_interaction(token)
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=f"已暂缓 3 天，直到 {until}",
+                save_history=False,
+            )
+            self._notify_next_queued_show()
+            return
+        if op == "keyword":
+            suggestion = str(diagnosis.get("search_keyword_suggestion") or "").strip()
+            if not suggestion:
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text="当前诊断没有可添加的罗马音搜索关键词。",
+                    save_history=False,
+                )
+                return
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=(
+                    "是否将以下罗马音写入该订阅的搜索关键词？\n"
+                    f"{suggestion}\n\n只修改搜索关键词，不修改站点、包含规则或其他订阅设置。"
+                ),
+                buttons=build_keyword_confirm_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "keyword-confirm":
+            suggestion = str(diagnosis.get("search_keyword_suggestion") or "").strip()
+            subscribe_id = safe_int(diagnosis.get("subscribe_id"), 0)
+            if not suggestion or not subscribe_id:
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text="缺少订阅或罗马音关键词，无法保存。",
+                    save_history=False,
+                )
+                return
+            try:
+                result = self._update_subscribe(subscribe_id, {"keyword": suggestion})
+                subscribe = self._get_subscribe(subscribe_id)
+                saved_keyword = str(getattr(subscribe, "keyword", "") or "").strip() if subscribe else ""
+                if not result.get("updated") or saved_keyword != suggestion:
+                    raise RuntimeError("MoviePilot 回读的搜索关键词与写入值不一致")
+                diagnosis["search_keyword_suggestion"] = ""
+                state["diagnosis"] = diagnosis
+                state["expires_at"] = (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds")
+                self._ensure_store().save_interaction(token, state)
+                logger.info(
+                    "订阅下载增强已写入订阅搜索关键词："
+                    f"订阅ID={subscribe_id}，关键词={suggestion}"
+                )
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text=f"已添加订阅搜索关键词：{suggestion}",
+                    buttons=build_main_menu(
+                        token,
+                        self._plugin_config.allow_tg_rule_update,
+                        can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                        candidate_count=len(diagnosis.get("candidates") or []),
+                    ),
+                    save_history=False,
+                )
+            except Exception as exc:
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text=f"添加订阅搜索关键词失败：{exc}",
+                    buttons=build_keyword_confirm_menu(token),
+                    save_history=False,
+                )
+            return
+        if op == "download":
+            if diagnosis.get("source") in {"plugin_pt_scope", "romaji_fallback"}:
+                candidates = diagnosis.get("candidates") or []
+                if candidates:
+                    self._post_callback_message(
+                        event_data,
+                        title=f"选择下载：{diagnosis.get('title')}",
+                        text="请选择要下载的候选资源。",
+                        buttons=build_resource_menu(token, candidates),
+                        save_history=False,
+                    )
+                else:
+                    self._post_callback_message(
+                        event_data,
+                        title=self._notification_title(diagnosis),
+                        text="插件 PT 范围搜索没有可下载候选资源。",
+                        buttons=build_main_menu(
+                            token,
+                            self._plugin_config.allow_tg_rule_update,
+                            can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                            candidate_count=len(diagnosis.get("candidates") or []),
+                            search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                        ),
+                        save_history=False,
+                    )
+                return
+            result = self._start_moviepilot_subscribe_search(diagnosis)
+            self._ensure_store().delete_interaction(token)
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=result.get("message") or ("Started MP subscribe search" if result.get("success") else "Failed to start MP subscribe search"),
+                save_history=False,
+            )
+            self._notify_next_queued_show()
+            return
+        if op == "ptscope":
+            # 弹出"其他站点"选择菜单（PT 搜索范围 - 订阅站点），不立即搜索
+            other_sites = self._compute_other_sites(diagnosis)
+            state["other_sites"] = other_sites
+            state["expires_at"] = (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds")
+            self._ensure_store().save_interaction(token, state)
+            if other_sites:
+                site_label = "、".join(s.get("name") for s in other_sites)
+                text = f"选择要搜索的其他站点（订阅站点之外）：\n可搜站点：{site_label}"
+            else:
+                text = "没有可搜索的其他站点。订阅站点已覆盖 PT 搜索范围内的全部站点。"
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=text,
+                buttons=build_other_sites_menu(token, other_sites),
+                save_history=False,
+            )
+            return
+        if op == "ptsall" or (op.startswith("pts") and op[3:].isdigit()):
+            other_sites = state.get("other_sites") or self._compute_other_sites(diagnosis)
+            if op == "ptsall":
+                only_sites = [str(s.get("id")) for s in other_sites]
+            else:
+                idx = int(op[3:])
+                only_sites = [str(other_sites[idx].get("id"))] if 0 <= idx < len(other_sites) else []
+            diagnosis = self._manual_pt_scope_diagnosis(diagnosis, only_sites=only_sites)
+            state["diagnosis"] = diagnosis
+            state["expires_at"] = (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds")
+            self._ensure_store().save_interaction(token, state)
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=render_notification_text(diagnosis),
+                buttons=build_main_menu(
+                    token,
+                    self._plugin_config.allow_tg_rule_update,
+                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                ),
+                save_history=False,
+            )
+            return
+        if op.startswith("pick"):
+            index = int(op.replace("pick", "") or 0) - 1
+            self._download_candidate(diagnosis, index, event_data)
+            return
+        if op == "ci-auto":
+            result = self._identifier_auto({"title": state.get("title")}, source="telegram")
+            self._update_ci_state_after_result(token, state, result)
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=render_identifier_fix_result_text(result),
+                buttons=build_ci_done_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "ci-manual":
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=f"媒体文件名：{state.get('title') or '-'}",
+                buttons=build_ci_manual_type_menu(token),
+                save_history=False,
+            )
+            return
+        if op in {"ci-tv", "ci-movie"}:
+            state["manual_media_type"] = "tv" if op == "ci-tv" else "movie"
+            self._ensure_store().save_interaction(token, state)
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=f"已选择 {state['manual_media_type']}，请回复：/ci {token} TMDBID",
+                buttons=build_ci_wait_tmdb_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "ci-retry":
+            result = self._retry_ci_recognition(state)
+            self._post_callback_message(
+                event_data,
+                title="再次识别",
+                text=render_identifier_fix_result_text(result),
+                buttons=build_ci_done_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "ci-back":
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=f"媒体文件名：{state.get('title') or '-'}",
+                buttons=build_ci_mode_menu(token),
+                save_history=False,
+            )
+            return
+        if op == "rule":
+            suggestions = build_rule_suggestions(
+                diagnosis.get("candidates") or [],
+                release_groups=self._release_groups_for_diagnosis(diagnosis),
+            )
+            self._post_callback_message(
+                event_data,
+                title=f"调整订阅规则：{diagnosis.get('title')}",
+                text="请选择要添加的官组、平台关键词或 PT 站点。",
+                buttons=build_rule_menu(token, suggestions),
+                save_history=False,
+            )
+            return
+        if op == "rule-confirm":
+            back_token = ((state.get("preview") or {}).get("back_token") or "").strip()
+            result = self._rule_confirm(token)
+            if result.get("success"):
+                record = result.get("data") or {}
+                current_label = "当前订阅站点：" if record.get("field") == "sites" else "当前包含规则："
+                default_target = "订阅站点" if record.get("field") == "sites" else "订阅包含规则"
+                text = "\n".join(
+                    [
+                        f"已添加：{record.get('selected_text') or default_target}",
+                        current_label,
+                        record.get("new_value") or "-",
+                    ]
+                )
+                self._post_callback_message(
+                    event_data,
+                    title="订阅下载增强",
+                    text=text,
+                    buttons=build_rule_done_menu(back_token) if back_token else None,
+                    save_history=False,
+                )
+            else:
+                self._post_callback_message(
+                    event_data,
+                    title="订阅下载增强",
+                    text=result.get("message", "订阅规则修改失败。"),
+                    save_history=False,
+                )
+            return
+        if op.startswith("rule"):
+            index = int(op.replace("rule", "") or 0) - 1
+            suggestions = build_rule_suggestions(
+                diagnosis.get("candidates") or [],
+                release_groups=self._release_groups_for_diagnosis(diagnosis),
+            )
+            if 0 <= index < len(suggestions):
+                selected_text = suggestions[index].get("text") or suggestions[index].get("value") or "规则"
+                result = self._rule_preview(
+                    {
+                        "subscribe_id": diagnosis.get("subscribe_id"),
+                        "pattern": suggestions[index].get("pattern"),
+                        "back_token": token,
+                        "selected_text": selected_text,
+                    },
+                    source="telegram",
+                )
+                if result.get("success"):
+                    preview = result.get("data") or {}
+                    self._post_callback_message(
+                        event_data,
+                        title=f"规则修改预览：{diagnosis.get('title')}",
+                        text=render_rule_preview_text(preview, selected_text),
+                        buttons=build_rule_confirm_menu(preview.get("token"), token),
+                        save_history=False,
+                    )
+                else:
+                    self._post_callback_message(
+                        event_data,
+                        title="订阅下载增强",
+                        text=result.get("message", "生成预览失败。"),
+                        save_history=False,
+                    )
+            return
+        if op == "ignore":
+            self._ensure_store().save_ignore(self._ignore_key(diagnosis))
+            self._ensure_store().delete_interaction(token)
+            self._post_callback_message(event_data, title="订阅下载增强", text="已忽略本次提醒。", save_history=False)
+            self._notify_next_queued_show()
+            return
+        if op == "back":
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=render_notification_text(diagnosis),
+                buttons=build_main_menu(
+                    token,
+                    self._plugin_config.allow_tg_rule_update,
+                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                ),
+                save_history=False,
+            )
+
+    def _rule_preview(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        subscribe_id = int(payload.get("subscribe_id") or 0)
+        pattern = payload.get("pattern") or payload.get("include") or ""
+        subscribe = self._get_subscribe(subscribe_id)
+        if not subscribe:
+            return {"success": False, "message": "订阅不存在"}
+        try:
+            name_map: Dict[int, str] = {}
+            for site in self._ensure_site_resolver().available_sites():
+                sid = str(site.get("id") or "")
+                if sid.isdigit():
+                    name_map[int(sid)] = site.get("name") or sid
+            preview = build_rule_preview(subscribe, pattern, source=source, name_map=name_map)
+        except ValueError as exc:
+            return {"success": False, "message": str(exc)}
+        token = make_token(preview)
+        preview.update(
+            {
+                "token": token,
+                "back_token": payload.get("back_token") or "",
+                "selected_text": payload.get("selected_text") or "",
+            }
+        )
+        self._ensure_store().save_interaction(
+            token,
+            {
+                "view": "rule_preview",
+                "preview": preview,
+                "expires_at": (datetime.now() + timedelta(hours=2)).isoformat(timespec="seconds"),
+            },
+        )
+        return {"success": True, "data": preview}
+
+    def _rule_confirm(self, token: str) -> Dict[str, Any]:
+        state = self._ensure_store().load_interaction(token)
+        if not state or not state.get("preview"):
+            return {"success": False, "message": "确认 token 无效或已过期"}
+        try:
+            record = apply_rule_preview(state["preview"], self._update_subscribe)
+        except ValueError as exc:
+            return {"success": False, "message": str(exc)}
+        record["selected_text"] = (state.get("preview") or {}).get("selected_text") or ""
+        self._ensure_store().append_rule_record(record)
+        self._ensure_store().delete_interaction(token)
+        return {"success": True, "data": record}
+
+    def _identifier_fix(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        if payload.get("mode") == "manual" or payload.get("tmdbid") or payload.get("tmdb_id"):
+            return self._identifier_manual(payload, source)
+        diagnosis = self._resolve_diagnosis_payload(payload)
+        candidate = self._resolve_candidate_payload(payload, diagnosis) if diagnosis else {}
+        title = str(payload.get("title") or payload.get("candidate_title") or candidate.get("title") or "").strip()
+        return self._identifier_auto({"title": title}, source)
+
+    def _identifier_auto(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        title = self._identifier_title_from_payload(payload)
+        if not title:
+            return self._record_identifier_tool_failure("", {}, "媒体文件名不能为空", "missing_title", source, "auto")
+        try:
+            target = self._identify_target_by_ai(title)
+        except Exception as exc:
+            return self._record_identifier_tool_failure(
+                title,
+                {},
+                f"AI 未配置或调用失败：{exc}",
+                "ai_unavailable",
+                source,
+                "auto",
+            )
+        if not isinstance(target, dict):
+            return self._record_identifier_tool_failure(title, {}, "AI 返回格式无效", "invalid_ai_response", source, "auto")
+        return self._apply_identifier_rule(title, target, source, mode="auto")
+
+    def _identifier_manual(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        title = self._identifier_title_from_payload(payload)
+        if not title:
+            return self._record_identifier_tool_failure("", {}, "媒体文件名不能为空", "missing_title", source, "force")
+        media_type = normalize_media_type(payload.get("media_type") or payload.get("type"))
+        tmdbid = safe_int(payload.get("tmdbid") or payload.get("tmdb_id"), 0)
+        if media_type == "unknown" or not tmdbid:
+            return self._record_identifier_tool_failure(
+                title,
+                {},
+                "请填写 movie/tv 和 TMDB ID",
+                "missing_target",
+                source,
+                "force",
+            )
+        target = {
+            "media_type": media_type,
+            "tmdbid": tmdbid,
+        }
+        return self._apply_manual_identifier_rule(title, target, source, mode="force")
+
+    def _identifier_year(self, payload: Dict[str, Any], source: str) -> Dict[str, Any]:
+        title = self._identifier_title_from_payload(payload)
+        if not title:
+            return self._record_identifier_tool_failure("", {}, "媒体文件名不能为空", "missing_title", source, "year")
+        media_type = normalize_media_type(payload.get("media_type") or payload.get("type"))
+        tmdbid = safe_int(payload.get("tmdbid") or payload.get("tmdb_id"), 0)
+        if media_type == "unknown" or not tmdbid:
+            return self._record_identifier_tool_failure(
+                title,
+                {},
+                "请填写 movie/tv 和 TMDB ID",
+                "missing_target",
+                source,
+                "year",
+            )
+        return self._apply_manual_identifier_rule(
+            title,
+            {"media_type": media_type, "tmdbid": tmdbid},
+            source,
+            mode="year",
+        )
+
+    def _apply_manual_identifier_rule(
+        self, title: str, target: Dict[str, Any], source: str, mode: str
+    ) -> Dict[str, Any]:
+        target = dict(target or {})
+        tmdb_summary = self._load_tmdb_target_summary(target)
+        if tmdb_summary.get("success") is False:
+            return self._record_identifier_tool_failure(
+                title,
+                target,
+                tmdb_summary.get("message") or "TMDB 没有查到可用数据",
+                "tmdb_unavailable",
+                source,
+                mode,
+            )
+        target["name"] = tmdb_summary.get("name") or ""
+        target["year"] = tmdb_summary.get("year") or ""
+        try:
+            if mode == "year":
+                block = build_year_identifier_block(title, target)
+            else:
+                block = build_force_identifier_block(title, target)
+            rule = block[-1]
+        except ValueError as exc:
+            return self._record_identifier_tool_failure(
+                title, target, str(exc), "invalid_rule", source, mode
+            )
+
+        try:
+            applied = self._append_custom_identifiers(block)
+        except Exception as exc:
+            return self._record_identifier_tool_failure(
+                title,
+                target,
+                f"写入自定义识别词失败：{exc}",
+                "write_failed",
+                source,
+                mode,
+            )
+
+        recheck = self._recognize_identifier_title(title, target)
+        success = bool(recheck.get("success"))
+        if success:
+            message = "已写入强制绑定规则" if mode == "force" else "已写入年份修正规则"
+            if not applied.get("added"):
+                message = "识别词已存在，再次识别已命中"
+            reason = ""
+            status = "success"
+        else:
+            message = recheck.get("message") or "识别词已写入，但再次识别未命中目标 TMDB"
+            reason = recheck.get("reason") or "recognize_failed"
+            status = "failed"
+
+        record = build_identifier_record(
+            subscribe_id=0,
+            title=str(target.get("name") or title),
+            candidate_title=title,
+            target=target,
+            added=applied.get("added") or [],
+            source=source,
+            status=status,
+            message=message,
+        )
+        record.update(
+            {
+                "mode": mode,
+                "rule": "\n".join(block),
+                "total_count": applied.get("total_count"),
+                "recheck": recheck,
+            }
+        )
+        if reason:
+            record["reason"] = reason
+        self._ensure_store().append_identifier_record(record)
+        return {"success": success, "message": message, "reason": reason, "data": record}
+
+    @staticmethod
+    def _identifier_title_from_payload(payload: Dict[str, Any]) -> str:
+        return str(
+            payload.get("title")
+            or payload.get("media_title")
+            or payload.get("filename")
+            or payload.get("candidate_title")
+            or ""
+        ).strip()
+
+    def _apply_identifier_rule(self, title: str, target: Dict[str, Any], source: str, mode: str) -> Dict[str, Any]:
+        target = dict(target or {})
+        target["media_type"] = normalize_media_type(target.get("media_type") or target.get("type"))
+        target["tmdbid"] = safe_int(target.get("tmdbid") or target.get("tmdb_id"), 0)
+        if target["media_type"] == "unknown" or not target["tmdbid"]:
+            return self._record_identifier_tool_failure(title, target, "缺少 movie/tv 或 TMDB ID", "missing_target", source, mode)
+        if target["media_type"] == "tv":
+            season, episode = self._parse_season_episode_from_title(title)
+            if not safe_int(target.get("season"), 0) and season:
+                target["season"] = season
+            if not safe_int(target.get("episode"), 0) and episode:
+                target["episode"] = episode
+
+        tmdb_summary = self._load_tmdb_target_summary(target)
+        if tmdb_summary.get("success") is False:
+            return self._record_identifier_tool_failure(
+                title,
+                target,
+                tmdb_summary.get("message") or "TMDB 没有查到可用数据",
+                "tmdb_unavailable",
+                source,
+                mode,
+            )
+        if tmdb_summary.get("name"):
+            target["name"] = target.get("name") or tmdb_summary.get("name")
+        if tmdb_summary.get("year"):
+            target["year"] = target.get("year") or tmdb_summary.get("year")
+
+        try:
+            lines = build_identifier_lines(title, target)
+        except ValueError as exc:
+            return self._record_identifier_tool_failure(title, target, str(exc), "invalid_target", source, mode)
+        rules = [line for line in lines if validate_identifier_rule(line)]
+        if not rules:
+            return self._record_identifier_tool_failure(title, target, "生成的识别词规则无效", "invalid_rule", source, mode)
+
+        rule = rules[0]
+        try:
+            applied = self._append_custom_identifiers([rule])
+        except Exception as exc:
+            return self._record_identifier_tool_failure(title, target, f"写入自定义识别词失败：{exc}", "write_failed", source, mode)
+
+        recheck = self._recognize_identifier_title(title, target)
+        success = bool(recheck.get("success"))
+        if success:
+            message = "已识别并写入自定义识别词" if applied.get("added") else "识别词已存在，再次识别已命中"
+            status = "success"
+            reason = ""
+        else:
+            message = recheck.get("message") or "识别词已写入，但再次识别未命中目标 TMDB"
+            status = "failed"
+            reason = recheck.get("reason") or "recognize_failed"
+
+        record = build_identifier_record(
+            subscribe_id=0,
+            title=str(target.get("name") or title),
+            candidate_title=title,
+            target=target,
+            added=applied.get("added") or [],
+            source=source,
+            status=status,
+            message=message,
+        )
+        record["mode"] = mode
+        record["rule"] = rule
+        record["total_count"] = applied.get("total_count")
+        record["recheck"] = recheck
+        if reason:
+            record["reason"] = reason
+        self._ensure_store().append_identifier_record(record)
+        return {"success": success, "message": message, "reason": reason, "data": record}
+
+    def _record_identifier_tool_failure(
+        self,
+        title: str,
+        target: Dict[str, Any],
+        message: str,
+        reason: str,
+        source: str,
+        mode: str,
+    ) -> Dict[str, Any]:
+        record = build_identifier_record(
+            subscribe_id=0,
+            title=str((target or {}).get("name") or title or ""),
+            candidate_title=title,
+            target=target or {},
+            added=[],
+            source=source,
+            status="failed",
+            message=message,
+        )
+        record["mode"] = mode
+        record["reason"] = reason
+        self._ensure_store().append_identifier_record(record)
+        return {"success": False, "message": message, "reason": reason, "data": record}
+
+    @staticmethod
+    def _parse_season_episode_from_title(title: str) -> Tuple[int, int]:
+        text = str(title or "")
+        match = re.search(r"(?i)\bS(\d{1,2})E(\d{1,4})\b", text)
+        if match:
+            return safe_int(match.group(1), 0), safe_int(match.group(2), 0)
+        match = re.search(r"(?i)\bS(\d{1,2})\b", text)
+        if match:
+            return safe_int(match.group(1), 0), 0
+        return 0, 0
+
+    @staticmethod
+    def _format_episode_number(episode: int) -> str:
+        return f"E{episode:02d}" if episode else ""
+
+    @classmethod
+    def _format_episode_summary(cls, episodes: List[Any]) -> str:
+        values: List[str] = []
+        for raw in episodes or []:
+            if isinstance(raw, dict):
+                episode = safe_int(raw.get("episode"), 0)
+            else:
+                episode = safe_int(getattr(raw, "episode", 0), 0)
+            label = cls._format_episode_number(episode)
+            if label and label not in values:
+                values.append(label)
+        return "/".join(values)
+
+    @classmethod
+    def _format_download_log_context(
+        cls,
+        title: str,
+        subscribe_id: int = 0,
+        tmdbid: int = 0,
+        season: int = 0,
+        episodes: Optional[List[Any]] = None,
+    ) -> str:
+        fields = [f"剧名={str(title or '').strip() or '未知'}"]
+        if subscribe_id:
+            fields.append(f"订阅ID={subscribe_id}")
+        if tmdbid:
+            fields.append(f"TMDB={tmdbid}")
+        if season:
+            fields.append(f"S{season:02d}")
+        episode_summary = cls._format_episode_summary(episodes or [])
+        if episode_summary:
+            fields.append(f"缺失={episode_summary}")
+        return "，".join(fields)
+
+    @classmethod
+    def _format_item_log_context(cls, item: DiagnosisInput) -> str:
+        return cls._format_download_log_context(
+            title=item.title,
+            subscribe_id=safe_int(item.subscribe_id, 0),
+            tmdbid=safe_int(item.tmdbid, 0),
+            season=safe_int(item.season, 0),
+            episodes=list(item.episodes or []),
+        )
+
+    @classmethod
+    def _format_diagnosis_log_context(cls, diagnosis: Dict[str, Any], candidate: Optional[Dict[str, Any]] = None) -> str:
+        episodes = list(diagnosis.get("episodes") or [])
+        if candidate and safe_int(candidate.get("episode"), 0):
+            episodes.append(candidate)
+        return cls._format_download_log_context(
+            title=str(diagnosis.get("title") or ""),
+            subscribe_id=safe_int(diagnosis.get("subscribe_id"), 0),
+            tmdbid=safe_int(diagnosis.get("tmdbid") or diagnosis.get("tmdb_id"), 0),
+            season=safe_int((candidate or {}).get("season") or diagnosis.get("season"), 0),
+            episodes=episodes,
+        )
+
+    def _record_identifier_failure(
+        self,
+        diagnosis: Dict[str, Any],
+        candidate: Dict[str, Any],
+        target: Dict[str, Any],
+        message: str,
+        reason: str,
+        source: str,
+    ) -> Dict[str, Any]:
+        record = build_identifier_record(
+            subscribe_id=safe_int(diagnosis.get("subscribe_id"), 0),
+            title=str(diagnosis.get("title") or target.get("name") or ""),
+            candidate_title=str(candidate.get("title") or ""),
+            target=target,
+            added=[],
+            source=source,
+            status="failed",
+            message=message,
+        )
+        record["reason"] = reason
+        self._ensure_store().append_identifier_record(record)
+        return {"success": False, "message": message, "reason": reason, "data": record}
+
+    def _resolve_diagnosis_payload(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        diagnosis = payload.get("diagnosis")
+        if isinstance(diagnosis, dict):
+            return diagnosis
+        subscribe_id = safe_int(payload.get("subscribe_id"), 0)
+        tmdbid = safe_int(payload.get("tmdbid"), 0)
+        for item in self._ensure_store().load_scan_results():
+            if subscribe_id and safe_int(item.get("subscribe_id"), 0) == subscribe_id:
+                return item
+            if tmdbid and safe_int(item.get("tmdbid"), 0) == tmdbid:
+                return item
+        return {}
+
+    @staticmethod
+    def _resolve_candidate_payload(payload: Dict[str, Any], diagnosis: Dict[str, Any]) -> Dict[str, Any]:
+        candidate = payload.get("candidate")
+        if isinstance(candidate, dict):
+            return candidate
+        candidates = diagnosis.get("candidates") or []
+        candidate_id = str(payload.get("candidate_id") or "").strip()
+        if candidate_id:
+            for item in candidates:
+                if str(item.get("candidate_id") or item.get("download_payload") or "") == candidate_id:
+                    return item
+        index = safe_int(payload.get("candidate_index"), -1)
+        if 0 <= index < len(candidates):
+            return candidates[index]
+        if payload.get("candidate_title") or payload.get("title"):
+            return {"title": payload.get("candidate_title") or payload.get("title")}
+        return {}
+
+    @staticmethod
+    def _build_identifier_target(
+        payload: Dict[str, Any], diagnosis: Dict[str, Any], candidate: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        episodes = diagnosis.get("episodes") or []
+        first_episode = episodes[0] if episodes else {}
+        media_type = normalize_media_type(payload.get("media_type") or payload.get("type") or "tv")
+        return {
+            "name": str(payload.get("desired_name") or diagnosis.get("title") or "").strip(),
+            "year": str(payload.get("desired_year") or payload.get("year") or "").strip(),
+            "media_type": media_type,
+            "tmdbid": safe_int(payload.get("tmdbid") or payload.get("tmdb_id") or diagnosis.get("tmdbid"), 0),
+            "season": safe_int(payload.get("season") or candidate.get("season") or diagnosis.get("season"), 0),
+            "episode": safe_int(payload.get("episode") or candidate.get("episode") or first_episode.get("episode"), 0),
+        }
+
+    def _load_tmdb_target_summary(self, target: Dict[str, Any]) -> Dict[str, Any]:
+        tmdbid = safe_int(target.get("tmdbid"), 0)
+        media_type = normalize_media_type(target.get("media_type"))
+        if not tmdbid or media_type == "unknown":
+            return {"success": False, "message": "缺少 TMDB ID 或媒体类型"}
+        try:
+            try:
+                from app.chain.media import MediaChain
+            except Exception:
+                from app.chain import MediaChain
+
+            mtype = MediaType.TV
+            if media_type == "movie" and hasattr(MediaType, "MOVIE"):
+                mtype = MediaType.MOVIE
+            mediainfo = MediaChain().recognize_media(mtype=mtype, media_source=MediaSource.TMDB, media_id=str(tmdbid))
+            if not mediainfo:
+                return {"success": False, "message": "TMDB 没有查到可用数据"}
+            return {
+                "success": True,
+                "name": str(getattr(mediainfo, "title", "") or getattr(mediainfo, "name", "") or "").strip(),
+                "year": str(getattr(mediainfo, "year", "") or "").strip(),
+            }
+        except Exception as exc:
+            logger.warning(f"订阅下载增强校验 TMDB 目标失败 TMDB={tmdbid}: {exc}")
+            return {"success": False, "message": f"TMDB 校验失败：{exc}"}
+
+    @staticmethod
+    def _run_coro_sync(coro: Any) -> Any:
+        """同步执行协程，兼容当前线程已存在运行中事件循环的情况。
+
+        asyncio.run 在已有运行中的事件循环里会抛 RuntimeError；此时
+        loop.run_until_complete 同样会因为循环正在运行而失败，因此改用独立
+        线程运行 asyncio.run，避免 "event loop is already running"。
+        """
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            # 当前线程没有运行中的事件循环，直接同步执行
+            return asyncio.run(coro)
+        # 已在运行中的事件循环里，切换到独立线程执行，避免阻塞/报错
+        import concurrent.futures
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            return executor.submit(lambda: asyncio.run(coro)).result()
+
+    @classmethod
+    def _get_llm_sync(cls):
+        """获取可同步调用的 LLM 实例。
+
+        兼容 app.helper.llm 与 app.agent.llm 两个导入路径，并在 get_llm
+        返回协程时安全地同步等待其结果。
+        """
+        try:
+            from app.agent.llm import LLMHelper
+        except Exception:
+            try:
+                from app.agent.llm import LLMHelper
+            except Exception as exc:
+                raise RuntimeError("AI 未配置或 LLMHelper 不可用") from exc
+
+        llm = LLMHelper.get_llm(streaming=False)
+        if hasattr(llm, "__await__"):
+            llm = cls._run_coro_sync(llm)
+        return llm
+
+    def _identify_target_by_ai(self, title: str) -> Dict[str, Any]:
+        llm = self._get_llm_sync()
+        prompt = "\n".join(
+            [
+                "你是 MoviePilot 媒体识别助手。",
+                "请根据媒体文件名判断目标媒体，并只输出 JSON。",
+                "JSON 字段：media_type 只能是 tv 或 movie；tmdbid 必须是 TMDB 数字 ID；name/year/season/episode 可选。",
+                "不要输出 markdown，不要解释。",
+                f"媒体文件名：{title}",
+            ]
+        )
+        response = llm.invoke(prompt)
+        content = str(getattr(response, "content", response) or "").strip()
+        start = content.find("{")
+        end = content.rfind("}")
+        if start >= 0 and end > start:
+            content = content[start : end + 1]
+        try:
+            data = json.loads(content)
+        except Exception as exc:
+            raise RuntimeError("AI 返回不是可解析 JSON") from exc
+        return {
+            "media_type": normalize_media_type(data.get("media_type") or data.get("type")),
+            "tmdbid": safe_int(data.get("tmdbid") or data.get("tmdb_id"), 0),
+            "name": str(data.get("name") or data.get("title") or "").strip(),
+            "year": str(data.get("year") or "").strip(),
+            "season": safe_int(data.get("season"), 0),
+            "episode": safe_int(data.get("episode"), 0),
+        }
+
+    def _recognize_identifier_title(self, title: str, target: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            try:
+                from app.chain.media import MediaChain
+            except Exception:
+                from app.chain import MediaChain
+            from app.sdk.media import MetaInfo
+
+            meta = MetaInfo(title)
+            mediainfo = MediaChain().recognize_media(meta=meta, cache=False)
+            recognized_tmdbid = safe_int(
+                getattr(mediainfo, "tmdb_id", None) or getattr(mediainfo, "tmdbid", None),
+                0,
+            ) if mediainfo else 0
+            target_tmdbid = safe_int(target.get("tmdbid"), 0)
+            matched = bool(recognized_tmdbid and recognized_tmdbid == target_tmdbid)
+            return {
+                "success": matched,
+                "message": "再次识别成功" if matched else "再次识别未命中目标 TMDB",
+                "recognized_title": getattr(mediainfo, "title", "") if mediainfo else "",
+                "tmdbid": recognized_tmdbid,
+            }
+        except Exception as exc:
+            return {"success": False, "message": f"再次识别失败：{exc}", "reason": "recognize_failed"}
+
+    def _suggest_identifier_lines_by_ai(self, title: str, target: Dict[str, Any]) -> List[str]:
+        llm = self._get_llm_sync()
+        prompt = "\n".join(
+            [
+                "你是 MoviePilot 自定义识别词规则助手。",
+                "请根据原始标题和目标信息生成 1 组尽量窄作用域、可直接用于 CustomIdentifiers 的规则。",
+                "只输出规则行，不要 markdown。",
+                "支持格式：屏蔽词；被替换词 => 替换词；前定位词 <> 后定位词 >> EP±N；组合规则。",
+                "运算符两侧必须保留空格： => 、 <> 、 >> 、 && 。",
+                "可使用强制 TMDB：{[tmdbid=xxx;type=tv/movie;s=1;e=1]}。",
+                f"原始标题：{title}",
+                f"目标：{target}",
+            ]
+        )
+        response = llm.invoke(prompt)
+        content = getattr(response, "content", response)
+        lines = []
+        for raw in str(content or "").replace("```text", "```").splitlines():
+            line = raw.strip().strip("`")
+            if not line or line.lower().startswith(("```", "规则", "说明")):
+                continue
+            normalized = normalize_identifier_line(line)
+            if normalized:
+                lines.append(normalized)
+        return lines
+
+    def _append_custom_identifiers(self, lines: List[str]) -> Dict[str, Any]:
+        from app.db.systemconfig_oper import SystemConfigOper
+
+        oper = SystemConfigOper()
+        key = getattr(SystemConfigKey, "CustomIdentifiers", "CustomIdentifiers")
+        existing = oper.get(key) or []
+        existing = self._flatten_words(existing)
+        added = dedupe_identifier_blocks(existing, lines)
+        if added:
+            oper.set(key, added + existing)
+            try:
+                refresh_identifier_runtime_cache()
+            except Exception as exc:
+                logger.warning(f"订阅下载增强刷新识别词缓存失败: {exc}")
+        return {"added": added, "total_count": len(existing) + len(added)}
+
+    def _retry_identifier_recognition(self, diagnosis: Dict[str, Any]) -> Dict[str, Any]:
+        candidates = diagnosis.get("candidates") or []
+        candidate = candidates[0] if candidates else {}
+        title = str(candidate.get("title") or diagnosis.get("title") or "").strip()
+        if not title:
+            return {"success": False, "message": "没有可再次识别的标题", "reason": "missing_title"}
+        try:
+            try:
+                from app.chain.media import MediaChain
+            except Exception:
+                from app.chain import MediaChain
+            from app.sdk.media import MetaInfo
+
+            meta = MetaInfo(title)
+            mediainfo = MediaChain().recognize_media(meta=meta, cache=False)
+            matched = bool(mediainfo and safe_int(getattr(mediainfo, "tmdb_id", 0), 0) == safe_int(diagnosis.get("tmdbid"), 0))
+            return {
+                "success": matched,
+                "message": "再次识别成功" if matched else "再次识别仍未命中目标 TMDB",
+                "data": {"added": [], "recognized_title": getattr(mediainfo, "title", "") if mediainfo else ""},
+            }
+        except Exception as exc:
+            return {"success": False, "message": f"再次识别失败：{exc}", "reason": "recognize_failed"}
+
+    def _start_moviepilot_subscribe_search(self, diagnosis: Dict[str, Any]) -> Dict[str, Any]:
+        subscribe_id = safe_int(diagnosis.get("subscribe_id"), 0)
+        if not subscribe_id:
+            return {"success": False, "message": "缺少订阅 ID，无法触发 MP 原生订阅搜索"}
+        try:
+            from app.scheduler import Scheduler
+
+            Scheduler().start(
+                job_id="subscribe_search",
+                sid=subscribe_id,
+                state=None,
+                manual=True,
+            )
+            logger.info(
+                "订阅下载增强触发 MP 原生订阅搜索成功："
+                f"{self._format_diagnosis_log_context(diagnosis)}"
+            )
+            return {
+                "success": True,
+                "message": f"已触发 MP 原生订阅搜索：{diagnosis.get('title') or subscribe_id}",
+            }
+        except Exception as exc:
+            log_exception = getattr(logger, "exception", None)
+            if callable(log_exception):
+                log_exception("订阅下载增强触发 MP 原生订阅搜索失败")
+            else:
+                logger.warning(f"订阅下载增强触发 MP 原生订阅搜索失败: {exc}")
+            return {"success": False, "message": f"触发 MP 原生订阅搜索失败：{exc}"}
+
+    def _download_candidate(self, diagnosis: Dict[str, Any], index: int, event_data: Optional[Dict[str, Any]] = None):
+        event_data = event_data or {}
+        candidates = diagnosis.get("candidates") or []
+        if not (0 <= index < len(candidates)):
+            self._post_callback_message(event_data, title="订阅下载增强", text="候选资源不存在。", save_history=False)
+            return
+        candidate = candidates[index]
+        candidate_id = candidate.get("download_payload") or candidate.get("candidate_id")
+        context = self._download_contexts.get(str(candidate_id))
+        from_cache = False
+        if not context:
+            # 内存上下文丢失（如插件重载/重启），尝试从本地缓存重建
+            try:
+                cached = self._ensure_store().load_candidate_cache(str(candidate_id))
+                if cached:
+                    context = self._rebuild_context_from_cache(cached)
+                    from_cache = bool(context)
+            except Exception as exc:
+                logger.warning(f"订阅下载增强读取候选缓存失败: {exc}")
+        if not context:
+            result = self._start_moviepilot_subscribe_search(diagnosis)
+            text = result.get("message") or "已触发 MP 原生订阅搜索"
+            if result.get("success"):
+                text = f"候选下载上下文已失效，{text}"
+            else:
+                text = f"候选下载上下文已失效，且{text}"
+            self._post_callback_message(event_data, title="订阅下载增强", text=text, save_history=False)
+            return
+        try:
+            from app.chain.download import DownloadChain
+
+            DownloadChain().download_single(context=context, username=PLUGIN_ID)
+            logger.info(
+                "订阅下载增强提交候选资源下载成功："
+                f"{self._format_diagnosis_log_context(diagnosis, candidate)}，"
+                f"站点={candidate.get('site_name') or candidate.get('site') or '未知'}，"
+                f"候选={candidate.get('title') or candidate_id or '未知'}，"
+                f"来源={'本地缓存重建' if from_cache else '内存上下文'}"
+            )
+            done_text = "已提交下载任务（缓存重建）。" if from_cache else "已提交下载任务。"
+            self._post_callback_message(event_data, title="订阅下载增强", text=done_text, save_history=False)
+        except Exception as exc:
+            log_exception = getattr(logger, "exception", None)
+            if callable(log_exception):
+                log_exception("订阅下载增强提交候选资源下载失败")
+            else:
+                logger.warning(f"订阅下载增强提交候选资源下载失败: {exc}")
+            self._post_callback_message(event_data, title="订阅下载增强", text=f"提交下载失败：{exc}", save_history=False)
+
+    def _delete_callback_message(self, event_data: Dict[str, Any]) -> bool:
+        try:
+            channel = event_data.get("channel")
+            source = event_data.get("source")
+            message_id = event_data.get("original_message_id") or event_data.get("message_id")
+            chat_id = event_data.get("original_chat_id") or event_data.get("chat_id")
+            if not message_id or not chat_id:
+                return False
+            chain = getattr(self, "chain", None)
+            if not chain or not hasattr(chain, "delete_message"):
+                return False
+            chain.delete_message(channel, source, message_id, chat_id)
+            return True
+        except Exception as exc:
+            logger.warning(f"订阅下载增强删除 Telegram 消息失败: {exc}")
+            return False
+
+    def _handle_transfer_complete_cleanup(self, event):
+        config = getattr(self, "_plugin_config", PluginConfig.from_dict({}))
+        mode = normalize_cleanup_mode(getattr(config, "season_pack_cleanup", CLEANUP_OFF))
+        full_download = bool(getattr(config, "season_pack_full_download", False))
+        if mode == CLEANUP_OFF and not full_download:
+            return
+        event_data = getattr(event, "event_data", None) or {}
+        if not isinstance(event_data, dict):
+            return
+        history_id = safe_int(event_data.get("transfer_history_id"), 0)
+        if not history_id:
+            return
+
+        current = self._get_transfer_history_for_cleanup(history_id)
+        if not current:
+            return
+        self._attach_cleanup_torrent_name(current, event_data)
+        total_episode = self._resolve_total_episode_for_cleanup(current, event_data)
+        subscribe_completed = self._resolve_subscribe_completed_for_cleanup(current, event_data, total_episode)
+        match = build_season_pack_match(current, total_episode, subscribe_completed=subscribe_completed)
+        if not match.matched:
+            logger.info(
+                f"订阅下载增强全集最终集处理跳过：{self._cleanup_history_label(current)}，原因={match.reason}"
+            )
+            return
+
+        histories = self._load_transfer_histories_for_cleanup(current) if mode != CLEANUP_OFF else []
+        plan = build_cleanup_plan(
+            current=current,
+            histories=histories,
+            total_episode=total_episode,
+            mode=mode,
+            subscribe_completed=subscribe_completed,
+        )
+        download_result = None
+        if full_download:
+            download_result = self._ensure_season_pack_full_download(current, event_data)
+
+        if mode != CLEANUP_OFF and not plan.should_cleanup:
+            logger.info(
+                f"订阅下载增强全集最终集清理跳过：{self._cleanup_history_label(current)}，原因={plan.reason}"
+            )
+
+        deleted, errors = [], []
+        for history in plan.histories:
+            try:
+                if self._delete_transfer_history_for_cleanup(history, delete_source=plan.delete_source):
+                    deleted.append(history)
+                else:
+                    errors.append(f"{self._cleanup_history_label(history)} 删除失败")
+            except Exception as exc:
+                errors.append(f"{self._cleanup_history_label(history)} {exc}")
+                logger.warning(f"订阅下载增强全集最终集清理失败：{self._cleanup_history_label(history)}，{exc}")
+        self._notify_season_cleanup(current, plan, deleted, errors, download_result=download_result)
+
+    def _ensure_season_pack_full_download(self, current, event_data: Dict[str, Any]) -> Dict[str, Any]:
+        download_hash = self._resolve_cleanup_download_hash(current, event_data)
+        if not download_hash:
+            return {"ok": False, "reason": "missing download hash", "file_count": 0}
+
+        downloader = self._resolve_cleanup_downloader_name(current, event_data)
+        try:
+            from app.sdk.services import DownloaderHelper
+
+            helper = DownloaderHelper()
+            if downloader:
+                service = helper.get_service(name=downloader, type_filter="qbittorrent")
+            else:
+                service = helper.get_service(type_filter="qbittorrent")
+            if isinstance(service, (list, tuple)):
+                service = service[0] if service else None
+            qbittorrent = getattr(service, "instance", None) or service
+            if not qbittorrent or not hasattr(qbittorrent, "get_files"):
+                return {
+                    "ok": False,
+                    "reason": "qBittorrent downloader not found",
+                    "file_count": 0,
+                    "downloader": downloader,
+                }
+
+            files = list(qbittorrent.get_files(download_hash) or [])
+            if len(files) <= 1:
+                logger.info(
+                    f"订阅下载增强跳过整季包全包下载：单文件种子非整季包，hash={download_hash}，files={len(files)}"
+                )
+                return {
+                    "ok": False,
+                    "reason": "single-file torrent, skip full download",
+                    "file_count": len(files),
+                    "downloader": downloader,
+                    "hash": download_hash,
+                }
+            file_ids = []
+            for position, fileitem in enumerate(files):
+                file_index = self._torrent_file_index(fileitem, position)
+                if file_index is not None:
+                    file_ids.append(str(file_index))
+            if not file_ids:
+                return {
+                    "ok": False,
+                    "reason": "torrent files not found",
+                    "file_count": 0,
+                    "downloader": downloader,
+                    "hash": download_hash,
+                }
+
+            joined_file_ids = "|".join(file_ids)
+            qbittorrent.set_files(torrent_hash=download_hash, file_ids=joined_file_ids, priority=1)
+            qbittorrent.start_torrents(download_hash)
+            logger.info(
+                f"订阅下载增强已将整季包 qB 文件全部设为下载：hash={download_hash}，files={len(file_ids)}"
+            )
+            return {
+                "ok": True,
+                "reason": "selected all files",
+                "file_count": len(file_ids),
+                "downloader": downloader,
+                "hash": download_hash,
+            }
+        except Exception as exc:
+            logger.warning(f"订阅下载增强设置整季包 qB 全包下载失败：hash={download_hash}，{exc}")
+            return {
+                "ok": False,
+                "reason": str(exc),
+                "file_count": 0,
+                "downloader": downloader,
+                "hash": download_hash,
+            }
+
+    @staticmethod
+    def _resolve_cleanup_download_hash(current, event_data: Dict[str, Any]) -> str:
+        return str(
+            getattr(current, "download_hash", "")
+            or event_data.get("download_hash")
+            or event_data.get("hash")
+            or ""
+        )
+
+    @classmethod
+    def _resolve_cleanup_downloader_name(cls, current, event_data: Dict[str, Any]) -> str:
+        sources = [event_data, current]
+        for key in ("download", "download_info", "torrent", "torrent_info", "transferinfo"):
+            value = event_data.get(key)
+            if value:
+                sources.append(value)
+        for source in sources:
+            value = cls._read_cleanup_value(source, "downloader", "downloader_name", "download_source")
+            if value:
+                return str(value)
+        return ""
+
+    @staticmethod
+    def _read_cleanup_value(source, *names: str):
+        for name in names:
+            if isinstance(source, dict):
+                value = source.get(name)
+            else:
+                value = getattr(source, name, None)
+            if value:
+                return value
+        return None
+
+    @classmethod
+    def _torrent_file_index(cls, fileitem, fallback: int) -> int:
+        value = cls._read_cleanup_value(fileitem, "index", "id")
+        if value is None:
+            return fallback
+        return safe_int(value, fallback)
+
+    def _get_transfer_history_for_cleanup(self, history_id: int):
+        try:
+            from app.db.transferhistory_oper import TransferHistoryOper
+
+            return TransferHistoryOper().get(history_id)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取整理记录失败：{history_id}，{exc}")
+            return None
+
+    def _attach_cleanup_torrent_name(self, history, event_data: Dict[str, Any]):
+        if not history or getattr(history, "_subscribeplus_torrent_name", None) or getattr(history, "torrent_name", None):
+            return
+
+        torrent_name = self._extract_cleanup_torrent_name_from_event(event_data)
+        if not torrent_name:
+            download_hash = str(getattr(history, "download_hash", "") or event_data.get("download_hash") or "")
+            if download_hash:
+                try:
+                    from app.db.models.downloadhistory import DownloadHistory
+                    from app.db.transferhistory_oper import TransferHistoryOper
+
+                    db = TransferHistoryOper()._db
+                    download = DownloadHistory.get_by_hash(db, download_hash)
+                    torrent_name = str(getattr(download, "torrent_name", "") or "")
+                except Exception as exc:
+                    logger.warning(f"订阅下载增强读取下载历史种子名失败：hash={download_hash}，{exc}")
+        if torrent_name:
+            setattr(history, "_subscribeplus_torrent_name", torrent_name)
+
+    @staticmethod
+    def _extract_cleanup_torrent_name_from_event(event_data: Dict[str, Any]) -> str:
+        if not isinstance(event_data, dict):
+            return ""
+        sources = [event_data]
+        for key in ("download", "download_info", "torrent", "torrent_info", "transferinfo"):
+            value = event_data.get(key)
+            if value:
+                sources.append(value)
+        for source in sources:
+            for attr in ("torrent_name", "torrentname"):
+                value = source.get(attr) if isinstance(source, dict) else getattr(source, attr, None)
+                if value:
+                    return str(value)
+        return ""
+
+    def _load_transfer_histories_for_cleanup(self, current) -> List[Any]:
+        try:
+            from app.db.transferhistory_oper import TransferHistoryOper
+
+            return TransferHistoryOper().get_by(
+                tmdbid=safe_int(getattr(current, "tmdbid", 0), 0),
+                mtype=MediaType.TV.value,
+                season=str(getattr(current, "seasons", "") or ""),
+            ) or []
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取同季整理记录失败：{self._cleanup_history_label(current)}，{exc}")
+            return []
+
+    def _resolve_total_episode_for_cleanup(self, current, event_data: Dict[str, Any]) -> int:
+        tmdbid = safe_int(getattr(current, "tmdbid", 0), 0)
+        season = parse_season_number(getattr(current, "seasons", None))
+        if not (tmdbid and season):
+            return 0
+        try:
+            from app.db.subscribe_oper import SubscribeOper
+
+            subscribes = SubscribeOper().list_by_tmdbid(tmdbid=tmdbid, season=season) or []
+            for subscribe in subscribes:
+                total = safe_int(getattr(subscribe, "total_episode", 0), 0)
+                if total:
+                    return total
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取订阅总集数失败：TMDB={tmdbid} S{season}，{exc}")
+
+        mediainfo = event_data.get("mediainfo")
+        for attr in ("total_episode", "episode_count", "episodes_count"):
+            total = safe_int(getattr(mediainfo, attr, 0), 0)
+            if total:
+                return total
+        return 0
+
+    def _resolve_subscribe_completed_for_cleanup(self, current, event_data: Dict[str, Any], total_episode: int) -> bool:
+        """判断该季订阅是否真正完结。
+
+        仅当能确认整季已完结时才返回 True，避免未完结剧集在“刚补到 TMDB
+        当前最后一集”时被误判为完结整季包。判定依据（满足其一即视为完结）：
+        - 存在活跃订阅且 lack_episode == 0（订阅已收齐本季全部集数）；
+        - 存在活跃订阅且其 total_episode 与已入库最新集吻合，且订阅状态为已完成('S')。
+        无法确认时返回 False（保守，不触发整季包清理/全包下载）。
+        """
+        tmdbid = safe_int(getattr(current, "tmdbid", 0), 0)
+        season = parse_season_number(getattr(current, "seasons", None))
+        if not (tmdbid and season):
+            return False
+        try:
+            from app.db.subscribe_oper import SubscribeOper
+
+            subscribes = SubscribeOper().list_by_tmdbid(tmdbid=tmdbid, season=season) or []
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取订阅完结状态失败：TMDB={tmdbid} S{season}，{exc}")
+            return False
+
+        for subscribe in subscribes:
+            state = str(getattr(subscribe, "state", "") or "").upper()
+            lack = safe_int(getattr(subscribe, "lack_episode", None), -1)
+            sub_total = safe_int(getattr(subscribe, "total_episode", 0), 0)
+            # 已完成订阅
+            if state in ("S", "C"):
+                return True
+            # 订阅已收齐（缺失为 0）且总集数确定
+            if lack == 0 and sub_total > 0:
+                return True
+        return False
+
+    def _delete_transfer_history_for_cleanup(self, history, delete_source: bool) -> bool:
+        from app import schemas
+        from app.chain.storage import StorageChain
+        from app.db.models.downloadhistory import DownloadFiles
+        from app.db.models.transferhistory import TransferHistory
+        from app.db.transferhistory_oper import TransferHistoryOper
+
+        history_oper = TransferHistoryOper()
+        if delete_source and getattr(history, "src_fileitem", None):
+            src_fileitem = schemas.FileItem(**getattr(history, "src_fileitem"))
+            state = StorageChain().delete_media_file(src_fileitem)
+            if not state:
+                logger.warning(f"订阅下载增强删除源文件失败：{getattr(src_fileitem, 'path', '')}")
+                return False
+            DownloadFiles.delete_by_fullpath(history_oper._db, Path(src_fileitem.path).as_posix())
+            download_file_deleted_event = getattr(EventType, "DownloadFileDeleted", None)
+            if eventmanager and download_file_deleted_event:
+                eventmanager.send_event(
+                    download_file_deleted_event,
+                    {"src": getattr(history, "src", None), "hash": getattr(history, "download_hash", None)},
+                )
+        TransferHistory.delete(history_oper._db, getattr(history, "id"))
+        return True
+
+    def _notify_season_cleanup_legacy(self, current, plan, deleted: List[Any], errors: List[str]):
+        config = getattr(self, "_plugin_config", PluginConfig.from_dict({}))
+        if not getattr(config, "notify_tg", True):
+            return
+        if not deleted and not errors:
+            return
+        title = getattr(current, "title", None) or getattr(current, "name", None) or "全集包清理"
+        lines = [
+            f"剧名：{title}",
+            "触发：最终集来自整季包，已处理旧整理记录",
+            f"模式：{'删除转移记录和源文件' if plan.delete_source else '仅删除转移记录'}",
+            f"集数：{', '.join('E%02d' % episode for episode in plan.episode_numbers) or '-'}",
+            f"成功：{len(deleted)} 条",
+        ]
+        if errors:
+            lines.append(f"失败：{len(errors)} 条")
+            lines.extend(errors[:5])
+        self.post_message(
+            mtype=NotificationType.Plugin if NotificationType else None,
+            title=self._notification_title(title),
+            text="\n".join(lines),
+            save_history=False,
+        )
+
+    def _notify_season_cleanup(
+        self,
+        current,
+        plan,
+        deleted: List[Any],
+        errors: List[str],
+        download_result: Optional[Dict[str, Any]] = None,
+    ):
+        config = getattr(self, "_plugin_config", PluginConfig.from_dict({}))
+        if not getattr(config, "notify_tg", True):
+            return
+        if not deleted and not errors and not download_result:
+            return
+
+        title = getattr(current, "title", None) or getattr(current, "name", None) or "全集包处理"
+        lines = [
+            f"剧名：{title}",
+            "触发：最终集来自整季包",
+        ]
+        if download_result:
+            if download_result.get("ok"):
+                lines.append(f"整季包下载：已在 qB 全选 {download_result.get('file_count', 0)} 个文件")
+            else:
+                lines.append(f"整季包下载：失败，{download_result.get('reason') or '未知原因'}")
+
+        if plan.mode != CLEANUP_OFF:
+            lines.extend(
+                [
+                    f"清理模式：{'删除转移记录和源文件' if plan.delete_source else '仅删除转移记录'}",
+                    f"旧记录集数：{', '.join('E%02d' % episode for episode in plan.episode_numbers) or '-'}",
+                    f"清理成功：{len(deleted)} 条",
+                ]
+            )
+        else:
+            lines.append("清理模式：关闭")
+
+        if errors:
+            lines.append(f"清理失败：{len(errors)} 条")
+            lines.extend(errors[:5])
+        self.post_message(
+            mtype=NotificationType.Plugin if NotificationType else None,
+            title=self._notification_title(title),
+            text="\n".join(lines),
+            save_history=False,
+        )
+
+    @staticmethod
+    def _cleanup_history_label(history) -> str:
+        title = getattr(history, "title", None) or getattr(history, "name", None) or "未知"
+        episodes = getattr(history, "episodes", None) or ""
+        history_id = getattr(history, "id", None)
+        return f"{title} {episodes}#{history_id}"
+
+    def _handle_sp_command_text(self, text: str, event_data: Dict[str, Any]):
+        store = self._ensure_store()
+        items = []
+        for item in self._prune_downloaded_scan_results():
+            ignore_key = self._ignore_key(item)
+            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
+                continue
+            items.append(item)
+
+        if not items:
+            self._post_callback_message(
+                event_data,
+                title="订阅下载增强",
+                text="当前没有待处理诊断结果。",
+                save_history=False,
+            )
+            return
+
+        menu_items = []
+        lines = [f"当前待处理诊断：{len(items)} 部"]
+        for item in items[:20]:
+            token = self._save_interaction(item)
+            menu_items.append((token, item))
+            episodes = item.get("episodes") or []
+            episode_text = "/".join(
+                f"E{safe_int(episode.get('episode'), 0):02d}"
+                for episode in episodes[:3]
+                if safe_int(episode.get("episode"), 0)
+            )
+            season = safe_int(item.get("season"), 0)
+            suffix = f" S{season:02d} {episode_text}" if season or episode_text else ""
+            lines.append(f"- {item.get('title') or '未命名'}{suffix}")
+        if len(items) > 20:
+            lines.append(f"... 还有 {len(items) - 20} 部未列出")
+
+        self._post_callback_message(
+            event_data,
+            title="订阅下载增强待处理诊断",
+            text="\n".join(lines),
+            buttons=build_pending_menu(menu_items),
+            save_history=False,
+        )
+
+    def _handle_ci_command_text(self, text: str, event_data: Dict[str, Any]):
+        raw = str(text or "").strip()
+        arg = raw[3:].strip() if raw.startswith("/ci") else raw
+        if not arg:
+            self._post_callback_message(event_data, title="自定义识别词", text="请发送：/ci 媒体文件名", save_history=False)
+            return
+
+        parts = arg.split()
+        if parts:
+            state = self._ensure_store().load_interaction(parts[0])
+            if state and state.get("view") == "ci_tool":
+                tmdbid = safe_int(parts[1] if len(parts) > 1 else None, 0)
+                if not tmdbid:
+                    self._post_callback_message(
+                        event_data,
+                        title="自定义识别词",
+                        text=f"请回复：/ci {parts[0]} TMDBID",
+                        save_history=False,
+                    )
+                    return
+                result = self._identifier_manual(
+                    {
+                        "title": state.get("title"),
+                        "media_type": state.get("manual_media_type") or "tv",
+                        "tmdbid": tmdbid,
+                    },
+                    source="telegram",
+                )
+                self._update_ci_state_after_result(parts[0], state, result)
+                self._post_callback_message(
+                    event_data,
+                    title="自定义识别词",
+                    text=render_identifier_fix_result_text(result),
+                    buttons=build_ci_done_menu(parts[0]),
+                    save_history=False,
+                )
+                return
+
+        if len(parts) >= 3 and parts[0].lower() in {"tv", "movie"} and safe_int(parts[1], 0):
+            title = " ".join(parts[2:]).strip()
+            token = self._save_ci_interaction(title)
+            result = self._identifier_manual(
+                {"title": title, "media_type": parts[0], "tmdbid": safe_int(parts[1], 0)},
+                source="telegram",
+            )
+            state = self._ensure_store().load_interaction(token) or {"view": "ci_tool", "title": title}
+            self._update_ci_state_after_result(token, state, result)
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=render_identifier_fix_result_text(result),
+                buttons=build_ci_done_menu(token),
+                save_history=False,
+            )
+            return
+
+        token = self._save_ci_interaction(arg)
+        self._post_callback_message(
+            event_data,
+            title="自定义识别词",
+            text=f"媒体文件名：{arg}",
+            buttons=build_ci_mode_menu(token),
+            save_history=False,
+        )
+
+    def _save_ci_interaction(self, title: str) -> str:
+        token = make_token({"ci": title, "created_at": datetime.now().isoformat(timespec="seconds")})
+        self._ensure_store().save_interaction(
+            token,
+            {
+                "view": "ci_tool",
+                "title": str(title or "").strip(),
+                "expires_at": (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds"),
+            },
+        )
+        return token
+
+    def _update_ci_state_after_result(self, token: str, state: Dict[str, Any], result: Dict[str, Any]):
+        data = result.get("data") or {}
+        if data.get("candidate_title"):
+            state["title"] = data.get("candidate_title")
+        if data.get("tmdbid"):
+            state["last_target"] = {
+                "tmdbid": data.get("tmdbid"),
+                "media_type": data.get("media_type"),
+                "season": data.get("season"),
+                "episode": data.get("episode"),
+                "name": data.get("title"),
+            }
+        self._ensure_store().save_interaction(token, state)
+
+    def _retry_ci_recognition(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        title = str(state.get("title") or "").strip()
+        target = state.get("last_target") or {}
+        if not title or not target.get("tmdbid"):
+            return {"success": False, "message": "没有可再次识别的记录", "reason": "missing_target", "data": {"added": []}}
+        recheck = self._recognize_identifier_title(title, target)
+        return {
+            "success": bool(recheck.get("success")),
+            "message": recheck.get("message") or "再次识别完成",
+            "reason": recheck.get("reason") or ("" if recheck.get("success") else "recognize_failed"),
+            "data": {"added": [], "recheck": recheck},
+        }
+
+    def _save_interaction(self, diagnosis: Dict[str, Any]) -> str:
+        token = make_token(
+            {
+                "subscribe_id": diagnosis.get("subscribe_id"),
+                "tmdbid": diagnosis.get("tmdbid"),
+                "season": diagnosis.get("season"),
+                "created_at": diagnosis.get("created_at"),
+            }
+        )
+        self._ensure_store().save_interaction(
+            token,
+            {
+                "view": "main",
+                "diagnosis": diagnosis,
+                "expires_at": (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds"),
+            },
+        )
+        return token
+
+    @staticmethod
+    def _ignore_key(item: Dict[str, Any]) -> str:
+        episodes = ",".join(str(episode.get("episode")) for episode in item.get("episodes") or [])
+        return f"{item.get('subscribe_id')}:{item.get('season')}:{episodes}"
+
+    def _refresh_scan_result_item(self, item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """按当前媒体库/整理历史复核单条诊断结果，剔除已入库的集。
+
+        返回值：仍有缺集时返回更新后的诊断项；全部已入库时返回 None。
+        """
+        tmdbid = safe_int(item.get("tmdbid"), 0)
+        season = safe_int(item.get("season"), 0)
+        episodes = item.get("episodes") or []
+        if not tmdbid or not season or not episodes:
+            return item
+        try:
+            downloaded = self._load_downloaded_episodes(tmdbid, season)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强复核已入库集失败: {exc}")
+            return item
+        if not downloaded:
+            return item
+        remaining = [ep for ep in episodes if safe_int(ep.get("episode"), 0) not in downloaded]
+        if not remaining:
+            return None
+        if len(remaining) == len(episodes):
+            return item
+        updated = dict(item)
+        updated["episodes"] = remaining
+        return updated
+
+    def _prune_downloaded_scan_results(self) -> List[Dict[str, Any]]:
+        """遍历诊断快照，剔除已入库的集与已完成的诊断项，并回写存储。"""
+        store = self._ensure_store()
+        results = store.load_scan_results()
+        if not results:
+            return results
+        refreshed: List[Dict[str, Any]] = []
+        changed = False
+        for item in results:
+            updated = self._refresh_scan_result_item(item)
+            if updated is None:
+                changed = True
+                continue
+            if updated is not item:
+                changed = True
+            refreshed.append(updated)
+        if changed:
+            store.replace_scan_results(refreshed)
+        return refreshed
+
+    def _load_subscribes(self) -> List[Any]:
+        try:
+            from app.db.subscribe_oper import SubscribeOper
+
+            return SubscribeOper().list() or []
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取订阅失败: {exc}")
+            return []
+
+    def _get_subscribe(self, subscribe_id: int) -> Any:
+        try:
+            from app.db.subscribe_oper import SubscribeOper
+
+            return SubscribeOper().get(subscribe_id)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取订阅 {subscribe_id} 失败: {exc}")
+            return None
+
+    def _update_subscribe(self, subscribe_id: int, payload: Dict[str, Any]) -> Dict[str, Any]:
+        from app.db.subscribe_oper import SubscribeOper
+
+        subscribe = SubscribeOper().update(subscribe_id, payload)
+        return {"id": subscribe_id, "updated": bool(subscribe)}
+
+    @staticmethod
+    def _flatten_words(value: Any) -> List[str]:
+        if value is None:
+            return []
+        if isinstance(value, str):
+            return [line.strip() for line in value.splitlines() if line.strip()]
+        if isinstance(value, dict):
+            words: List[str] = []
+            for item in value.values():
+                words.extend(SubscribePlus._flatten_words(item))
+            return words
+        if isinstance(value, (list, tuple, set)):
+            words = []
+            for item in value:
+                words.extend(SubscribePlus._flatten_words(item))
+            return words
+        return [str(value)]
+
+    def _load_custom_release_groups(self) -> List[str]:
+        words: List[str] = []
+        try:
+            from app.db.systemconfig_oper import SystemConfigOper
+
+            oper = SystemConfigOper()
+            for key in (
+                getattr(SystemConfigKey, "CustomIdentifiers", "CustomIdentifiers"),
+                getattr(SystemConfigKey, "CustomReleaseGroups", "CustomReleaseGroups"),
+                getattr(SystemConfigKey, "CustomWords", "CustomWords"),
+                getattr(SystemConfigKey, "ReleaseGroups", "ReleaseGroups"),
+            ):
+                try:
+                    words.extend(self._flatten_words(oper.get(key)))
+                except Exception:
+                    continue
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取自定义制作组词表失败: {exc}")
+        return extract_release_groups_from_words(words)
+
+    def _release_groups_for_diagnosis(self, diagnosis: Dict[str, Any]) -> List[str]:
+        groups = list(self._load_custom_release_groups())
+        subscribe_id = int(diagnosis.get("subscribe_id") or 0)
+        if subscribe_id:
+            subscribe = self._get_subscribe(subscribe_id)
+            if subscribe:
+                words: List[str] = []
+                for attr in ("custom_words", "custom_identifiers", "release_groups"):
+                    words.extend(self._flatten_words(getattr(subscribe, attr, None)))
+                groups.extend(extract_release_groups_from_words(words))
+
+        result: List[str] = []
+        seen = set()
+        for group in groups:
+            key = str(group or "").lower()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            result.append(str(group))
+        return result
+
+    def _load_moviepilot_search_sites(self) -> List[Dict[str, Any]]:
+        try:
+            indexers = []
+            try:
+                from app.sdk.network import SitesHelper
+
+                indexers = SitesHelper().get_indexers() or []
+            except Exception:
+                from app.db.site_oper import SiteOper
+
+                indexers = [
+                    {
+                        "id": getattr(site, "id", None),
+                        "name": getattr(site, "name", None),
+                        "is_active": getattr(site, "is_active", True),
+                    }
+                    for site in (SiteOper().list_active() or [])
+                ]
+            return self._normalize_indexer_sites(indexers)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取搜索站点失败: {exc}")
+            return []
+
+    @staticmethod
+    def _normalize_indexer_sites(indexers: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+        sites = []
+        for indexer in indexers or []:
+            if indexer.get("is_active") is False:
+                continue
+            site_id = indexer.get("id", indexer.get("value"))
+            if site_id in (None, ""):
+                continue
+            site_id = str(site_id)
+            sites.append({"id": site_id, "name": str(indexer.get("name") or indexer.get("title") or site_id)})
+        return sites
+
+    def _load_tv_categories(self) -> List[str]:
+        try:
+            try:
+                from app.chain.media import MediaChain
+            except Exception:
+                from app.chain import MediaChain
+
+            raw_categories = (MediaChain().media_category() or {}).get(MediaType.TV.value) or []
+            categories = []
+            for item in raw_categories:
+                if isinstance(item, dict):
+                    value = item.get("title") or item.get("name") or item.get("value")
+                else:
+                    value = item
+                if value:
+                    categories.append(str(value).strip())
+            return categories
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取二级分类策略失败: {exc}")
+            return []
+
+    @staticmethod
+    def _describe_subscribe(subscribe: Any) -> str:
+        title = str(getattr(subscribe, "name", "") or getattr(subscribe, "title", "") or "未知订阅").strip()
+        subscribe_id = getattr(subscribe, "id", None)
+        tmdbid = getattr(subscribe, "tmdbid", None)
+        parts = [title]
+        if subscribe_id:
+            parts.append(f"ID={subscribe_id}")
+        if tmdbid:
+            parts.append(f"TMDB={tmdbid}")
+        return " ".join(parts)
+
+    def _resolve_subscribe_category(self, subscribe: Any) -> Optional[str]:
+        tmdbid = int(getattr(subscribe, "tmdbid", 0) or 0)
+        if not tmdbid:
+            return None
+        subscribe_label = self._describe_subscribe(subscribe)
+        episode_group = getattr(subscribe, "episode_group", None) or ""
+        cache_key = f"{tmdbid}:{episode_group}"
+        if cache_key in self._category_cache:
+            return self._category_cache[cache_key]
+        try:
+            try:
+                from app.chain.media import MediaChain
+            except Exception:
+                from app.chain import MediaChain
+
+            mediainfo = MediaChain().recognize_media(
+                mtype=MediaType.TV,
+                media_source=MediaSource.TMDB,
+                media_id=str(tmdbid),
+                episode_group=episode_group or None,
+            )
+            category = str(getattr(mediainfo, "category", "") or "").strip()
+            if category:
+                self._category_cache[cache_key] = category
+                return category
+            logger.warning(f"订阅下载增强识别订阅分类未命中 {subscribe_label}")
+        except Exception as exc:
+            logger.warning(f"订阅下载增强识别订阅分类失败 {subscribe_label}: {exc}")
+        return None
+
+    def _load_tmdb_episodes(self, tmdbid: int, season: int, episode_group: Optional[str]) -> List[Dict[str, Any]]:
+        cache_key = f"{tmdbid}:{season}:{episode_group or ''}"
+        cached = self._ensure_store().load_tmdb_cache(cache_key)
+        if cached and cached.get("episodes"):
+            return cached["episodes"]
+        try:
+            from app.chain.tmdb import TmdbChain
+
+            episodes = TmdbChain().tmdb_episodes(tmdbid=tmdbid, season=season, episode_group=episode_group) or []
+            normalized = [
+                {
+                    "episode_number": getattr(episode, "episode_number", None) or getattr(episode, "episode", None),
+                    "air_date": str(getattr(episode, "air_date", "") or ""),
+                }
+                for episode in episodes
+            ]
+            self._ensure_store().save_tmdb_cache(
+                cache_key,
+                {"episodes": normalized, "updated_at": datetime.now().isoformat(timespec="seconds")},
+            )
+            return normalized
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取 TMDB 剧集失败 TMDB={tmdbid} S{season}: {exc}")
+            return []
+
+    @staticmethod
+    def _season_labels(season: int) -> List[str]:
+        value = safe_int(season, 0)
+        if not value:
+            return []
+        return list(dict.fromkeys([f"S{value:02d}", f"S{value}"]))
+
+    @staticmethod
+    def _history_status_ok(history: Any) -> bool:
+        return getattr(history, "status", True) is not False
+
+    @staticmethod
+    def _history_identity(history: Any) -> str:
+        return str(getattr(history, "id", None) or getattr(history, "dest", None) or id(history))
+
+    def _load_transfer_history_dicts(self, tmdbid: int, season: Optional[int] = None) -> List[Dict[str, Any]]:
+        from app.db.transferhistory_oper import TransferHistoryOper
+
+        oper = TransferHistoryOper()
+        histories = []
+        seen = set()
+
+        def add(items: List[Any]):
+            for history in items or []:
+                if not self._history_status_ok(history):
+                    continue
+                key = self._history_identity(history)
+                if key in seen:
+                    continue
+                seen.add(key)
+                histories.append(history)
+
+        if season:
+            for label in self._season_labels(season):
+                add(oper.get_by(tmdbid=tmdbid, mtype=MediaType.TV.value, season=label) or [])
+        if not histories:
+            add(oper.get_by(tmdbid=tmdbid, mtype=MediaType.TV.value) or [])
+
+        return [
+            {
+                "tmdbid": getattr(history, "tmdbid", None),
+                "season": getattr(history, "seasons", None),
+                "episodes": getattr(history, "episodes", None),
+            }
+            for history in histories
+        ]
+
+    def _is_episode_downloaded(self, tmdbid: int, season: int, episode: int) -> tuple[bool, str]:
+        try:
+            from app.db.mediaserver_oper import MediaServerOper
+
+            item = MediaServerOper().exists(tmdbid=tmdbid, mtype=MediaType.TV.value)
+            seasoninfo = getattr(item, "seasoninfo", None) if item else None
+            if episode_in_seasoninfo(seasoninfo, season, episode):
+                return True, "媒体库缓存已命中"
+        except Exception as exc:
+            logger.warning(f"订阅下载增强查询媒体库缓存失败: {exc}")
+
+        try:
+            history_dicts = self._load_transfer_history_dicts(tmdbid, season)
+            if episode_in_transfer_history(history_dicts, tmdbid, season, episode):
+                return True, "整理历史已命中"
+        except Exception as exc:
+            logger.warning(f"订阅下载增强查询整理历史失败: {exc}")
+
+        return False, "媒体库缓存和整理历史均未命中"
+
+    def _load_downloaded_episodes(self, tmdbid: int, season: int) -> set[int]:
+        episodes: set[int] = set()
+        try:
+            from app.db.mediaserver_oper import MediaServerOper
+
+            item = MediaServerOper().exists(tmdbid=tmdbid, mtype=MediaType.TV.value)
+            if item:
+                episodes.update(episodes_in_seasoninfo(getattr(item, "seasoninfo", None), season))
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取媒体库已下载集失败: {exc}")
+
+        try:
+            history_dicts = self._load_transfer_history_dicts(tmdbid, season)
+            episodes.update(episodes_in_transfer_history(history_dicts, tmdbid, season))
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取整理历史已下载集失败: {exc}")
+
+        return {episode for episode in episodes if episode > 0}
+
+    def _load_moviepilot_subscribe_sites(self, item: DiagnosisInput) -> List[str]:
+        try:
+            from app.chain.subscribe import SubscribeChain
+            from app.db.subscribe_oper import SubscribeOper
+
+            subscribe = SubscribeOper().get(safe_int(item.subscribe_id, 0))
+            if not subscribe:
+                return []
+            return [str(site) for site in (SubscribeChain.get_sub_sites(subscribe) or [])]
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取 MP 订阅搜索站点失败：{item.title}，{exc}")
+            return []
+
+    def _search_torrents(self, item: DiagnosisInput, sites: Optional[List[str]] = None) -> List[Dict[str, Any]]:
+        try:
+            from app.chain.search import SearchChain
+
+            search_sites = item.sites if sites is None else sites
+            site_ids = [int(site_id) for site_id in search_sites if str(site_id).isdigit()]
+            coro = SearchChain().async_search_by_id(
+                tmdbid=item.tmdbid,
+                mtype=MediaType.TV,
+                area="title",
+                season=item.season,
+                sites=site_ids or None,
+                cache_local=False,
+            )
+            try:
+                contexts = asyncio.run(coro)
+            except RuntimeError:
+                loop = asyncio.get_event_loop()
+                contexts = loop.run_until_complete(coro)
+
+            results = []
+            for context in contexts or []:
+                torrent = getattr(context, "torrent_info", context)
+                media_info = getattr(context, "media_info", None)
+                meta_info = getattr(context, "meta_info", None)
+                title = getattr(torrent, "title", None) or getattr(torrent, "name", None) or ""
+                episodes = list(getattr(meta_info, "episode_list", None) or [])
+                season_list = list(getattr(meta_info, "season_list", None) or [])
+                candidate_id = self._remember_download_context(context, item, title)
+                recognized = bool(
+                    getattr(context, "candidate_recognized", False)
+                    or (
+                        media_info
+                        and int(getattr(media_info, "tmdb_id", 0) or 0) == int(item.tmdbid)
+                    )
+                )
+                results.append(
+                    {
+                        "candidate_id": candidate_id,
+                        "site": str(getattr(torrent, "site", "") or ""),
+                        "site_name": getattr(torrent, "site_name", None),
+                        "title": title,
+                        "recognized": recognized,
+                        "season": season_list[0] if season_list else item.season,
+                        "episode": episodes[0] if episodes else 0,
+                        "episodes": episodes,
+                        "seeders": getattr(torrent, "seeders", 0),
+                        "size": getattr(torrent, "size", ""),
+                        "free": bool(getattr(torrent, "downloadvolumefactor", None) == 0),
+                        "download_payload": candidate_id,
+                    }
+                )
+            return results
+        except Exception as exc:
+            logger.warning(f"订阅下载增强搜索 PT 资源失败: {exc}")
+            return []
+
+    def _context_to_candidate(self, context: Any, item: DiagnosisInput) -> Dict[str, Any]:
+        torrent = getattr(context, "torrent_info", context)
+        media_info = getattr(context, "media_info", None)
+        meta_info = getattr(context, "meta_info", None)
+        title = getattr(torrent, "title", None) or getattr(torrent, "name", None) or ""
+        episodes = list(getattr(meta_info, "episode_list", None) or [])
+        season_list = list(getattr(meta_info, "season_list", None) or [])
+        candidate_id = self._remember_download_context(context, item, title)
+        tmdb_id = safe_int(getattr(media_info, "tmdb_id", None), 0) if media_info else 0
+        recognized = bool(
+            getattr(context, "candidate_recognized", False)
+            or getattr(context, "media_info_is_target", False)
+            or (tmdb_id and tmdb_id == int(item.tmdbid or 0))
+        )
+        download_factor = getattr(torrent, "downloadvolumefactor", None)
+        volume_factor = getattr(torrent, "volume_factor", None)
+        if not volume_factor and download_factor is not None:
+            try:
+                if float(download_factor) == 0:
+                    volume_factor = "Free"
+                elif float(download_factor) < 1:
+                    volume_factor = f"{int(float(download_factor) * 100)}%"
+            except (TypeError, ValueError):
+                volume_factor = ""
+        return {
+            "candidate_id": candidate_id,
+            "site": str(getattr(torrent, "site", "") or ""),
+            "site_name": getattr(torrent, "site_name", None),
+            "title": title,
+            "recognized": recognized,
+            "season": season_list[0] if season_list else item.season,
+            "episode": episodes[0] if episodes else 0,
+            "episodes": episodes,
+            "seeders": getattr(torrent, "seeders", 0),
+            "peers": getattr(torrent, "peers", 0),
+            "grabs": getattr(torrent, "grabs", 0),
+            "size": getattr(torrent, "size", ""),
+            "description": getattr(torrent, "description", "") or "",
+            "pubdate": getattr(torrent, "pubdate", "") or "",
+            "date_elapsed": getattr(torrent, "date_elapsed", "") or "",
+            "freedate": getattr(torrent, "freedate", "") or "",
+            "freedate_diff": getattr(torrent, "freedate_diff", "") or "",
+            "volume_factor": volume_factor or "",
+            "uploadvolumefactor": getattr(torrent, "uploadvolumefactor", None),
+            "downloadvolumefactor": download_factor,
+            "labels": list(getattr(torrent, "labels", None) or []),
+            "page_url": getattr(torrent, "page_url", "") or "",
+            "enclosure": getattr(torrent, "enclosure", "") or "",
+            "free": bool(download_factor == 0),
+            "download_payload": candidate_id,
+        }
+
+    def _remember_download_context(self, context: Any, item: DiagnosisInput, title: str) -> str:
+        raw = f"{item.subscribe_id}:{item.tmdbid}:{item.season}:{title}:{len(self._download_contexts)}"
+        candidate_id = hashlib.sha1(raw.encode("utf-8")).hexdigest()[:12]
+        self._download_contexts[candidate_id] = context
+        if len(self._download_contexts) > 300:
+            for old_key in list(self._download_contexts.keys())[:100]:
+                self._download_contexts.pop(old_key, None)
+        # 持久化候选下载所需的最小字段，供内存上下文丢失后重建下载
+        try:
+            self._save_candidate_download_cache(candidate_id, context, item, title)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强缓存候选下载信息失败: {exc}")
+        return candidate_id
+
+    def _save_candidate_download_cache(self, candidate_id: str, context: Any, item: DiagnosisInput, title: str):
+        config = getattr(self, "_plugin_config", None)
+        cache_days = int(getattr(config, "candidate_cache_days", 3) or 0)
+        if cache_days <= 0:
+            return
+        torrent = getattr(context, "torrent_info", context)
+        meta_info = getattr(context, "meta_info", None)
+        payload = {
+            "candidate_id": candidate_id,
+            "subscribe_id": int(getattr(item, "subscribe_id", 0) or 0),
+            "tmdbid": int(getattr(item, "tmdbid", 0) or 0),
+            "season": int(getattr(item, "season", 0) or 0),
+            "title": title or getattr(torrent, "title", "") or "",
+            "site": getattr(torrent, "site", None),
+            "site_name": getattr(torrent, "site_name", None),
+            "enclosure": getattr(torrent, "enclosure", "") or "",
+            "page_url": getattr(torrent, "page_url", "") or "",
+            "size": getattr(torrent, "size", "") or "",
+            "seeders": getattr(torrent, "seeders", 0),
+            "pubdate": getattr(torrent, "pubdate", "") or "",
+            "description": getattr(torrent, "description", "") or "",
+            "imdbid": getattr(torrent, "imdbid", "") or "",
+            "episodes": list(getattr(meta_info, "episode_list", None) or []),
+            "cached_at": datetime.now().isoformat(timespec="seconds"),
+            "expires_at": (datetime.now() + timedelta(days=cache_days)).isoformat(timespec="seconds"),
+        }
+        if not payload["enclosure"]:
+            # 没有种子直链无法重建下载，跳过缓存
+            return
+        self._ensure_store().save_candidate_cache(candidate_id, payload)
+
+    def _rebuild_context_from_cache(self, cached: Dict[str, Any]) -> Any:
+        """用缓存的最小字段重建下载 Context。"""
+        from app.sdk.media import Context, TorrentInfo
+        from app.sdk.media import MetaInfo
+
+        title = str(cached.get("title") or "")
+        if not cached.get("enclosure"):
+            return None
+        torrent = TorrentInfo()
+        torrent.title = title
+        torrent.enclosure = cached.get("enclosure") or ""
+        torrent.page_url = cached.get("page_url") or ""
+        torrent.site = cached.get("site")
+        torrent.site_name = cached.get("site_name")
+        torrent.size = cached.get("size") or 0
+        torrent.seeders = cached.get("seeders") or 0
+        torrent.pubdate = cached.get("pubdate") or ""
+        torrent.description = cached.get("description") or ""
+        try:
+            torrent.imdbid = cached.get("imdbid") or ""
+        except Exception:
+            pass
+        meta = MetaInfo(title)
+        media = None
+        try:
+            if cached.get("tmdbid"):
+                from app.schemas.types import MediaType
+
+                try:
+                    from app.chain.media import MediaChain
+                except Exception:
+                    from app.chain import MediaChain
+                media = MediaChain().recognize_media(
+                    meta=meta, media_source=MediaSource.TMDB, media_id=str(int(cached.get("tmdbid"))), mtype=MediaType.TV, cache=True
+                )
+        except Exception as exc:
+            logger.warning(f"订阅下载增强重建候选媒体信息失败，将按种子信息下载: {exc}")
+        context = Context(meta_info=meta, media_info=media, torrent_info=torrent)
+        return context
+
+    @staticmethod
+    def _extract_payload(payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+        if not payload:
+            return {}
+        if isinstance(payload, dict):
+            return payload
+        return {}
+
+    def _ensure_store(self) -> JsonStore:
+        if not self._store:
+            self._store = JsonStore(self.get_data_path(PLUGIN_ID))
+        return self._store
+
+    def _ensure_site_resolver(self) -> SiteResolver:
+        if not self._site_resolver:
+            self._site_resolver = SiteResolver(self._load_moviepilot_search_sites)
+        return self._site_resolver
+
+    def _ensure_scanner(self) -> SubscriptionScanner:
+        if not self._scanner:
+            self._scanner = SubscriptionScanner(
+                self._load_subscribes,
+                self._load_tmdb_episodes,
+                self._is_episode_downloaded,
+                load_categories=self._load_tv_categories,
+                resolve_subscribe_category=self._resolve_subscribe_category,
+                load_downloaded_episodes=self._load_downloaded_episodes,
+            )
+        return self._scanner
+
+    def _ensure_diagnoser(self) -> TorrentDiagnoser:
+        if not self._diagnoser:
+            self._diagnoser = TorrentDiagnoser(self._search_torrents)
+        return self._diagnoser
