@@ -84,5 +84,25 @@
       "v1.4.1": "bugfix",
       "v1.4": "domain mapping and unused tag cleanup"
     }
+  },
+  "PlexToolbox": {
+    "name": "PLEX 工具箱",
+    "description": "Plex 302 反向代理 + STRM 媒体流信息补全（Emby 数据源写入 Plex 库）。",
+    "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
+    "version": "0.7.3",
+    "author": "shyblacktea,MoviePilot助手",
+    "level": 1,
+    "v2": true,
+    "release": true,
+    "history": {
+      "0.7.3": "fix: 修复播放队列复用时播前补全不触发；补充媒体 Part 到 ratingKey 的缓存兜底；移除弹窗固定高度限制。",
+      "0.7.2": "fix: 修复播前补全结果未正确持久化和展示剧集信息。",
+      "0.7.1": "feat: 配置页和数据页统一为五个功能 Tab，新增播前补全、运行概况和 Helper 健康检查。",
+      "0.7.0": "feat: 新增播前媒体流信息补全，覆盖继续观看和直接起播场景。",
+      "0.6.0": "feat: 新增补全结果清理；优化反代稳定性和连接池配置。",
+      "0.5.0": "feat: 新增目录匹配、刮削辅助和缺封面扫描。",
+      "0.4.0": "feat: 新增媒体流信息自动补全、定时补全和播放停止后增量补全。",
+      "0.3.0": "feat: 由 Plex302ReverseProxy 改造为 PLEX 工具箱，新增 STRM 媒体流信息补全和 Vue 配置详情页。"
+    }
   }
 }
