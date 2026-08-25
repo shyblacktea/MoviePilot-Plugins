@@ -84,17 +84,5 @@
       "v1.4.1": "bugfix",
       "v1.4": "domain mapping and unused tag cleanup"
     }
-  },
-  "P115StrmHelper": {
-    "name": "115网盘STRM助手",
-    "description": "115网盘STRM生成一条龙服务",
-    "version": "3.2.0",
-    "author": "DDSRem",
-    "level": 1,
-    "v2": true,
-    "release": true,
-    "history": {
-      "3.2.0": "适配 MoviePilot v3.0.0 / Python 3.14，补齐 full_strm_sync / txt_tree_storage / share_strm_scan 的 cp314 wheel"
-    }
   }
 }
