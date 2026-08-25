@@ -1,4 +1,17 @@
 {
+  "ManualSubscribeAssistantMod": {
+    "name": "手动订阅助手魔改版",
+    "description": "抓取 Mikan 季番并识别 Bangumi/TMDB，由用户点击后手动创建 MoviePilot 订阅，不运行后台自动订阅。",
+    "icon": "https://raw.githubusercontent.com/Aqr-K/MoviePilot-Plugins/main/icons/Auto_Subscribe_Assistant.png",
+    "version": "0.0.1",
+    "author": "shyblacktea（基于 Aqr-K）",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "0.0.1": "feat: 基于自动订阅助手改造成 MoviePilot V3 手动订阅工具；支持 Mikan 季番抓取、Bangumi/TMDB 跳转与识别，只有用户点击候选项后才创建订阅。"
+    }
+  },
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
