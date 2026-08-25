@@ -104,5 +104,20 @@
       "0.4.0": "feat: 新增媒体流信息自动补全、定时补全和播放停止后增量补全。",
       "0.3.0": "feat: 由 Plex302ReverseProxy 改造为 PLEX 工具箱，新增 STRM 媒体流信息补全和 Vue 配置详情页。"
     }
+  },
+  "Plex302ReverseProxy": {
+    "name": "PLEX 302 反向代理",
+    "description": "Plex 302 反向代理，自动代理 HTTP 链接，跳转最终地址，支持 STRM 与路径规则直链。",
+    "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
+    "version": "0.2.1",
+    "author": "shyblacktea",
+    "level": 1,
+    "v2": true,
+    "release": false,
+    "history": {
+      "0.2.1": "fix: 优化起播速度，增加相同播放请求的 single-flight 合并，并收敛起播关键路径超时。",
+      "0.2.0": "fix: 修复 Plex 官方客户端 STRM 播放，补齐 .mpd / .m3u8 转码路由。",
+      "0.1.0": "feat: 初始支持 Plex 播放/下载流 302 直链、STRM 解析、顶置路径规则、强制 DirectPlay 和 WebSocket 代理。"
+    }
   }
 }
