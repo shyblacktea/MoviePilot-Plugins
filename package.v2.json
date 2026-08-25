@@ -113,7 +113,7 @@
     "author": "shyblacktea",
     "level": 1,
     "v2": true,
-    "release": false,
+    "release": true,
     "history": {
       "0.2.1": "fix: 优化起播速度，增加相同播放请求的 single-flight 合并，并收敛起播关键路径超时。",
       "0.2.0": "fix: 修复 Plex 官方客户端 STRM 播放，补齐 .mpd / .m3u8 转码路由。",
