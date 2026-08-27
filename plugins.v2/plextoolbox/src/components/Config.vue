@@ -106,34 +106,6 @@
                 <VDivider class="my-4" /><div class="ptb-subsection-title">缺 poster.jpg 精准补全</div><div class="d-flex ga-2 flex-wrap"><VBtn color="info" variant="tonal" size="small" :loading="busyKey === 'poster_preview'" :disabled="!!busyKey" prepend-icon="mdi-magnify" @click="doFixPoster(true)">预览缺 poster</VBtn><VBtn color="success" variant="flat" size="small" :loading="busyKey === 'poster_run'" :disabled="!!busyKey" prepend-icon="mdi-image-plus" @click="doFixPoster(false)">执行补全</VBtn></div>
                 <VAlert v-if="scrapingResult" :type="scrapingResult.type" variant="tonal" density="compact" class="mt-4 text-caption" style="white-space:pre-wrap">{{ scrapingResult.text }}</VAlert>
               </div>
-
-              <div v-show="activeTab === 'merge'" class="ptb-pane">
-                <div class="ptb-section-title">合并重复条目</div>
-                <VAlert type="info" variant="tonal" density="compact" class="mb-3 text-caption">扫描 Plex 全部剧集/电影库中 tmdb id 相同的重复条目，合并为一个（保留集数最多的条目作主）。</VAlert>
-                <div class="d-flex ga-2 flex-wrap mb-3">
-                  <VBtn color="info" variant="tonal" size="small" :loading="busyKey === 'merge_scan'" :disabled="!!busyKey" prepend-icon="mdi-magnify" @click="doMergeScan">扫描重复</VBtn>
-                  <VBtn v-if="mergeGroups.length" color="success" variant="flat" size="small" :loading="busyKey === 'merge_run'" :disabled="!!busyKey" prepend-icon="mdi-call-merge" @click="doMergeExecute">合并全部（{{ mergeGroups.length }} 组）</VBtn>
-                </div>
-                <template v-if="mergeGroups.length">
-                  <div class="text-caption text-medium-emphasis mb-2">共 {{ mergeGroups.length }} 组重复</div>
-                  <VTable density="compact" class="ptb-history">
-                    <thead><tr><th>剧集 / 电影</th><th>TMDB</th><th>重复条目</th></tr></thead>
-                    <tbody>
-                      <tr v-for="(group, gi) in mergeGroups" :key="gi">
-                        <td class="text-caption">{{ group.title }}</td>
-                        <td class="text-caption">{{ group.guid_id }}</td>
-                        <td class="text-caption">
-                          <div v-for="(item, ii) in group.items" :key="ii" :class="{ 'font-weight-bold': ii === 0 }">
-                            [{{ item.section_title }}] {{ item.title }}（{{ item.year }}）— {{ item.leaf_count }} 集
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </VTable>
-                </template>
-                <VAlert v-else-if="mergeScanned" type="success" variant="tonal" density="compact" class="mt-2 text-caption">未发现重复条目。</VAlert>
-                <VAlert v-if="mergeResult" :type="mergeResult.type" variant="tonal" density="compact" class="mt-4 text-caption" style="white-space:pre-wrap">{{ mergeResult.text }}</VAlert>
-              </div>
             </div>
 
             <aside class="ptb-dashboard" aria-label="运行表盘">
@@ -170,7 +142,6 @@ const tabs = [
   { key: 'records', title: '补全记录', icon: 'mdi-history', desc: '最近一次补全与历史执行记录' },
   { key: 'matching', title: '目录匹配', icon: 'mdi-link-variant-off', desc: '预览并执行取消匹配重读 NFO' },
   { key: 'scraping', title: '刮削与海报', icon: 'mdi-image-search-outline', desc: '缺封面扫描、刮削和 poster 补全' },
-  { key: 'merge', title: '合并重复', icon: 'mdi-call-merge', desc: '扫描并合并 tmdb id 相同的重复条目' },
 ]
 const activeTab = ref('proxy')
 const currentTab = computed(() => tabs.find(item => item.key === activeTab.value) || tabs[0])
@@ -194,9 +165,6 @@ const scrapeLimit = ref(0)
 const busyKey = ref('')
 const matchingResult = ref(null)
 const scrapingResult = ref(null)
-const mergeGroups = ref([])
-const mergeScanned = ref(false)
-const mergeResult = ref(null)
 
 const helperDocUrl = 'https://github.com/shyblacktea/MoviePilot-Plugins/blob/main/plugins.v2/plextoolbox/helper/README.md'
 const defaults = { enabled: false, proxy_enabled: false, plex_host: '', plex_token: '', host: '0.0.0.0', port: 32401, pin_rules: '', force_direct_play: true, mediainfo_enabled: false, plex_direct_host: '', helper_url: '', helper_token: '', emby_url: '', emby_apikey: '', use_emby: true, overwrite_streams: true, only_missing: true, concurrency: 3, sections: '', webhook_enabled: false, dedup_window: 300, forward_episodes: 5 }
@@ -235,9 +203,6 @@ async function doUnmatch(dryRun) { if (!scrapeSection.value) return showMatching
 async function doScanCover() { if (!scrapeSection.value) return showScraping('warning', '请先选择目标媒体库'); busyKey.value = 'scan_cover'; try { const response = await postPluginApi(props.api, 'scan_cover', { section: scrapeSection.value }); if (!response?.success) throw new Error(response?.error || '扫描失败'); const list = (response.missing || []).slice(0, 20).map(item => `· ${item.title}（${item.reason}）`).join('\n'); showScraping('info', `已检查 ${response.checked} 个条目，缺封面 ${response.total} 个${list ? '：\n' + list : ''}`) } catch (exception) { showScraping('error', String(exception)) } finally { busyKey.value = '' } }
 async function doScrape(dryRun) { if (!scrapeSection.value) return showScraping('warning', '请先选择目标媒体库'); if (!dryRun && !window.confirm('确认对缺封面条目执行 MoviePilot 刮削？将生成 NFO+封面文件。')) return; busyKey.value = dryRun ? 'scrape_preview' : 'scrape_run'; try { const response = await postPluginApi(props.api, 'scrape', { section: scrapeSection.value, dry_run: dryRun, limit: Number(scrapeLimit.value) || 0, unmatch_after: false }); if (!response?.success) throw new Error(response?.error || '刮削失败'); const list = (response.targets || []).slice(0, 20).map(item => `· ${item.title} → ${item.dir}`).join('\n'); showScraping(dryRun ? 'info' : 'success', dryRun ? `待刮削 ${response.candidates} 个目录${list ? '：\n' + list : ''}` : `刮削成功 ${response.scraped} 个，已刷新 ${response.refreshed || 0} 个，失败 ${response.failed} 个`) } catch (exception) { showScraping('error', String(exception)) } finally { busyKey.value = '' } }
 async function doFixPoster(dryRun) { if (!scrapeSection.value) return showScraping('warning', '请先选择目标媒体库'); if (!dryRun && !window.confirm('确认为缺 poster.jpg 的条目执行补全？剧集优先复制季内海报，其余从 TMDB 下载。')) return; busyKey.value = dryRun ? 'poster_preview' : 'poster_run'; try { const response = await postPluginApi(props.api, 'fix_poster', { section: scrapeSection.value, dry_run: dryRun, limit: Number(scrapeLimit.value) || 0 }); if (!response?.success) throw new Error(response?.error || '操作失败'); const list = (response.targets || []).slice(0, 20).map(item => `· ${item.title} → ${item.dir}`).join('\n'); showScraping(dryRun ? 'info' : (response.failed ? 'warning' : 'success'), dryRun ? `已检查 ${response.checked} 个条目，缺 poster ${response.candidates} 个${list ? '：\n' + list : ''}` : `补全成功 ${response.fixed} 个（已刷新 ${response.refreshed}），失败 ${response.failed} 个`) } catch (exception) { showScraping('error', String(exception)) } finally { busyKey.value = '' } }
-
-async function doMergeScan() { busyKey.value = 'merge_scan'; mergeResult.value = null; mergeGroups.value = []; mergeScanned.value = false; try { const response = await getPluginApi(props.api, 'merge_scan'); if (!response?.success) throw new Error(response?.error || '扫描失败'); mergeGroups.value = response.groups || []; mergeScanned.value = true; if (!mergeGroups.value.length) mergeResult.value = { type: 'success', text: '未发现重复条目' } } catch (exception) { mergeResult.value = { type: 'error', text: String(exception) } } finally { busyKey.value = '' } }
-async function doMergeExecute() { if (!mergeGroups.value.length) return; if (!window.confirm(`确认合并 ${mergeGroups.value.length} 组重复条目？每组保留集数最多的条目，其余并入。`)) return; busyKey.value = 'merge_run'; mergeResult.value = null; try { const merges = mergeGroups.value.map(group => { const sorted = [...group.items].sort((a, b) => (Number(b.leaf_count) || 0) - (Number(a.leaf_count) || 0)); return { primary: sorted[0].rating_key, others: sorted.slice(1).map(item => item.rating_key) } }); const response = await postPluginApi(props.api, 'merge_execute', { merges }); if (!response?.success) throw new Error(response?.error || '合并失败'); const msg = `合并成功 ${response.merged} 组${response.failed?.length ? '，失败 ' + response.failed.length + ' 组' : ''}`; busyKey.value = ''; await doMergeScan(); mergeResult.value = { type: 'success', text: msg + '（已重新扫描）' } } catch (exception) { mergeResult.value = { type: 'error', text: String(exception) } } finally { busyKey.value = '' } }
 
 async function saveConfig() { const payload = { ...config }; error.value = ''; saving.value = true; try { const response = await postPluginApi(props.api, 'config', payload); if (!response?.success) throw new Error(response?.message || response?.error || '配置保存失败'); const verify = await getPluginApi(props.api, 'config'); const persisted = verify?.data || verify; if (persisted && typeof persisted === 'object') Object.assign(config, persisted); snapshotBaseline(); saveMessage.value = '配置已保存并生效'; saveSnackbar.value = true } catch (exception) { error.value = exception?.message || String(exception) } finally { saving.value = false } }
 onMounted(async () => { emit('layout', layoutRequest); await loadConfig(); await loadRuntimeData(); if (config.plex_token && (config.plex_direct_host || config.plex_host)) loadSections() })
