@@ -63,7 +63,7 @@ class PlexToolbox(_PluginBase):
     plugin_name = "PLEX 工具箱"
     plugin_desc = "Plex 302 反向代理 + STRM 媒体流信息补全（Emby 数据源写入 Plex 库）。"
     plugin_icon = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png"
-    plugin_version = "0.7.4"
+    plugin_version = "0.7.3"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "plextoolbox_"
@@ -540,8 +540,6 @@ class PlexToolbox(_PluginBase):
             {"path": "/scrape", "endpoint": self.scrape_api, "methods": ["POST"], "auth": "bear", "summary": "对缺封面条目触发 MP 刮削"},
             {"path": "/fix_poster", "endpoint": self.fix_poster_api, "methods": ["POST"], "auth": "bear", "summary": "补全缺失的 poster.jpg（季海报复制/TMDB）"},
             {"path": "/clear_completion_data", "endpoint": self.clear_completion_data_api, "methods": ["POST"], "auth": "bear", "summary": "一键清理补全结果/播放补全历史"},
-            {"path": "/merge_scan", "endpoint": self.merge_scan_api, "methods": ["GET"], "auth": "bear", "summary": "扫描重复条目"},
-            {"path": "/merge_execute", "endpoint": self.merge_execute_api, "methods": ["POST"], "auth": "bear", "summary": "执行重复条目合并"},
         ]
 
     def get_config_api(self) -> Dict[str, Any]:
@@ -822,45 +820,6 @@ class PlexToolbox(_PluginBase):
         if not cleared:
             return {"success": False, "error": f"未知的清理目标: {target}"}
         return {"success": True, "cleared": cleared, "message": f"已清理: {', '.join(cleared)}"}
-
-    def merge_scan_api(self) -> Dict[str, Any]:
-        """扫描 Plex 媒体库中 tmdb id 相同的重复条目。"""
-        plex = self._plex_direct()
-        if not plex:
-            return {"success": False, "error": "未配置 Plex 直连地址或 token"}
-        try:
-            groups = plex.scan_duplicate_items(media_types=("movie", "show"))
-            return {"success": True, "groups": groups, "total_groups": len(groups)}
-        except Exception as exc:
-            logger.error("PlexToolbox 扫描重复条目异常: %s", exc, exc_info=True)
-            return {"success": False, "error": str(exc)}
-
-    def merge_execute_api(self, payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """
-        执行重复条目合并 API。
-
-        :param payload: {merges: [{primary, others: [ratingKey...]}]}
-        :return: 合并结果
-        """
-        payload = payload or {}
-        merges = payload.get("merges") or []
-        if not merges:
-            return {"success": False, "error": "未指定合并计划"}
-        plex = self._plex_direct()
-        if not plex:
-            return {"success": False, "error": "未配置 Plex 直连地址或 token"}
-        merged = 0
-        failed: List[str] = []
-        for m in merges:
-            primary = str(m.get("primary") or "").strip()
-            others = [str(x) for x in (m.get("others") or []) if str(x)]
-            if not primary or not others:
-                continue
-            if plex.merge_items(primary, others):
-                merged += 1
-            else:
-                failed.append(primary)
-        return {"success": True, "merged": merged, "failed": failed}
 
     def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
         """Vue 模式下返回默认配置模型。"""
