@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any, Dict, List, Optional
 from urllib.parse import quote
 
@@ -431,3 +432,99 @@ class PlexClient:
                         continue
             out.append(p)
         return out
+
+    @staticmethod
+    def _external_guid(guids: List[Dict[str, Any]]) -> Optional[str]:
+        """
+        从条目的 Guid 数组中提取 tmdb id。
+
+        Plex 的 Guid 形如 ``{"id": "tmdb://94664"}``，这里只取 tmdb 段。
+        电影与剧集共用 tmdb id 作为去重依据。
+
+        :param guids: Plex 条目 Guid 数组
+        :return: tmdb id 字符串，取不到返回 None
+        """
+        for g in guids or []:
+            idv = g.get("id") or ""
+            m = re.search(r"tmdb://(\d+)", idv)
+            if m:
+                return m.group(1)
+        return None
+
+    def scan_duplicate_items(
+        self, media_types: Optional[tuple] = ("movie", "show")
+    ) -> List[Dict[str, Any]]:
+        """
+        扫描媒体库中 tmdb id 相同的重复条目。
+
+        列表接口的 includeGuids 不可靠，这里对每个顶层条目逐个调用详情接口
+        确认外部 GUID，再按 tmdb id 分组，返回重复组供前端确认后合并。
+
+        :param media_types: 限定媒体类型，默认 ("movie", "show")
+        :return: [{guid_id, media_type, title, items:[{rating_key, title, year, leaf_count, section_key, section_title}]}]
+        """
+        wanted = set(media_types or ())
+        grouped: Dict[str, Dict[str, Any]] = {}
+        for sec in self.list_sections():
+            stype = sec.get("type") or ""
+            if wanted and stype not in wanted:
+                continue
+            skey = str(sec.get("key") or "")
+            stitle = sec.get("title") or ""
+            if not skey:
+                continue
+            for item in self._iter_section_items(skey):
+                rk = str(item.get("rating_key") or "")
+                if not rk:
+                    continue
+                metas = self._metadata(rk)
+                if not metas:
+                    continue
+                meta = metas[0]
+                guid_id = self._external_guid(meta.get("Guid") or [])
+                if not guid_id:
+                    continue
+                entry = {
+                    "rating_key": rk,
+                    "title": meta.get("title") or "",
+                    "year": meta.get("year"),
+                    "leaf_count": meta.get("leafCount") or 0,
+                    "section_key": skey,
+                    "section_title": stitle,
+                }
+                bucket = grouped.setdefault(
+                    guid_id,
+                    {
+                        "guid_id": guid_id,
+                        "media_type": stype,
+                        "title": meta.get("title") or "",
+                        "items": [],
+                    },
+                )
+                bucket["items"].append(entry)
+
+        result: List[Dict[str, Any]] = []
+        for bucket in grouped.values():
+            if len(bucket["items"]) < 2:
+                continue
+            # 标题取集数/条目数最多的那个条目，避免误用残缺副本的名称
+            top = max(bucket["items"], key=lambda x: int(x.get("leaf_count") or 0))
+            bucket["title"] = top["title"]
+            bucket["items"].sort(
+                key=lambda x: int(x.get("leaf_count") or 0), reverse=True
+            )
+            result.append(bucket)
+        return result
+
+    def merge_items(self, primary: str, others: List[str]) -> bool:
+        """
+        将多个条目合并到主条目（主条目保留，其余条目并入）。
+
+        :param primary: 保留的主条目 ratingKey
+        :param others: 需并入的条目 ratingKey 列表
+        :return: 成功返回 True
+        """
+        ids = ",".join(str(x) for x in others if str(x))
+        if not ids:
+            return False
+        return self._put(f"/library/metadata/{primary}/merge?ids={ids}")
