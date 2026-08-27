@@ -35,5 +35,18 @@
       "0.2": "feat: Telegram 规则调整改为只添加官组或平台，避免官组+平台组合误扩大匹配范围；feat: 规则菜单、确认页和完成页新增结束按钮，确认后可返回规则菜单继续处理；feat: 支持从 MoviePilot 自定义识别词和订阅自定义词中提取制作组/官组；feat: 配置页新增独立搜索 PT 站点范围，数据页新增清除最近诊断结果按钮；feat: PT 候选资源只保留最近缺失集数，Telegram 结束按钮会尝试删除当前通知消息；fix: 平台关键词按边界匹配，避免 BluRay 等标题片段误判平台",
       "0.1": "feat: 初版支持 TMDB 播出日期停更检测、PT 搜索诊断、Telegram 独立通知和 Vue 配置详情页；feat: 二级分类读取 MoviePilot 分类策略，并支持订阅无分类时按 TMDB 信息识别分类；feat: 搜索站点范围同步 MoviePilot 搜索站点设置；ui: 移除固定规则模式配置，规则调整改为 Telegram 菜单动态选择；docs: 更新作者为 shyblacktea,Codex"
     }
+  },
+  "PlexToolbox": {
+    "name": "PLEX 工具箱",
+    "description": "Plex 302 反向代理、STRM 媒体流信息补全、缺海报修复与 TMDB 重复条目合并。",
+    "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
+    "version": "1.0.0",
+    "author": "shyblacktea,MoviePilot助手",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json）；保留 302 反代、STRM 媒体流信息补全、缺海报修复和 TMDB 相同条目合并功能；V2 0.7.4 继续并行维护。"
+    }
   }
 }
