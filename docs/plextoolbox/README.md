@@ -31,6 +31,16 @@
 
 ## 更新日志
 
+### v1.0.0（V3）
+
+- 迁移到 MoviePilot V3 专用实现，源码位于 `plugins.v3/plextoolbox/`。
+- 保留 302 反代、STRM 媒体流信息补全、缺海报修复和 TMDB 重复条目合并功能。
+- V2 `0.7.4` 继续保留，与 V3 `1.0.0` 并行维护。
+
+### v0.7.4
+
+- 修正 V2 插件版本号：`0.7.4` 与原 `0.8.0` 为同一份功能内容；保留 V2 版本，并与 V3 `1.0.0` 并行维护。
+
 ### v0.7.3
 
 - 修复 Plex 复用已有播放队列或自动连播时没有重新创建 `playQueues`，导致播前补全不触发的问题。
@@ -71,6 +81,17 @@
 - 由 Plex302ReverseProxy 改造为 PLEX 工具箱：302 反代作为子功能保留，新增 STRM 媒体流信息补全（Emby 数据源 + helper 写库），Vue 联邦前端配置页与数据页。
 
 -------
+
+## 发布信息
+
+- 插件 ID：`PlexToolbox`
+- V2 源码目录：`plugins.v2/plextoolbox/`
+- V3 源码目录：`plugins.v3/plextoolbox/`
+- 当前版本：`V2 0.7.4；V3 1.0.0`
+- V2 Release Tag：`PlexToolbox_v0.7.4`
+- V2 Release 资产：`plextoolbox_v0.7.4.zip`
+- V3 Release Tag：`PlexToolbox_v1.0.0`
+- V3 Release 资产：`plextoolbox_v1.0.0.zip`
 
 ## 致谢
 
