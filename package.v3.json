@@ -1,4 +1,18 @@
 {
+  "ManualSubscribeAssistantShy": {
+    "name": "手动订阅助手魔改版",
+    "description": "抓取 Mikan 季番并识别 Bangumi/TMDB，由用户点击后手动创建 MoviePilot 订阅，不运行后台自动订阅。",
+    "icon": "https://avatars.githubusercontent.com/u/33568732?s=256&v=4",
+    "version": "0.1.0",
+    "author": "shyblacktea（基于 Aqr-K）",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "0.1.0": "重做：完整迁移自动订阅助手的多来源抓取、动态配置、过滤器、运行状态、候选筛选和订阅管理界面；抓取只保存候选，改为用户确认后手动创建订阅。",
+      "0.0.1": "初版支持 Mikan 季番抓取、Bangumi/TMDB 跳转与手动创建订阅。"
+    }
+  },
   "SubscribePlus": {
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
@@ -46,7 +60,7 @@
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
-      "1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json）；保留 302 反代、STRM 媒体流信息补全、缺海报修复和 TMDB 相同条目合并功能；V2 0.7.4 继续并行维护。"
+      "1.0.0": "feat: 新增 Plex TMDB 重复条目扫描与合并功能；V2 0.7.3 原版继续并行保留。"
     }
   }
 }
