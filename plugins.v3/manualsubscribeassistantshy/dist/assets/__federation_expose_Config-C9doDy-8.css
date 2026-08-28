@@ -1,0 +1,456 @@
+
+.asa-control[data-v-dc1837a7] { inline-size: 100%;
+}
+.asa-select__primary[data-v-dc1837a7] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.asa-select__more[data-v-dc1837a7] { flex: 0 0 auto; margin-inline-start: 6px; color: rgba(var(--v-theme-on-surface), 0.58); white-space: nowrap;
+}
+.asa-select__clear[data-v-dc1837a7] { cursor: pointer; color: rgba(var(--v-theme-on-surface), 0.4); transition: color 0.15s ease;
+}
+.asa-select__clear[data-v-dc1837a7]:hover { color: rgb(var(--v-theme-error));
+}
+.asa-rmm__clear[data-v-dc1837a7] {
+  display: inline-flex; align-items: center; gap: 4px; align-self: flex-end;
+  padding: 2px 6px; border: 0; background: transparent; color: rgba(var(--v-theme-on-surface), 0.5);
+  font-size: 0.72rem; cursor: pointer; transition: color 0.15s ease;
+}
+.asa-rmm__clear[data-v-dc1837a7]:hover { color: rgb(var(--v-theme-error));
+}
+
+/* 数字步进器 */
+.asa-stepper[data-v-dc1837a7] {
+  display: grid;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: 40px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.22);
+  border-radius: var(--app-control-radius, 8px);
+  grid-template-columns: 38px minmax(48px, 1fr) 38px;
+  transition: border-color 0.15s ease;
+}
+.asa-stepper[data-v-dc1837a7]:focus-within { border-color: rgb(var(--v-theme-primary));
+}
+.asa-stepper__input[data-v-dc1837a7] {
+  min-inline-size: 0; inline-size: 100%; padding: 0 4px; border: 0; background: transparent;
+  color: rgb(var(--v-theme-on-surface)); font-size: 0.85rem; text-align: center;
+  font-variant-numeric: tabular-nums; outline: none; -moz-appearance: textfield;
+}
+.asa-stepper__input[data-v-dc1837a7]::-webkit-outer-spin-button,
+.asa-stepper__input[data-v-dc1837a7]::-webkit-inner-spin-button { margin: 0; -webkit-appearance: none;
+}
+
+/* region-media-map：内联折叠触发按钮 + 弹窗卡片管理 */
+.asa-rmm-field[data-v-dc1837a7] { inline-size: 100%;
+}
+.asa-rmm-trigger[data-v-dc1837a7] { inline-size: 100%; justify-content: space-between; text-transform: none; letter-spacing: 0; font-weight: 500;
+}
+.asa-rmm-trigger__txt[data-v-dc1837a7] { flex: 1 1 auto; overflow: hidden; text-align: start; text-overflow: ellipsis; white-space: nowrap;
+}
+.asa-rmm-dlg__title[data-v-dc1837a7] { display: flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 700;
+}
+.asa-rmm-dlg__hint[data-v-dc1837a7] { margin: 0 0 12px; color: rgba(var(--v-theme-on-surface), 0.6); font-size: 0.78rem; line-height: 1.4;
+}
+.asa-rmm-dlg__body[data-v-dc1837a7] { padding-block: 12px 6px;
+}
+.asa-rmm[data-v-dc1837a7] { inline-size: 100%; display: flex; flex-direction: column; gap: 10px;
+}
+.asa-rmm__rows[data-v-dc1837a7] { display: flex; flex-direction: column; gap: 8px;
+}
+/* 每个地区为一张卡：名称+删除在上、类别 chips 换行在下 → 列（媒体类型）再多也完整显示不挤压 */
+.asa-rmm__row[data-v-dc1837a7] {
+  display: flex; flex-direction: column; gap: 8px; padding: 10px 12px;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.12);
+  border-radius: var(--app-control-radius, 8px);
+  background: rgba(var(--v-theme-on-surface), 0.03);
+}
+.asa-rmm__head[data-v-dc1837a7] { display: flex; align-items: center; gap: 8px;
+}
+/* 启用开关：去掉 v-switch 默认 ~40px 的触控最小高度、并缩小轨道/滑块，使其与单行文字（约 20px）高度一致（不再过高） */
+.asa-rmm__switch[data-v-dc1837a7] { flex: 0 0 auto; margin: 0;
+}
+.asa-rmm__name[data-v-dc1837a7] { min-inline-size: 0; overflow: hidden; font-size: 0.86rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap;
+}
+/* 禁用态：名称置灰划线、类别整体淡化（配置保留，可随时重新启用） */
+.asa-rmm__name--off[data-v-dc1837a7] { color: rgba(var(--v-theme-on-surface), 0.42); text-decoration: line-through;
+}
+.asa-rmm__cats[data-v-dc1837a7] { display: flex; flex-wrap: wrap; gap: 6px;
+}
+.asa-rmm__cats--off[data-v-dc1837a7] { opacity: 0.45;
+}
+.asa-rmm__cat[data-v-dc1837a7] {
+  padding: 4px 12px;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.2);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(var(--v-theme-on-surface), 0.65);
+  font-size: 0.76rem;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.asa-rmm__cat--on[data-v-dc1837a7] { border-color: rgb(var(--v-theme-primary)); background: rgba(var(--v-theme-primary), 0.14); color: rgb(var(--v-theme-primary)); font-weight: 600;
+}
+.asa-rmm__del[data-v-dc1837a7] { color: rgba(var(--v-theme-on-surface), 0.45);
+}
+.asa-rmm__empty[data-v-dc1837a7] { padding: 14px 4px; color: rgba(var(--v-theme-on-surface), 0.5); font-size: 0.8rem; text-align: center;
+}
+.asa-rmm__add[data-v-dc1837a7] { margin-top: 2px;
+}
+
+.asa-logo[data-v-686c3c52] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+.asa-logo__svg[data-v-686c3c52] { display: inline-flex; inline-size: 100%; block-size: 100%;
+}
+.asa-logo__svg[data-v-686c3c52] svg { inline-size: 100%; block-size: 100%; display: block;
+}
+
+.asa-config[data-v-ac43d55f] {
+  container-type: inline-size;
+  color: rgb(var(--v-theme-on-surface));
+  --asa-radius: var(--app-surface-radius, 12px);
+  --asa-line: rgba(var(--v-theme-on-surface), 0.08);
+}
+.asa-config[data-v-ac43d55f], .asa-config[data-v-ac43d55f] * { box-sizing: border-box;
+}
+.asa-cfg-head[data-v-ac43d55f] {
+  position: sticky; z-index: 5; inset-block-start: 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-block-size: 64px; padding: 10px 16px;
+  border-block-end: 1px solid rgba(var(--v-theme-on-surface), 0.1);
+  background: var(--app-grouped-list-background, rgb(var(--v-theme-surface)));
+}
+.asa-cfg-head__brand[data-v-ac43d55f] { display: flex; align-items: center; gap: 12px; min-inline-size: 0;
+}
+.asa-cfg-head__logo[data-v-ac43d55f] {
+  display: flex; align-items: center; justify-content: center; flex: 0 0 40px;
+  block-size: 40px; inline-size: 40px; border-radius: 11px;
+  background: rgba(var(--v-theme-primary), 0.12); color: rgb(var(--v-theme-primary));
+}
+.asa-cfg-head__identity[data-v-ac43d55f] { min-inline-size: 0;
+}
+.asa-cfg-head__crumbs[data-v-ac43d55f] { display: flex; align-items: center; gap: 2px; color: rgba(var(--v-theme-on-surface), 0.5); font-size: 0.68rem;
+}
+.asa-cfg-head__title[data-v-ac43d55f] { margin: 2px 0 0; font-size: 1.05rem; font-weight: 700; line-height: 1.3;
+}
+.asa-cfg-head__actions[data-v-ac43d55f] { display: flex; align-items: center; gap: 8px; flex: 0 0 auto;
+}
+.asa-cfg-head__dirty[data-v-ac43d55f] { display: inline-flex; align-items: center; gap: 6px; color: rgb(var(--v-theme-warning)); font-size: 0.8rem; font-weight: 600; white-space: nowrap;
+}
+.asa-cfg-head__save[data-v-ac43d55f] { min-inline-size: 104px; font-weight: 600;
+}
+.asa-cfg-body[data-v-ac43d55f] { padding: 18px 18px 24px;
+}
+.asa-cfg-layout[data-v-ac43d55f] { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr);
+}
+.asa-nav[data-v-ac43d55f] { display: flex; flex-direction: column; gap: 4px; min-inline-size: 0;
+}
+.asa-nav__list[data-v-ac43d55f] { display: flex; flex-direction: column; gap: 3px; min-block-size: 0;
+}
+.asa-nav__top[data-v-ac43d55f] { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 4px 6px 8px;
+}
+.asa-nav__heading[data-v-ac43d55f] { color: rgba(var(--v-theme-on-surface), 0.5); font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+}
+.asa-nav__collapse[data-v-ac43d55f] {
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  inline-size: 28px; block-size: 28px; border: 0; border-radius: 8px; background: transparent;
+  color: rgba(var(--v-theme-on-surface), 0.55); cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+}
+.asa-nav__collapse[data-v-ac43d55f]:hover { background: rgba(var(--v-theme-on-surface), 0.06); color: rgb(var(--v-theme-primary));
+}
+.asa-nav__item[data-v-ac43d55f] {
+  display: flex; align-items: center; gap: 12px; min-block-size: 46px; padding: 0 12px;
+  border: 0; border-radius: 10px; background: transparent; color: rgba(var(--v-theme-on-surface), 0.78);
+  font-size: 0.85rem; font-weight: 600; text-align: start; text-decoration: none; cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.asa-nav__item[data-v-ac43d55f]:hover { background: rgba(var(--v-theme-on-surface), 0.05);
+}
+.asa-nav__item--active[data-v-ac43d55f] { background: rgba(var(--v-theme-primary), 0.1); color: rgb(var(--v-theme-primary));
+}
+.asa-nav__label[data-v-ac43d55f] { flex: 1 1 auto; overflow: hidden; white-space: nowrap;
+}
+.asa-nav__dot[data-v-ac43d55f] { flex: 0 0 auto; inline-size: 8px; block-size: 8px; border-radius: 50%; background: rgba(var(--v-theme-on-surface), 0.22); transition: opacity 0.16s ease;
+}
+.asa-nav__dot--on[data-v-ac43d55f] { background: rgb(var(--v-theme-success)); box-shadow: 0 0 0 3px rgba(var(--v-theme-success), 0.16);
+}
+/* 功能栏（分组列表）与「插件帮助」之间的分割线 */
+.asa-nav__sep[data-v-ac43d55f] { flex: 0 0 auto; block-size: 1px; margin: 6px 6px 4px; background: rgba(var(--v-theme-on-surface), 0.1);
+}
+/* 插件帮助：沿用 .asa-nav__item 的「图标 + 标签」布局（与「全局设置」等分组项一致）；链接去下划线、图标淡色 */
+.asa-nav__help[data-v-ac43d55f] { flex: 0 0 auto; text-decoration: none; color: rgba(var(--v-theme-on-surface), 0.72);
+}
+.asa-nav__help-ico[data-v-ac43d55f] { color: rgba(var(--v-theme-on-surface), 0.5);
+}
+
+/* 收起：仅图标（标签宽度动画收合，流畅不卡顿；图标居中于预选框） */
+.asa-nav--collapsed .asa-nav__heading[data-v-ac43d55f] { display: none;
+}
+.asa-nav--collapsed .asa-nav__top[data-v-ac43d55f] { justify-content: center; padding-inline: 0;
+}
+.asa-nav--collapsed .asa-nav__list[data-v-ac43d55f] { align-items: center;
+}
+.asa-nav--collapsed .asa-nav__label[data-v-ac43d55f] { display: none;
+}
+.asa-nav--collapsed .asa-nav__dot[data-v-ac43d55f] { display: none;
+}
+.asa-nav--collapsed .asa-nav__item[data-v-ac43d55f],
+.asa-nav--collapsed .asa-nav__collapse[data-v-ac43d55f] { inline-size: 44px; padding-inline: 0; justify-content: center; gap: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+.asa-nav__label[data-v-ac43d55f] { transition: none;
+}
+}
+.asa-surface[data-v-ac43d55f] { min-inline-size: 0;
+}
+.asa-mobile-back[data-v-ac43d55f] {
+  display: none; align-items: center; gap: 6px; margin: 0 0 12px; padding: 6px 12px 6px 8px;
+  border: 0; border-radius: 9px; background: rgba(var(--v-theme-on-surface), 0.05);
+  color: rgb(var(--v-theme-primary)); font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.asa-mobile-back[data-v-ac43d55f]:hover { background: rgba(var(--v-theme-on-surface), 0.09);
+}
+.asa-surface__heading[data-v-ac43d55f] { display: flex; align-items: flex-start; gap: 10px; padding: 2px 2px 14px;
+}
+.asa-surface__heading h2[data-v-ac43d55f] { margin: 0; font-size: 1.05rem; font-weight: 700; line-height: 1.3;
+}
+.asa-surface__heading p[data-v-ac43d55f] { margin: 3px 0 0; color: rgba(var(--v-theme-on-surface), 0.6); font-size: 0.76rem;
+}
+.asa-section[data-v-ac43d55f] {
+  overflow: hidden; border: var(--app-surface-border, 1px solid var(--asa-line));
+  border-radius: var(--asa-radius); background: var(--app-grouped-list-background, rgb(var(--v-theme-surface)));
+}
+.asa-section + .asa-section[data-v-ac43d55f] { margin-block-start: 12px;
+}
+.asa-section > h3[data-v-ac43d55f] { padding: 13px 16px 9px; margin: 0; font-size: 0.9rem; font-weight: 700;
+}
+.asa-section__rows[data-v-ac43d55f] { padding-inline: 16px;
+}
+.asa-row[data-v-ac43d55f] {
+  display: grid; align-items: start; gap: 18px; padding-block: 13px;
+  border-block-start: 1px solid var(--asa-line);
+  grid-template-columns: minmax(0, 1.4fr) minmax(160px, 0.85fr);
+}
+.asa-row--switch[data-v-ac43d55f] { align-items: center;
+}
+.asa-row--switch .asa-row__control[data-v-ac43d55f] { display: flex; justify-content: flex-end;
+}
+.asa-row--wide[data-v-ac43d55f] { grid-template-columns: minmax(0, 1fr); gap: 8px;
+}
+.asa-row__copy[data-v-ac43d55f] { min-inline-size: 0;
+}
+.asa-row__label[data-v-ac43d55f] { color: rgb(var(--v-theme-on-surface)); font-size: 0.83rem; font-weight: 600; line-height: 1.2;
+}
+.asa-row__copy p[data-v-ac43d55f] { margin: 4px 0 0; color: rgba(var(--v-theme-on-surface), 0.56); font-size: 0.7rem; line-height: 1.05rem;
+}
+.asa-row__control[data-v-ac43d55f] { min-inline-size: 0;
+}
+.asa-section--advanced > h3[data-v-ac43d55f] { display: none;
+}
+.asa-advanced-toggle[data-v-ac43d55f] {
+  display: flex; align-items: center; gap: 6px; inline-size: 100%; padding: 12px 16px;
+  border: 0; background: transparent; color: rgb(var(--v-theme-primary)); font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.asa-advanced-toggle__hint[data-v-ac43d55f] { color: rgba(var(--v-theme-on-surface), 0.45); font-weight: 400; font-size: 0.72rem;
+}
+.asa-section--advanced .asa-section__rows[data-v-ac43d55f] { padding-block-end: 6px;
+}
+.asa-run[data-v-ac43d55f] { display: flex; align-items: center; gap: 10px; margin-block-start: 14px;
+}
+.asa-run__msg[data-v-ac43d55f] { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; font-weight: 500;
+}
+.asa-run__msg--ok[data-v-ac43d55f] { color: rgb(var(--v-theme-success));
+}
+.asa-run__msg--err[data-v-ac43d55f] { color: rgb(var(--v-theme-error));
+}
+.asa-aside[data-v-ac43d55f] {
+  align-self: start; padding: 16px; border: var(--app-surface-border, 1px solid var(--asa-line));
+  border-radius: var(--asa-radius); background: var(--app-grouped-list-background, rgb(var(--v-theme-surface)));
+}
+.asa-aside__title[data-v-ac43d55f] { display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+}
+.asa-aside__title h3[data-v-ac43d55f] { margin: 0; font-size: 0.95rem; font-weight: 700;
+}
+/* 处理中：运行态高亮区 */
+.asa-running[data-v-ac43d55f] {
+  margin-bottom: 14px; padding: 12px; border-radius: 10px;
+  background: rgba(var(--v-theme-primary), 0.08); border: 1px solid rgba(var(--v-theme-primary), 0.18);
+}
+.asa-running__title[data-v-ac43d55f] { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: rgb(var(--v-theme-primary)); font-size: 0.82rem; font-weight: 700;
+}
+.asa-running__row[data-v-ac43d55f] { display: flex; align-items: center; gap: 8px; padding-block: 4px; font-size: 0.78rem; color: rgba(var(--v-theme-on-surface), 0.8);
+}
+.asa-running__name[data-v-ac43d55f] { flex: 1 1 auto; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.asa-running__row strong[data-v-ac43d55f] { flex: 0 0 auto; color: rgb(var(--v-theme-primary)); font-variant-numeric: tabular-nums;
+}
+.asa-aside__list[data-v-ac43d55f] { padding: 0; margin: 6px 0 14px; list-style: none;
+}
+.asa-aside__list li[data-v-ac43d55f] {
+  display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 8px;
+  padding-block: 9px; color: rgba(var(--v-theme-on-surface), 0.72); font-size: 0.82rem;
+  border-block-start: 1px solid var(--asa-line);
+}
+.asa-aside__list li[data-v-ac43d55f]:first-child { border-block-start: 0;
+}
+.asa-aside__list strong[data-v-ac43d55f] { color: rgb(var(--v-theme-on-surface)); font-variant-numeric: tabular-nums;
+}
+.asa-aside__btn[data-v-ac43d55f] { font-weight: 600;
+}
+
+/* 概览按钮与抽屉关闭按钮默认隐藏（桌面端概览常驻右列，无需按钮），仅移动端容器查询下显示。 */
+.asa-cfg-head__overview[data-v-ac43d55f] { display: none;
+}
+.asa-aside__close[data-v-ac43d55f] { display: none;
+}
+
+/* 运行概览（订阅历史粗略统计） */
+.asa-aside__title--sub[data-v-ac43d55f] { margin-block-start: 18px; margin-bottom: 6px;
+}
+.asa-runtime__state[data-v-ac43d55f] { padding: 4px 2px 12px; color: rgba(var(--v-theme-on-surface), 0.5); font-size: 0.76rem;
+}
+.asa-runtime__total[data-v-ac43d55f] { display: flex; align-items: baseline; justify-content: space-between; padding: 2px 2px 10px; font-size: 0.82rem; color: rgba(var(--v-theme-on-surface), 0.72);
+}
+.asa-runtime__total strong[data-v-ac43d55f] { color: rgb(var(--v-theme-on-surface)); font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.asa-runtime__grid[data-v-ac43d55f] { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-block-end: 14px;
+}
+.asa-runtime__cell[data-v-ac43d55f] {
+  display: flex; align-items: center; gap: 5px; min-inline-size: 0; padding: 8px 9px; border-radius: 9px;
+  background: rgba(var(--v-theme-on-surface), 0.04); font-size: 0.72rem; color: rgba(var(--v-theme-on-surface), 0.7);
+}
+.asa-runtime__cell span[data-v-ac43d55f] { flex: 1 1 auto; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.asa-runtime__cell strong[data-v-ac43d55f] { color: rgb(var(--v-theme-on-surface)); font-variant-numeric: tabular-nums;
+}
+
+/* 底部保存条：就地 sticky 贴底（在 .asa-config 容器上下文内，兼容宿主弹窗层级，不用 Teleport 以免被宿主高层弹窗遮挡）；
+   不透明白底、去掉 backdrop-filter 消除滚动时轻微重绘位移；配合下方 .asa-config { min-block-size:100dvh } 让短内容视图也稳定贴底。 */
+.asa-mobile-dock[data-v-ac43d55f] {
+  position: sticky; z-index: 6; inset-block-end: 0; margin: 0 12px 12px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border: 1px solid rgba(var(--v-theme-on-surface), 0.14);
+  border-radius: var(--app-surface-radius, 12px); background: rgb(var(--v-theme-surface));
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+}
+.asa-mobile-dock__state[data-v-ac43d55f] { display: inline-flex; align-items: center; gap: 6px; color: rgb(var(--v-theme-warning)); font-size: 0.8rem; font-weight: 600;
+}
+.asa-fade-enter-active[data-v-ac43d55f], .asa-fade-leave-active[data-v-ac43d55f] { transition: opacity 0.2s ease;
+}
+.asa-fade-enter-from[data-v-ac43d55f], .asa-fade-leave-to[data-v-ac43d55f] { opacity: 0;
+}
+
+/* 底部保存条弹出过渡（从下方滑入，独占一行） */
+.asa-dock-enter-active[data-v-ac43d55f], .asa-dock-leave-active[data-v-ac43d55f] { transition: transform 0.24s ease, opacity 0.24s ease;
+}
+.asa-dock-enter-from[data-v-ac43d55f], .asa-dock-leave-to[data-v-ac43d55f] { transform: translateY(100%); opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+.asa-dock-enter-active[data-v-ac43d55f], .asa-dock-leave-active[data-v-ac43d55f] { transition: opacity 0.2s ease;
+}
+.asa-dock-enter-from[data-v-ac43d55f], .asa-dock-leave-to[data-v-ac43d55f] { transform: none;
+}
+}
+@container (width >= 680px) {
+.asa-cfg-layout[data-v-ac43d55f] { grid-template-columns: max-content minmax(0, 1fr);
+}
+.asa-nav[data-v-ac43d55f] { grid-column: 1;
+}
+.asa-surface[data-v-ac43d55f] { grid-column: 2;
+}
+.asa-mobile-dock[data-v-ac43d55f] { display: none;
+}
+}
+@container (width >= 940px) {
+  /* 侧栏按内容宽（一行完整显示，不锁死）；中间内容区独立滚动，
+     滚动条落在内容与右侧概览之间，而非整体最右侧。 */
+.asa-cfg-layout[data-v-ac43d55f] { grid-template-columns: max-content minmax(0, 1fr) 240px; grid-template-areas: 'nav content aside'; gap: 18px; align-items: start;
+}
+.asa-nav[data-v-ac43d55f] {
+    grid-area: nav; position: sticky; inset-block-start: 124px;
+    display: flex; flex-direction: column; block-size: calc(100dvh - 214px);
+}
+  /* 渠道列表可内部滚动，帮助钉在左下角、与列表分区，渠道再多也不叠加 */
+.asa-nav__list[data-v-ac43d55f] {
+    flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; min-block-size: 0;
+    scrollbar-width: thin; scrollbar-color: rgba(var(--v-theme-on-surface), 0.22) transparent;
+}
+.asa-nav__list[data-v-ac43d55f]::-webkit-scrollbar { inline-size: 6px;
+}
+.asa-nav__list[data-v-ac43d55f]::-webkit-scrollbar-thumb { background: rgba(var(--v-theme-on-surface), 0.18); border-radius: 3px;
+}
+.asa-nav__help[data-v-ac43d55f] { flex: 0 0 auto; margin-block-start: 10px;
+}
+.asa-surface[data-v-ac43d55f] {
+    grid-area: content; overflow-y: auto; overscroll-behavior: contain;
+    block-size: calc(100dvh - 214px); padding-inline-end: 10px;
+    scrollbar-width: thin; scrollbar-color: rgba(var(--v-theme-on-surface), 0.22) transparent;
+}
+.asa-surface[data-v-ac43d55f]::-webkit-scrollbar { inline-size: 8px;
+}
+.asa-surface[data-v-ac43d55f]::-webkit-scrollbar-thumb { background: rgba(var(--v-theme-on-surface), 0.2); border-radius: 4px;
+}
+.asa-surface[data-v-ac43d55f]::-webkit-scrollbar-thumb:hover { background: rgba(var(--v-theme-on-surface), 0.32);
+}
+.asa-aside[data-v-ac43d55f] { grid-area: aside; position: sticky; inset-block-start: 124px;
+}
+}
+/* iPad / 中等宽度（< 940px，即非三栏布局）：概览一律改为右侧可收纳抽屉，不再堆叠追加在配置界面末尾。
+   就地 fixed（留在 .asa-config 内，随宿主弹窗层级正常显示，不用 Teleport 以免被宿主高层弹窗遮挡）；
+   整屏高、整体不透明白底。 */
+@container (width < 940px) {
+.asa-cfg-head__overview[data-v-ac43d55f] { display: inline-flex;
+}
+.asa-aside[data-v-ac43d55f] {
+    position: fixed; z-index: 30; inset-block: 0; inset-inline-end: 0;
+    inline-size: min(320px, 86vw); block-size: 100dvh; overflow-y: auto;
+    padding: 46px 16px 16px; border-radius: 0; border: 0;
+    border-inline-start: 1px solid rgba(var(--v-theme-on-surface), 0.12);
+    background: rgb(var(--v-theme-surface));
+    transform: translateX(100%); transition: transform 0.26s ease;
+}
+  /* 阴影仅在展开时出现，避免收起（移出屏幕右侧）时阴影仍溢到视口边缘 */
+.asa-aside--open[data-v-ac43d55f] { transform: translateX(0); box-shadow: -12px 0 32px rgba(0, 0, 0, 0.34);
+}
+.asa-aside__close[data-v-ac43d55f] {
+    position: absolute; inset-block-start: 8px; inset-inline-end: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    inline-size: 32px; block-size: 32px; border: 0; border-radius: 8px;
+    background: rgba(var(--v-theme-on-surface), 0.06); color: rgba(var(--v-theme-on-surface), 0.7); cursor: pointer;
+}
+.asa-aside__close[data-v-ac43d55f]:hover { background: rgba(var(--v-theme-on-surface), 0.12);
+}
+.asa-aside-scrim[data-v-ac43d55f] { display: block; position: fixed; z-index: 29; inset: 0; background: rgba(0, 0, 0, 0.42);
+}
+}
+@container (width < 680px) {
+.asa-row[data-v-ac43d55f] { grid-template-columns: minmax(0, 1fr) minmax(130px, 0.8fr); gap: 12px; align-items: center;
+}
+.asa-row--wide[data-v-ac43d55f] { grid-template-columns: minmax(0, 1fr);
+}
+  /* 移动端窗口式导航：功能栏 / 配置页二选一显示，点选进入、返回回到功能栏 */
+.asa-nav__collapse[data-v-ac43d55f] { display: none;
+}
+.asa-mobile-back[data-v-ac43d55f] { display: inline-flex;
+}
+.asa-cfg-layout--mnav .asa-surface[data-v-ac43d55f] { display: none;
+}
+.asa-cfg-layout--mcontent .asa-nav[data-v-ac43d55f] { display: none;
+}
+  /* 顶部不显示「未保存 + 保存」，避免面包屑整行被挤压（改由底部 sticky 保存条承担） */
+.asa-cfg-head__dirty[data-v-ac43d55f], .asa-cfg-head__save[data-v-ac43d55f] { display: none;
+}
+  /* 让内容区至少铺满视口高度，使底部 sticky 保存条稳定贴底、切换视图不上移；并为末尾配置项预留空间不被遮挡。 */
+.asa-cfg-body[data-v-ac43d55f] { min-block-size: calc(100dvh - 118px);
+}
+.asa-config--docked .asa-cfg-body[data-v-ac43d55f] { padding-block-end: 92px;
+}
+}
+@media (prefers-reduced-motion: reduce) {
+.asa-aside[data-v-ac43d55f] { transition: none;
+}
+}
