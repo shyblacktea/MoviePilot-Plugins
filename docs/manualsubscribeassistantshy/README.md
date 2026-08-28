@@ -1,6 +1,6 @@
-# 手动订阅助手魔改版
+# 手动订阅助手
 
-`ManualSubscribeAssistantShy` 是仅面向 MoviePilot V3 的本地插件：抓取多来源媒体候选，由用户确认后手动创建 MoviePilot 订阅。
+`ManualSubscribeAssistantShy` 是仅面向 MoviePilot V3 的插件：抓取多来源媒体候选，由用户确认后手动创建 MoviePilot 订阅，并在主页侧栏提供入口。
 
 ## 主要功能
 
@@ -10,6 +10,11 @@
 - “订阅管理”显示抓取候选，“订阅历史”显示本插件创建的 MoviePilot 订阅。
 
 ## 更新日志
+
+### 0.1.2
+
+- 新增主页侧栏入口，可从主页直接打开插件。
+- 插件显示名称统一为“手动订阅助手”，移除“魔改版”字样。
 
 ### 0.1.1
 
@@ -27,8 +32,7 @@
 - 插件 ID：`ManualSubscribeAssistantShy`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 插件目录：`plugins.v3/manualsubscribeassistantshy/`
-- 当前版本：`0.1.1`
-- Release Tag：`ManualSubscribeAssistantShy_v0.1.1`
-- Release 资产：`manualsubscribeassistantshy_v0.1.1.zip`
+- 当前版本：`0.1.2`
+- Release Tag：`ManualSubscribeAssistantShy_v0.1.2`
+- Release 资产：`manualsubscribeassistantshy_v0.1.2.zip`
 - 本插件本次仅发布 V3，不提供 V2 兼容版本。
-
