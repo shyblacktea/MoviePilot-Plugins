@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from .models import FieldSpec, ProviderSpec
 
 # 全局默认值集中定义，避免散落。
-DEFAULT_USERNAME = "手动订阅助手魔改版"
+DEFAULT_USERNAME = "手动订阅助手"
 
 
 class TypedConfigAccess:
