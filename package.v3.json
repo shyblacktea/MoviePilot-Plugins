@@ -1,7 +1,7 @@
 {
   "ManualSubscribeAssistantShy": {
     "name": "手动订阅助手",
-    "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（基于 Aqr-K）",
+    "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（基于 Aqr-K）（shyblacktea 自用版）",
     "icon": "https://avatars.githubusercontent.com/u/33568732?s=256&v=4",
     "version": "0.1.1",
     "author": "shyblacktea",
@@ -16,10 +16,10 @@
   },
   "SubscribePlus": {
     "name": "订阅下载增强",
-    "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。",
+    "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（shyblacktea 自用版）",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png",
     "version": "1.0.0",
-    "author": "shyblacktea,MoviePilot助手",
+    "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
@@ -53,10 +53,10 @@
   },
   "PlexToolbox": {
     "name": "PLEX 工具箱",
-    "description": "Plex 302 反向代理、STRM 媒体流信息补全、缺海报修复与 TMDB 重复条目合并。",
+    "description": "Plex 302 反向代理、STRM 媒体流信息补全、缺海报修复与 TMDB 重复条目合并。（shyblacktea 自用版）",
     "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
     "version": "1.0.0",
-    "author": "shyblacktea,MoviePilot助手",
+    "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
