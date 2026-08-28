@@ -46,13 +46,13 @@ class ManualSubscribeAssistantShy(_PluginBase):
     """多来源榜单手动订阅助手（Vue 联邦渲染）。"""
 
     # 插件名称
-    plugin_name = "手动订阅助手魔改版"
+    plugin_name = "手动订阅助手"
     # 插件描述
     plugin_desc = "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。"
     # 插件图标
     plugin_icon = "https://avatars.githubusercontent.com/u/33568732?s=256&v=4"
     # 插件版本
-    plugin_version = "0.1.1"
+    plugin_version = "0.1.2"
     # 插件作者
     plugin_author = "shyblacktea（基于 Aqr-K）"
     # 作者主页
@@ -149,9 +149,22 @@ class ManualSubscribeAssistantShy(_PluginBase):
         """Vue 模式无需 Vuetify 详情页，历史由前端 Page 组件经 API 渲染。"""
         return None
 
+    def get_sidebar_nav(self) -> List[Dict[str, Any]]:
+        """声明手动订阅助手在主页侧栏中的入口。"""
+        if not self.get_state():
+            return []
+        return [{
+            "nav_key": "main",
+            "title": "手动订阅助手",
+            "icon": "mdi-rss",
+            "section": "subscribe",
+            "permission": "manage",
+            "order": 45,
+        }]
+
     def get_dashboard_meta(self) -> Optional[List[Dict[str, str]]]:
         """声明可用的仪表盘部件（供宿主仪表盘「添加组件」列出）。"""
-        return [{"key": "overview", "name": "自动订阅助手 · 订阅概览"}]
+        return [{"key": "overview", "name": "手动订阅助手 · 订阅概览"}]
 
     def get_dashboard(
         self, key: str = "", **kwargs
@@ -161,7 +174,7 @@ class ManualSubscribeAssistantShy(_PluginBase):
         cols = {"cols": 12, "md": 6}
         attrs = {
             "border": True,
-            "title": "自动订阅助手",
+            "title": "手动订阅助手",
             "subtitle": "订阅概览",
             # 前端 Dashboard 组件据此设置自动刷新间隔（秒）；0 表示仅手动刷新。
             "refresh": 300,
