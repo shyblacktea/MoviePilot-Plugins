@@ -378,7 +378,7 @@ const GLOBAL_KEY = '__global__'
 // --- i18n（内联，保持联邦块自包含）---
 const MSG = {
   'zh-CN': {
-    plugin: '插件', title: '手动订阅助手魔改版', changes: '{n} 项改动', save: '保存', close: '关闭',
+    plugin: '插件', title: '手动订阅助手', changes: '{n} 项改动', save: '保存', close: '关闭',
     settingsGroups: '设置分组', globalHeading: '全局设置', globalDesc: '插件总开关、通知与订阅归属，作用于所有来源',
     secRunning: '运行', secSubscription: '订阅', secOneTime: '一次性维护',
     'g.enabled.label': '启用插件', 'g.enabled.hint': '总开关，关闭后所有定时任务停止',
@@ -402,7 +402,7 @@ const MSG = {
     'rt.subscribed': '已订阅', 'rt.media_exists': '已存在', 'rt.subscription_exists': '已订阅过', 'rt.filtered': '已过滤',
   },
   'zh-TW': {
-    plugin: '外掛', title: '手動訂閱助手魔改版', changes: '{n} 項變更', save: '儲存', close: '關閉',
+    plugin: '外掛', title: '手動訂閱助手', changes: '{n} 項變更', save: '儲存', close: '關閉',
     settingsGroups: '設定分組', globalHeading: '全域設定', globalDesc: '外掛總開關、通知與訂閱歸屬，作用於所有來源',
     secRunning: '執行', secSubscription: '訂閱', secOneTime: '一次性維護',
     'g.enabled.label': '啟用外掛', 'g.enabled.hint': '總開關，關閉後所有定時任務停止',
@@ -465,7 +465,7 @@ function t(k, p) {
   return s
 }
 
-const GLOBAL_DEFAULTS = { enabled: false, notify: false, exist_ok: true, username: '手动订阅助手魔改版', onlyonce: false, clear: false }
+const GLOBAL_DEFAULTS = { enabled: false, notify: false, exist_ok: true, username: '手动订阅助手', onlyonce: false, clear: false }
 const GLOBAL_SECTIONS = [
   { titleKey: 'secRunning', fields: [{ key: 'enabled', kind: 'switch' }, { key: 'notify', kind: 'switch' }] },
   { titleKey: 'secSubscription', fields: [{ key: 'username', kind: 'text' }, { key: 'exist_ok', kind: 'switch' }] },
