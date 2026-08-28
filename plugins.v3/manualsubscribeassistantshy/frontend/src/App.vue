@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar color="surface" flat border>
-      <v-app-bar-title class="text-body-1 font-weight-bold">自动订阅助手 · 组件预览</v-app-bar-title>
+      <v-app-bar-title class="text-body-1 font-weight-bold">手动订阅助手 · 组件预览</v-app-bar-title>
       <template #append>
         <v-btn-toggle v-model="previewWidth" density="comfortable" mandatory variant="outlined" class="mr-3">
           <v-btn :value="380" size="small">窄</v-btn>
@@ -97,7 +97,7 @@ const frameStyle = computed(() => ({ maxWidth: `${previewWidth.value}px` }))
 
 // 代表性已保存配置：启用部分来源，供脏值追踪 / 概览渲染
 const mockConfig = {
-  global: { enabled: true, notify: true, exist_ok: true, username: '手动订阅助手魔改版', onlyonce: false, clear: false },
+  global: { enabled: true, notify: true, exist_ok: true, username: '手动订阅助手', onlyonce: false, clear: false },
   providers: {
     douban: { enabled: true, cron: '0 8 * * *' },
     maoyan: { enabled: true, cron: '30 9 * * *' },
@@ -113,9 +113,9 @@ const mockConfig = {
 
 const dashConfig = reactive({
   id: 'ManualSubscribeAssistantShy',
-  name: '手动订阅助手魔改版',
+  name: '手动订阅助手',
   render_mode: 'vue',
-  attrs: { title: '手动订阅助手魔改版', subtitle: '订阅概览', border: true, refresh: 0 },
+  attrs: { title: '手动订阅助手', subtitle: '订阅概览', border: true, refresh: 0 },
 })
 
 function toggleTheme() {
