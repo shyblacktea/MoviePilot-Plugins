@@ -9,9 +9,9 @@
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
-      "0.1.1": "fix: 修复订阅配置中的清空历史逻辑，改为只清空订阅管理候选，不影响实际 MoviePilot 订阅和订阅历史；同步更新界面提示；ui: 候选状态筛选改为单选，待确认、已订阅、被过滤、未识别互斥。",
-      "0.1.0": "重做：完整迁移自动订阅助手的多来源抓取、动态配置、过滤器、运行状态、候选筛选和订阅管理界面；抓取只保存候选，改为用户确认后手动创建订阅。",
-      "0.0.1": "初版支持 Mikan 季番抓取、Bangumi/TMDB 跳转与手动创建订阅。"
+      "v0.1.1": "fix: 修复订阅配置中的清空历史逻辑，改为只清空订阅管理候选，不影响实际 MoviePilot 订阅和订阅历史；同步更新界面提示；ui: 候选状态筛选改为单选，待确认、已订阅、被过滤、未识别互斥。",
+      "v0.1.0": "重做：完整迁移自动订阅助手的多来源抓取、动态配置、过滤器、运行状态、候选筛选和订阅管理界面；抓取只保存候选，改为用户确认后手动创建订阅。",
+      "v0.0.1": "初版支持 Mikan 季番抓取、Bangumi/TMDB 跳转与手动创建订阅。"
     }
   },
   "SubscribePlus": {
@@ -24,7 +24,7 @@
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
-      "1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），旧导入 app.core.*/app.helper.*/app.log 统一迁移到 app.sdk.*（events/logging/media/services/network）与 app.agent.llm；版本 0.24 -> 1.0.0。"
+      "v1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），旧导入 app.core.*/app.helper.*/app.log 统一迁移到 app.sdk.*（events/logging/media/services/network）与 app.agent.llm；版本 0.24 -> 1.0.0。"
     }
   },
   "PlexToolbox": {
@@ -37,7 +37,7 @@
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
-      "1.0.0": "feat: 新增 Plex TMDB 重复条目扫描与合并功能。"
+      "v1.0.0": "feat: 新增 Plex TMDB 重复条目扫描与合并功能。"
     }
   }
 }
