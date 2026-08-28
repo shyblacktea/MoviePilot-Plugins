@@ -123,7 +123,7 @@ const STAT_ORDER = ['subscribed', 'media_exists', 'subscription_exists', 'filter
 // --- i18n（内联，保持联邦块自包含）---
 const MSG = {
   'zh-CN': {
-    title: '手动订阅助手魔改版', subtitle: '订阅概览', cap: '累计处理', sources: '来源',
+    title: '手动订阅助手', subtitle: '订阅概览', cap: '累计处理', sources: '来源',
     enabledOf: '{a} / {b} 启用', noSources: '无可用来源', recent: '最近订阅',
     emptyText: '暂无订阅记录', emptyHint: '启用来源并运行后，这里会展示订阅统计',
     retry: '重试', refresh: '刷新', apiUnavailable: 'API 不可用', loadError: '数据加载失败：',
@@ -131,7 +131,7 @@ const MSG = {
     'st.filtered': '被过滤', 'st.unrecognized': '未识别', 'st.already_handled': '已处理', 'st.error': '异常',
   },
   'zh-TW': {
-    title: '手動訂閱助手魔改版', subtitle: '訂閱概覽', cap: '累計處理', sources: '來源',
+    title: '手動訂閱助手', subtitle: '訂閱概覽', cap: '累計處理', sources: '來源',
     enabledOf: '{a} / {b} 啟用', noSources: '無可用來源', recent: '最近訂閱',
     emptyText: '暫無訂閱記錄', emptyHint: '啟用來源並執行後，這裡會顯示訂閱統計',
     retry: '重試', refresh: '重新整理', apiUnavailable: 'API 不可用', loadError: '資料載入失敗：',
