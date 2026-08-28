@@ -2,14 +2,17 @@ const currentImports = {};
       const exportSet = new Set(['Module', '__esModule', 'default', '_export_sfc']);
       let moduleMap = {
 "./Page":()=>{
-      dynamicLoadingCss(["__federation_expose_Page-Dd_valo3.css","PluginTabs-CF7oGx1f.css"], false, './Page');
-      return __federation_import('./__federation_expose_Page-CqciKitU.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},
+      dynamicLoadingCss(["__federation_expose_Page-Dj3P1_Px.css","PluginTabs-CF7oGx1f.css"], false, './Page');
+      return __federation_import('./__federation_expose_Page-SYe24Je1.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},
 "./Config":()=>{
-      dynamicLoadingCss(["__federation_expose_Config-BKNnZ46M.css","PluginTabs-CF7oGx1f.css"], false, './Config');
-      return __federation_import('./__federation_expose_Config-073pkI6B.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},
+      dynamicLoadingCss(["__federation_expose_Config-C9doDy-8.css","PluginTabs-CF7oGx1f.css"], false, './Config');
+      return __federation_import('./__federation_expose_Config-C03414ex.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},
 "./Dashboard":()=>{
-      dynamicLoadingCss(["__federation_expose_Dashboard-p4gK0mO5.css"], false, './Dashboard');
-      return __federation_import('./__federation_expose_Dashboard-DG7fLF_F.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
+      dynamicLoadingCss(["__federation_expose_Dashboard-_75vtsuV.css"], false, './Dashboard');
+      return __federation_import('./__federation_expose_Dashboard-eEqniloa.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},
+"./AppPage":()=>{
+      dynamicLoadingCss(["__federation_expose_Page-Dj3P1_Px.css","PluginTabs-CF7oGx1f.css"], false, './AppPage');
+      return __federation_import('./__federation_expose_AppPage-CSLB_TLX.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
       const seen = {};
       const dynamicLoadingCss = (cssFilePaths, dontAppendStylesToHead, exposeItemName) => {
         const metaUrl = import.meta.url;
