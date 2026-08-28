@@ -19,7 +19,7 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 ### 订阅类
 
 - [订阅下载增强](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/subscribeplus)：检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。
-- [手动订阅助手](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/manualsubscribeassistantshy)：完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（基于 Aqr-K）
+- [手动订阅助手](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/manualsubscribeassistantshy)：完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。
 
 ### 媒体服务器类
 
