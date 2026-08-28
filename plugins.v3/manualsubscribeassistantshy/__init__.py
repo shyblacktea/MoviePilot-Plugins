@@ -48,13 +48,13 @@ class ManualSubscribeAssistantShy(_PluginBase):
     # 插件名称
     plugin_name = "手动订阅助手"
     # 插件描述
-    plugin_desc = "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。"
+    plugin_desc = "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（基于 Aqr-K）"
     # 插件图标
     plugin_icon = "https://avatars.githubusercontent.com/u/33568732?s=256&v=4"
     # 插件版本
-    plugin_version = "0.1.2"
+    plugin_version = "0.1.1"
     # 插件作者
-    plugin_author = "shyblacktea（基于 Aqr-K）"
+    plugin_author = "shyblacktea"
     # 作者主页
     author_url = "https://github.com/shyblacktea"
     # 插件配置项 ID 前缀
