@@ -32,7 +32,7 @@
             v-for="s in statCards"
             :key="s.key"
             type="button"
-            :class="['asa-stat', `asa-stat--${s.color}`, { 'asa-stat--active': filters.statuses.includes(s.key) }]"
+            :class="['asa-stat', `asa-stat--${s.color}`, { 'asa-stat--active': filters.status === s.key }]"
             @click="toggleStatus(s.key)"
           >
             <span class="asa-stat__num">{{ s.count }}</span>
@@ -40,7 +40,7 @@
           </button>
         </div>
 
-        <!-- 搜索 + 筛选：桌面与移动端统一为「筛选」弹窗触发按钮 + 多选开关 -->
+        <!-- 搜索 + 筛选：桌面与移动端统一为「筛选」弹窗触发按钮 -->
         <div class="asa-filters">
           <v-btn
             class="asa-filters__trigger"
@@ -215,7 +215,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- 移动端筛选弹窗（搜索 / 发行年份范围 / 类型多选 / 状态多选 / 来源多选） -->
+    <!-- 移动端筛选弹窗（搜索 / 发行年份范围 / 类型多选 / 状态单选 / 来源多选） -->
     <v-dialog v-model="filterDialog" max-width="440" scrollable>
       <v-card class="asa-filter-dlg">
         <v-card-title class="asa-filter-dlg__title">
@@ -347,13 +347,13 @@ const footDialog = ref(false)  // 移动端页脚「每页行数 + 跳转」弹�
 const statusCounts = ref({})
 const providerNames = reactive({})
 const providerList = ref([])
-// 统一筛选模型（历史）：关键词 / 发行年份范围 / 类型(多) / 状态(多) / 来源(多)。
-// 「留空即不过滤（全部）」：keyword='' / year=null / 多选=[]。桌面内联、移动弹窗共用此对象；
+// 统一筛选模型（历史）：关键词 / 发行年份范围 / 类型(多) / 状态(单) / 来源(多)。
+// 「留空即不过滤（全部）」：keyword='' / year=null / 多选=[] / 单选=null。桌面内联、移动弹窗共用此对象；
 // 弹窗编辑 draft 副本，点「应用」后整体拷回 filters，避免弹窗内每次输入都触发服务端重取。
-const EMPTY_FILTERS = () => ({ keyword: '', yearMin: null, yearMax: null, mtypes: [], statuses: [], providers: [] })
+const EMPTY_FILTERS = () => ({ keyword: '', yearMin: null, yearMax: null, mtypes: [], status: null, providers: [] })
 function cloneFilters(s) {
   return { keyword: s.keyword, yearMin: s.yearMin, yearMax: s.yearMax,
-    mtypes: [...s.mtypes], statuses: [...s.statuses], providers: [...s.providers] }
+    mtypes: [...s.mtypes], status: s.status, providers: [...s.providers] }
 }
 const filters = reactive(EMPTY_FILTERS())
 const draft = reactive(EMPTY_FILTERS())
@@ -397,7 +397,7 @@ const paginationSize = computed(() => (isSingleCol.value ? 'x-small' : 'small'))
 const activeFilterCount = computed(() =>
   (filters.keyword ? 1 : 0) +
   (filters.yearMin != null || filters.yearMax != null ? 1 : 0) +
-  (filters.mtypes.length ? 1 : 0) + (filters.statuses.length ? 1 : 0) + (filters.providers.length ? 1 : 0))
+  (filters.mtypes.length ? 1 : 0) + (filters.status ? 1 : 0) + (filters.providers.length ? 1 : 0))
 const hasFilter = computed(() => activeFilterCount.value > 0)
 const tabDefs = computed(() => {
   const base = [
@@ -416,12 +416,12 @@ const typeSelectItems = computed(() => [
   { title: t('mt.movie'), value: '电影' },
   { title: t('mt.tv'), value: '电视剧' },
 ])
-// FilterPanel 字段配置（历史）：类型多选、状态多选、来源多选 + 发行年份范围 + 搜索。
+// FilterPanel 字段配置（历史）：类型多选、状态单选、来源多选 + 发行年份范围 + 搜索。
 const historyFilterFields = computed(() => [
   { type: 'search', key: 'keyword', label: t('searchLabel'), placeholder: t('searchPh') },
   { type: 'year-range', keyMin: 'yearMin', keyMax: 'yearMax', label: t('filterYear'), minText: t('yearFrom'), maxText: t('yearTo') },
   { type: 'select', key: 'mtypes', multi: true, items: typeSelectItems.value, label: t('filterType'), icon: 'mdi-shape-outline', allText: t('filterAll') },
-  { type: 'select', key: 'statuses', multi: true, items: statusSelectItems.value, label: t('filterStatus'), icon: 'mdi-flag-outline', allText: t('filterAll') },
+  { type: 'select', key: 'status', items: statusSelectItems.value, label: t('filterStatus'), icon: 'mdi-flag-outline', allText: t('filterAll') },
   { type: 'select', key: 'providers', multi: true, items: providerOptions.value, label: t('filterSource'), icon: 'mdi-filter-variant', allText: t('filterAll') },
 ])
 
@@ -458,12 +458,12 @@ function normalizeList(res) {
   return []
 }
 
-// 历史筛选 → 查询参数：多选以逗号连接（后端按逗号切分，向后兼容单值）；空数组/空值经 qs 过滤丢弃。
+// 历史筛选 → 查询参数：类型/来源多选以逗号连接，状态单值直传；空数组/空值经 qs 过滤丢弃。
 function historyQuery() {
   return {
     keyword: filters.keyword,
     provider: filters.providers.join(','),
-    status: filters.statuses.join(','),
+    status: filters.status,
     mtype: filters.mtypes.join(','),
     year_min: filters.yearMin,
     year_max: filters.yearMax,
@@ -521,11 +521,9 @@ function reloadCurrent() {
   if (view.value === 'history') fetchHistory()
 }
 function applyFilters() { page.value = 1; fetchHistory() }
-// 统计卡片点击：切换该状态在多选集合中的存在。
+// 统计卡片点击：状态互斥；再次点击当前状态则清除状态筛选。
 function toggleStatus(key) {
-  const i = filters.statuses.indexOf(key)
-  if (i >= 0) filters.statuses.splice(i, 1)
-  else filters.statuses.push(key)
+  filters.status = filters.status === key ? null : key
   applyFilters()
 }
 function clearFilters() { Object.assign(filters, EMPTY_FILTERS()); applyFilters() }
