@@ -263,7 +263,7 @@ const STAT_ORDER = ['candidate', 'subscribed', 'filtered', 'unrecognized']
 
 const MSG = {
   'zh-CN': {
-    plugin: '插件', appTitle: '手动订阅助手魔改版', title: '订阅管理', manageTitle: '订阅历史', config: '订阅配置',
+    plugin: '插件', appTitle: '手动订阅助手', title: '订阅管理', manageTitle: '订阅历史', config: '订阅配置',
     records: '共 {n} 条记录', refresh: '刷新', close: '关闭', searchPh: '搜索名称…',
     filterSource: '来源', filterStatus: '状态', filterType: '类型', clearFilters: '清除筛选',
     filter: '筛选', filterTitle: '筛选与搜索', filterYear: '发行年份', yearFrom: '起始年', yearTo: '结束年',
@@ -281,7 +281,7 @@ const MSG = {
     'st.candidate': '待确认', 'st.subscribed': '已订阅', 'st.filtered': '被过滤', 'st.unrecognized': '未识别',
   },
   'zh-TW': {
-    plugin: '外掛', appTitle: '手動訂閱助手魔改版', title: '訂閱管理', manageTitle: '訂閱歷史', config: '訂閱設定',
+    plugin: '外掛', appTitle: '手動訂閱助手', title: '訂閱管理', manageTitle: '訂閱歷史', config: '訂閱設定',
     records: '共 {n} 筆記錄', refresh: '重新整理', close: '關閉', searchPh: '搜尋名稱…',
     filterSource: '來源', filterStatus: '狀態', filterType: '類型', clearFilters: '清除篩選',
     filter: '篩選', filterTitle: '篩選與搜尋', filterYear: '發行年份', yearFrom: '起始年', yearTo: '結束年',
