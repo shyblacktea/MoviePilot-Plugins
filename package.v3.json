@@ -37,7 +37,7 @@
         "system_version": ">=3.0.0",
         "release": true,
         "history": {
-            "1.0.0": "feat: 新增 Plex TMDB 重复条目扫描与合并功能；V2 0.7.3 原版继续并行保留。"
+            "1.0.0": "feat: 新增 Plex TMDB 重复条目扫描与合并功能。"
         }
     }
 }
