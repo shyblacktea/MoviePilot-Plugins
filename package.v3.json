@@ -1,43 +1,43 @@
 {
-    "ManualSubscribeAssistantShy": {
-        "name": "手动订阅助手",
-        "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（基于 Aqr-K）（shyblacktea 自用版）",
-        "icon": "https://avatars.githubusercontent.com/u/33568732?s=256&v=4",
-        "version": "0.1.1",
-        "author": "shyblacktea",
-        "level": 1,
-        "system_version": ">=3.0.0",
-        "release": true,
-        "history": {
-            "0.1.1": "fix: 修复订阅配置中的清空历史逻辑，改为只清空订阅管理候选，不影响实际 MoviePilot 订阅和订阅历史；同步更新界面提示；ui: 候选状态筛选改为单选，待确认、已订阅、被过滤、未识别互斥。",
-            "0.1.0": "重做：完整迁移自动订阅助手的多来源抓取、动态配置、过滤器、运行状态、候选筛选和订阅管理界面；抓取只保存候选，改为用户确认后手动创建订阅。",
-            "0.0.1": "初版支持 Mikan 季番抓取、Bangumi/TMDB 跳转与手动创建订阅。"
-        }
-    },
-    "SubscribePlus": {
-        "name": "订阅下载增强",
-        "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（shyblacktea 自用版）",
-        "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png",
-        "version": "1.0.0",
-        "author": "shyblacktea",
-        "level": 1,
-        "system_version": ">=3.0.0",
-        "release": true,
-        "history": {
-            "1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），旧导入 app.core.*/app.helper.*/app.log 统一迁移到 app.sdk.*（events/logging/media/services/network）与 app.agent.llm；版本 0.24 -> 1.0.0。"
-        }
-    },
-    "PlexToolbox": {
-        "name": "PLEX 工具箱",
-        "description": "Plex 302 反向代理、STRM 媒体流信息补全、缺海报修复与 TMDB 重复条目合并。（shyblacktea 自用版）",
-        "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
-        "version": "1.0.0",
-        "author": "shyblacktea",
-        "level": 1,
-        "system_version": ">=3.0.0",
-        "release": true,
-        "history": {
-            "1.0.0": "feat: 新增 Plex TMDB 重复条目扫描与合并功能。"
-        }
+  "ManualSubscribeAssistantShy": {
+    "name": "手动订阅助手",
+    "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（基于 Aqr-K）（shyblacktea 自用版）",
+    "icon": "https://avatars.githubusercontent.com/u/33568732?s=256&v=4",
+    "version": "0.1.1",
+    "author": "shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "0.1.1": "fix: 修复订阅配置中的清空历史逻辑，改为只清空订阅管理候选，不影响实际 MoviePilot 订阅和订阅历史；同步更新界面提示；ui: 候选状态筛选改为单选，待确认、已订阅、被过滤、未识别互斥。",
+      "0.1.0": "重做：完整迁移自动订阅助手的多来源抓取、动态配置、过滤器、运行状态、候选筛选和订阅管理界面；抓取只保存候选，改为用户确认后手动创建订阅。",
+      "0.0.1": "初版支持 Mikan 季番抓取、Bangumi/TMDB 跳转与手动创建订阅。"
     }
+  },
+  "SubscribePlus": {
+    "name": "订阅下载增强",
+    "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（shyblacktea 自用版）",
+    "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png",
+    "version": "1.0.0",
+    "author": "shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），旧导入 app.core.*/app.helper.*/app.log 统一迁移到 app.sdk.*（events/logging/media/services/network）与 app.agent.llm；版本 0.24 -> 1.0.0。"
+    }
+  },
+  "PlexToolbox": {
+    "name": "PLEX 工具箱",
+    "description": "Plex 302 反向代理、STRM 媒体流信息补全、缺海报修复与 TMDB 重复条目合并。（shyblacktea 自用版）",
+    "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
+    "version": "1.0.0",
+    "author": "shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "1.0.0": "feat: 新增 Plex TMDB 重复条目扫描与合并功能。"
+    }
+  }
 }
