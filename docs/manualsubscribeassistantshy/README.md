@@ -30,3 +30,10 @@
 - 当前版本：`0.1.1`
 - Release Tag：`ManualSubscribeAssistantShy_v0.1.1`
 - Release 资产：`manualsubscribeassistantshy_v0.1.1.zip`
+
+## 致谢
+
+- 原作者：[Aqr-K](https://github.com/Aqr-K)
+- 原仓库：[Aqr-K/MoviePilot-Plugins](https://github.com/Aqr-K/MoviePilot-Plugins)
+
+本版本基于原作者的自动订阅助手改造，感谢原作者和 MoviePilot 社区。
