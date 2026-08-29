@@ -2,7 +2,7 @@
   "ManualSubscribeAssistantShy": {
     "name": "手动订阅助手",
     "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（小k自用版）",
-    "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/manualsubscribeassistantshy.svg",
+    "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/manualsubscribeassistantshy.png",
     "version": "0.1.1",
     "author": "shyblacktea",
     "level": 1,
@@ -43,7 +43,7 @@
   "DownloadDirFilter": {
     "name": "下载目录滤镜",
     "description": "根据自定义格式修改MP下载种子的保存路径、种子名称。（小k自用版）",
-    "icon": "https://avatars.githubusercontent.com/u/33568732?v=4",
+    "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/downloaddirfilter.png",
     "version": "0.0.1",
     "author": "shyblacktea",
     "level": 1,
