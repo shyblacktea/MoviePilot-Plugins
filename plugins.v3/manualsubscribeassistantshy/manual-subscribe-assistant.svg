@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">手动订阅助手图标</title>
+  <desc id="desc">深蓝渐变方形底图上叠放订阅卡片，青绿色鼠标指针指向确认按钮。</desc>
+  <defs>
+    <linearGradient id="bg" x1="80" y1="40" x2="940" y2="980" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0B1633"/>
+      <stop offset="0.55" stop-color="#102A4A"/>
+      <stop offset="1" stop-color="#07515D"/>
+    </linearGradient>
+    <linearGradient id="card" x1="250" y1="230" x2="795" y2="730" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#183967"/>
+      <stop offset="1" stop-color="#102746"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="370" y1="390" x2="780" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#48F0CE"/>
+      <stop offset="1" stop-color="#10B9C1"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="24" stdDeviation="22" flood-color="#020817" flood-opacity="0.42"/>
+    </filter>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <clipPath id="round">
+      <rect x="32" y="32" width="960" height="960" rx="218"/>
+    </clipPath>
+  </defs>
+
+  <rect x="32" y="32" width="960" height="960" rx="218" fill="url(#bg)"/>
+  <g clip-path="url(#round)">
+    <circle cx="820" cy="160" r="190" fill="#39E8D0" opacity="0.12" filter="url(#glow)"/>
+    <circle cx="185" cy="860" r="230" fill="#2577D7" opacity="0.18" filter="url(#glow)"/>
+    <path d="M90 760C245 635 360 840 530 735S785 560 960 665" fill="none" stroke="#56E8D0" stroke-opacity="0.09" stroke-width="4"/>
+    <path d="M65 820C220 695 365 900 555 785S795 625 970 735" fill="none" stroke="#5EA8FF" stroke-opacity="0.08" stroke-width="3"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="194" y="188" width="636" height="486" rx="58" fill="#06152F" opacity="0.58"/>
+    <rect x="174" y="164" width="636" height="486" rx="58" fill="url(#card)" stroke="#5EEBD3" stroke-opacity="0.58" stroke-width="5"/>
+    <rect x="174" y="164" width="636" height="112" rx="58" fill="#1A4770" opacity="0.68"/>
+    <path d="M174 220H810" stroke="#71F0D8" stroke-opacity="0.26" stroke-width="3"/>
+
+    <circle cx="232" cy="220" r="13" fill="#FF6F91"/>
+    <circle cx="274" cy="220" r="13" fill="#FFC857"/>
+    <circle cx="316" cy="220" r="13" fill="#4CE1C3"/>
+
+    <rect x="232" y="332" width="62" height="62" rx="18" fill="#0C6E78"/>
+    <path d="M263 346v34M246 363h34" stroke="#8CFFF0" stroke-width="11" stroke-linecap="round"/>
+    <rect x="330" y="340" width="306" height="18" rx="9" fill="#D8F9F3" opacity="0.9"/>
+    <rect x="330" y="375" width="214" height="13" rx="6.5" fill="#8CB4C9" opacity="0.78"/>
+
+    <rect x="232" y="454" width="402" height="18" rx="9" fill="#B8D9E4" opacity="0.78"/>
+    <rect x="232" y="494" width="330" height="14" rx="7" fill="#739BB8" opacity="0.68"/>
+    <rect x="232" y="544" width="178" height="54" rx="27" fill="url(#accent)"/>
+    <path d="M278 571h87" stroke="#062C49" stroke-width="11" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M615 522L690 790L740 694L805 734L828 696L763 656L848 612Z" fill="#F4FFFE" stroke="#072B4A" stroke-width="14" stroke-linejoin="round"/>
+    <path d="M763 656L848 612L805 734L740 694Z" fill="#49E7D0" opacity="0.95"/>
+    <path d="M615 522L690 790L740 694L763 656Z" fill="#FFFFFF"/>
+  </g>
+
+  <circle cx="688" cy="432" r="27" fill="#4CE1C3" opacity="0.22"/>
+  <circle cx="688" cy="432" r="10" fill="#78FFE4"/>
+  <circle cx="760" cy="382" r="8" fill="#7AB8FF" opacity="0.8"/>
+  <circle cx="824" cy="460" r="6" fill="#4CE1C3" opacity="0.75"/>
+</svg>
