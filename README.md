@@ -15,6 +15,7 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 ### 工具类
 
 - [清理无效插件](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/cleaninvalidplugin)：扫描、清理或重新安装数据库中无法加载的插件记录。
+- [下载目录滤镜](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/downloaddirfilter)：根据自定义格式修改MP下载种子的保存路径、种子名称。
 
 ### 订阅类
 

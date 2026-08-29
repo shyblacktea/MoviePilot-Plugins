@@ -222,7 +222,7 @@ class DownloadDirFilter(_PluginBase):
     # 插件描述
     plugin_desc = "根据自定义格式修改MP下载种子的保存路径、种子名称。（小k自用版）"
     # 插件图标
-    plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/downloaddirfilter.png"
+    plugin_icon = "https://avatars.githubusercontent.com/u/33568732?v=4"
     # 插件版本
     plugin_version = "0.0.1"
     # 插件作者

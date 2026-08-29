@@ -43,7 +43,7 @@
   "DownloadDirFilter": {
     "name": "下载目录滤镜",
     "description": "根据自定义格式修改MP下载种子的保存路径、种子名称。（小k自用版）",
-    "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/downloaddirfilter.png",
+    "icon": "https://avatars.githubusercontent.com/u/33568732?v=4",
     "version": "0.0.1",
     "author": "shyblacktea",
     "level": 1,
