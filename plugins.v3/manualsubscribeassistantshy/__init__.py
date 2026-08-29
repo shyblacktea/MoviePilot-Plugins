@@ -48,9 +48,9 @@ class ManualSubscribeAssistantShy(_PluginBase):
     # 插件名称
     plugin_name = "手动订阅助手"
     # 插件描述
-    plugin_desc = "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。"
+    plugin_desc = "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（小k自用版）"
     # 插件图标
-    plugin_icon = "https://avatars.githubusercontent.com/u/33568732?s=256&v=4"
+    plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/manualsubscribeassistantshy.svg"
     # 插件版本
     plugin_version = "0.1.1"
     # 插件作者
