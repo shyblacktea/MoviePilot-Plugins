@@ -1,7 +1,7 @@
 {
   "ManualSubscribeAssistantShy": {
     "name": "手动订阅助手",
-    "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（基于 Aqr-K）（shyblacktea 自用版）",
+    "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（shyblacktea 自用版）",
     "icon": "https://avatars.githubusercontent.com/u/33568732?s=256&v=4",
     "version": "0.1.1",
     "author": "shyblacktea",
