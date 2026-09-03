@@ -1,4 +1,17 @@
 {
+  "CureTMDbAnimeShy": {
+    "name": "CTMDbA",
+    "description": "对 TMDb 上被合并为一季的番剧进行季信息分离。（小k自用版）",
+    "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/curetmdbanimeshy.png",
+    "version": "0.0.1",
+    "author": "Attente,shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "v0.0.1": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），旧导入 app.core.*/app.helper.*/app.utils.*/app.log 统一迁移到 app.sdk.*，独立插件 ID CureTMDbAnimeShy 杜绝与原版 CureTMDbAnime 来源冲突。"
+    }
+  },
   "ManualSubscribeAssistantShy": {
     "name": "手动订阅助手",
     "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（小k自用版）",
