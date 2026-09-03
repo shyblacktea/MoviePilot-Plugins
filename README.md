@@ -22,6 +22,10 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 - [订阅下载增强](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/subscribeplus)：检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。
 - [手动订阅助手](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/manualsubscribeassistantshy)：完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。
 
+### 识别/刮削类
+
+- [CTMDbA](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/curetmdbanimeshy)：对 TMDb 上被合并为一季的番剧进行季信息分离。
+
 ### 媒体服务器类
 
 - [PLEX 工具箱](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/plextoolbox)：Plex 302 反向代理 + STRM 媒体流信息补全（Emby/ffprobe 数据源写入 Plex 库）。
