@@ -44,7 +44,7 @@ class CureTMDbAnimeShyConfig(BaseModel):
 
 class CureTMDbAnimeShy(_PluginBase):
     # 插件名称
-    plugin_name = "CTMDbA"
+    plugin_name = "CTMDbA魔改版"
     # 插件描述
     plugin_desc = "对 TMDb 上被合并为一季的番剧进行季信息分离。（小k自用版）"
     # 插件图标
