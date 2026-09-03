@@ -1,0 +1,740 @@
+import os
+import threading
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, Field
+
+from app.sdk.cache import cached
+from app.sdk.config import settings
+from app.sdk.media import MediaInfo, MetaBase
+from app.sdk.logging import logger
+from app.plugins import _PluginBase
+from app.sdk.network import RequestUtils
+from app.sdk.utilities import SystemUtils
+
+from .engine import MetaCorrectionUseCase
+from .patch import MonkeyPatchManager
+
+
+class CureTMDbAnimeShyConfig(BaseModel):
+    # 启用插件
+    enabled: bool = Field(default=False)
+    # Bangumi API 地址
+    bangumi_api_url: str = Field(
+        default="https://api.bgm.tv",
+    )
+    # Bangumi API 是否使用代理
+    bangumi_use_proxy: bool = Field(default=True)
+    # 启用元数据修正
+    enable_correction: bool = Field(default=True)
+    # 当标题默认解析为 S01 时，按发布时间匹配 TMDB 季播出窗口推断季号
+    assume_season_by_window: bool = Field(default=False)
+    # 最新季允许的越界宽限集数
+    grace_episodes: int = Field(default=2, ge=0, le=5)
+    # 改写所需的最小总分优势（避免噪声触发改写）
+    rewrite_threshold: int = Field(default=16, ge=0, le=40)
+    # 远程数据源地址
+    source: Optional[str] = Field(
+        default="https://raw.githubusercontent.com/wikrin/CureTMDb/main/tv.json",
+    )
+    # 运行端口
+    port: int = Field(default=8632, ge=1024, le=65535)
+
+
+class CureTMDbAnimeShy(_PluginBase):
+    # 插件名称
+    plugin_name = "CTMDbA"
+    # 插件描述
+    plugin_desc = "对 TMDb 上被合并为一季的番剧进行季信息分离。（小k自用版）"
+    # 插件图标
+    plugin_icon = "curetmdbanimeshy.png"
+    # 插件版本
+    plugin_version = "0.0.1"
+    # 插件作者
+    plugin_author = "Attente,shyblacktea"
+    # 作者主页
+    author_url = "https://github.com/shyblacktea"
+    # 插件配置项ID前缀
+    plugin_config_prefix = "curetmdbanimeshy_"
+    # 加载顺序
+    plugin_order = 99
+    # 可使用的用户级别
+    auth_level = 1
+    # 二进制文件
+    binary_name = "curetmdbanime"
+    # 二进制文件版本
+    binary_version = "1.3.1"
+    # 二进制下载仓库（二进制仍由原作者 wikrin 编译分发）
+    binary_repo = "https://github.com/wikrin"
+
+    def __init__(self):
+        super().__init__()
+        self.config = CureTMDbAnimeShyConfig()
+        self.patch_manager = MonkeyPatchManager()
+        self._thread: Optional[threading.Thread] = None
+        self._event: threading.Event = threading.Event()
+        self._process: Optional[Any] = None
+        self._process_lock = threading.Lock()
+
+    def init_plugin(self, config: dict = None):
+        # 停止现有任务
+        if not self.stop_service():
+            logger.error("CureTMDbAnimeShy 旧服务未能停止，取消重复启动。")
+            return
+        # 加载插件配置
+        self.load_config(config)
+
+        if not self.config.enabled:
+            return
+
+        # 初始化
+        self.meta_correction_use_case = MetaCorrectionUseCase(
+            grace_episodes=self.config.grace_episodes,
+            rewrite_threshold=self.config.rewrite_threshold,
+            assume_season_by_window=self.config.assume_season_by_window,
+        )
+
+        # 在单独线程中运行 CureTMDbAnimeShy 服务
+        self._thread = threading.Thread(target=self._run_binary_in_thread, daemon=True)
+        self._thread.start()
+
+    def load_config(self, config: dict):
+        """加载配置"""
+        if config:
+            self.config = CureTMDbAnimeShyConfig(**config)
+
+    def stop_service(self):
+        """退出插件"""
+        # 先通知输出读取线程退出，再主动终止其子进程以唤醒管道。
+        self._event.set()
+        process_stopped = self._terminate_process()
+
+        if self._thread:
+            # 等待线程结束
+            self._thread.join(timeout=5)
+            if self._thread.is_alive():
+                logger.warning("CureTMDbAnimeShy 服务线程未能及时停止。")
+                self.patch_manager.unpatch_all()
+                return False
+            self._thread = None
+
+        if not process_stopped:
+            self.patch_manager.unpatch_all()
+            return False
+
+        # 仅在旧线程和进程都停止后重置事件，避免遗留线程恢复运行。
+        self._event.clear()
+
+        # 线程停止后再恢复补丁
+        self.patch_manager.unpatch_all()
+        return True
+
+    def _terminate_process(self, process=None) -> bool:
+        """终止并回收已跟踪的 CureTMDbAnimeShy 子进程。"""
+        import psutil
+
+        with self._process_lock:
+            target = process or self._process
+            if not target:
+                return True
+
+            stopped = False
+            try:
+                if target.is_running():
+                    logger.info("正在停止 CureTMDbAnimeShy 子进程。")
+                    target.terminate()
+
+                try:
+                    target.wait(timeout=3)
+                    stopped = True
+                except psutil.TimeoutExpired:
+                    logger.warning("CureTMDbAnimeShy 子进程未及时退出，强制终止。")
+                    if target.is_running():
+                        target.kill()
+                    target.wait(timeout=2)
+                    stopped = True
+                except psutil.NoSuchProcess:
+                    stopped = True
+            except psutil.NoSuchProcess:
+                stopped = True
+            except Exception as e:
+                logger.warning(f"清理 CureTMDbAnimeShy 子进程失败：{e}")
+
+            if stopped and self._process is target:
+                self._process = None
+            return stopped
+
+    @staticmethod
+    def _is_port_in_use(port: int) -> bool:
+        """检查本机端口是否已有服务监听，避免重复启动。"""
+        import socket
+
+        try:
+            with socket.create_connection(("127.0.0.1", int(port)), timeout=0.25):
+                return True
+        except OSError:
+            return False
+
+    def get_api(self) -> List[Dict[str, Any]]:
+        pass
+
+    def get_form(self):
+        return [
+            {
+                "component": "VForm",
+                "content": [
+                    {
+                        "component": "VRow",
+                        "content": [
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 4},
+                                "content": [
+                                    {
+                                        "component": "VSwitch",
+                                        "props": {
+                                            "model": "enabled",
+                                            "label": "启用插件",
+                                            "hint": "开启后将使用 CureTMDbAnimeShy 代理 TheMovieDb API请求",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 4},
+                                "content": [
+                                    {
+                                        "component": "VTextField",
+                                        "props": {
+                                            "model": "port",
+                                            "label": "端口",
+                                            "type": "number",
+                                            "min": 1024,
+                                            "max": 65535,
+                                            "step": 1,
+                                            "hint": "插件服务的监听端口，范围 1024-65535",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 4},
+                                "content": [
+                                    {
+                                        "component": "VSwitch",
+                                        "props": {
+                                            "model": "enable_correction",
+                                            "label": "启用元数据修正",
+                                            "hint": "开启后将对元数据季号、集号进行修正",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "component": "VRow",
+                        "content": [
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 4},
+                                "content": [
+                                    {
+                                        "component": "VTextField",
+                                        "props": {
+                                            "model": "bangumi_api_url",
+                                            "label": "Bangumi API URL",
+                                            "placeholder": "https://api.bgm.tv",
+                                            "hint": "请求 Bangumi API 时使用的地址",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 4},
+                                "content": [
+                                    {
+                                        "component": "VSwitch",
+                                        "props": {
+                                            "model": "bangumi_use_proxy",
+                                            "label": "Bangumi 使用代理",
+                                            "hint": "请求 Bangumi API 时是否使用代理",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "component": "VRow",
+                        "content": [
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 4},
+                                "content": [
+                                    {
+                                        "component": "VSwitch",
+                                        "props": {
+                                            "model": "assume_season_by_window",
+                                            "label": "按播出窗口推断季号",
+                                            "hint": "在标题缺少明确季号时，根据发布时间匹配 TMDB 季播出窗口尝试修正季号",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 4},
+                                "content": [
+                                    {
+                                        "component": "VTextField",
+                                        "props": {
+                                            "model": "grace_episodes",
+                                            "label": "集数越界宽限",
+                                            "type": "number",
+                                            "min": 0,
+                                            "max": 5,
+                                            "step": 1,
+                                            "hint": "最新季连载中允许超出 TMDB 已知集数的宽限集数，用于容忍连载滞后",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 4},
+                                "content": [
+                                    {
+                                        "component": "VTextField",
+                                        "props": {
+                                            "model": "rewrite_threshold",
+                                            "label": "改写阈值",
+                                            "type": "number",
+                                            "min": 0,
+                                            "max": 40,
+                                            "step": 2,
+                                            "hint": "改写候选需比原样候选高出的最小分数差值，数值越大越严格",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        "component": "VRow",
+                        "content": [
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 9},
+                                "content": [
+                                    {
+                                        "component": "VTextField",
+                                        "props": {
+                                            "model": "source",
+                                            "label": "来源",
+                                            "hint": "自定义分季数据源地址（JSON格式），适用于无法自动匹配或需自定义分季的场景",
+                                            "persistent-hint": True,
+                                        },
+                                    }
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            }
+        ], CureTMDbAnimeShyConfig().model_dump()
+
+    def get_page(self):
+        pass
+
+    def get_state(self):
+        return self.patch_manager.is_patched()
+
+    def _run_binary_in_thread(self):
+        """
+        在独立线程中运行二进制文件并捕获其输出。
+        """
+        # 工作目录
+        working_dir = settings.PLUGIN_DATA_PATH / self.__class__.__name__.lower()
+        # 可执行文件路径
+        executable_path = working_dir / self.binary_name
+
+        if not executable_path.exists() or not self._check_version(executable_path):
+            logger.info("尝试下载二级制文件...")
+            self.__download(executable_path)
+            if not executable_path.exists():
+                logger.error("二级制文件不存在，无法启动 CureTMDbAnimeShy 服务。")
+                return
+
+        # 确保文件有可执行权限
+        if not os.access(executable_path, os.X_OK) and not self.__fix_exec_permission(
+            executable_path
+        ):
+            return
+
+        # 构建命令行参数列表
+        cmd_args = [
+            executable_path.as_posix(),
+            "--debug",
+            "--port",
+            str(self.config.port),
+            "--data-dir",
+            working_dir.as_posix(),
+        ]
+
+        if self.config.bangumi_api_url:
+            cmd_args.extend(["--bangumi-api-url", self.config.bangumi_api_url])
+
+        if self.config.bangumi_use_proxy:
+            cmd_args.append("--bangumi-use-proxy")
+
+        if self.config.source:
+            cmd_args.extend(["--cure-source", self.config.source])
+
+        if settings.PROXY_HOST:
+            cmd_args.extend(["--proxy", settings.PROXY_HOST])
+
+        if settings.TMDB_API_DOMAIN:
+            cmd_args.extend(["--tmdb-api-url", f"https://{settings.TMDB_API_DOMAIN}"])
+
+        if self._is_port_in_use(self.config.port):
+            logger.error(
+                f"端口 {self.config.port} 已被占用，取消重复启动 CureTMDbAnimeShy。"
+            )
+            return
+
+        process = None
+        try:
+            from subprocess import PIPE
+
+            import psutil
+
+            process = psutil.Popen(
+                cmd_args, stdout=PIPE, stderr=PIPE, text=True, bufsize=1
+            )
+            with self._process_lock:
+                self._process = process
+            if process.is_running():
+                self.patch_manager.patch_build_url(self.config.port)
+                if self.config.enable_correction:
+                    self.patch_manager.patch_meta_enhancement(self.correct_meta)
+                # 输出服务日志
+                self._read_process_output(process)
+
+        finally:
+            if process:
+                self._terminate_process(process)
+            logger.info("CureTMDbAnimeShy 服务线程已退出。")
+
+    def _read_process_output(self, process):
+        import selectors
+
+        def log_output_line(line: str):
+            if line.strip():
+                parts = line.strip().split(" ", 3)
+                log_level = parts[0][1:-1].lower()
+                log_func = (
+                    logger.debug
+                    if log_level == "gin"
+                    else getattr(logger, log_level, logger.critical)
+                )
+                log_func(f"🔗  {parts[-1].strip()}")
+
+        streams = [stream for stream in (process.stdout, process.stderr) if stream]
+        with selectors.DefaultSelector() as sel:
+            for stream in streams:
+                sel.register(stream, selectors.EVENT_READ)
+
+            while not self._event.is_set() and sel.get_map():
+                events = sel.select(timeout=1)
+                for key, _ in events:
+                    try:
+                        line = key.fileobj.readline()
+                    except (OSError, ValueError):
+                        line = ""
+                    if line:
+                        log_output_line(line)
+                    else:
+                        # EOF/HUP 会持续被 selector 报告；注销后才能避免忙循环。
+                        try:
+                            sel.unregister(key.fileobj)
+                        except KeyError:
+                            pass
+
+        for stream in streams:
+            try:
+                stream.close()
+            except (OSError, ValueError):
+                pass
+
+    def _check_version(self, executable: Path) -> bool:
+        """检查版本"""
+        from app.sdk.string import StringUtils
+
+        version = SystemUtils.execute(f"{executable.as_posix()} -v")
+        if version == "dev":
+            return True
+
+        result, msg = StringUtils.compare_version(
+            version, ">=", self.binary_version, True
+        )
+        if result is None:
+            logger.error(f"比较版本出错：{msg}")
+            return False
+
+        logger.info(msg)
+        return result
+
+    @staticmethod
+    def __fix_exec_permission(file_path: Path) -> bool:
+        """修复文件可执行权限"""
+        try:
+            import stat
+
+            current_uid = os.getuid()
+            file_stat = file_path.stat()
+
+            # 文件所有者或 root 可直接修改
+            if current_uid == file_stat.st_uid or current_uid == 0:
+                file_path.chmod(file_stat.st_mode | stat.S_IXUSR)
+                success = os.access(file_path, os.X_OK)
+                if success:
+                    logger.info(
+                        f"权限修复成功：{oct(file_path.stat().st_mode & 0o777)}"
+                    )
+                else:
+                    logger.error("权限设置后仍无法执行")
+                return success
+
+            # Docker 环境通过容器修改
+            logger.info("当前用户无权限，尝试通过 Docker 修改")
+            return CureTMDbAnimeShy.__fix_permission_via_docker(file_path)
+
+        except Exception as e:
+            logger.error(f"修复可执行权限失败：{e}")
+            return False
+
+    @staticmethod
+    def __fix_permission_via_docker(file_path: Path) -> bool:
+        """
+        通过 Docker 守护进程修改文件权限
+
+        :return bool: 修复成功返回 True，否则返回 False
+        """
+        try:
+            import docker
+            from app.sdk.services import SystemHelper
+
+            # 检查是否为 Docker 环境
+            if not SystemUtils.is_docker():
+                logger.error("非 Docker 环境，无法通过 Docker 守护进程修改权限")
+                return False
+
+            # 获取容器 ID
+            container_id = SystemHelper._get_container_id()
+            if not container_id:
+                logger.error("无法获取容器 ID")
+                return False
+
+            # 创建 Docker 客户端
+            client = docker.DockerClient(base_url=settings.DOCKER_CLIENT_API)
+            container = client.containers.get(container_id)
+
+            logger.info("通过 Docker 容器执行权限修改")
+
+            # 执行命令
+            exit_code, output = container.exec_run(
+                cmd=["chmod", "+x", file_path.as_posix()],
+                stdout=False,
+                detach=True,
+            )
+
+            if exit_code == 0:
+                logger.info("通过 Docker 守护进程修改权限成功")
+                return os.access(file_path, os.X_OK)
+            else:
+                logger.error(
+                    f"通过 Docker 修改权限失败：{output.decode() if output else '无输出'}"
+                )
+                return False
+
+        except Exception as e:
+            logger.error(f"通过 Docker 修改权限失败：{e}")
+            return False
+
+    def __download_url(self):
+        """
+        获取下载链接
+        """
+        _url = "{binary_repo}/{name}/releases/download/v{version}/{name}-{os}-{arch}"
+
+        if SystemUtils.is_aarch64():
+            arch = "arm64"
+        elif SystemUtils.is_x86_64():
+            arch = "amd64"
+        else:
+            raise NotImplementedError("不支持的CPU架构")
+
+        os_name = "darwin" if SystemUtils.is_macos() else "linux"
+
+        return _url.format(
+            binary_repo=self.binary_repo,
+            name=self.binary_name,
+            arch=arch,
+            version=self.binary_version,
+            os=os_name,
+        )
+
+    def __download(self, dest_path: Path):
+        """
+        下载二进制文件
+        """
+        import shutil
+        import tempfile
+
+        url = self.__download_url()
+        temp_dir = tempfile.mkdtemp()
+        temp_file = Path(temp_dir) / f"{self.binary_name}.tmp"
+
+        try:
+            # 创建目标目录
+            dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+            logger.info(f"正在下载: {url}")
+            with RequestUtils(proxies=settings.PROXY).get_stream(url) as r:
+                r.raise_for_status()
+                with open(temp_file, "wb") as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        f.write(chunk)
+
+            # 设置可执行权限
+            temp_file.chmod(0o755)
+
+            # 复制到目标位置
+            shutil.copy2(temp_file.as_posix(), dest_path.as_posix())
+
+            logger.info(f"下载完成: {dest_path}")
+
+        except Exception as e:
+            logger.error(f"下载失败: {e}")
+            raise
+        finally:
+            # 清理临时目录
+            try:
+                shutil.rmtree(temp_dir)
+            except Exception as e:
+                logger.warning(f"清理临时目录失败: {e}")
+
+    @cached(ttl=2 * 3600)
+    def _get_logical_mapping(self, tmdb_id: int):
+        """
+        获取 TMDB 逻辑季集映射信息
+        """
+        mapping: Dict[tuple[int, int], tuple[int, int]] = {}
+
+        result = RequestUtils(timeout=2).get_json(
+            f"http://127.0.0.1:{self.config.port}/cache/mapping/{tmdb_id}"
+        )
+        if not isinstance(result, dict):
+            return mapping
+
+        for season_key, episodes in result.items():
+            try:
+                season_num = int(season_key)
+            except (TypeError, ValueError):
+                continue
+
+            if not isinstance(episodes, dict):
+                continue
+
+            for episode_key, item in episodes.items():
+                try:
+                    episode_num = int(episode_key)
+                except (TypeError, ValueError):
+                    continue
+
+                if not isinstance(item, dict):
+                    continue
+
+                logical_season = item.get("season")
+                logical_episode = item.get("episode")
+                try:
+                    logical_season = int(logical_season)
+                    logical_episode = int(logical_episode)
+                except (TypeError, ValueError):
+                    continue
+
+                mapping[(season_num, episode_num)] = (logical_season, logical_episode)
+
+        return mapping
+
+    def correct_meta(self, meta: MetaBase, mediainfo: MediaInfo) -> MetaBase:
+        """
+        根据逻辑季信息调整元数据对象中的季号和集号。
+
+        :param meta: 原始元数据对象
+        :param mediainfo: 媒体信息对象
+        """
+        if not meta or not mediainfo or mediainfo.type.name != "TV":
+            return meta
+
+        if set(mediainfo.genre_ids).isdisjoint(settings.ANIME_GENREIDS):
+            return meta
+
+        # 检查识别词是否已偏移集数
+        if meta.apply_words and (
+            matched_word := next(
+                (
+                    word
+                    for word in meta.apply_words
+                    if " >> " in word and " <> " in word
+                ),
+                None,
+            )
+        ):
+            logger.info(f"存在应用的集数偏移识别词 `{matched_word}`, 跳过调整元数据")
+            return meta
+
+        tmdb_mapping = self._get_logical_mapping(mediainfo.tmdb_id)
+        pubdate = self.patch_manager.get_torrent_pubdate(
+            title=meta.title,
+            description=meta.subtitle,
+        )
+        try:
+            decision = self.meta_correction_use_case.correct(
+                meta=meta,
+                tmdb_mapping=tmdb_mapping,
+                mediainfo=mediainfo,
+                publish_date=pubdate,
+                source="torrent_pubdate" if pubdate else None,
+            )
+        except ValueError:
+            return meta
+
+        if not decision.changed:
+            return meta
+
+        meta.set_season(decision.final_range.season_list)
+        meta.set_episode(decision.final_range.episode_list)
+
+        logger.info(
+            "%s 调整结论: %s => %s, %s",
+            meta.title,
+            decision.original_range.format(),
+            decision.final_range.format(),
+            "；".join(decision.reasons) if decision.reasons else "",
+        )
+
+        return meta
