@@ -1,4 +1,4 @@
-# CTMDbA（番剧季信息分离）
+# CTMDbA魔改版（番剧季信息分离）
 
 `CureTMDbAnimeShy` 是面向 MoviePilot 的番剧季信息分离插件：对 TMDb 上被合并为一季的番剧进行季信息分离。（小k自用版）
 
