@@ -1,6 +1,6 @@
 {
   "CureTMDbAnimeShy": {
-    "name": "CTMDbA",
+    "name": "CTMDbA魔改版",
     "description": "对 TMDb 上被合并为一季的番剧进行季信息分离。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/curetmdbanimeshy.png",
     "version": "0.0.1",
