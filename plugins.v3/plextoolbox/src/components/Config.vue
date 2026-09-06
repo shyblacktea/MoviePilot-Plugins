@@ -53,7 +53,7 @@
 
               <div v-show="activeTab === 'mediainfo'" class="ptb-pane">
                 <div class="ptb-section-title">STRM 媒体流信息补全</div>
-                <VAlert type="info" variant="tonal" density="compact" class="mb-3 text-caption">点击播放时先补全当前条目及设置的后续集，最多等待 3 秒后自动放行播放。需先在 Plex 主机部署 helper 写库服务。<a :href="helperDocUrl" target="_blank" rel="noopener" class="ptb-doc-link">查看部署说明</a></VAlert>
+                <VAlert type="info" variant="tonal" density="compact" class="mb-3 text-caption">点击播放时先补全当前条目及设置的后续集，最多等待 3 秒后自动放行播放。需先在 Plex 主机部署 helper 写库服务；没有 Emby 时可直接用 ffprobe 探测 STRM 内的 302 直链。<a :href="helperDocUrl" target="_blank" rel="noopener" class="ptb-doc-link">查看部署说明</a></VAlert>
                 <VRow>
                   <VCol cols="12"><VSwitch v-model="config.mediainfo_enabled" color="primary" hide-details inset label="启用媒体信息补全" /></VCol>
                   <VCol cols="12" md="8"><VTextField v-model="config.plex_direct_host" label="Plex 直连地址（写库/枚举用）" variant="outlined" density="compact" hide-details="auto" /></VCol>
@@ -63,6 +63,9 @@
                   <VCol cols="12" md="6"><VSwitch v-model="config.use_emby" color="primary" hide-details inset label="数据源 Emby MediaStreams" /></VCol>
                   <VCol cols="12" md="8"><VTextField v-model="config.emby_url" label="Emby 地址" variant="outlined" density="compact" hide-details="auto" /></VCol>
                   <VCol cols="12" md="4"><VTextField v-model="config.emby_apikey" label="Emby API Key" variant="outlined" density="compact" hide-details="auto" /></VCol>
+                  <VCol cols="12"><VSwitch v-model="config.use_ffprobe" color="primary" hide-details inset label="启用 ffprobe（无 Emby 或 Emby 未命中时读取 STRM 302 直链）" /></VCol>
+                  <VCol cols="12" md="8"><VTextField v-model="config.ffprobe_path_map" label="Plex 路径 → MoviePilot 容器路径映射" placeholder="/Volumes/data=/media" hint="每行一条，支持 =、=> 或分号分隔；Plex 主机路径在左，MP 容器路径在右" persistent-hint variant="outlined" density="compact" hide-details="auto" /></VCol>
+                  <VCol cols="12" md="4"><VTextField v-model.number="config.ffprobe_timeout" type="number" min="1" max="300" label="ffprobe 超时（秒）" variant="outlined" density="compact" hide-details="auto" /></VCol>
                   <VCol cols="12" md="8"><VSelect v-model="selectedSections" :items="sectionOptions" item-title="title" item-value="value" label="要补全的 Plex 媒体库" variant="outlined" density="compact" multiple chips closable-chips hide-details="auto" :loading="loadingSections"><template #append-inner><VBtn icon="mdi-refresh" size="x-small" variant="text" @click.stop="loadSections" /></template></VSelect></VCol>
                   <VCol cols="12" md="4"><VTextField v-model.number="config.concurrency" type="number" min="1" max="10" label="探测并发数" variant="outlined" density="compact" hide-details="auto" /></VCol>
                   <VCol cols="12" md="6"><VSwitch v-model="config.only_missing" color="primary" hide-details inset label="仅处理缺失媒体信息的条目" /></VCol>
@@ -79,7 +82,7 @@
                 <div class="d-flex align-center mb-2"><div class="ptb-block-title">最近一次补全</div><VSpacer /><VBtn v-if="lastPlay" color="grey" variant="text" size="x-small" prepend-icon="mdi-broom" :loading="clearing === 'last'" @click="clearData('last_play_result')">清理</VBtn></div>
                 <template v-if="lastPlay">
                   <div v-if="lastPlay.label" class="text-body-2 font-weight-medium mb-2">{{ lastPlay.label }}</div>
-                  <div class="ptb-stat-grid mb-3"><StatCard label="本次条目" :value="lastPlay.strm_parts" /><StatCard label="已解析" :value="lastPlay.resolved" /><StatCard label="Emby 命中" :value="lastPlay.emby_hits" /><StatCard label="写入成功" :value="lastPlay.written_ok" /><StatCard label="写入失败" :value="lastPlay.write_failed" /></div>
+                  <div class="ptb-stat-grid mb-3"><StatCard label="本次条目" :value="lastPlay.strm_parts" /><StatCard label="已解析" :value="lastPlay.resolved" /><StatCard label="Emby 命中" :value="lastPlay.emby_hits" /><StatCard label="ffprobe 命中" :value="lastPlay.ffprobe_hits" /><StatCard label="写入成功" :value="lastPlay.written_ok" /><StatCard label="写入失败" :value="lastPlay.write_failed" /></div>
                   <VTable v-if="lastPlay.items?.length" density="compact" class="ptb-history"><thead><tr><th>条目</th><th>状态</th></tr></thead><tbody><tr v-for="(item, index) in lastPlay.items" :key="index"><td class="text-caption">{{ item.label || ('part ' + item.part_id) }}</td><td><VChip :color="statusColor(item.status)" size="x-small" variant="tonal">{{ statusLabel(item.status) }}</VChip><span v-if="item.error" class="text-caption text-error ml-2">{{ item.error }}</span></td></tr></tbody></VTable>
                 </template>
                 <VAlert v-else type="info" variant="tonal" density="compact" class="text-caption">暂无补全记录。</VAlert>
@@ -139,7 +142,7 @@
             <aside class="ptb-dashboard" aria-label="运行表盘">
               <section><div class="ptb-dashboard-title"><VIcon icon="mdi-clock-outline" color="primary" size="20" />运行节奏</div><DashboardRow icon="mdi-motion-play-outline" label="播前补全" :value="triggerText" /><DashboardRow icon="mdi-skip-forward-outline" label="播前追加" :value="`后 ${config.forward_episodes || 0} 集`" /><DashboardRow icon="mdi-timer-outline" label="去重窗口" :value="`${config.dedup_window || 0} 秒`" /><DashboardRow icon="mdi-heart-pulse" label="Helper 检查" value="每 5 分钟" /></section>
               <VDivider class="my-3" />
-              <section><div class="ptb-dashboard-title"><VIcon icon="mdi-chart-box-outline" color="primary" size="20" />运行概况</div><DashboardRow icon="mdi-swap-horizontal-bold" label="代理服务" :value="status.proxy_running ? '运行中' : '未运行'" /><DashboardRow icon="mdi-lan-connect" label="Helper" :value="helperStatusText" /><DashboardRow icon="mdi-history" label="最近补全" :value="lastRunText" /><DashboardRow icon="mdi-database-check-outline" label="最近写入" :value="lastWriteText" /><DashboardRow icon="mdi-folder-multiple-outline" label="补全媒体库" :value="`${selectedSections.length} 个`" /></section>
+              <section><div class="ptb-dashboard-title"><VIcon icon="mdi-chart-box-outline" color="primary" size="20" />运行概况</div><DashboardRow icon="mdi-swap-horizontal-bold" label="代理服务" :value="status.proxy_running ? '运行中' : '未运行'" /><DashboardRow icon="mdi-lan-connect" label="Helper" :value="helperStatusText" /><DashboardRow icon="mdi-database-search-outline" label="媒体数据源" :value="config.use_emby && config.emby_url && config.emby_apikey && config.use_ffprobe ? 'Emby → ffprobe' : (config.use_emby && config.emby_url && config.emby_apikey ? 'Emby' : (config.use_ffprobe ? 'ffprobe' : '未启用'))" /><DashboardRow icon="mdi-history" label="最近补全" :value="lastRunText" /><DashboardRow icon="mdi-database-check-outline" label="最近写入" :value="lastWriteText" /><DashboardRow icon="mdi-folder-multiple-outline" label="补全媒体库" :value="`${selectedSections.length} 个`" /></section>
             </aside>
           </div>
 
@@ -198,8 +201,8 @@ const mergeGroups = ref([])
 const mergeScanned = ref(false)
 const mergeResult = ref(null)
 
-const helperDocUrl = 'https://github.com/shyblacktea/MoviePilot-Plugins/blob/main/plugins.v2/plextoolbox/helper/README.md'
-const defaults = { enabled: false, proxy_enabled: false, plex_host: '', plex_token: '', host: '0.0.0.0', port: 32401, pin_rules: '', force_direct_play: true, mediainfo_enabled: false, plex_direct_host: '', helper_url: '', helper_token: '', emby_url: '', emby_apikey: '', use_emby: true, overwrite_streams: true, only_missing: true, concurrency: 3, sections: '', webhook_enabled: false, dedup_window: 300, forward_episodes: 5 }
+const helperDocUrl = 'https://github.com/shyblacktea/MoviePilot-Plugins/blob/main/plugins.v3/plextoolbox/helper/README.md'
+const defaults = { enabled: false, proxy_enabled: false, plex_host: '', plex_token: '', host: '0.0.0.0', port: 32401, pin_rules: '', force_direct_play: true, mediainfo_enabled: false, plex_direct_host: '', helper_url: '', helper_token: '', emby_url: '', emby_apikey: '', use_emby: true, use_ffprobe: true, ffprobe_path_map: '/Volumes/data=/media', ffprobe_timeout: 40, overwrite_streams: true, only_missing: true, concurrency: 3, sections: '', webhook_enabled: false, dedup_window: 300, forward_episodes: 5 }
 const config = reactive({ ...defaults, ...props.initialConfig })
 const savedBaseline = ref(JSON.parse(JSON.stringify(defaults)))
 

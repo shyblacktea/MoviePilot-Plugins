@@ -1,6 +1,6 @@
 # PLEX 工具箱
 
-`PlexToolbox` 是 Plex 综合工具插件：302 反向代理 + STRM 媒体流信息补全（Emby 数据源写入 Plex 库）+ 刮削辅助工具。由 `Plex302ReverseProxy` 改造扩展而来。
+`PlexToolbox` 是 Plex 综合工具插件：302 反向代理 + STRM 媒体流信息补全（Emby 或 ffprobe 数据源写入 Plex 库）+ 刮削辅助工具。由 `Plex302ReverseProxy` 改造扩展而来。
 
 ## 主要功能
 
@@ -14,7 +14,8 @@
 
 ### STRM 媒体流信息补全
 
-- Plex 自身无法探测 STRM 直链的媒体流信息（编码/分辨率/音轨/字幕/时长），本功能从 Emby 读取同名文件的 MediaStreams，经部署在 Plex 所在机器上的 helper 小服务直接写入 Plex 数据库。
+- Plex 自身无法探测 STRM 直链的媒体流信息（编码/分辨率/音轨/字幕/时长），本功能优先从 Emby 读取同名文件的 MediaStreams，也可直接读取 STRM 中的远程 URL 并用 ffprobe 探测，经部署在 Plex 所在机器上的 helper 小服务写入 Plex 数据库。
+- ffprobe 模式支持 Plex 主机路径到 MoviePilot 容器路径映射；不改写 STRM 文件，也不要求部署 Emby。
 - 支持手动全量、定时全量、播放停止后增量补全（本集 + 后 N 集，已补全自动跳过）。
 - 播放停止触发来源：反代嗅探 `/:/timeline?state=stopped` 或 Plex Webhook。
 - 数据页展示最近一次补全结果与播放补全历史，支持一键清理。
@@ -27,9 +28,14 @@
 
 ## helper 部署
 
-写库 helper（`helper/plex_mediainfo_helper.py`，纯标准库）需部署在 Plex 所在机器，提供 `/health`、`/dbinfo`、`/busy`、`/write`、`/write_batch` 接口，token 用 `X-PTH-Token` 头校验。详见 [helper/README.md](../../plugins.v2/plextoolbox/helper/README.md)。
+写库 helper（`helper/plex_mediainfo_helper.py`，纯标准库）需部署在 Plex 所在机器，提供 `/health`、`/dbinfo`、`/busy`、`/write`、`/write_batch` 接口，token 用 `X-PTH-Token` 头校验。详见 [helper/README.md](../../plugins.v3/plextoolbox/helper/README.md)。
 
 ## 更新日志
+
+### v1.1.0（V3）
+
+- 新增可选 ffprobe 数据源：无 Emby 时读取 STRM 中的 302 直链并探测媒体流信息。
+- 新增 Plex 路径映射、ffprobe 超时配置、来源命中统计及对应的单元测试。
 
 ### v1.0.0（V3）
 
@@ -82,11 +88,11 @@
 - 插件 ID：`PlexToolbox`
 - V2 源码目录：`plugins.v2/plextoolbox/`
 - V3 源码目录：`plugins.v3/plextoolbox/`
-- 当前版本：`V2 0.7.3；V3 1.0.0`
+- 当前版本：`V2 0.7.3；V3 1.1.0`
 - V2 Release Tag：`PlexToolbox_v0.7.3`
 - V2 Release 资产：沿用原有 `PlexToolbox_v0.7.3` Release
-- V3 Release Tag：`PlexToolbox_v1.0.0`
-- V3 Release 资产：`plextoolbox_v1.0.0.zip`
+- V3 Release Tag：`PlexToolbox_v1.1.0`
+- V3 Release 资产：`plextoolbox_v1.1.0.zip`
 
 ## 致谢
 
