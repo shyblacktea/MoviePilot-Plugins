@@ -87,7 +87,7 @@ const _hoisted_42 = { class: "ptb-dashboard-title" };
 
 const {computed,defineComponent,h,onMounted,reactive,ref,resolveComponent,watch} = await importShared('vue');
 
-const helperDocUrl = 'https://github.com/shyblacktea/MoviePilot-Plugins/blob/main/plugins.v2/plextoolbox/helper/README.md';
+const helperDocUrl = 'https://github.com/shyblacktea/MoviePilot-Plugins/blob/main/plugins.v3/plextoolbox/helper/README.md';
 
 const _sfc_main = {
   __name: 'Config',
@@ -137,7 +137,7 @@ const mergeGroups = ref([]);
 const mergeScanned = ref(false);
 const mergeResult = ref(null);
 
-const defaults = { enabled: false, proxy_enabled: false, plex_host: '', plex_token: '', host: '0.0.0.0', port: 32401, pin_rules: '', force_direct_play: true, mediainfo_enabled: false, plex_direct_host: '', helper_url: '', helper_token: '', emby_url: '', emby_apikey: '', use_emby: true, overwrite_streams: true, only_missing: true, concurrency: 3, sections: '', webhook_enabled: false, dedup_window: 300, forward_episodes: 5 };
+const defaults = { enabled: false, proxy_enabled: false, plex_host: '', plex_token: '', host: '0.0.0.0', port: 32401, pin_rules: '', force_direct_play: true, mediainfo_enabled: false, plex_direct_host: '', helper_url: '', helper_token: '', emby_url: '', emby_apikey: '', use_emby: true, use_ffprobe: true, ffprobe_path_map: '/Volumes/data=/media', ffprobe_timeout: 40, overwrite_streams: true, only_missing: true, concurrency: 3, sections: '', webhook_enabled: false, dedup_window: 300, forward_episodes: 5 };
 const config = reactive({ ...defaults, ...props.initialConfig });
 const savedBaseline = ref(JSON.parse(JSON.stringify(defaults)));
 
@@ -251,7 +251,7 @@ return (_ctx, _cache) => {
                     loading: saving.value,
                     onClick: saveConfig
                   }, {
-                    default: _withCtx(() => [...(_cache[35] || (_cache[35] = [
+                    default: _withCtx(() => [...(_cache[38] || (_cache[38] = [
                       _createTextVNode("保存修改", -1)
                     ]))]),
                     _: 1
@@ -267,7 +267,7 @@ return (_ctx, _cache) => {
           ]),
           default: _withCtx(() => [
             _createVNode(_component_VCardTitle, { class: "text-h6 ptb-header-title" }, {
-              default: _withCtx(() => [...(_cache[34] || (_cache[34] = [
+              default: _withCtx(() => [...(_cache[37] || (_cache[37] = [
                 _createTextVNode("PLEX 工具箱", -1)
               ]))]),
               _: 1
@@ -369,7 +369,7 @@ return (_ctx, _cache) => {
             _createElementVNode("div", _hoisted_12, [
               _createElementVNode("div", _hoisted_13, [
                 _withDirectives(_createElementVNode("div", _hoisted_14, [
-                  _cache[36] || (_cache[36] = _createElementVNode("div", { class: "ptb-section-title" }, "302 反向代理", -1)),
+                  _cache[39] || (_cache[39] = _createElementVNode("div", { class: "ptb-section-title" }, "302 反向代理", -1)),
                   _createVNode(_component_VRow, null, {
                     default: _withCtx(() => [
                       _createVNode(_component_VCol, { cols: "12" }, {
@@ -486,7 +486,7 @@ return (_ctx, _cache) => {
                   [_vShow, activeTab.value === 'proxy']
                 ]),
                 _withDirectives(_createElementVNode("div", _hoisted_15, [
-                  _cache[39] || (_cache[39] = _createElementVNode("div", { class: "ptb-section-title" }, "STRM 媒体流信息补全", -1)),
+                  _cache[42] || (_cache[42] = _createElementVNode("div", { class: "ptb-section-title" }, "STRM 媒体流信息补全", -1)),
                   _createVNode(_component_VAlert, {
                     type: "info",
                     variant: "tonal",
@@ -494,7 +494,7 @@ return (_ctx, _cache) => {
                     class: "mb-3 text-caption"
                   }, {
                     default: _withCtx(() => [
-                      _cache[37] || (_cache[37] = _createTextVNode("点击播放时先补全当前条目及设置的后续集，最多等待 3 秒后自动放行播放。需先在 Plex 主机部署 helper 写库服务。", -1)),
+                      _cache[40] || (_cache[40] = _createTextVNode("点击播放时先补全当前条目及设置的后续集，最多等待 3 秒后自动放行播放。需先在 Plex 主机部署 helper 写库服务；没有 Emby 时可直接用 ffprobe 探测 STRM 内的 302 直链。", -1)),
                       _createElementVNode("a", {
                         href: helperDocUrl,
                         target: "_blank",
@@ -548,7 +548,7 @@ return (_ctx, _cache) => {
                             "prepend-icon": "mdi-lan-connect",
                             onClick: checkHelper
                           }, {
-                            default: _withCtx(() => [...(_cache[38] || (_cache[38] = [
+                            default: _withCtx(() => [...(_cache[41] || (_cache[41] = [
                               _createTextVNode("检查 helper", -1)
                             ]))]),
                             _: 1
@@ -636,6 +636,58 @@ return (_ctx, _cache) => {
                         ]),
                         _: 1
                       }),
+                      _createVNode(_component_VCol, { cols: "12" }, {
+                        default: _withCtx(() => [
+                          _createVNode(_component_VSwitch, {
+                            modelValue: config.use_ffprobe,
+                            "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => ((config.use_ffprobe) = $event)),
+                            color: "primary",
+                            "hide-details": "",
+                            inset: "",
+                            label: "启用 ffprobe（无 Emby 或 Emby 未命中时读取 STRM 302 直链）"
+                          }, null, 8, ["modelValue"])
+                        ]),
+                        _: 1
+                      }),
+                      _createVNode(_component_VCol, {
+                        cols: "12",
+                        md: "8"
+                      }, {
+                        default: _withCtx(() => [
+                          _createVNode(_component_VTextField, {
+                            modelValue: config.ffprobe_path_map,
+                            "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => ((config.ffprobe_path_map) = $event)),
+                            label: "Plex 路径 → MoviePilot 容器路径映射",
+                            placeholder: "/Volumes/data=/media",
+                            hint: "每行一条，支持 =、=> 或分号分隔；Plex 主机路径在左，MP 容器路径在右",
+                            "persistent-hint": "",
+                            variant: "outlined",
+                            density: "compact",
+                            "hide-details": "auto"
+                          }, null, 8, ["modelValue"])
+                        ]),
+                        _: 1
+                      }),
+                      _createVNode(_component_VCol, {
+                        cols: "12",
+                        md: "4"
+                      }, {
+                        default: _withCtx(() => [
+                          _createVNode(_component_VTextField, {
+                            modelValue: config.ffprobe_timeout,
+                            "onUpdate:modelValue": _cache[19] || (_cache[19] = $event => ((config.ffprobe_timeout) = $event)),
+                            modelModifiers: { number: true },
+                            type: "number",
+                            min: "1",
+                            max: "300",
+                            label: "ffprobe 超时（秒）",
+                            variant: "outlined",
+                            density: "compact",
+                            "hide-details": "auto"
+                          }, null, 8, ["modelValue"])
+                        ]),
+                        _: 1
+                      }),
                       _createVNode(_component_VCol, {
                         cols: "12",
                         md: "8"
@@ -643,7 +695,7 @@ return (_ctx, _cache) => {
                         default: _withCtx(() => [
                           _createVNode(_component_VSelect, {
                             modelValue: selectedSections.value,
-                            "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => ((selectedSections).value = $event)),
+                            "onUpdate:modelValue": _cache[20] || (_cache[20] = $event => ((selectedSections).value = $event)),
                             items: sectionOptions.value,
                             "item-title": "title",
                             "item-value": "value",
@@ -676,7 +728,7 @@ return (_ctx, _cache) => {
                         default: _withCtx(() => [
                           _createVNode(_component_VTextField, {
                             modelValue: config.concurrency,
-                            "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => ((config.concurrency) = $event)),
+                            "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => ((config.concurrency) = $event)),
                             modelModifiers: { number: true },
                             type: "number",
                             min: "1",
@@ -696,7 +748,7 @@ return (_ctx, _cache) => {
                         default: _withCtx(() => [
                           _createVNode(_component_VSwitch, {
                             modelValue: config.only_missing,
-                            "onUpdate:modelValue": _cache[19] || (_cache[19] = $event => ((config.only_missing) = $event)),
+                            "onUpdate:modelValue": _cache[22] || (_cache[22] = $event => ((config.only_missing) = $event)),
                             color: "primary",
                             "hide-details": "",
                             inset: "",
@@ -712,7 +764,7 @@ return (_ctx, _cache) => {
                         default: _withCtx(() => [
                           _createVNode(_component_VSwitch, {
                             modelValue: config.overwrite_streams,
-                            "onUpdate:modelValue": _cache[20] || (_cache[20] = $event => ((config.overwrite_streams) = $event)),
+                            "onUpdate:modelValue": _cache[23] || (_cache[23] = $event => ((config.overwrite_streams) = $event)),
                             color: "primary",
                             "hide-details": "",
                             inset: "",
@@ -728,7 +780,7 @@ return (_ctx, _cache) => {
                         default: _withCtx(() => [
                           _createVNode(_component_VSwitch, {
                             modelValue: config.webhook_enabled,
-                            "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => ((config.webhook_enabled) = $event)),
+                            "onUpdate:modelValue": _cache[24] || (_cache[24] = $event => ((config.webhook_enabled) = $event)),
                             color: "primary",
                             "hide-details": "",
                             inset: "",
@@ -744,7 +796,7 @@ return (_ctx, _cache) => {
                         default: _withCtx(() => [
                           _createVNode(_component_VTextField, {
                             modelValue: config.dedup_window,
-                            "onUpdate:modelValue": _cache[22] || (_cache[22] = $event => ((config.dedup_window) = $event)),
+                            "onUpdate:modelValue": _cache[25] || (_cache[25] = $event => ((config.dedup_window) = $event)),
                             modelModifiers: { number: true },
                             type: "number",
                             min: "0",
@@ -763,7 +815,7 @@ return (_ctx, _cache) => {
                         default: _withCtx(() => [
                           _createVNode(_component_VTextField, {
                             modelValue: config.forward_episodes,
-                            "onUpdate:modelValue": _cache[23] || (_cache[23] = $event => ((config.forward_episodes) = $event)),
+                            "onUpdate:modelValue": _cache[26] || (_cache[26] = $event => ((config.forward_episodes) = $event)),
                             modelModifiers: { number: true },
                             type: "number",
                             min: "0",
@@ -797,7 +849,7 @@ return (_ctx, _cache) => {
                 ]),
                 _withDirectives(_createElementVNode("div", _hoisted_16, [
                   _createElementVNode("div", _hoisted_17, [
-                    _cache[40] || (_cache[40] = _createElementVNode("div", { class: "ptb-section-title mb-0" }, "补全记录", -1)),
+                    _cache[43] || (_cache[43] = _createElementVNode("div", { class: "ptb-section-title mb-0" }, "补全记录", -1)),
                     _createVNode(_component_VSpacer),
                     _createVNode(_component_VBtn, {
                       icon: "mdi-refresh",
@@ -808,7 +860,7 @@ return (_ctx, _cache) => {
                     }, null, 8, ["loading"])
                   ]),
                   _createElementVNode("div", _hoisted_18, [
-                    _cache[42] || (_cache[42] = _createElementVNode("div", { class: "ptb-block-title" }, "最近一次补全", -1)),
+                    _cache[45] || (_cache[45] = _createElementVNode("div", { class: "ptb-block-title" }, "最近一次补全", -1)),
                     _createVNode(_component_VSpacer),
                     (lastPlay.value)
                       ? (_openBlock(), _createBlock(_component_VBtn, {
@@ -818,9 +870,9 @@ return (_ctx, _cache) => {
                           size: "x-small",
                           "prepend-icon": "mdi-broom",
                           loading: clearing.value === 'last',
-                          onClick: _cache[24] || (_cache[24] = $event => (clearData('last_play_result')))
+                          onClick: _cache[27] || (_cache[27] = $event => (clearData('last_play_result')))
                         }, {
-                          default: _withCtx(() => [...(_cache[41] || (_cache[41] = [
+                          default: _withCtx(() => [...(_cache[44] || (_cache[44] = [
                             _createTextVNode("清理", -1)
                           ]))]),
                           _: 1
@@ -846,6 +898,10 @@ return (_ctx, _cache) => {
                             value: lastPlay.value.emby_hits
                           }, null, 8, ["value"]),
                           _createVNode(_unref(StatCard), {
+                            label: "ffprobe 命中",
+                            value: lastPlay.value.ffprobe_hits
+                          }, null, 8, ["value"]),
+                          _createVNode(_unref(StatCard), {
                             label: "写入成功",
                             value: lastPlay.value.written_ok
                           }, null, 8, ["value"]),
@@ -861,7 +917,7 @@ return (_ctx, _cache) => {
                               class: "ptb-history"
                             }, {
                               default: _withCtx(() => [
-                                _cache[43] || (_cache[43] = _createElementVNode("thead", null, [
+                                _cache[46] || (_cache[46] = _createElementVNode("thead", null, [
                                   _createElementVNode("tr", null, [
                                     _createElementVNode("th", null, "条目"),
                                     _createElementVNode("th", null, "状态")
@@ -901,7 +957,7 @@ return (_ctx, _cache) => {
                         density: "compact",
                         class: "text-caption"
                       }, {
-                        default: _withCtx(() => [...(_cache[44] || (_cache[44] = [
+                        default: _withCtx(() => [...(_cache[47] || (_cache[47] = [
                           _createTextVNode("暂无补全记录。", -1)
                         ]))]),
                         _: 1
@@ -914,7 +970,7 @@ return (_ctx, _cache) => {
                         density: "compact",
                         class: "mt-3 text-caption"
                       }, {
-                        default: _withCtx(() => [...(_cache[45] || (_cache[45] = [
+                        default: _withCtx(() => [...(_cache[48] || (_cache[48] = [
                           _createTextVNode("Plex 当前繁忙，本次未写入。", -1)
                         ]))]),
                         _: 1
@@ -932,9 +988,9 @@ return (_ctx, _cache) => {
                           size: "x-small",
                           "prepend-icon": "mdi-broom",
                           loading: clearing.value === 'history',
-                          onClick: _cache[25] || (_cache[25] = $event => (clearData('play_history')))
+                          onClick: _cache[28] || (_cache[28] = $event => (clearData('play_history')))
                         }, {
-                          default: _withCtx(() => [...(_cache[46] || (_cache[46] = [
+                          default: _withCtx(() => [...(_cache[49] || (_cache[49] = [
                             _createTextVNode("清空历史", -1)
                           ]))]),
                           _: 1
@@ -948,7 +1004,7 @@ return (_ctx, _cache) => {
                         class: "ptb-history"
                       }, {
                         default: _withCtx(() => [
-                          _cache[47] || (_cache[47] = _createElementVNode("thead", null, [
+                          _cache[50] || (_cache[50] = _createElementVNode("thead", null, [
                             _createElementVNode("tr", null, [
                               _createElementVNode("th", null, "时间"),
                               _createElementVNode("th", null, "条目"),
@@ -1003,7 +1059,7 @@ return (_ctx, _cache) => {
                         density: "compact",
                         class: "text-caption"
                       }, {
-                        default: _withCtx(() => [...(_cache[48] || (_cache[48] = [
+                        default: _withCtx(() => [...(_cache[51] || (_cache[51] = [
                           _createTextVNode("暂无历史记录。", -1)
                         ]))]),
                         _: 1
@@ -1012,14 +1068,14 @@ return (_ctx, _cache) => {
                   [_vShow, activeTab.value === 'records']
                 ]),
                 _withDirectives(_createElementVNode("div", _hoisted_29, [
-                  _cache[52] || (_cache[52] = _createElementVNode("div", { class: "ptb-section-title" }, "目录匹配", -1)),
+                  _cache[55] || (_cache[55] = _createElementVNode("div", { class: "ptb-section-title" }, "目录匹配", -1)),
                   _createVNode(_component_VAlert, {
                     type: "info",
                     variant: "tonal",
                     density: "compact",
                     class: "mb-3 text-caption"
                   }, {
-                    default: _withCtx(() => [...(_cache[49] || (_cache[49] = [
+                    default: _withCtx(() => [...(_cache[52] || (_cache[52] = [
                       _createTextVNode("取消匹配后，条目会按当前 NFO 代理重读。建议先预览影响。", -1)
                     ]))]),
                     _: 1
@@ -1033,9 +1089,9 @@ return (_ctx, _cache) => {
                       loading: busyKey.value === 'unmatch_preview',
                       disabled: !!busyKey.value,
                       "prepend-icon": "mdi-magnify",
-                      onClick: _cache[26] || (_cache[26] = $event => (doUnmatch(true)))
+                      onClick: _cache[29] || (_cache[29] = $event => (doUnmatch(true)))
                     }, {
-                      default: _withCtx(() => [...(_cache[50] || (_cache[50] = [
+                      default: _withCtx(() => [...(_cache[53] || (_cache[53] = [
                         _createTextVNode("预览影响", -1)
                       ]))]),
                       _: 1
@@ -1047,9 +1103,9 @@ return (_ctx, _cache) => {
                       loading: busyKey.value === 'unmatch_run',
                       disabled: !!busyKey.value,
                       "prepend-icon": "mdi-link-off",
-                      onClick: _cache[27] || (_cache[27] = $event => (doUnmatch(false)))
+                      onClick: _cache[30] || (_cache[30] = $event => (doUnmatch(false)))
                     }, {
-                      default: _withCtx(() => [...(_cache[51] || (_cache[51] = [
+                      default: _withCtx(() => [...(_cache[54] || (_cache[54] = [
                         _createTextVNode("执行取消匹配", -1)
                       ]))]),
                       _: 1
@@ -1074,20 +1130,20 @@ return (_ctx, _cache) => {
                   [_vShow, activeTab.value === 'matching']
                 ]),
                 _withDirectives(_createElementVNode("div", _hoisted_31, [
-                  _cache[59] || (_cache[59] = _createElementVNode("div", { class: "ptb-section-title" }, "刮削与海报", -1)),
+                  _cache[62] || (_cache[62] = _createElementVNode("div", { class: "ptb-section-title" }, "刮削与海报", -1)),
                   _createVNode(_component_VAlert, {
                     type: "info",
                     variant: "tonal",
                     density: "compact",
                     class: "mb-3 text-caption"
                   }, {
-                    default: _withCtx(() => [...(_cache[53] || (_cache[53] = [
+                    default: _withCtx(() => [...(_cache[56] || (_cache[56] = [
                       _createTextVNode("扫描缺封面条目并交给 MoviePilot 生成 NFO/封面，或精准补全缺失 poster.jpg。", -1)
                     ]))]),
                     _: 1
                   }),
                   _createVNode(_unref(TargetFields)),
-                  _cache[60] || (_cache[60] = _createElementVNode("div", { class: "ptb-subsection-title mt-4" }, "缺封面刮削", -1)),
+                  _cache[63] || (_cache[63] = _createElementVNode("div", { class: "ptb-subsection-title mt-4" }, "缺封面刮削", -1)),
                   _createElementVNode("div", _hoisted_32, [
                     _createVNode(_component_VBtn, {
                       color: "info",
@@ -1098,7 +1154,7 @@ return (_ctx, _cache) => {
                       "prepend-icon": "mdi-image-off-outline",
                       onClick: doScanCover
                     }, {
-                      default: _withCtx(() => [...(_cache[54] || (_cache[54] = [
+                      default: _withCtx(() => [...(_cache[57] || (_cache[57] = [
                         _createTextVNode("扫描缺封面", -1)
                       ]))]),
                       _: 1
@@ -1110,9 +1166,9 @@ return (_ctx, _cache) => {
                       loading: busyKey.value === 'scrape_preview',
                       disabled: !!busyKey.value,
                       "prepend-icon": "mdi-magnify",
-                      onClick: _cache[28] || (_cache[28] = $event => (doScrape(true)))
+                      onClick: _cache[31] || (_cache[31] = $event => (doScrape(true)))
                     }, {
-                      default: _withCtx(() => [...(_cache[55] || (_cache[55] = [
+                      default: _withCtx(() => [...(_cache[58] || (_cache[58] = [
                         _createTextVNode("预览刮削目录", -1)
                       ]))]),
                       _: 1
@@ -1124,16 +1180,16 @@ return (_ctx, _cache) => {
                       loading: busyKey.value === 'scrape_run',
                       disabled: !!busyKey.value,
                       "prepend-icon": "mdi-auto-fix",
-                      onClick: _cache[29] || (_cache[29] = $event => (doScrape(false)))
+                      onClick: _cache[32] || (_cache[32] = $event => (doScrape(false)))
                     }, {
-                      default: _withCtx(() => [...(_cache[56] || (_cache[56] = [
+                      default: _withCtx(() => [...(_cache[59] || (_cache[59] = [
                         _createTextVNode("执行刮削", -1)
                       ]))]),
                       _: 1
                     }, 8, ["loading", "disabled"])
                   ]),
                   _createVNode(_component_VDivider, { class: "my-4" }),
-                  _cache[61] || (_cache[61] = _createElementVNode("div", { class: "ptb-subsection-title" }, "缺 poster.jpg 精准补全", -1)),
+                  _cache[64] || (_cache[64] = _createElementVNode("div", { class: "ptb-subsection-title" }, "缺 poster.jpg 精准补全", -1)),
                   _createElementVNode("div", _hoisted_33, [
                     _createVNode(_component_VBtn, {
                       color: "info",
@@ -1142,9 +1198,9 @@ return (_ctx, _cache) => {
                       loading: busyKey.value === 'poster_preview',
                       disabled: !!busyKey.value,
                       "prepend-icon": "mdi-magnify",
-                      onClick: _cache[30] || (_cache[30] = $event => (doFixPoster(true)))
+                      onClick: _cache[33] || (_cache[33] = $event => (doFixPoster(true)))
                     }, {
-                      default: _withCtx(() => [...(_cache[57] || (_cache[57] = [
+                      default: _withCtx(() => [...(_cache[60] || (_cache[60] = [
                         _createTextVNode("预览缺 poster", -1)
                       ]))]),
                       _: 1
@@ -1156,9 +1212,9 @@ return (_ctx, _cache) => {
                       loading: busyKey.value === 'poster_run',
                       disabled: !!busyKey.value,
                       "prepend-icon": "mdi-image-plus",
-                      onClick: _cache[31] || (_cache[31] = $event => (doFixPoster(false)))
+                      onClick: _cache[34] || (_cache[34] = $event => (doFixPoster(false)))
                     }, {
-                      default: _withCtx(() => [...(_cache[58] || (_cache[58] = [
+                      default: _withCtx(() => [...(_cache[61] || (_cache[61] = [
                         _createTextVNode("执行补全", -1)
                       ]))]),
                       _: 1
@@ -1183,14 +1239,14 @@ return (_ctx, _cache) => {
                   [_vShow, activeTab.value === 'scraping']
                 ]),
                 _withDirectives(_createElementVNode("div", _hoisted_34, [
-                  _cache[66] || (_cache[66] = _createElementVNode("div", { class: "ptb-section-title" }, "合并重复条目", -1)),
+                  _cache[69] || (_cache[69] = _createElementVNode("div", { class: "ptb-section-title" }, "合并重复条目", -1)),
                   _createVNode(_component_VAlert, {
                     type: "info",
                     variant: "tonal",
                     density: "compact",
                     class: "mb-3 text-caption"
                   }, {
-                    default: _withCtx(() => [...(_cache[62] || (_cache[62] = [
+                    default: _withCtx(() => [...(_cache[65] || (_cache[65] = [
                       _createTextVNode("扫描 Plex 全部剧集/电影库中 tmdb id 相同的重复条目，合并为一个（保留集数最多的条目作主）。", -1)
                     ]))]),
                     _: 1
@@ -1205,7 +1261,7 @@ return (_ctx, _cache) => {
                       "prepend-icon": "mdi-magnify",
                       onClick: doMergeScan
                     }, {
-                      default: _withCtx(() => [...(_cache[63] || (_cache[63] = [
+                      default: _withCtx(() => [...(_cache[66] || (_cache[66] = [
                         _createTextVNode("扫描重复", -1)
                       ]))]),
                       _: 1
@@ -1236,7 +1292,7 @@ return (_ctx, _cache) => {
                           class: "ptb-history"
                         }, {
                           default: _withCtx(() => [
-                            _cache[64] || (_cache[64] = _createElementVNode("thead", null, [
+                            _cache[67] || (_cache[67] = _createElementVNode("thead", null, [
                               _createElementVNode("tr", null, [
                                 _createElementVNode("th", null, "剧集 / 电影"),
                                 _createElementVNode("th", null, "TMDB"),
@@ -1271,7 +1327,7 @@ return (_ctx, _cache) => {
                           density: "compact",
                           class: "mt-2 text-caption"
                         }, {
-                          default: _withCtx(() => [...(_cache[65] || (_cache[65] = [
+                          default: _withCtx(() => [...(_cache[68] || (_cache[68] = [
                             _createTextVNode("未发现重复条目。", -1)
                           ]))]),
                           _: 1
@@ -1304,7 +1360,7 @@ return (_ctx, _cache) => {
                       color: "primary",
                       size: "20"
                     }),
-                    _cache[67] || (_cache[67] = _createTextVNode("运行节奏", -1))
+                    _cache[70] || (_cache[70] = _createTextVNode("运行节奏", -1))
                   ]),
                   _createVNode(_unref(DashboardRow), {
                     icon: "mdi-motion-play-outline",
@@ -1335,7 +1391,7 @@ return (_ctx, _cache) => {
                       color: "primary",
                       size: "20"
                     }),
-                    _cache[68] || (_cache[68] = _createTextVNode("运行概况", -1))
+                    _cache[71] || (_cache[71] = _createTextVNode("运行概况", -1))
                   ]),
                   _createVNode(_unref(DashboardRow), {
                     icon: "mdi-swap-horizontal-bold",
@@ -1346,6 +1402,11 @@ return (_ctx, _cache) => {
                     icon: "mdi-lan-connect",
                     label: "Helper",
                     value: helperStatusText.value
+                  }, null, 8, ["value"]),
+                  _createVNode(_unref(DashboardRow), {
+                    icon: "mdi-database-search-outline",
+                    label: "媒体数据源",
+                    value: config.use_emby && config.emby_url && config.emby_apikey && config.use_ffprobe ? 'Emby → ffprobe' : (config.use_emby && config.emby_url && config.emby_apikey ? 'Emby' : (config.use_ffprobe ? 'ffprobe' : '未启用'))
                   }, null, 8, ["value"]),
                   _createVNode(_unref(DashboardRow), {
                     icon: "mdi-history",
@@ -1372,13 +1433,13 @@ return (_ctx, _cache) => {
     }),
     _createVNode(_component_VBottomSheet, {
       modelValue: mobileTabSheet.value,
-      "onUpdate:modelValue": _cache[32] || (_cache[32] = $event => ((mobileTabSheet).value = $event))
+      "onUpdate:modelValue": _cache[35] || (_cache[35] = $event => ((mobileTabSheet).value = $event))
     }, {
       default: _withCtx(() => [
         _createVNode(_component_VCard, null, {
           default: _withCtx(() => [
             _createVNode(_component_VCardTitle, { class: "text-subtitle-1" }, {
-              default: _withCtx(() => [...(_cache[69] || (_cache[69] = [
+              default: _withCtx(() => [...(_cache[72] || (_cache[72] = [
                 _createTextVNode("选择功能", -1)
               ]))]),
               _: 1
@@ -1412,7 +1473,7 @@ return (_ctx, _cache) => {
     }, 8, ["modelValue"]),
     _createVNode(_component_VSnackbar, {
       modelValue: saveSnackbar.value,
-      "onUpdate:modelValue": _cache[33] || (_cache[33] = $event => ((saveSnackbar).value = $event)),
+      "onUpdate:modelValue": _cache[36] || (_cache[36] = $event => ((saveSnackbar).value = $event)),
       color: "success",
       location: "top",
       timeout: 2200
@@ -1427,6 +1488,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-cccb7214"]]);
+const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-5f4d0cac"]]);
 
 export { Config as default };

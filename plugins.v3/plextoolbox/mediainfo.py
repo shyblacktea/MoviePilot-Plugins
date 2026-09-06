@@ -8,6 +8,7 @@ from typing import Any, Callable, Dict, List, Optional
 from app.sdk.logging import logger
 
 from .emby_client import EmbyClient
+from .ffprobe_source import FfprobeSource
 from .helper_client import HelperClient
 from .plex_client import PlexClient
 
@@ -24,6 +25,8 @@ class MediaInfoCompleter:
         overwrite_streams: bool = True,
         concurrency: int = 3,
         force_write: bool = False,
+        ffprobe: Optional[FfprobeSource] = None,
+        use_ffprobe: bool = True,
     ) -> None:
         """
         初始化补全器。
@@ -35,18 +38,22 @@ class MediaInfoCompleter:
         :param overwrite_streams: 写入前是否清空该 part 旧流
         :param concurrency: 数据源探测并发数
         :param force_write: 是否忽略 Plex 繁忙强制写入
+        :param ffprobe: ffprobe 数据源
+        :param use_ffprobe: 是否启用 ffprobe 数据源
         """
         self._plex = plex
         self._helper = helper
         self._emby = emby
         self._use_emby = use_emby and emby is not None
+        self._ffprobe = ffprobe
+        self._use_ffprobe = use_ffprobe and ffprobe is not None
         self._overwrite = overwrite_streams
         self._concurrency = max(1, concurrency)
         self._force = force_write
 
     def _resolve_one(self, part: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
-        为单个 STRM part 从 Emby 解析媒体信息。
+        为单个 STRM part 从 Emby 或 ffprobe 解析媒体信息。
 
         :param part: {part_id, file, title, ...}
         :return: helper payload（含 part_id 与流信息），失败返回 None
@@ -59,6 +66,12 @@ class MediaInfoCompleter:
                 info = self._emby.find_streams_by_name(file_path)
             except Exception as e:
                 logger.debug("Emby 数据源失败 %s: %s", file_path, e)
+
+        if not info and self._use_ffprobe and self._ffprobe:
+            try:
+                info = self._ffprobe.find_streams_by_name(file_path)
+            except Exception as e:
+                logger.debug("ffprobe 数据源失败 part_id=%s: %s", part.get("part_id"), e)
 
         if not info:
             return None
@@ -115,7 +128,7 @@ class MediaInfoCompleter:
         if not unresolved_files:
             return
         logger.warning(
-            "PlexToolbox 未取到媒体信息[%s]：%s 个文件（Emby 未命中）",
+            "PlexToolbox 未取到媒体信息[%s]：%s 个文件（Emby/ffprobe 均未命中）",
             scope, len(unresolved_files),
         )
         for f in unresolved_files[:50]:
@@ -143,6 +156,7 @@ class MediaInfoCompleter:
             "strm_parts": 0,
             "resolved": 0,
             "emby_hits": 0,
+            "ffprobe_hits": 0,
             "unresolved": 0,
             "written_ok": 0,
             "write_failed": 0,
@@ -177,6 +191,8 @@ class MediaInfoCompleter:
                 item["status"] = "resolved"
                 if info.get("source") == "emby":
                     summary["emby_hits"] += 1
+                elif info.get("source") == "ffprobe":
+                    summary["ffprobe_hits"] += 1
             else:
                 summary["unresolved"] += 1
                 unresolved_files.append(p.get("file") or str(p.get("part_id")))
@@ -233,6 +249,7 @@ class MediaInfoCompleter:
             "strm_parts": 0,
             "resolved": 0,
             "emby_hits": 0,
+            "ffprobe_hits": 0,
             "unresolved": 0,
             "written_ok": 0,
             "write_failed": 0,
@@ -265,6 +282,8 @@ class MediaInfoCompleter:
                     summary["resolved"] += 1
                     if info.get("source") == "emby":
                         summary["emby_hits"] += 1
+                    elif info.get("source") == "ffprobe":
+                        summary["ffprobe_hits"] += 1
                 else:
                     summary["unresolved"] += 1
                     unresolved_files.append(

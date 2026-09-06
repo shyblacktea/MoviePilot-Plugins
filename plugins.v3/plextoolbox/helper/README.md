@@ -164,6 +164,21 @@ docker compose up -d
 
 需要修改的地方：`volumes` 左侧换成 Plex 实际的 `Databases` 目录，`PTH_TOKEN` 自定义密码，`PTH_PLEX_TOKEN` 填你的 Plex token（留空则跳过繁忙检测）。
 
+## 无 Emby 时使用 ffprobe
+
+PlexToolbox V3 可以不依赖 Emby：MoviePilot 会读取 Plex 条目对应的 `.strm` 首行，
+直接用 ffprobe 探测其中的 P115 302 地址，再把媒体流信息发送给本 helper 写入 Plex。
+该流程只读取 STRM，不会改写 STRM 内容；helper 仍必须部署在 Plex 数据库所在机器。
+
+在 PlexToolbox 的「媒体信息补全」中：
+
+1. 开启「启用 ffprobe」，Emby 可留空或关闭。
+2. 将「Plex 路径 → MoviePilot 容器路径映射」设为实际映射，例如
+   `/Volumes/data=/media`。
+3. 确认 MP 容器能访问映射后的 `.strm` 文件，并用「检查 helper」确认写库服务可达。
+
+路径左侧是 Plex API 返回的路径，右侧是 MoviePilot 容器内的路径；多条映射每行一条。
+
 ### 3. 验证
 
 ```bash

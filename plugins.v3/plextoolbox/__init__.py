@@ -19,6 +19,7 @@ except Exception:
 
 from .proxy_app import create_app
 from .emby_client import EmbyClient
+from .ffprobe_source import FfprobeSource
 from .helper_client import HelperClient
 from .mediainfo import MediaInfoCompleter
 from .plex_client import PlexClient
@@ -61,9 +62,9 @@ class PlexToolbox(_PluginBase):
     """PLEX 工具箱：302 反向代理与 STRM 媒体流信息补全。"""
 
     plugin_name = "PLEX 工具箱"
-    plugin_desc = "Plex 302 反向代理、STRM 媒体流信息补全、缺海报修复与 TMDB 重复条目合并。"
+    plugin_desc = "Plex 302 反向代理、STRM 媒体流信息补全（支持无 Emby 的 ffprobe 数据源）、缺海报修复与 TMDB 重复条目合并。"
     plugin_icon = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png"
-    plugin_version = "1.0.0"
+    plugin_version = "1.1.0"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "plextoolbox_"
@@ -91,6 +92,10 @@ class PlexToolbox(_PluginBase):
     _emby_url = ""
     _emby_apikey = ""
     _use_emby = True
+    _use_ffprobe = True
+    # Plex 主机路径 => MoviePilot 容器路径；默认值适配常见部署
+    _ffprobe_path_map = "/Volumes/data=/media"
+    _ffprobe_timeout = 40
     _overwrite_streams = True
     _only_missing = True
     _concurrency = 3
@@ -158,6 +163,19 @@ class PlexToolbox(_PluginBase):
             self._emby_url = (config.get("emby_url") or "").strip()
             self._emby_apikey = (config.get("emby_apikey") or "").strip()
             self._use_emby = config.get("use_emby", True)
+            self._use_ffprobe = config.get("use_ffprobe", True)
+            ffprobe_path_map = config.get("ffprobe_path_map")
+            self._ffprobe_path_map = (
+                "/Volumes/data=/media"
+                if ffprobe_path_map is None
+                else str(ffprobe_path_map).strip()
+            )
+            try:
+                self._ffprobe_timeout = max(
+                    1, min(300, int(config.get("ffprobe_timeout") or 40))
+                )
+            except (TypeError, ValueError):
+                self._ffprobe_timeout = 40
             self._overwrite_streams = config.get("overwrite_streams", True)
             self._only_missing = config.get("only_missing", True)
             try:
@@ -233,6 +251,9 @@ class PlexToolbox(_PluginBase):
                 "emby_url": self._emby_url,
                 "emby_apikey": self._emby_apikey,
                 "use_emby": self._use_emby,
+                "use_ffprobe": self._use_ffprobe,
+                "ffprobe_path_map": self._ffprobe_path_map,
+                "ffprobe_timeout": self._ffprobe_timeout,
                 "overwrite_streams": self._overwrite_streams,
                 "only_missing": self._only_missing,
                 "concurrency": self._concurrency,
@@ -264,6 +285,14 @@ class PlexToolbox(_PluginBase):
         emby = None
         if self._use_emby and self._emby_url and self._emby_apikey:
             emby = EmbyClient(self._emby_url, self._emby_apikey)
+        ffprobe = (
+            FfprobeSource(
+                path_map=self._ffprobe_path_map,
+                timeout=self._ffprobe_timeout,
+            )
+            if self._use_ffprobe
+            else None
+        )
         return MediaInfoCompleter(
             plex=plex,
             helper=helper,
@@ -272,6 +301,8 @@ class PlexToolbox(_PluginBase):
             overwrite_streams=self._overwrite_streams,
             concurrency=self._concurrency,
             force_write=force_write,
+            ffprobe=ffprobe,
+            use_ffprobe=self._use_ffprobe,
         )
 
     def run_completion(
@@ -350,6 +381,7 @@ class PlexToolbox(_PluginBase):
                 "strm_parts": summary.get("strm_parts", 0),
                 "resolved": summary.get("resolved", 0),
                 "emby_hits": summary.get("emby_hits", 0),
+                "ffprobe_hits": summary.get("ffprobe_hits", 0),
                 "written_ok": summary.get("written_ok", 0),
                 "write_failed": summary.get("write_failed", 0),
                 "unresolved": summary.get("unresolved", 0),
@@ -570,6 +602,7 @@ class PlexToolbox(_PluginBase):
             "mediainfo_enabled": self._mediainfo_enabled,
             "running": self._running,
             "use_emby": self._use_emby,
+            "use_ffprobe": self._use_ffprobe,
             "helper_health_ok": self._helper_health_ok,
             "helper_health_failures": self._helper_health_failures,
         }
@@ -880,6 +913,9 @@ class PlexToolbox(_PluginBase):
             "emby_url": self._emby_url,
             "emby_apikey": self._emby_apikey,
             "use_emby": self._use_emby,
+            "use_ffprobe": self._use_ffprobe,
+            "ffprobe_path_map": self._ffprobe_path_map,
+            "ffprobe_timeout": self._ffprobe_timeout,
             "overwrite_streams": self._overwrite_streams,
             "only_missing": self._only_missing,
             "concurrency": self._concurrency,
