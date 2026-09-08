@@ -143,18 +143,28 @@ class SubscriptionScanner:
 
     def scan(self, config: PluginConfig, site_resolver: SiteResolver, today: Optional[date] = None) -> List[DiagnosisInput]:
         today = today or date.today()
-        selected_categories = set(config.selected_categories or self.collect_categories())
+        subscribes = list(self.load_subscribes() or [])
+        if not subscribes:
+            return []
+        selected_categories = set(config.selected_categories or self._collect_categories_from(subscribes))
         results: List[DiagnosisInput] = []
+        stats = {"total": len(subscribes), "non_tv": 0, "missing_identity": 0,
+                 "category_skipped": 0, "no_stale": 0}
 
-        for subscribe in self.load_subscribes():
+        for subscribe in subscribes:
             if not self._is_tv(subscribe):
+                stats["non_tv"] += 1
                 continue
-            tmdbid = int(getattr(subscribe, "tmdbid", 0) or 0)
-            season = int(getattr(subscribe, "season", 0) or 0)
+            tmdbid = int(getattr(subscribe, "tmdbid", 0) or getattr(subscribe, "media_id", 0) or 0)
+            season_raw = getattr(subscribe, "season", 0) or getattr(subscribe, "seasons", 0) or 0
+            season_match = re.search(r"\d+", str(season_raw))
+            season = int(season_match.group(0)) if season_match else 0
             if not tmdbid or not season:
+                stats["missing_identity"] += 1
                 continue
             category = self._subscribe_category(subscribe)
             if category not in selected_categories:
+                stats["category_skipped"] += 1
                 continue
 
             stale_episodes = []
@@ -197,9 +207,21 @@ class SubscriptionScanner:
                         include=str(getattr(subscribe, "include", "") or ""),
                         sites=site_resolver.resolve_for_category(config, category),
                         episodes=stale_episodes,
+                        username=str(getattr(subscribe, "username", "") or ""),
                     )
                 )
+            else:
+                stats["no_stale"] += 1
+        self.last_scan_stats = stats | {"candidates": len(results)}
         return results
+
+    def _collect_categories_from(self, subscribes: List[Any]) -> List[str]:
+        """从已加载的订阅列表收集分类，避免同一轮扫描重复查询订阅。"""
+        return sorted(_ordered_unique([
+            self._subscribe_category(subscribe)
+            for subscribe in subscribes
+            if self._is_tv(subscribe)
+        ]))
 
     @staticmethod
     def _is_tv(subscribe: Any) -> bool:
