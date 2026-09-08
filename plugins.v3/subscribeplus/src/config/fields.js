@@ -12,6 +12,7 @@ export const groups = [
   { key: 'rules', title: '规则记录', icon: 'mdi-history', desc: '订阅规则修改历史。' },
   { key: 'scan', title: '扫描设置', icon: 'mdi-tune-variant', desc: '订阅扫描周期、宽限天数与站点范围。' },
   { key: 'notify', title: '通知权限', icon: 'mdi-message-badge-outline', desc: 'Telegram 通知与规则修改授权。' },
+  { key: 'notify_rules', title: 'F4通知目标面板', icon: 'mdi-bell-cog-outline', desc: '系统通知(入库/下载/订阅)目标 + 订阅用户映射。' },
   { key: 'cleanup', title: '清理与候选', icon: 'mdi-broom', desc: '整季包清理策略与候选缓存。' },
 ]
 
