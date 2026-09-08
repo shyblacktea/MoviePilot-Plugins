@@ -1,15 +1,20 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
+from threading import Lock
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 
 class JsonStore:
+    _write_lock = Lock()
     def __init__(self, data_dir: Path, max_rule_records: int = 100):
         self.data_dir = Path(data_dir)
         self.max_rule_records = max_rule_records
+        self._read_cache: Dict[str, tuple[int, Any]] = {}
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
     def _path(self, name: str) -> Path:
@@ -20,15 +25,32 @@ class JsonStore:
         if not path.exists():
             return default
         try:
-            return json.loads(path.read_text(encoding="utf-8") or json.dumps(default))
+            mtime_ns = path.stat().st_mtime_ns
+            cached = self._read_cache.get(name)
+            if cached and cached[0] == mtime_ns:
+                return cached[1]
+            value = json.loads(path.read_text(encoding="utf-8") or json.dumps(default))
+            self._read_cache[name] = (mtime_ns, value)
+            return value
         except (OSError, json.JSONDecodeError):
             return default
 
     def _write(self, name: str, value: Any):
-        self._path(name).write_text(
-            json.dumps(value, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
+        path = self._path(name)
+        payload = json.dumps(value, ensure_ascii=False, indent=2)
+        with self._write_lock:
+            fd, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=str(path.parent), text=True)
+            try:
+                with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                    handle.write(payload)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                os.replace(temp_name, path)
+            finally:
+                try:
+                    os.unlink(temp_name)
+                except FileNotFoundError:
+                    pass
 
     def save_scan_results(self, results: List[Dict[str, Any]]):
         for result in results or []:
