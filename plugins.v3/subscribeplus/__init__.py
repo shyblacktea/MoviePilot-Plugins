@@ -129,10 +129,10 @@ PLUGIN_ID = "SubscribePlus"
 
 class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
-    plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。"
+    plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.0.0"
-    plugin_author = "shyblacktea,MoviePilot助手"
+    plugin_version = "1.0.1"
+    plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
     plugin_order = 998
@@ -236,6 +236,10 @@ class SubscribePlus(_PluginBase):
             {"path": "/rule_preview", "endpoint": self.rule_preview_api, "methods": ["POST"], "auth": "bear", "summary": "生成规则修改预览"},
             {"path": "/rule_confirm", "endpoint": self.rule_confirm_api, "methods": ["POST"], "auth": "bear", "summary": "确认规则修改"},
             {"path": "/diagnose_one", "endpoint": self.diagnose_one_api, "methods": ["POST"], "auth": "bear", "summary": "manual single subscribe diagnosis"},
+            {"path": "/notify_options", "endpoint": self.get_notify_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取订阅通知管理选项"},
+            {"path": "/notify_rules", "endpoint": self.save_notify_rules_api, "methods": ["POST"], "auth": "bear", "summary": "保存订阅通知映射"},
+            {"path": "/f4_options", "endpoint": self.get_f4_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取 F4 系统通知目标配置"},
+            {"path": "/f4_actions", "endpoint": self.save_f4_actions_api, "methods": ["POST"], "auth": "bear", "summary": "保存 F4 系统通知目标配置"},
         ]
 
     def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
@@ -320,6 +324,348 @@ class SubscribePlus(_PluginBase):
 
     def get_site_options_api(self) -> Dict[str, Any]:
         return {"success": True, "data": {"items": self._ensure_site_resolver().available_sites()}}
+
+    # ---------- 订阅通知管理 ----------
+
+    def _load_notification_channels(self) -> List[Dict[str, Any]]:
+        """读取启用的消息通知渠道配置。
+
+        :return: [{type, name, config}], type 形如 telegram/qqbot
+        """
+        try:
+            from app.application.notification import get_notification_configs
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取通知渠道失败: {exc}")
+            return []
+        try:
+            channels = []
+            for conf in get_notification_configs(include_disabled=False):
+                channels.append(
+                    {
+                        "type": str(getattr(conf, "type", "") or "").strip().lower(),
+                        "name": str(getattr(conf, "name", "") or ""),
+                        "config": dict(getattr(conf, "config", None) or {}),
+                    }
+                )
+            return channels
+        except Exception as exc:
+            logger.warning(f"订阅下载增强解析通知渠道失败: {exc}")
+            return []
+
+    @staticmethod
+    def _channel_kind(channel_type: str) -> str:
+        """把渠道 type 归一化为 tg/qq 前缀。
+
+        :param channel_type: 通知渠道类型，如 telegram/qqbot
+        :return: tg 或 qq；无法识别返回原始类型
+        """
+        raw = str(channel_type or "").strip().lower()
+        if raw in {"telegram", "tg"}:
+            return "tg"
+        if raw in {"qqbot", "qq"}:
+            return "qq"
+        return raw
+
+    @staticmethod
+    def _split_ids(value: Any) -> List[str]:
+        """把逗号分隔的 ID 字符串拆成去空白、去重列表。"""
+        result: List[str] = []
+        for item in str(value or "").split(","):
+            item = item.strip()
+            if item and item not in result:
+                result.append(item)
+        return result
+
+    @staticmethod
+    def _normalize_target(target: str, default_prefix: str = "tg") -> str:
+        """规范化通知目标值为带渠道前缀的格式。
+
+        兼容旧版无前缀配置：旧版只支持 Telegram，裸 ID（含 QQ 已保存的
+        group: 前缀）统一补成 default_prefix 前缀（默认 tg）。已带
+        tg:/qq: 前缀的保持不变。
+
+        :param target: 原始目标值（可能为空、裸 ID 或带前缀）
+        :param default_prefix: 无前缀值按哪个渠道解析（默认 tg）
+        :return: 带前缀目标值；空输入返回空串
+        """
+        raw = str(target or "").strip()
+        if not raw:
+            return ""
+        if raw.startswith("tg:") or raw.startswith("qq:"):
+            return raw
+        # 兼容旧版 QQ 群保存值 group:{openid}：补 qq: 前缀而不是误判成 TG
+        if raw.startswith("group:"):
+            return f"qq:{raw}"
+        # 兼容历史脏数据：形如「群组 -1003975240343」「管理员 123」「用户 456」的
+        # 标题文本，提取末尾 ID 段；不影响其它形态。
+        stripped = re.split(r"\s+", raw, maxsplit=1)
+        if len(stripped) == 2 and re.fullmatch(r"-?\d+", stripped[1].strip()):
+            raw = stripped[1].strip()
+        prefix = str(default_prefix or "tg").strip().lower()
+        if prefix not in ("tg", "qq"):
+            prefix = "tg"
+        return f"{prefix}:{raw}"
+
+    @classmethod
+    def _split_targets(cls, value: Any) -> List[str]:
+        """把配置值拆成多个规范化的带渠道前缀目标（去空去重）。
+
+        支持旧版单值、逗号/中文逗号分隔的多目标以及数组/元组输入，
+        返回按原顺序去重后的目标列表；空输入返回空列表。
+
+        :param value: 原始目标配置值（字符串或可迭代）
+        :return: 规范化后的目标列表
+        """
+        if value is None:
+            return []
+        if isinstance(value, str):
+            items = [item.strip() for item in re.split(r"[,，]", value) if item.strip()]
+        elif isinstance(value, (list, tuple, set)):
+            items = [str(item).strip() for item in value if str(item).strip()]
+        else:
+            items = []
+        result: List[str] = []
+        for item in items:
+            normalized = cls._normalize_target(item)
+            if normalized and normalized not in result:
+                result.append(normalized)
+        return result
+
+    def _build_notify_target_options(self) -> Dict[str, Any]:
+        """从启用通知渠道构造订阅通知目标选项（多渠道统一列表）。
+
+        每个启用的通知渠道（telegram/qqbot…）都会产出候选目标，目标值统一带
+        渠道前缀（tg:/qq:）避免不同渠道 ID 撞车。返回结构：
+        {kind, prefix, targets: [{id, title, source, channel}]}
+        其中 kind/prefix 保留主渠道（telegram 优先）信息供前端兼容展示。
+
+        :return: 多渠道目标选项字典
+        """
+        channels = self._load_notification_channels()
+        if not channels:
+            return {"kind": "", "prefix": "", "targets": []}
+        # 主渠道：优先 telegram，其次 qqbot；与 post_message 默认路由保持一致。
+        ordered = sorted(
+            channels,
+            key=lambda item: 0 if item["type"] == "telegram" else (1 if item["type"] == "qqbot" else 2),
+        )
+        primary = ordered[0]
+        primary_type = primary.get("type", "") if isinstance(primary, dict) else ""
+        targets: List[Dict[str, str]] = []
+        seen: List[str] = []
+        for channel in ordered:
+            if not isinstance(channel, dict):
+                continue
+            channel_type = str(channel.get("type") or "").strip().lower()
+            prefix = self._channel_kind(channel_type)
+            if prefix not in ("tg", "qq"):
+                continue
+            config = channel.get("config") or {}
+            channel_label = "Telegram" if prefix == "tg" else "QQ"
+            if prefix == "tg":
+                group_ids = self._split_ids(config.get("TELEGRAM_CHAT_ID"))
+                admin_ids = self._split_ids(config.get("TELEGRAM_ADMINS"))
+                user_ids = self._split_ids(config.get("TELEGRAM_USERS"))
+                for group_id in group_ids:
+                    value = f"tg:{group_id}"
+                    if value not in seen:
+                        seen.append(value)
+                        targets.append({"id": value, "title": f"[{channel_label}] 群组 {group_id}", "source": "group", "channel": "tg"})
+                for admin_id in admin_ids:
+                    value = f"tg:{admin_id}"
+                    if value not in seen:
+                        seen.append(value)
+                        targets.append({"id": value, "title": f"[{channel_label}] 管理员 {admin_id}", "source": "admin", "channel": "tg"})
+                for user_id in user_ids:
+                    value = f"tg:{user_id}"
+                    if value not in seen:
+                        seen.append(value)
+                        targets.append({"id": value, "title": f"[{channel_label}] 用户白名单 {user_id}", "source": "user", "channel": "tg"})
+            elif prefix == "qq":
+                # QQ 渠道以管理员/群 openid 为候选主体。
+                admin_ids = self._split_ids(config.get("QQBOT_ADMINS"))
+                group_ids = self._split_ids(config.get("QQ_GROUP_OPENID") or config.get("QQ_GROUP"))
+                open_ids = self._split_ids(config.get("QQ_OPENID"))
+                for group_id in group_ids:
+                    value = f"qq:group:{group_id}"
+                    if value not in seen:
+                        seen.append(value)
+                        targets.append({"id": value, "title": f"[{channel_label}] 群 {group_id}", "source": "group", "channel": "qq"})
+                for admin_id in admin_ids:
+                    value = f"qq:{admin_id}"
+                    if value not in seen:
+                        seen.append(value)
+                        targets.append({"id": value, "title": f"[{channel_label}] 管理员 {admin_id}", "source": "admin", "channel": "qq"})
+                for open_id in open_ids:
+                    value = f"qq:{open_id}"
+                    if value not in seen:
+                        seen.append(value)
+                        targets.append({"id": value, "title": f"[{channel_label}] 用户 {open_id}", "source": "user", "channel": "qq"})
+        return {
+            "kind": primary_type,
+            "prefix": self._channel_kind(primary_type),
+            "targets": targets,
+        }
+
+    def _collect_subscribe_usernames(self) -> List[str]:
+        """收集订阅归属用户（username）去重列表。"""
+        usernames: List[str] = []
+        for subscribe in self._load_subscribes() or []:
+            username = str(getattr(subscribe, "username", "") or "").strip()
+            if username and username not in usernames:
+                usernames.append(username)
+        return usernames
+
+    def get_notify_options_api(self) -> Dict[str, Any]:
+        """返回订阅通知管理所需选项：通知目标候选 + 订阅用户列表 + 现有映射。"""
+        try:
+            target_options = self._build_notify_target_options()
+            usernames = self._collect_subscribe_usernames()
+            return {
+                "success": True,
+                "data": {
+                    "channel_kind": target_options.get("kind", ""),
+                    "channel_prefix": target_options.get("prefix", ""),
+                    "channel_count": len({
+                        str(target.get("channel") or "") for target in target_options.get("targets", [])
+                        if target.get("channel")
+                    }) or (1 if target_options.get("prefix") else 0),
+                    "targets": target_options.get("targets", []),
+                    "usernames": usernames,
+                    "rules": {
+                        str(username).strip(): self._split_targets(target)
+                        for username, target in (self._plugin_config.notify_rules or {}).items()
+                        if str(username).strip() and str(target).strip()
+                    },
+                    "default_target": self._split_targets(
+                        str(self._plugin_config.default_notify_target or "").strip()
+                    ),
+                },
+            }
+        except Exception as exc:
+            logger.error(f"订阅下载增强获取通知管理选项失败: {exc}", exc_info=True)
+            return {"success": False, "message": str(exc)}
+
+    def save_notify_rules_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        """保存订阅通知映射与默认通知目标。
+
+        :param payload: {rules: {username: target_id}, default_target: target_id}
+        :return: {success, message}
+        """
+        payload = payload or {}
+        raw_rules = payload.get("rules") or {}
+        rules = {
+            str(username).strip(): ",".join(self._split_targets(target))
+            for username, target in raw_rules.items()
+            if str(username).strip()
+        }
+        # 去掉拆分后为空的映射（用户清空该行目标）
+        rules = {name: targets for name, targets in rules.items() if targets}
+        default_target = ",".join(self._split_targets(payload.get("default_target")))
+        try:
+            merged = self._plugin_config.to_dict()
+            merged["notify_rules"] = rules
+            merged["default_notify_target"] = default_target
+            self.update_config(merged)
+            self.init_plugin(merged)
+            return {"success": True, "message": f"已保存 {len(rules)} 条订阅通知映射（支持多目标）"}
+        except Exception as exc:
+            logger.error(f"订阅下载增强保存通知映射失败: {exc}", exc_info=True)
+            return {"success": False, "message": str(exc)}
+
+    # ---------- F4 系统通知目标面板 ----------
+
+    # F4 面板控制的三类宿主通知消息类型（中文名与宿主 MessageType/通知开关一致）
+    F4_SWITCH_TYPES: List[str] = ["资源下载", "整理入库", "订阅"]
+
+    # action 可选值：all=发群组；user,admin=用户+管理员；user=仅用户；admin=仅管理员
+    F4_ACTION_OPTIONS: List[Dict[str, str]] = [
+        {"value": "all", "title": "发群组"},
+        {"value": "user,admin", "title": "用户+管理员"},
+        {"value": "user", "title": "仅用户"},
+        {"value": "admin", "title": "仅管理员"},
+    ]
+
+    def _read_f4_actions(self) -> Dict[str, str]:
+        """读取宿主通知开关中 F4 三档的当前 action。
+
+        :return: {消息类型: action 字符串}，缺省补空串
+        """
+        result: Dict[str, str] = {}
+        try:
+            from app.db.systemconfig_oper import SystemConfigOper
+
+            oper = SystemConfigOper()
+            key = getattr(SystemConfigKey, "NotificationSwitchs", "NotificationSwitchs")
+            switches = oper.get(key) or []
+            for switch in switches or []:
+                if not isinstance(switch, dict):
+                    continue
+                stype = str(switch.get("type") or "").strip()
+                if stype in self.F4_SWITCH_TYPES:
+                    result[stype] = str(switch.get("action") or "").strip()
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取 F4 通知开关失败: {exc}")
+        for stype in self.F4_SWITCH_TYPES:
+            result.setdefault(stype, "")
+        return result
+
+    def get_f4_options_api(self) -> Dict[str, Any]:
+        """返回 F4 通知目标面板选项：三档当前 action + 可选值定义。"""
+        try:
+            current = self._read_f4_actions()
+            return {
+                "success": True,
+                "data": {
+                    "types": self.F4_SWITCH_TYPES,
+                    "options": self.F4_ACTION_OPTIONS,
+                    "current": current,
+                },
+            }
+        except Exception as exc:
+            logger.error(f"订阅下载增强获取 F4 通知目标失败: {exc}", exc_info=True)
+            return {"success": False, "message": str(exc)}
+
+    def save_f4_actions_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        """保存 F4 通知目标配置到宿主通知开关。
+
+        :param payload: {actions: {消息类型: action}}
+        :return: {success, message}
+        """
+        payload = payload or {}
+        raw_actions = payload.get("actions") or {}
+        valid_actions = {option["value"] for option in self.F4_ACTION_OPTIONS}
+        updates: Dict[str, str] = {}
+        for stype in self.F4_SWITCH_TYPES:
+            value = str(raw_actions.get(stype) or "").strip()
+            if value in valid_actions:
+                updates[stype] = value
+        if not updates:
+            return {"success": False, "message": "没有可保存的 F4 通知目标"}
+        try:
+            from app.db.systemconfig_oper import SystemConfigOper
+
+            oper = SystemConfigOper()
+            key = getattr(SystemConfigKey, "NotificationSwitchs", "NotificationSwitchs")
+            switches = oper.get(key) or []
+            # 保留宿主其它类型开关，仅更新 F4 三档
+            for switch in switches or []:
+                if isinstance(switch, dict) and str(switch.get("type") or "").strip() in updates:
+                    switch["action"] = updates[str(switch.get("type") or "").strip()]
+            # 宿主缺失的类型补上
+            existing_types = {
+                str(switch.get("type") or "").strip()
+                for switch in switches or []
+                if isinstance(switch, dict)
+            }
+            for stype, action in updates.items():
+                if stype not in existing_types:
+                    switches.append({"type": stype, "action": action})
+            oper.set(key, switches)
+            return {"success": True, "message": f"已保存 {len(updates)} 项 F4 通知目标"}
+        except Exception as exc:
+            logger.error(f"订阅下载增强保存 F4 通知目标失败: {exc}", exc_info=True)
+            return {"success": False, "message": str(exc)}
 
     def get_results_api(self) -> Dict[str, Any]:
         store = self._ensure_store()
@@ -435,6 +781,7 @@ class SubscribePlus(_PluginBase):
 
         results = []
         inputs = scanner.scan(config, resolver)
+        logger.info(f"订阅下载增强扫描统计：{getattr(scanner, 'last_scan_stats', {})}")
         cursor = store.load_scan_cursor()
         batch, next_cursor = select_scan_batch(inputs, config.max_scan_subscribes, cursor)
         store.save_scan_cursor(next_cursor)
@@ -506,6 +853,7 @@ class SubscribePlus(_PluginBase):
                             evidence=evidence or "manual single episode diagnosis",
                         )
                     ],
+                    username=str(getattr(subscribe, "username", "") or ""),
                 ),
                 "",
             )
@@ -770,6 +1118,7 @@ class SubscribePlus(_PluginBase):
             message="MP 订阅搜索结果中没有覆盖目标集的候选资源",
             episodes=[episode.to_dict() for episode in scoped_item.episodes],
             sites=scoped_item.sites,
+            username=scoped_item.username,
         )
 
     @staticmethod
@@ -950,6 +1299,7 @@ class SubscribePlus(_PluginBase):
             include=include,
             sites=sites,
             episodes=episodes,
+            username=str(getattr(subscribe, "username", "") or ""),
         )
         result = TorrentDiagnoser(self._search_torrents).diagnose(item).to_dict()
         result["source"] = "plugin_pt_scope"
@@ -991,22 +1341,152 @@ class SubscribePlus(_PluginBase):
                 continue
             token = self._save_interaction(item)
             try:
-                self.post_message(
-                    mtype=NotificationType.Plugin if NotificationType else None,
-                    title=self._notification_title(item),
-                    text=render_notification_text(item),
-                    buttons=build_main_menu(
+                message_kwargs = {
+                    "mtype": NotificationType.Plugin if NotificationType else None,
+                    "title": self._notification_title(item),
+                    "text": render_notification_text(item),
+                    "buttons": build_main_menu(
                         token,
                         self._plugin_config.allow_tg_rule_update,
                         can_identifier_fix=item.get("reason") == "recognition_issue",
                         candidate_count=len(item.get("candidates") or []),
                         search_keyword_suggestion=item.get("search_keyword_suggestion") or "",
                     ),
-                    save_history=False,
+                    "save_history": False,
+                }
+                self._post_message_to_targets(
+                    self._resolve_notify_userids(item),
+                    message_kwargs,
                 )
             except Exception as exc:
-                logger.warning(f"璁㈤槄涓嬭浇澧炲己鍙戦€侀€氱煡澶辫触: {exc}")
+                logger.warning(f"订阅下载增强发送通知失败: {exc}")
             return
+
+    @staticmethod
+    def _target_to_userid(target: str) -> Optional[str]:
+        """把带渠道前缀的目标值转成宿主 post_message 可用的 userid。
+
+        规则：
+        - 空值返回 None；
+        - tg:xxx → xxx（TG 原生 Chat/用户 ID）；
+        - qq:group:xxx → group:xxx（QQ 群 userid 约定）；
+        - qq:xxx → xxx（QQ 私聊 openid）；
+        - 无前缀裸值按 TG 原生值透传（兼容旧版）。
+
+        :param target: 带渠道前缀的目标值
+        :return: 宿主 userid；空输入返回 None
+        """
+        raw = str(target or "").strip()
+        if not raw:
+            return None
+        if raw.startswith("qq:"):
+            return raw[len("qq:"):]
+        if raw.startswith("tg:"):
+            raw = raw[len("tg:"):]
+            return raw or None
+        # 兼容历史脏数据（未重新保存前的旧映射）：形如「群组 -1003975240343」，
+        # 提取末尾纯数字段作为 TG userid。
+        parts = re.split(r"\s+", raw, maxsplit=1)
+        if len(parts) == 2 and re.fullmatch(r"-?\d+", parts[1].strip()):
+            return parts[1].strip()
+        return raw or None
+
+    def _default_group_chat_id(self) -> str:
+        """读取通知渠道默认群组 Chat ID（TG 的 TELEGRAM_CHAT_ID 或 QQ 群）。
+
+        供未命中「订阅通知管理」映射且未配置默认目标时兜底使用，确保通知
+        落在群组而非 user/admin 私聊路由。返回带渠道前缀的目标值。
+
+        :return: 群组目标值（tg:xxx / qq:group:xxx）；无可用渠道返回空串
+        """
+        channels = self._load_notification_channels()
+        if not channels:
+            return ""
+        ordered = sorted(
+            channels,
+            key=lambda item: 0 if item["type"] == "telegram" else (1 if item["type"] == "qqbot" else 2),
+        )
+        for channel in ordered:
+            if not isinstance(channel, dict):
+                continue
+            prefix = self._channel_kind(channel.get("type", "") if isinstance(channel, dict) else "")
+            config = channel.get("config") or {}
+            if prefix == "tg":
+                ids = self._split_ids(config.get("TELEGRAM_CHAT_ID"))
+                if ids:
+                    return f"tg:{ids[0]}"
+            elif prefix == "qq":
+                ids = self._split_ids(config.get("QQ_GROUP_OPENID") or config.get("QQ_GROUP"))
+                if ids:
+                    return f"qq:group:{ids[0]}"
+        return ""
+
+    def _default_notify_userids(self) -> List[str]:
+        """解析无订阅归属用户的默认通知目标 userid 列表。
+
+        优先级：配置的默认目标（可多选） > 通知渠道默认群组。确保插件主动
+        通知（全集包清理等）不会因缺少 userid 而落入 user/admin 私聊路由。
+        返回的 userid 为宿主原生格式（已剥离渠道前缀），按序去重。
+
+        :return: 目标 userid 列表；无可用目标返回空列表
+        """
+        targets = self._split_targets(str(self._plugin_config.default_notify_target or "").strip())
+        if not targets:
+            fallback = self._default_group_chat_id()
+            targets = [fallback] if fallback else []
+        userids: List[str] = []
+        for target in targets:
+            userid = self._target_to_userid(target)
+            if userid and userid not in userids:
+                userids.append(userid)
+        return userids
+
+    def _resolve_notify_userids(self, item: Dict[str, Any]) -> List[str]:
+        """按订阅归属用户解析通知目标 userid 列表（支持多目标）。
+
+        优先级：订阅通知管理映射（可多选） > 配置的默认目标（可多选） >
+        通知渠道默认群组。返回宿主原生 userid（个人 ID 或群组 Chat ID），
+        确保通知不会因缺少 userid 而落入 user/admin 私聊路由。
+
+        :param item: 通知诊断项
+        :return: 目标 userid 列表；无可用目标返回空列表
+        """
+        username = str(item.get("username") or "").strip()
+        rules = self._plugin_config.notify_rules or {}
+        raw_targets: List[str] = []
+        if username:
+            raw_targets = self._split_targets(str(rules.get(username) or "").strip())
+        if not raw_targets:
+            return self._default_notify_userids()
+        userids: List[str] = []
+        for target in raw_targets:
+            userid = self._target_to_userid(target)
+            if userid and userid not in userids:
+                userids.append(userid)
+        return userids
+
+    def _post_message_to_targets(
+        self,
+        userids: List[str],
+        message_kwargs: Dict[str, Any],
+    ) -> None:
+        """把同一条消息逐个发送到多个目标 userid。
+
+        宿主 Telegram 发送按单 chat_id 处理，多目标由插件循环投递实现；
+        不传 userid 的目标交由宿主默认路由（群）处理，避免与既有交互消息
+        语义冲突。
+
+        :param userids: 目标 userid 列表（已去重）
+        :param message_kwargs: post_message 关键字参数（不含 userid）
+        """
+        if not userids:
+            self.post_message(**message_kwargs)
+            return
+        for userid in userids:
+            try:
+                self.post_message(userid=userid, **message_kwargs)
+            except Exception as exc:
+                logger.warning(f"订阅下载增强发送通知到 {userid} 失败: {exc}")
 
     if eventmanager:
         @eventmanager.register(EventType.MessageAction)
@@ -2484,11 +2964,14 @@ class SubscribePlus(_PluginBase):
         if errors:
             lines.append(f"失败：{len(errors)} 条")
             lines.extend(errors[:5])
-        self.post_message(
-            mtype=NotificationType.Plugin if NotificationType else None,
-            title=self._notification_title(title),
-            text="\n".join(lines),
-            save_history=False,
+        self._post_message_to_targets(
+            self._default_notify_userids(),
+            {
+                "mtype": NotificationType.Plugin if NotificationType else None,
+                "title": self._notification_title(title),
+                "text": "\n".join(lines),
+                "save_history": False,
+            },
         )
 
     def _notify_season_cleanup(
@@ -2530,11 +3013,14 @@ class SubscribePlus(_PluginBase):
         if errors:
             lines.append(f"清理失败：{len(errors)} 条")
             lines.extend(errors[:5])
-        self.post_message(
-            mtype=NotificationType.Plugin if NotificationType else None,
-            title=self._notification_title(title),
-            text="\n".join(lines),
-            save_history=False,
+        self._post_message_to_targets(
+            self._default_notify_userids(),
+            {
+                "mtype": NotificationType.Plugin if NotificationType else None,
+                "title": self._notification_title(title),
+                "text": "\n".join(lines),
+                "save_history": False,
+            },
         )
 
     @staticmethod
