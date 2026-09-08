@@ -131,7 +131,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.0.1"
+    plugin_version = "1.0.2"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -3367,6 +3367,33 @@ class SubscribePlus(_PluginBase):
         return sites
 
     def _load_tv_categories(self) -> List[str]:
+        """读取宿主分类策略中启用的电视剧二级分类。
+
+        优先读取 MoviePilot V3 分类策略（systemconfig MediaClassificationPolicy
+        的 active.categories，media_type=电视剧 且 enabled），兼容旧版
+        MediaChain().media_category() 以支持旧宿主回退。
+        """
+        categories: List[str] = []
+        try:
+            from app.db.systemconfig_oper import SystemConfigOper
+
+            key = getattr(SystemConfigKey, "MediaClassificationPolicy", None)
+            if key is not None:
+                policy = SystemConfigOper().get(key) or {}
+                active = policy.get("active") or {}
+                raw_categories = active.get("categories") or []
+                categories = [
+                    str(item.get("name") or "").strip()
+                    for item in raw_categories
+                    if isinstance(item, dict)
+                    and str(item.get("media_type") or "").strip() == MediaType.TV.value
+                    and item.get("enabled", True) is not False
+                    and str(item.get("name") or "").strip()
+                ]
+        except Exception:
+            categories = []
+        if categories:
+            return categories
         try:
             try:
                 from app.chain.media import MediaChain
@@ -3374,7 +3401,6 @@ class SubscribePlus(_PluginBase):
                 from app.chain import MediaChain
 
             raw_categories = (MediaChain().media_category() or {}).get(MediaType.TV.value) or []
-            categories = []
             for item in raw_categories:
                 if isinstance(item, dict):
                     value = item.get("title") or item.get("name") or item.get("value")
