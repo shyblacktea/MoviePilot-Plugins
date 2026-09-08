@@ -238,6 +238,7 @@ class TorrentDiagnoser:
                 message=f"PT 搜索失败：{exc}",
                 episodes=[episode.to_dict() for episode in item.episodes],
                 sites=item.sites,
+                username=item.username,
             )
 
         target_episodes = [episode.episode for episode in item.episodes]
@@ -253,4 +254,5 @@ class TorrentDiagnoser:
             episodes=[episode.to_dict() for episode in item.episodes],
             candidates=diagnosis.candidates,
             sites=item.sites,
+            username=item.username,
         )
