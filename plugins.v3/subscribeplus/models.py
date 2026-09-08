@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -30,6 +31,8 @@ class PluginConfig:
     season_pack_cleanup: str = "off"
     season_pack_full_download: bool = False
     candidate_cache_days: int = 3
+    notify_rules: Dict[str, str] = field(default_factory=dict)
+    default_notify_target: str = ""
 
     @classmethod
     def from_dict(cls, raw: Optional[Dict[str, Any]]) -> "PluginConfig":
@@ -48,6 +51,20 @@ class PluginConfig:
         config.allow_tg_rule_update = bool(config.allow_tg_rule_update)
         config.season_pack_full_download = bool(config.season_pack_full_download)
         config.candidate_cache_days = max(0, int(config.candidate_cache_days or 0))
+        config.default_notify_target = str(config.default_notify_target or "").strip()
+        config.notify_rules = {
+            str(key): str(value)
+            for key, value in (config.notify_rules or {}).items()
+            if str(key).strip() and str(value).strip()
+        }
+        # 兼容旧配置：notify_rules 历史值可能是以分隔符拼出的多目标，统一拆分
+        config.notify_rules = {
+            str(key): ",".join(
+                item for item in re.split(r"[,，]", str(value or ""))
+                if item.strip()
+            )
+            for key, value in config.notify_rules.items()
+        }
         from .season_cleanup import normalize_cleanup_mode
 
         config.season_pack_cleanup = normalize_cleanup_mode(config.season_pack_cleanup)
@@ -79,6 +96,7 @@ class DiagnosisInput:
     include: str = ""
     sites: List[str] = field(default_factory=list)
     episodes: List[StaleEpisode] = field(default_factory=list)
+    username: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         data = asdict(self)
@@ -105,6 +123,7 @@ class DiagnosisItem:
     subscription_site_names: List[str] = field(default_factory=list)
     subscription_site_progress: List[Dict[str, Any]] = field(default_factory=list)
     search_keyword_suggestion: str = ""
+    username: str = ""
     created_at: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
 
     def to_dict(self) -> Dict[str, Any]:
