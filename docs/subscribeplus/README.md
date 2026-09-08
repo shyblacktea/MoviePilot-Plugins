@@ -86,6 +86,16 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 ## 版本
 
+### v1.0.2
+
+- fix: 适配 MoviePilot V3 分类策略——`_load_tv_categories` 改读宿主 `MediaClassificationPolicy`（systemconfig `active.categories` 中 `media_type=电视剧` 且启用的分类名），不再调用已移除的 `MediaChain().media_category()`，修复「订阅下载增强读取二级分类策略失败」告警；旧宿主回退兼容保留。
+
+### v1.0.1
+
+- feat: 订阅用户通知目标重构——渠道统一按 `tg:` / `qq:` 前缀解析，支持 QQ 通知。
+- feat: F4 通知目标面板（原「订阅通知管理」）升级为多选多投：默认通知目标与每用户映射均可同时选择群组/用户/管理员等目标，投递时循环发送。
+- 兼容旧单值/脏数据自动归一，前端保存与加载全面数组化。
+
 ### v1.0.0
 
 - 迁移到 MoviePilot V3 专用实现（`plugins.v3` + `package.v3.json`），声明 `system_version: ">=3.0.0"`。
@@ -257,9 +267,9 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`1.0.0`
-- Release tag：`SubscribePlus_v1.0.0`
-- Release 资产：`subscribeplus_v1.0.0.zip`
+- 当前版本：`1.0.2`
+- Release tag：`SubscribePlus_v1.0.2`
+- Release 资产：`subscribeplus_v1.0.2.zip`
 
 ## 致谢
 
