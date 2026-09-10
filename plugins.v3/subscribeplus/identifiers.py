@@ -48,7 +48,52 @@ def target_tmdbid(target: Dict[str, Any]) -> int:
     return safe_int(target.get("tmdbid") or target.get("tmdb_id"), 0)
 
 
+_MEDIA_SUFFIX_RE = re.compile(r"\.(?:mkv|mp4|avi|mov|ts|m2ts|strm)$", re.IGNORECASE)
+_TV_SEASON_CUT_RE = re.compile(r"(?i)[.\s_-]+S\d{1,3}(?:E\d{1,4}(?:-E?\d{1,4})?)?")
+_YEAR_CUT_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
+_ANCHOR_WORD_RE = re.compile(r"[A-Za-z\u4e00-\u9fff]")
+_MIN_ANCHOR_LENGTH = 4
+
+
+def identifier_anchor(title: str, media_type: str) -> str:
+    """从媒体文件名提取窄匹配锚点。
+
+    去掉目录、扩展名、季集编号与发布年份，只保留作品名部分，作为识别词替换
+    规则的匹配侧；避免把组名、分辨率、季集等整段转义后写死进规则。
+    """
+    raw_title = str(title or "").strip().replace("\\", "/").rsplit("/", 1)[-1]
+    raw_title = _MEDIA_SUFFIX_RE.sub("", raw_title)
+    if normalize_media_type(media_type) == "tv":
+        match = _TV_SEASON_CUT_RE.search(raw_title)
+        if match:
+            raw_title = raw_title[: match.start()]
+    year_match = _YEAR_CUT_RE.search(raw_title)
+    if year_match:
+        raw_title = raw_title[: year_match.start()].rstrip(" ._-([（【")
+    return raw_title.strip(" ._-")
+
+
+def escape_replacement_text(value: Any) -> str:
+    """转义替换文本，避免名称里的反斜杠被当作正则反向引用模板。"""
+    return str(value or "").replace("\\", "\\\\")
+
+
+def resolve_identifier_anchor(title: str, media_type: str) -> str:
+    """解析可用的窄锚点，锚点过短或缺少文字时回退到原作品名提取逻辑。"""
+    anchor = identifier_anchor(title, media_type)
+    if len(anchor) < _MIN_ANCHOR_LENGTH or not _ANCHOR_WORD_RE.search(anchor):
+        fallback = identifier_title_stem(title, media_type)
+        if fallback:
+            anchor = fallback
+    return anchor
+
+
 def build_exact_identifier_rule(title: str, target: Dict[str, Any]) -> str:
+    """生成窄作用域强制绑定规则，不写死季集编号。
+
+    匹配侧只使用作品名锚点，替换后季集编号与画质标签原样保留，因此同一条规则
+    对整季/整部的任意集数都生效，不会把季号或集号钉死在某一集上。
+    """
     raw_title = str(title or "").strip()
     name = str(target.get("name") or target.get("title") or "").strip()
     media_type = normalize_media_type(target.get("media_type") or target.get("type"))
@@ -56,20 +101,16 @@ def build_exact_identifier_rule(title: str, target: Dict[str, Any]) -> str:
     if not raw_title or not name or not tmdbid or media_type == "unknown":
         raise ValueError("缺少标题、目标名称、媒体类型或 TMDB ID")
 
-    replacement = name
+    anchor = resolve_identifier_anchor(raw_title, media_type)
+    if not anchor:
+        raise ValueError("无法从媒体文件名提取可用的作品名锚点")
+
+    replacement = escape_replacement_text(name)
     year = str(target.get("year") or "").strip()
     if len(year) == 4 and year.isdigit():
-        replacement += f".{year}"
-    replacement += f"{{[tmdbid={tmdbid};type={media_type}"
-    if media_type == "tv":
-        season = safe_int(target.get("season"), 0)
-        episode = safe_int(target.get("episode"), 0)
-        if season:
-            replacement += f";s={season}"
-        if episode:
-            replacement += f";e={episode}"
-    replacement += "]}"
-    return normalize_identifier_line(f"{re.escape(raw_title)} => {replacement}")
+        replacement += f" ({year})"
+    replacement += f"{{[tmdbid={tmdbid};type={media_type}]}}"
+    return normalize_identifier_line(f"(?i){re.escape(anchor)} => {replacement}")
 
 
 def identifier_title_stem(title: str, media_type: str) -> str:
