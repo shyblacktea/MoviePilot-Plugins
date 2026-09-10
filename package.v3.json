@@ -31,12 +31,13 @@
     "name": "订阅下载增强",
     "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
+      "v1.1.0": "feat: AI 识别词链路改造——写后验证改为写前门禁：写入前先与宿主识别结果、目标 TMDB ID 解出的权威名称/别名对齐校验，冲突或无法验证时不写入全局识别词（比对只使用权威名称，不使用 AI 自述名称，避免同义反复导致被编造的 TMDB ID 通过）；写入前先刷新宿主配置快照并把新规则置顶，避免用旧快照覆盖别处刚新增的识别词；生成的绑定规则改用窄锚点且不再写死季集，一条规则覆盖整季任意集数。",
       "v1.0.2": "fix: 适配 MoviePilot V3 分类策略——二级分类改读宿主 MediaClassificationPolicy（systemconfig active.categories 中 media_type=电视剧 且启用的分类名），不再调用已移除的 MediaChain().media_category()，修复「读取二级分类策略失败」告警；旧宿主回退兼容保留。",
       "v1.0.1": "feat: 订阅用户通知目标重构——渠道统一按 tg:/qq: 前缀解析；F4 通知目标面板（原「订阅通知管理」）升级为多选多投，默认通知目标与每用户映射均可同时选择群组/用户/管理员等目标并循环投递；兼容旧单值与脏数据自动归一。",
       "v1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），旧导入 app.core.*/app.helper.*/app.log 统一迁移到 app.sdk.*（events/logging/media/services/network）与 app.agent.llm；版本 0.24 -> 1.0.0。"
@@ -66,6 +67,19 @@
     "release": true,
     "history": {
       "v0.0.1": "fix: 适配 MoviePilot V3 媒体身份 API，修复 DownloadHistory.tmdbid 与 TransferHistoryOper.get_by_type_tmdbid 报错；feat: 由路径名称格式化改造为独立插件「下载目录滤镜」，首次加载自动迁移原插件配置与处理记录。"
+    }
+  },
+  "SilentBrowserCleanup": {
+    "name": "静默清理残留浏览器",
+    "description": "由 MoviePilot 内部调度器清理过期 Playwright/Chromium 进程，不发送通知。",
+    "icon": "",
+    "version": "1.0.0",
+    "author": "shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": false,
+    "history": {
+      "v1.0.0": "新增：改用 MoviePilot 内部调度器直接清理过期 Chromium 进程，完全绕过 Agent 广播链路，执行时不发送 Telegram 通知。"
     }
   }
 }
