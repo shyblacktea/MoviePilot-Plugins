@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 from threading import Lock
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -166,14 +166,6 @@ class JsonStore:
     def load_tmdb_cache(self, key: str) -> Optional[Dict[str, Any]]:
         return self._read("tmdb_cache.json", {}).get(key)
 
-    def save_ignore(self, key: str):
-        ignores = self._read("ignores.json", [])
-        if key not in ignores:
-            ignores.append(key)
-        self._write("ignores.json", ignores)
-
-    def is_ignored(self, key: str) -> bool:
-        return key in self._read("ignores.json", [])
 
     def save_notification_queue(self, items: List[Dict[str, Any]]):
         self._write("notification_queue.json", items or [])
@@ -190,12 +182,12 @@ class JsonStore:
         return item
 
     def save_snooze(self, key: str, until: str):
-        snoozes = self._read("snoozes.json", {})
+        snoozes = self._read("notification_suppressions.json", {})
         snoozes[str(key)] = str(until)
-        self._write("snoozes.json", snoozes)
+        self._write("notification_suppressions.json", snoozes)
 
     def is_snoozed(self, key: str) -> bool:
-        snoozes = self._read("snoozes.json", {})
+        snoozes = self._read("notification_suppressions.json", {})
         until = snoozes.get(str(key))
         if not until:
             return False
@@ -205,38 +197,99 @@ class JsonStore:
         except ValueError:
             pass
         snoozes.pop(str(key), None)
-        self._write("snoozes.json", snoozes)
+        self._write("notification_suppressions.json", snoozes)
         return False
+
+    def save_notification_suppression(self, key: str, until: str):
+        """保存一条按期限生效的通知抑制记录。"""
+        self.save_snooze(key, until)
+
+    def is_notification_suppressed(self, key: str) -> bool:
+        """判断诊断是否仍处于通知抑制期限内。"""
+        return self.is_snoozed(key)
 
     def save_candidate_cache(self, candidate_id: str, payload: Dict[str, Any]):
         """保存候选下载所需的最小字段，用于内存上下文丢失后重建下载。"""
         cache = self._read("candidate_cache.json", {})
         cache[str(candidate_id)] = payload
-        now = datetime.now()
-        for key in list(cache.keys()):
-            expires_at = (cache.get(key) or {}).get("expires_at")
-            if not expires_at:
-                continue
-            try:
-                if datetime.fromisoformat(expires_at) < now:
-                    cache.pop(key, None)
-            except ValueError:
-                cache.pop(key, None)
         self._write("candidate_cache.json", cache)
 
-    def load_candidate_cache(self, candidate_id: str) -> Optional[Dict[str, Any]]:
+    def prune_candidate_cache(self, cache_days: Optional[int] = None) -> int:
+        """清理过期候选下载缓存，并可按当前配置重新计算缓存期限。
+
+        ``cache_days`` 传入时以缓存记录的 ``cached_at`` 为准动态判断，确保
+        用户修改候选下载缓存天数后，TG 下载入口立即采用新期限，而不是继续
+        使用旧配置生成的 ``expires_at``。
+
+        :param cache_days: 当前候选下载缓存天数；None 时使用记录自身期限
+        :return: 清理的缓存条数
+        """
+        cache = self._read("candidate_cache.json", {})
+        if not isinstance(cache, dict):
+            return 0
+        days = None if cache_days is None else max(0, int(cache_days or 0))
+        now = datetime.now()
+        removed = 0
+        for key in list(cache.keys()):
+            payload = cache.get(key) or {}
+            expired = False
+            if days is not None:
+                cached_at = payload.get("cached_at")
+                if days <= 0:
+                    expired = True
+                elif cached_at:
+                    try:
+                        expired = datetime.fromisoformat(str(cached_at)) + timedelta(days=days) < now
+                    except (TypeError, ValueError):
+                        expired = True
+                else:
+                    expires_at = payload.get("expires_at")
+                    try:
+                        expired = bool(expires_at and datetime.fromisoformat(str(expires_at)) < now)
+                    except (TypeError, ValueError):
+                        expired = True
+            else:
+                expires_at = payload.get("expires_at")
+                if expires_at:
+                    try:
+                        expired = datetime.fromisoformat(str(expires_at)) < now
+                    except (TypeError, ValueError):
+                        expired = True
+            if expired:
+                cache.pop(key, None)
+                removed += 1
+        if removed:
+            self._write("candidate_cache.json", cache)
+        return removed
+
+    def load_candidate_cache(self, candidate_id: str, cache_days: Optional[int] = None) -> Optional[Dict[str, Any]]:
         """读取候选下载缓存，过期返回 None 并清除。"""
         cache = self._read("candidate_cache.json", {})
         payload = cache.get(str(candidate_id))
         if not payload:
             return None
-        expires_at = payload.get("expires_at")
-        if expires_at:
+        now = datetime.now()
+        days = None if cache_days is None else max(0, int(cache_days or 0))
+        expired = False
+        if days is not None and days <= 0:
+            expired = True
+        elif days is not None and payload.get("cached_at"):
             try:
-                if datetime.fromisoformat(expires_at) < datetime.now():
-                    cache.pop(str(candidate_id), None)
-                    self._write("candidate_cache.json", cache)
-                    return None
-            except ValueError:
-                return None
+                expired = datetime.fromisoformat(str(payload["cached_at"])) + timedelta(days=days) < now
+            except (TypeError, ValueError):
+                expired = True
+        else:
+            expires_at = payload.get("expires_at")
+            if expires_at:
+                try:
+                    expired = datetime.fromisoformat(str(expires_at)) < now
+                except (TypeError, ValueError):
+                    expired = True
+        if expired:
+            try:
+                cache.pop(str(candidate_id), None)
+                self._write("candidate_cache.json", cache)
+            except OSError:
+                pass
+            return None
         return payload
