@@ -31,6 +31,9 @@ class PluginConfig:
     season_pack_cleanup: str = "off"
     season_pack_full_download: bool = False
     candidate_cache_days: int = 3
+    notification_suppression_days: int = 3
+    custom_release_groups: List[str] = field(default_factory=list)
+    custom_platforms: List[str] = field(default_factory=list)
     notify_rules: Dict[str, str] = field(default_factory=dict)
     default_notify_target: str = ""
 
@@ -51,6 +54,17 @@ class PluginConfig:
         config.allow_tg_rule_update = bool(config.allow_tg_rule_update)
         config.season_pack_full_download = bool(config.season_pack_full_download)
         config.candidate_cache_days = max(0, int(config.candidate_cache_days or 0))
+        config.notification_suppression_days = max(0, int(config.notification_suppression_days or 0))
+        config.custom_release_groups = [
+            str(item).strip()
+            for item in _as_list(config.custom_release_groups)
+            if str(item).strip()
+        ]
+        config.custom_platforms = [
+            str(item).strip()
+            for item in _as_list(config.custom_platforms)
+            if str(item).strip()
+        ]
         config.default_notify_target = str(config.default_notify_target or "").strip()
         config.notify_rules = {
             str(key): str(value)
