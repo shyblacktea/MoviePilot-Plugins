@@ -86,6 +86,10 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 ## 版本
 
+### v1.1.1
+
+- fix: 修复 `/sp` 待处理列表的无效调用——`_handle_sp_command_text` 引用了 `JsonStore` 不存在的 `is_ignored`（旧「永久忽略」语义残留，按 `/sp` 会抛 `AttributeError`），改为统一的 `is_notification_suppressed` 限期抑制判定，与通知队列、诊断推送两处口径一致。
+
 ### v1.1.0
 
 - feat: AI 识别词链路改造——把原来的「写后验证」改成「写前门禁」：写入前先与宿主识别结果、目标 TMDB ID 解出的权威名称/别名对齐校验，冲突或无法验证时不再写入全局识别词。
@@ -274,9 +278,9 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`1.1.0`
-- Release tag：`SubscribePlus_v1.1.0`
-- Release 资产：`subscribeplus_v1.1.0.zip`
+- 当前版本：`1.1.1`
+- Release tag：`SubscribePlus_v1.1.1`
+- Release 资产：`subscribeplus_v1.1.1.zip`
 
 ## 致谢
 
