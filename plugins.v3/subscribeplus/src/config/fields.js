@@ -11,9 +11,9 @@ export const groups = [
   { key: 'identifier', title: '识别词工具', icon: 'mdi-tag-plus-outline', desc: '按 TMDB 强制绑定媒体或修正年份。' },
   { key: 'rules', title: '规则记录', icon: 'mdi-history', desc: '订阅规则修改历史。' },
   { key: 'scan', title: '扫描设置', icon: 'mdi-tune-variant', desc: '订阅扫描周期、宽限天数与站点范围。' },
-  { key: 'notify', title: '通知权限', icon: 'mdi-message-badge-outline', desc: 'Telegram 通知与规则修改授权。' },
+  { key: 'notify', title: '通知权限', icon: 'mdi-message-badge-outline', desc: 'Telegram 通知、重复提醒抑制与规则修改授权。' },
   { key: 'notify_rules', title: 'F4通知目标面板', icon: 'mdi-bell-cog-outline', desc: '系统通知(入库/下载/订阅)目标 + 订阅用户映射。' },
-  { key: 'cleanup', title: '清理与候选', icon: 'mdi-broom', desc: '整季包清理策略与候选缓存。' },
+  { key: 'cleanup', title: '清理与候选', icon: 'mdi-broom', desc: '整季包清理与候选下载缓存。' },
 ]
 
 /**
@@ -67,6 +67,11 @@ export const fields = [
     hint: '开启后可在 Telegram 交互中直接写入订阅过滤规则',
     alert: '开启后可通过 Telegram 交互直接调整订阅过滤规则，请谨慎授权。',
   },
+  {
+    key: 'notification_suppression_days', group: 'notify', section: '重复提醒抑制', type: 'number',
+    label: '不通知天数', min: 0, unit: '天', cols: { md: 6 },
+    hint: '同一诊断选择“不通知”后，在此期限内不再重复提醒；0 表示关闭',
+  },
 
   // ---- 清理与候选 ----
   {
@@ -88,7 +93,7 @@ export const fields = [
   {
     key: 'candidate_cache_days', group: 'cleanup', section: '候选下载', type: 'number',
     label: '候选缓存天数', min: 0, unit: '天', cols: { md: 6 },
-    hint: '候选下载信息本地缓存有效期，0 关闭；重载/重启后仍可直接下载候选',
+    hint: '候选种子下载信息缓存有效期；TG 选择条使用同一个天数，0 关闭',
   },
 ]
 
@@ -105,6 +110,9 @@ export const defaults = {
   season_pack_cleanup: 'off',
   season_pack_full_download: false,
   candidate_cache_days: 3,
+  notification_suppression_days: 3,
+  custom_release_groups: [],
+  custom_platforms: [],
 }
 
 /**
