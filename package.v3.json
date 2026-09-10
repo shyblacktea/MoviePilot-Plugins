@@ -68,18 +68,5 @@
     "history": {
       "v0.0.1": "fix: 适配 MoviePilot V3 媒体身份 API，修复 DownloadHistory.tmdbid 与 TransferHistoryOper.get_by_type_tmdbid 报错；feat: 由路径名称格式化改造为独立插件「下载目录滤镜」，首次加载自动迁移原插件配置与处理记录。"
     }
-  },
-  "SilentBrowserCleanup": {
-    "name": "静默清理残留浏览器",
-    "description": "由 MoviePilot 内部调度器清理过期 Playwright/Chromium 进程，不发送通知。",
-    "icon": "",
-    "version": "1.0.0",
-    "author": "shyblacktea",
-    "level": 1,
-    "system_version": ">=3.0.0",
-    "release": false,
-    "history": {
-      "v1.0.0": "新增：改用 MoviePilot 内部调度器直接清理过期 Chromium 进程，完全绕过 Agent 广播链路，执行时不发送 Telegram 通知。"
-    }
   }
 }
