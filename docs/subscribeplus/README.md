@@ -86,6 +86,13 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 ## 版本
 
+### v1.1.0
+
+- feat: AI 识别词链路改造——把原来的「写后验证」改成「写前门禁」：写入前先与宿主识别结果、目标 TMDB ID 解出的权威名称/别名对齐校验，冲突或无法验证时不再写入全局识别词。
+- fix: 门禁比对只使用权威名称（由目标 TMDB ID 反查得到），不再使用 AI 自述名称，避免同义反复导致被编造的 TMDB ID 也能通过校验。
+- fix: 写入全局识别词前先刷新宿主配置快照，并把新规则置顶写入，避免宿主内存快照落后于外部写入时覆盖别处刚新增的识别词。
+- fix: 生成的强制绑定规则改用窄锚点（去目录/扩展名/季集/年份噪声）、不再写死季集，一条规则覆盖整季任意集数。
+
 ### v1.0.2
 
 - fix: 适配 MoviePilot V3 分类策略——`_load_tv_categories` 改读宿主 `MediaClassificationPolicy`（systemconfig `active.categories` 中 `media_type=电视剧` 且启用的分类名），不再调用已移除的 `MediaChain().media_category()`，修复「订阅下载增强读取二级分类策略失败」告警；旧宿主回退兼容保留。
@@ -267,9 +274,9 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`1.0.2`
-- Release tag：`SubscribePlus_v1.0.2`
-- Release 资产：`subscribeplus_v1.0.2.zip`
+- 当前版本：`1.1.0`
+- Release tag：`SubscribePlus_v1.1.0`
+- Release 资产：`subscribeplus_v1.1.0.zip`
 
 ## 致谢
 
