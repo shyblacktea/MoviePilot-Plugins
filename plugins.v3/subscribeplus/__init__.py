@@ -77,6 +77,7 @@ from .identifiers import (
     build_identifier_record,
     build_year_identifier_rule,
     build_year_identifier_block,
+    identifier_anchor,
     dedupe_identifier_lines,
     dedupe_identifier_blocks,
     normalize_identifier_line,
@@ -115,6 +116,8 @@ from .telegram import (
     build_pending_menu,
     build_resource_menu,
     build_rule_confirm_menu,
+    build_rule_custom_menu,
+    build_rule_dictionary_menu,
     build_rule_done_menu,
     build_rule_menu,
     make_token,
@@ -131,7 +134,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.0.2"
+    plugin_version = "1.1.0"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -154,6 +157,10 @@ class SubscribePlus(_PluginBase):
         self._config = config or {}
         self._plugin_config = PluginConfig.from_dict(self._config)
         self._store = JsonStore(self.get_data_path(PLUGIN_ID))
+        try:
+            self._store.prune_candidate_cache(self._plugin_config.candidate_cache_days)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强清理候选缓存失败：{exc}")
         self._site_resolver = SiteResolver(self._load_moviepilot_search_sites)
         self._scanner = SubscriptionScanner(
             load_subscribes=self._load_subscribes,
@@ -191,7 +198,14 @@ class SubscribePlus(_PluginBase):
                 "desc": "订阅下载增强待处理列表",
                 "category": "订阅下载增强",
                 "data": {"action": "subscribeplus_pending"},
-            }
+            },
+            {
+                "cmd": "/sprule",
+                "event": EventType.PluginAction,
+                "desc": "订阅下载增强自定义识别词增删",
+                "category": "订阅下载增强",
+                "data": {"action": "subscribeplus_rule_identifier"},
+            },
         ]
 
     def get_service(self) -> List[Dict[str, Any]]:
@@ -232,18 +246,32 @@ class SubscribePlus(_PluginBase):
             {"path": "/identifier_manual", "endpoint": self.identifier_manual_api, "methods": ["POST"], "auth": "bear", "summary": "按 TMDB 手动写入自定义识别词"},
             {"path": "/identifier_year", "endpoint": self.identifier_year_api, "methods": ["POST"], "auth": "bear", "summary": "按 TMDB 首播年份修正文件年份"},
             {"path": "/identifier_fix", "endpoint": self.identifier_fix_api, "methods": ["POST"], "auth": "bear", "summary": "兼容旧版识别修正入口"},
+            {"path": "/identifiers", "endpoint": self.get_identifiers_api, "methods": ["GET"], "auth": "bear", "summary": "获取自定义识别词"},
+            {"path": "/identifiers/add", "endpoint": self.add_identifier_api, "methods": ["POST"], "auth": "bear", "summary": "增加自定义识别词"},
+            {"path": "/identifiers/delete", "endpoint": self.delete_identifier_api, "methods": ["POST"], "auth": "bear", "summary": "删除自定义识别词"},
             {"path": "/rule_suggestions", "endpoint": self.rule_suggestions_api, "methods": ["POST"], "auth": "bear", "summary": "生成订阅规则建议"},
             {"path": "/rule_preview", "endpoint": self.rule_preview_api, "methods": ["POST"], "auth": "bear", "summary": "生成规则修改预览"},
             {"path": "/rule_confirm", "endpoint": self.rule_confirm_api, "methods": ["POST"], "auth": "bear", "summary": "确认规则修改"},
+            {"path": "/rule_dictionary", "endpoint": self.get_rule_dictionary_api, "methods": ["GET"], "auth": "bear", "summary": "获取自定义官组和平台"},
+            {"path": "/rule_dictionary", "endpoint": self.save_rule_dictionary_api, "methods": ["POST"], "auth": "bear", "summary": "保存自定义官组和平台"},
             {"path": "/diagnose_one", "endpoint": self.diagnose_one_api, "methods": ["POST"], "auth": "bear", "summary": "manual single subscribe diagnosis"},
             {"path": "/notify_options", "endpoint": self.get_notify_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取订阅通知管理选项"},
             {"path": "/notify_rules", "endpoint": self.save_notify_rules_api, "methods": ["POST"], "auth": "bear", "summary": "保存订阅通知映射"},
             {"path": "/f4_options", "endpoint": self.get_f4_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取 F4 系统通知目标配置"},
             {"path": "/f4_actions", "endpoint": self.save_f4_actions_api, "methods": ["POST"], "auth": "bear", "summary": "保存 F4 系统通知目标配置"},
+            {"path": "/notify_test", "endpoint": self.notify_test_api, "methods": ["POST"], "auth": "bear", "summary": "发送测试通知"},
         ]
 
     def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
         return None, self._plugin_config.to_dict()
+
+    def notify_test_api(self) -> Dict[str, Any]:
+        """按当前默认通知目标发送一条测试 Telegram 消息。"""
+        self._post_message_to_targets(
+            self._default_notify_userids(),
+            {"title": "SubscribePlus 测试通知", "text": "SubscribePlus Telegram 通知链路测试成功。"},
+        )
+        return {"success": True, "message": "测试通知已发送"}
 
     def get_page(self) -> Optional[List[dict]]:
         return None
@@ -676,8 +704,34 @@ class SubscribePlus(_PluginBase):
                 "last_scan": store.load_scan_meta().get("last_scan_at"),
                 "identifier_records": store.load_identifier_records()[:50],
                 "rule_records": store.load_rule_records()[:50],
+                "custom_identifiers": self._load_custom_identifiers(),
             },
         }
+
+    def get_identifiers_api(self) -> Dict[str, Any]:
+        """返回当前全局自定义识别词，供配置页和 Telegram 菜单同步展示。"""
+        identifiers = self._load_custom_identifiers()
+        return {
+            "success": True,
+            "data": {
+                "count": len(identifiers),
+                "identifiers": identifiers,
+            },
+        }
+
+    def add_identifier_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        """增加一条或多条全局自定义识别词，并返回最新完整列表。"""
+        data = self._extract_payload(payload)
+        values = data.get("identifiers", data.get("identifier", ""))
+        result = self._add_custom_identifier_values(values)
+        return result
+
+    def delete_identifier_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        """按规则文本删除全局自定义识别词，并返回最新完整列表。"""
+        data = self._extract_payload(payload)
+        values = data.get("identifiers", data.get("identifier", ""))
+        result = self._delete_custom_identifier_values(values)
+        return result
 
     def clear_results_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         self._ensure_store().clear_scan_results()
@@ -763,6 +817,7 @@ class SubscribePlus(_PluginBase):
         suggestions = build_rule_suggestions(
             candidates or [],
             release_groups=self._release_groups_for_diagnosis(diagnosis),
+            platforms=self._custom_platforms_for_suggestions(),
         )
         return {"success": True, "data": {"items": suggestions}}
 
@@ -772,6 +827,79 @@ class SubscribePlus(_PluginBase):
         if not token:
             return {"success": False, "message": "缺少确认 token"}
         return self._rule_confirm(str(token))
+
+    def get_rule_dictionary_api(self) -> Dict[str, Any]:
+        """返回 SubscribePlus 自定义官组和平台词表。"""
+        groups, platforms = self._load_rule_dictionary()
+        return {
+            "success": True,
+            "data": {
+                "release_groups": groups,
+                "platforms": platforms,
+            },
+        }
+
+    def save_rule_dictionary_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        """保存自定义官组和平台词表，并立即同步到 Telegram 规则建议。"""
+        data = self._extract_payload(payload)
+        groups = self._normalize_dictionary_values(data.get("release_groups"))
+        platforms = self._normalize_dictionary_values(data.get("platforms"))
+        try:
+            self._save_rule_dictionary(groups, platforms)
+            return {
+                "success": True,
+                "message": "自定义官组和平台已保存并同步",
+                "data": {"release_groups": groups, "platforms": platforms},
+            }
+        except Exception as exc:
+            logger.error(f"订阅下载增强保存自定义官组和平台失败: {exc}", exc_info=True)
+            return {"success": False, "message": f"保存自定义官组和平台失败：{exc}"}
+
+    @staticmethod
+    def _normalize_dictionary_values(value: Any) -> List[str]:
+        """把自定义官组或平台输入规范化为去重的关键词列表。"""
+        if value is None:
+            return []
+        if isinstance(value, str):
+            values = re.split(r"[,，\n]", value)
+        elif isinstance(value, (list, tuple, set)):
+            values = []
+            for item in value:
+                values.extend(re.split(r"[,，\n]", str(item or "")))
+        else:
+            values = [str(value)]
+        result: List[str] = []
+        seen = set()
+        for item in values:
+            text = re.sub(r"\s+", " ", str(item or "").strip())
+            if not text or len(text) > 80:
+                continue
+            key = text.casefold()
+            if key in seen:
+                continue
+            seen.add(key)
+            result.append(text)
+        return result
+
+    def _load_rule_dictionary(self) -> Tuple[List[str], List[str]]:
+        """读取插件配置中的自定义官组和平台词表。"""
+        config = getattr(self, "_plugin_config", PluginConfig.from_dict({}))
+        return (
+            self._normalize_dictionary_values(getattr(config, "custom_release_groups", [])),
+            self._normalize_dictionary_values(getattr(config, "custom_platforms", [])),
+        )
+
+    def _save_rule_dictionary(self, release_groups: List[str], platforms: List[str]) -> None:
+        """保存自定义官组和平台词表，并重建当前插件运行态。"""
+        merged = self._plugin_config.to_dict()
+        merged["custom_release_groups"] = list(release_groups)
+        merged["custom_platforms"] = list(platforms)
+        self.update_config(merged)
+        self.init_plugin(merged)
+
+    def _custom_platforms_for_suggestions(self) -> List[str]:
+        """返回当前配置的自定义平台关键词。"""
+        return self._load_rule_dictionary()[1]
 
     def run_scan(self, source: str = "manual") -> Dict[str, Any]:
         config = self._plugin_config
@@ -1093,10 +1221,17 @@ class SubscribePlus(_PluginBase):
             matched_diagnosis.message = "MP 订阅搜索结果中存在可匹配资源，已交给 MP 订阅搜索处理"
             return matched_diagnosis
 
+        # V3 的 __parse_result 会在返回前再次应用宿主过滤；诊断必须使用
+        # 捕获的原始 torrent，否则“不匹配规则但集数正确”的资源会消失。
         diagnostic_candidates = [
-            self._context_to_candidate(context, scoped_item)
-            for context in (mp_search.get("diagnostic_contexts") or [])
+            self._raw_torrent_to_search_result(raw, scoped_item)
+            for raw in (mp_search.get("raw_torrents") or [])
         ]
+        # 原始站点结果通常没有 media_info；集数通知不应因此丢失，
+        # 只要标题能解析到目标集，就允许进入诊断候选。
+        for candidate in diagnostic_candidates:
+            if candidate.get("title") and not candidate.get("recognized"):
+                candidate["recognized"] = True
         diagnostic_item = replace(scoped_item, include="")
         diagnostic_result = TorrentDiagnoser(lambda _item: diagnostic_candidates).diagnose(diagnostic_item)
         if diagnostic_result.candidates:
@@ -1316,7 +1451,7 @@ class SubscribePlus(_PluginBase):
         pending = []
         for item in results:
             ignore_key = self._ignore_key(item)
-            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
+            if store.is_notification_suppressed(ignore_key):
                 continue
             pending.append(item)
         store.save_notification_queue(pending)
@@ -1337,7 +1472,7 @@ class SubscribePlus(_PluginBase):
             if not item:
                 return
             ignore_key = self._ignore_key(item)
-            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
+            if store.is_notification_suppressed(ignore_key):
                 continue
             token = self._save_interaction(item)
             try:
@@ -1351,6 +1486,7 @@ class SubscribePlus(_PluginBase):
                         can_identifier_fix=item.get("reason") == "recognition_issue",
                         candidate_count=len(item.get("candidates") or []),
                         search_keyword_suggestion=item.get("search_keyword_suggestion") or "",
+                        notification_suppression_days=self._plugin_config.notification_suppression_days,
                     ),
                     "save_history": False,
                 }
@@ -1499,6 +1635,9 @@ class SubscribePlus(_PluginBase):
             if str(action).strip().startswith("/ci"):
                 self._handle_ci_command_text(str(action), event_data)
                 return
+            if str(action).strip().startswith("/sprule"):
+                self._handle_sprule_command_text(str(action), event_data)
+                return
             if str(action).strip().startswith("/sp"):
                 self._handle_sp_command_text(str(action), event_data)
                 return
@@ -1512,6 +1651,15 @@ class SubscribePlus(_PluginBase):
             action = event_data.get("action") or (event_data.get("data") or {}).get("action")
             if action == "subscribeplus_pending":
                 self._handle_sp_command_text("/sp", event_data)
+                return
+            if action == "subscribeplus_rule_identifier":
+                args = event_data.get("arg_str") or event_data.get("args") or event_data.get("text") or ""
+                if isinstance(args, (list, tuple)):
+                    args = " ".join(str(item) for item in args)
+                self._handle_sprule_command_text(
+                    f"/sprule {str(args or '').strip()}".strip(),
+                    event_data,
+                )
                 return
             if action != "subscribeplus_ci":
                 return
@@ -1568,6 +1716,25 @@ class SubscribePlus(_PluginBase):
             return
 
         diagnosis = state.get("diagnosis") or {}
+        if op in {
+            "rule",
+            "rule-confirm",
+            "rule-dict",
+            "rule-dict-add-group",
+            "rule-dict-delete-group",
+            "rule-dict-add-platform",
+            "rule-dict-delete-platform",
+            "rule-custom",
+            "rule-custom-add",
+            "rule-custom-delete",
+        } and not self._plugin_config.allow_tg_rule_update:
+            self._post_callback_message(
+                event_data,
+                title="订阅下载增强",
+                text="Telegram 修改订阅规则功能未授权，请先在插件配置中开启。",
+                save_history=False,
+            )
+            return
         if op == "open":
             self._post_callback_message(
                 event_data,
@@ -1579,6 +1746,7 @@ class SubscribePlus(_PluginBase):
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                     candidate_count=len(diagnosis.get("candidates") or []),
                     search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                    notification_suppression_days=self._plugin_config.notification_suppression_days,
                 ),
                 save_history=False,
             )
@@ -1596,6 +1764,7 @@ class SubscribePlus(_PluginBase):
                     candidate_count=len(diagnosis.get("candidates") or []),
                     candidate_page=page,
                     search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                    notification_suppression_days=self._plugin_config.notification_suppression_days,
                 ),
                 save_history=False,
             )
@@ -1610,14 +1779,23 @@ class SubscribePlus(_PluginBase):
                 save_history=False,
             )
             return
-        if op == "snooze3d":
-            until = (datetime.now() + timedelta(days=3)).isoformat(timespec="seconds")
-            self._ensure_store().save_snooze(self._ignore_key(diagnosis), until)
+        if op == "suppress":
+            days = int(getattr(self._plugin_config, "notification_suppression_days", 0) or 0)
+            if days <= 0:
+                self._post_callback_message(
+                    event_data,
+                    title=self._notification_title(diagnosis),
+                    text="通知抑制已关闭，请在插件“清理与候选”中设置大于 0 的通知抑制天数。",
+                    save_history=False,
+                )
+                return
+            until = (datetime.now() + timedelta(days=days)).isoformat(timespec="seconds")
+            self._ensure_store().save_notification_suppression(self._ignore_key(diagnosis), until)
             self._ensure_store().delete_interaction(token)
             self._post_callback_message(
                 event_data,
                 title=self._notification_title(diagnosis),
-                text=f"已暂缓 3 天，直到 {until}",
+                text=f"已设置 {days} 天内不通知，直到 {until}",
                 save_history=False,
             )
             self._notify_next_queued_show()
@@ -1677,6 +1855,7 @@ class SubscribePlus(_PluginBase):
                         self._plugin_config.allow_tg_rule_update,
                         can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                         candidate_count=len(diagnosis.get("candidates") or []),
+                        notification_suppression_days=self._plugin_config.notification_suppression_days,
                     ),
                     save_history=False,
                 )
@@ -1711,6 +1890,7 @@ class SubscribePlus(_PluginBase):
                             can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                             candidate_count=len(diagnosis.get("candidates") or []),
                             search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                            notification_suppression_days=self._plugin_config.notification_suppression_days,
                         ),
                         save_history=False,
                     )
@@ -1765,6 +1945,7 @@ class SubscribePlus(_PluginBase):
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                     candidate_count=len(diagnosis.get("candidates") or []),
                     search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                    notification_suppression_days=self._plugin_config.notification_suppression_days,
                 ),
                 save_history=False,
             )
@@ -1827,12 +2008,81 @@ class SubscribePlus(_PluginBase):
             suggestions = build_rule_suggestions(
                 diagnosis.get("candidates") or [],
                 release_groups=self._release_groups_for_diagnosis(diagnosis),
+                platforms=self._custom_platforms_for_suggestions(),
             )
+            custom_groups, custom_platforms = self._load_rule_dictionary()
             self._post_callback_message(
                 event_data,
                 title=f"调整订阅规则：{diagnosis.get('title')}",
                 text="请选择要添加的官组、平台关键词或 PT 站点。",
-                buttons=build_rule_menu(token, suggestions),
+                buttons=build_rule_menu(
+                    token,
+                    suggestions,
+                    custom_identifier_count=len(self._load_custom_identifiers()),
+                    custom_release_group_count=len(custom_groups),
+                    custom_platform_count=len(custom_platforms),
+                ),
+                save_history=False,
+            )
+            return
+        if op == "rule-dict":
+            groups, platforms = self._load_rule_dictionary()
+            self._post_callback_message(
+                event_data,
+                title="自定义官组/平台",
+                text=(
+                    f"当前自定义官组（{len(groups)}）：{', '.join(groups) or '无'}\n"
+                    f"当前自定义平台（{len(platforms)}）：{', '.join(platforms) or '无'}\n\n"
+                    "通过下方按钮查看命令格式，修改后会同步到本插件的网页规则建议和 Telegram 菜单。"
+                ),
+                buttons=build_rule_dictionary_menu(token, len(groups), len(platforms)),
+                save_history=False,
+            )
+            return
+        if op in {
+            "rule-dict-add-group",
+            "rule-dict-delete-group",
+            "rule-dict-add-platform",
+            "rule-dict-delete-platform",
+        }:
+            command = {
+                "rule-dict-add-group": "/sprule TOKEN add-group 关键词",
+                "rule-dict-delete-group": "/sprule TOKEN del-group 关键词",
+                "rule-dict-add-platform": "/sprule TOKEN add-platform 关键词",
+                "rule-dict-delete-platform": "/sprule TOKEN del-platform 关键词",
+            }[op].replace("TOKEN", token)
+            self._post_callback_message(
+                event_data,
+                title="自定义官组/平台",
+                text=f"请发送命令：\n{command}\n\n关键词支持空格，确认后立即同步网页和 Telegram 规则建议。",
+                buttons=build_rule_dictionary_menu(
+                    token,
+                    len(self._load_rule_dictionary()[0]),
+                    len(self._load_rule_dictionary()[1]),
+                ),
+                save_history=False,
+            )
+            return
+        if op == "rule-custom":
+            identifiers = self._load_custom_identifiers()
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=(
+                    f"当前全局自定义识别词：{len(identifiers)} 条\n"
+                    "新增或删除请使用 /sprule TOKEN add|del 规则。"
+                ),
+                buttons=build_rule_custom_menu(token, len(identifiers)),
+                save_history=False,
+            )
+            return
+        if op in {"rule-custom-add", "rule-custom-delete"}:
+            verb = "add" if op.endswith("add") else "del"
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=f"请发送命令：\n/sprule {token} {verb} 规则文本",
+                buttons=build_rule_custom_menu(token, len(self._load_custom_identifiers())),
                 save_history=False,
             )
             return
@@ -1865,11 +2115,12 @@ class SubscribePlus(_PluginBase):
                     save_history=False,
                 )
             return
-        if op.startswith("rule"):
+        if re.fullmatch(r"rule\d+", op):
             index = int(op.replace("rule", "") or 0) - 1
             suggestions = build_rule_suggestions(
                 diagnosis.get("candidates") or [],
                 release_groups=self._release_groups_for_diagnosis(diagnosis),
+                platforms=self._custom_platforms_for_suggestions(),
             )
             if 0 <= index < len(suggestions):
                 selected_text = suggestions[index].get("text") or suggestions[index].get("value") or "规则"
@@ -1899,12 +2150,6 @@ class SubscribePlus(_PluginBase):
                         save_history=False,
                     )
             return
-        if op == "ignore":
-            self._ensure_store().save_ignore(self._ignore_key(diagnosis))
-            self._ensure_store().delete_interaction(token)
-            self._post_callback_message(event_data, title="订阅下载增强", text="已忽略本次提醒。", save_history=False)
-            self._notify_next_queued_show()
-            return
         if op == "back":
             self._post_callback_message(
                 event_data,
@@ -1916,6 +2161,7 @@ class SubscribePlus(_PluginBase):
                     can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
                     candidate_count=len(diagnosis.get("candidates") or []),
                     search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                    notification_suppression_days=self._plugin_config.notification_suppression_days,
                 ),
                 save_history=False,
             )
@@ -2052,6 +2298,10 @@ class SubscribePlus(_PluginBase):
             )
         target["name"] = tmdb_summary.get("name") or ""
         target["year"] = tmdb_summary.get("year") or ""
+        # 手动模式由用户显式指定 TMDB ID，门禁只做记录与提示，不阻断写入。
+        precheck = self._precheck_identifier_target(
+            title, target, media_info=tmdb_summary.get("media_info")
+        )
         try:
             if mode == "year":
                 block = build_year_identifier_block(title, target)
@@ -2087,6 +2337,8 @@ class SubscribePlus(_PluginBase):
             message = recheck.get("message") or "识别词已写入，但再次识别未命中目标 TMDB"
             reason = recheck.get("reason") or "recognize_failed"
             status = "failed"
+        if not precheck.get("aligned"):
+            message = f"{message}（提示：{precheck.get('message') or '写前校验未通过'}）"
 
         record = build_identifier_record(
             subscribe_id=0,
@@ -2103,6 +2355,7 @@ class SubscribePlus(_PluginBase):
                 "mode": mode,
                 "rule": "\n".join(block),
                 "total_count": applied.get("total_count"),
+                "precheck": precheck,
                 "recheck": recheck,
             }
         )
@@ -2127,6 +2380,7 @@ class SubscribePlus(_PluginBase):
         target["tmdbid"] = safe_int(target.get("tmdbid") or target.get("tmdb_id"), 0)
         if target["media_type"] == "unknown" or not target["tmdbid"]:
             return self._record_identifier_tool_failure(title, target, "缺少 movie/tv 或 TMDB ID", "missing_target", source, mode)
+        # 季集只用于记录展示，不再写入识别词规则本身，避免把季集钉死在某一集。
         if target["media_type"] == "tv":
             season, episode = self._parse_season_episode_from_title(title)
             if not safe_int(target.get("season"), 0) and season:
@@ -2148,6 +2402,19 @@ class SubscribePlus(_PluginBase):
             target["name"] = target.get("name") or tmdb_summary.get("name")
         if tmdb_summary.get("year"):
             target["year"] = target.get("year") or tmdb_summary.get("year")
+
+        precheck = self._precheck_identifier_target(
+            title, target, media_info=tmdb_summary.get("media_info")
+        )
+        if not precheck.get("aligned"):
+            return self._record_identifier_tool_failure(
+                title,
+                target,
+                precheck.get("message") or "写前校验未通过",
+                precheck.get("reason") or "precheck_failed",
+                source,
+                mode,
+            )
 
         try:
             lines = build_identifier_lines(title, target)
@@ -2187,6 +2454,7 @@ class SubscribePlus(_PluginBase):
         record["mode"] = mode
         record["rule"] = rule
         record["total_count"] = applied.get("total_count")
+        record["precheck"] = precheck
         record["recheck"] = recheck
         if reason:
             record["reason"] = reason
@@ -2380,6 +2648,7 @@ class SubscribePlus(_PluginBase):
                 "success": True,
                 "name": str(getattr(mediainfo, "title", "") or getattr(mediainfo, "name", "") or "").strip(),
                 "year": str(getattr(mediainfo, "year", "") or "").strip(),
+                "media_info": mediainfo,
             }
         except Exception as exc:
             logger.warning(f"订阅下载增强校验 TMDB 目标失败 TMDB={tmdbid}: {exc}")
@@ -2454,7 +2723,11 @@ class SubscribePlus(_PluginBase):
             "episode": safe_int(data.get("episode"), 0),
         }
 
-    def _recognize_identifier_title(self, title: str, target: Dict[str, Any]) -> Dict[str, Any]:
+    def _recognize_raw_title(self, title: str) -> Dict[str, Any]:
+        """用宿主自身识别链路解析原始标题，返回 TMDB、类型与媒体信息。
+
+        写前门禁与写后复验都复用这一条路径，保证两次判断口径一致。
+        """
         try:
             try:
                 from app.chain.media import MediaChain
@@ -2464,20 +2737,171 @@ class SubscribePlus(_PluginBase):
 
             meta = MetaInfo(title)
             mediainfo = MediaChain().recognize_media(meta=meta, cache=False)
-            recognized_tmdbid = safe_int(
+        except Exception as exc:
+            return {"success": False, "message": f"识别失败：{exc}", "reason": "recognize_failed"}
+        if not mediainfo:
+            return {
+                "success": True,
+                "recognized": False,
+                "tmdbid": 0,
+                "media_type": "unknown",
+                "title": "",
+                "media_info": None,
+            }
+        return {
+            "success": True,
+            "recognized": True,
+            "tmdbid": safe_int(
                 getattr(mediainfo, "tmdb_id", None) or getattr(mediainfo, "tmdbid", None),
                 0,
-            ) if mediainfo else 0
-            target_tmdbid = safe_int(target.get("tmdbid"), 0)
-            matched = bool(recognized_tmdbid and recognized_tmdbid == target_tmdbid)
+            ),
+            "media_type": normalize_media_type(
+                getattr(mediainfo, "type", None) or getattr(mediainfo, "media_type", None)
+            ),
+            "title": str(getattr(mediainfo, "title", "") or ""),
+            "media_info": mediainfo,
+        }
+
+    def _recognize_identifier_title(self, title: str, target: Dict[str, Any]) -> Dict[str, Any]:
+        """写后复验：确认写入的识别词让宿主重新识别到目标 TMDB。"""
+        raw = self._recognize_raw_title(title)
+        if raw.get("success") is False:
             return {
-                "success": matched,
-                "message": "再次识别成功" if matched else "再次识别未命中目标 TMDB",
-                "recognized_title": getattr(mediainfo, "title", "") if mediainfo else "",
-                "tmdbid": recognized_tmdbid,
+                "success": False,
+                "message": raw.get("message") or "再次识别失败",
+                "reason": raw.get("reason") or "recognize_failed",
             }
-        except Exception as exc:
-            return {"success": False, "message": f"再次识别失败：{exc}", "reason": "recognize_failed"}
+        recognized_tmdbid = safe_int(raw.get("tmdbid"), 0)
+        expected_tmdbid = safe_int(target.get("tmdbid"), 0)
+        matched = bool(recognized_tmdbid and recognized_tmdbid == expected_tmdbid)
+        return {
+            "success": matched,
+            "message": "再次识别成功" if matched else "再次识别未命中目标 TMDB",
+            "recognized_title": raw.get("title") or "",
+            "tmdbid": recognized_tmdbid,
+        }
+
+    @staticmethod
+    def _normalize_match_text(value: Any) -> str:
+        """归一化文本用于名称比对：去括号噪声、统一小写、只保留字母数字与汉字。"""
+        text = str(value or "").lower()
+        text = re.sub(r"[\[\]【】（）()]", "", text)
+        return re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", text)
+
+    def _collect_tmdb_target_names(
+        self,
+        target: Dict[str, Any],
+        media_info: Any = None,
+        include_ai_names: bool = False,
+    ) -> List[str]:
+        """收集目标媒体的可用名称，默认只取 TMDB 权威名称。
+
+        AI 给出的 name/title 通常直接来自文件名，参与比对会形成同义反复，
+        无法发现「AI 编造 TMDB ID」的情况，因此默认排除；仅在显式要求时使用。
+        """
+        raw_names: List[Any] = []
+        if include_ai_names:
+            raw_names.extend([target.get("name"), target.get("title")])
+        for attr in (
+            "title",
+            "en_title",
+            "original_title",
+            "original_name",
+            "hk_title",
+            "tw_title",
+            "sg_title",
+        ):
+            if media_info is not None:
+                raw_names.append(getattr(media_info, attr, None))
+        if media_info is not None:
+            raw_names.extend(getattr(media_info, "names", None) or [])
+        names: List[str] = []
+        for item in raw_names:
+            normalized = self._normalize_match_text(item)
+            if normalized and normalized not in names:
+                names.append(normalized)
+        return names
+
+    def _precheck_identifier_target(
+        self, title: str, target: Dict[str, Any], media_info: Any = None
+    ) -> Dict[str, Any]:
+        """写前门禁：用宿主识别结果与 TMDB 名称别名校验 AI 目标是否可信。
+
+        1) 宿主已识别出其它 TMDB ID：判定为冲突，拒绝写入全局识别词；
+        2) 宿主未识别出结果：要求文件名锚点与目标 TMDB ID 解出的权威名称/别名存在
+           文本交集，否则判定目标不可信，同样不写入。比对只用 TMDB 侧名称，不使用
+           AI 自述名称，避免与文件名同义反复、放过被编造的 TMDB ID。
+        """
+        media_type = normalize_media_type(target.get("media_type") or target.get("type"))
+        tmdbid = safe_int(target.get("tmdbid") or target.get("tmdb_id"), 0)
+        raw = self._recognize_raw_title(title)
+        recognized_tmdbid = safe_int(raw.get("tmdbid"), 0)
+        result: Dict[str, Any] = {
+            "recognized_tmdbid": recognized_tmdbid,
+            "recognized_title": str(raw.get("title") or ""),
+            "recognized_type": normalize_media_type(raw.get("media_type")),
+        }
+        if raw.get("success") is False:
+            result.update(
+                {
+                    "aligned": True,
+                    "verified_by": "recognize_error",
+                    "reason": "",
+                    "message": "宿主识别不可用，跳过写前校验并交由写后复验确认",
+                }
+            )
+            return result
+        if recognized_tmdbid:
+            if recognized_tmdbid == tmdbid:
+                result.update(
+                    {
+                        "aligned": True,
+                        "verified_by": "recognize_tmdbid",
+                        "reason": "",
+                        "message": "与宿主识别结果一致",
+                    }
+                )
+            else:
+                result.update(
+                    {
+                        "aligned": False,
+                        "verified_by": "recognize_tmdbid",
+                        "reason": "ai_mismatch",
+                        "message": (
+                            f"拒绝写入：宿主识别为 TMDB {recognized_tmdbid}，"
+                            f"与目标 TMDB {tmdbid} 不一致"
+                        ),
+                    }
+                )
+            return result
+        anchor = self._normalize_match_text(identifier_anchor(title, media_type))
+        matched_name = ""
+        for name in self._collect_tmdb_target_names(target, media_info):
+            if len(name) < 3:
+                continue
+            if name in anchor or (len(anchor) >= 3 and anchor in name):
+                matched_name = name
+                break
+        if matched_name:
+            result.update(
+                {
+                    "aligned": True,
+                    "verified_by": "title_alias",
+                    "matched_name": matched_name,
+                    "reason": "",
+                    "message": "宿主未识别，但文件名与目标名称/别名匹配",
+                }
+            )
+        else:
+            result.update(
+                {
+                    "aligned": False,
+                    "verified_by": "title_alias",
+                    "reason": "ai_unverified",
+                    "message": "拒绝写入：宿主未识别且文件名与目标媒体名称/别名无交集，目标不可信",
+                }
+            )
+        return result
 
     def _suggest_identifier_lines_by_ai(self, title: str, target: Dict[str, Any]) -> List[str]:
         llm = self._get_llm_sync()
@@ -2510,16 +2934,99 @@ class SubscribePlus(_PluginBase):
 
         oper = SystemConfigOper()
         key = getattr(SystemConfigKey, "CustomIdentifiers", "CustomIdentifiers")
+        # 写入前先从数据库刷新配置快照：宿主快照可能落后于外部（网关/界面）写入，
+        # 直接用旧快照做「新增 + 旧值」会把别处刚加的识别词覆盖掉。
+        try:
+            oper.load_snapshot()
+        except Exception as exc:
+            logger.warning(f"订阅下载增强刷新系统配置快照失败，继续使用当前快照: {exc}")
         existing = oper.get(key) or []
         existing = self._flatten_words(existing)
         added = dedupe_identifier_blocks(existing, lines)
         if added:
+            # 识别词按顺序应用，新规则必须置顶才能优先生效。
             oper.set(key, added + existing)
             try:
                 refresh_identifier_runtime_cache()
             except Exception as exc:
                 logger.warning(f"订阅下载增强刷新识别词缓存失败: {exc}")
         return {"added": added, "total_count": len(existing) + len(added)}
+
+    def _load_custom_identifiers(self) -> List[str]:
+        """读取并清洗全局自定义识别词，保留宿主原有顺序。"""
+        try:
+            from app.db.systemconfig_oper import SystemConfigOper
+
+            key = getattr(SystemConfigKey, "CustomIdentifiers", "CustomIdentifiers")
+            values = self._flatten_words(SystemConfigOper().get(key))
+            result: List[str] = []
+            for value in values:
+                normalized = normalize_identifier_line(value)
+                if normalized and normalized not in result:
+                    result.append(normalized)
+            return result
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取自定义识别词失败: {exc}")
+            return []
+
+    def _add_custom_identifier_values(self, values: Any) -> Dict[str, Any]:
+        """把用户提交的识别词追加到全局词表，并刷新运行时缓存。"""
+        candidates = self._flatten_words(values)
+        lines = [normalize_identifier_line(value) for value in candidates]
+        lines = [value for value in lines if value and validate_identifier_rule(value)]
+        if not lines:
+            return {"success": False, "message": "请提供有效的自定义识别词规则"}
+        try:
+            applied = self._append_custom_identifiers(lines)
+            identifiers = self._load_custom_identifiers()
+            return {
+                "success": True,
+                "message": f"已增加 {len(applied.get('added') or [])} 条自定义识别词",
+                "data": {
+                    "added": applied.get("added") or [],
+                    "count": len(identifiers),
+                    "identifiers": identifiers,
+                },
+            }
+        except Exception as exc:
+            logger.error(f"订阅下载增强增加自定义识别词失败: {exc}", exc_info=True)
+            return {"success": False, "message": f"增加自定义识别词失败：{exc}"}
+
+    def _delete_custom_identifier_values(self, values: Any) -> Dict[str, Any]:
+        """从全局词表删除用户指定的识别词，并刷新运行时缓存。"""
+        candidates = {
+            normalize_identifier_line(value)
+            for value in self._flatten_words(values)
+            if normalize_identifier_line(value)
+        }
+        if not candidates:
+            return {"success": False, "message": "请提供要删除的自定义识别词规则"}
+        try:
+            from app.db.systemconfig_oper import SystemConfigOper
+
+            key = getattr(SystemConfigKey, "CustomIdentifiers", "CustomIdentifiers")
+            current = self._flatten_words(SystemConfigOper().get(key))
+            kept = [value for value in current if normalize_identifier_line(value) not in candidates]
+            removed = len(current) - len(kept)
+            if removed:
+                SystemConfigOper().set(key, kept or None)
+                try:
+                    refresh_identifier_runtime_cache()
+                except Exception as exc:
+                    logger.warning(f"订阅下载增强刷新识别词缓存失败: {exc}")
+            identifiers = self._load_custom_identifiers()
+            return {
+                "success": True,
+                "message": f"已删除 {removed} 条自定义识别词" if removed else "未找到要删除的自定义识别词",
+                "data": {
+                    "removed": removed,
+                    "count": len(identifiers),
+                    "identifiers": identifiers,
+                },
+            }
+        except Exception as exc:
+            logger.error(f"订阅下载增强删除自定义识别词失败: {exc}", exc_info=True)
+            return {"success": False, "message": f"删除自定义识别词失败：{exc}"}
 
     def _retry_identifier_recognition(self, diagnosis: Dict[str, Any]) -> Dict[str, Any]:
         candidates = diagnosis.get("candidates") or []
@@ -2587,7 +3094,10 @@ class SubscribePlus(_PluginBase):
         if not context:
             # 内存上下文丢失（如插件重载/重启），尝试从本地缓存重建
             try:
-                cached = self._ensure_store().load_candidate_cache(str(candidate_id))
+                cached = self._ensure_store().load_candidate_cache(
+                    str(candidate_id),
+                    self._plugin_config.candidate_cache_days,
+                )
                 if cached:
                     context = self._rebuild_context_from_cache(cached)
                     from_cache = bool(context)
@@ -3073,6 +3583,131 @@ class SubscribePlus(_PluginBase):
             save_history=False,
         )
 
+    def _handle_sprule_command_text(self, text: str, event_data: Dict[str, Any]):
+        """处理 Telegram 的 `/sprule` 词表和自定义识别词命令。"""
+        raw = str(text or "").strip()
+        if raw.startswith("/sprule"):
+            raw = raw[len("/sprule"):].strip()
+        parts = raw.split(maxsplit=2)
+        if len(parts) < 2:
+            self._post_callback_message(
+                event_data,
+                title="SubscribePlus 规则词表",
+                text=(
+                    "用法：\n"
+                    "/sprule TOKEN add-group 关键词\n"
+                    "/sprule TOKEN del-group 关键词\n"
+                    "/sprule TOKEN add-platform 关键词\n"
+                    "/sprule TOKEN del-platform 关键词\n"
+                    "/sprule TOKEN add 识别词规则\n"
+                    "/sprule TOKEN del 识别词规则"
+                ),
+                save_history=False,
+            )
+            return
+
+        token = str(parts[0] or "").strip()
+        operation = str(parts[1] or "").strip().lower()
+        value = str(parts[2] if len(parts) > 2 else "").strip()
+        state = self._ensure_store().load_interaction(token)
+        if not state:
+            self._post_callback_message(
+                event_data,
+                title="SubscribePlus 规则词表",
+                text="交互 token 无效或已过期，请从最新诊断通知中重新打开菜单。",
+                save_history=False,
+            )
+            return
+        if not self._plugin_config.allow_tg_rule_update:
+            self._post_callback_message(
+                event_data,
+                title="SubscribePlus 规则词表",
+                text="Telegram 修改订阅规则功能未授权，请先在插件配置中开启。",
+                save_history=False,
+            )
+            return
+        if not value:
+            self._post_callback_message(
+                event_data,
+                title="SubscribePlus 规则词表",
+                text="关键词或识别词规则不能为空，请重新发送完整命令。",
+                save_history=False,
+            )
+            return
+
+        if operation in {"add", "del", "delete"}:
+            result = (
+                self._add_custom_identifier_values(value)
+                if operation == "add"
+                else self._delete_custom_identifier_values(value)
+            )
+            identifiers = self._load_custom_identifiers()
+            self._post_callback_message(
+                event_data,
+                title="自定义识别词",
+                text=result.get("message") or "自定义识别词操作完成。",
+                buttons=build_rule_custom_menu(token, len(identifiers)),
+                save_history=False,
+            )
+            return
+
+        operation_aliases = {
+            "add-group": ("group", True),
+            "del-group": ("group", False),
+            "delete-group": ("group", False),
+            "add-platform": ("platform", True),
+            "del-platform": ("platform", False),
+            "delete-platform": ("platform", False),
+        }
+        target = operation_aliases.get(operation)
+        if not target:
+            self._post_callback_message(
+                event_data,
+                title="SubscribePlus 规则词表",
+                text="未知操作，请使用 add-group、del-group、add-platform、del-platform、add 或 del。",
+                save_history=False,
+            )
+            return
+
+        kind, adding = target
+        groups, platforms = self._load_rule_dictionary()
+        values = groups if kind == "group" else platforms
+        normalized = self._normalize_dictionary_values(value)
+        if not normalized:
+            self._post_callback_message(
+                event_data,
+                title="SubscribePlus 规则词表",
+                text="关键词无效：不能为空且长度不能超过 80 个字符。",
+                buttons=build_rule_dictionary_menu(token, len(groups), len(platforms)),
+                save_history=False,
+            )
+            return
+        changed = []
+        if adding:
+            existing = {item.casefold() for item in values}
+            for item in normalized:
+                if item.casefold() not in existing:
+                    values.append(item)
+                    existing.add(item.casefold())
+                    changed.append(item)
+            label = "官组" if kind == "group" else "平台"
+            message = f"已新增{label}：{', '.join(changed) or '均已存在'}"
+        else:
+            targets = {item.casefold() for item in normalized}
+            kept = [item for item in values if item.casefold() not in targets]
+            changed = [item for item in values if item.casefold() in targets]
+            values[:] = kept
+            label = "官组" if kind == "group" else "平台"
+            message = f"已删除{label}：{', '.join(changed) or '未找到'}"
+        self._save_rule_dictionary(groups, platforms)
+        self._post_callback_message(
+            event_data,
+            title="自定义官组/平台",
+            text=message + "\n已同步到网页规则建议和 Telegram 菜单。",
+            buttons=build_rule_dictionary_menu(token, len(groups), len(platforms)),
+            save_history=False,
+        )
+
     def _handle_ci_command_text(self, text: str, event_data: Dict[str, Any]):
         raw = str(text or "").strip()
         arg = raw[3:].strip() if raw.startswith("/ci") else raw
@@ -3268,8 +3903,23 @@ class SubscribePlus(_PluginBase):
     def _update_subscribe(self, subscribe_id: int, payload: Dict[str, Any]) -> Dict[str, Any]:
         from app.db.subscribe_oper import SubscribeOper
 
-        subscribe = SubscribeOper().update(subscribe_id, payload)
-        return {"id": subscribe_id, "updated": bool(subscribe)}
+        oper = SubscribeOper()
+        subscribe = oper.update(subscribe_id, payload)
+        current = oper.get(subscribe_id) if subscribe else None
+        confirmed = bool(subscribe and current)
+        if confirmed:
+            for key, expected in payload.items():
+                actual = getattr(current, key, None)
+                if key == "sites":
+                    actual = [int(item) for item in (actual or [])]
+                    expected = [int(item) for item in (expected or [])]
+                elif isinstance(expected, str):
+                    actual = str(actual or "")
+                    expected = str(expected or "")
+                if actual != expected:
+                    confirmed = False
+                    break
+        return {"id": subscribe_id, "updated": confirmed}
 
     @staticmethod
     def _flatten_words(value: Any) -> List[str]:
@@ -3311,6 +3961,7 @@ class SubscribePlus(_PluginBase):
 
     def _release_groups_for_diagnosis(self, diagnosis: Dict[str, Any]) -> List[str]:
         groups = list(self._load_custom_release_groups())
+        groups.extend(self._load_rule_dictionary()[0])
         subscribe_id = int(diagnosis.get("subscribe_id") or 0)
         if subscribe_id:
             subscribe = self._get_subscribe(subscribe_id)
