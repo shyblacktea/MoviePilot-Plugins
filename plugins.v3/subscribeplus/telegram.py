@@ -39,13 +39,15 @@ def build_main_menu(
     can_identifier_fix: bool = False,
     candidate_count: int = 0,
     candidate_page: int = 0,
-    candidate_page_size: int = CANDIDATE_PAGE_SIZE,
+    candidate_page_size: int | None = None,
     search_keyword_suggestion: str = "",
+    notification_suppression_days: int = 3,
 ) -> List[List[Dict[str, str]]]:
     first_row = [{"text": "下载", "callback_data": make_callback("download", token)}]
     if allow_rule_update:
         first_row.append({"text": "调整规则", "callback_data": make_callback("rule", token)})
     rows = [first_row]
+    candidate_page_size = max(1, int(candidate_page_size or CANDIDATE_PAGE_SIZE))
     pages = _page_count(candidate_count, candidate_page_size)
     if candidate_count > candidate_page_size and pages > 1:
         page = _clamp_page(candidate_page, candidate_count, candidate_page_size)
@@ -59,13 +61,12 @@ def build_main_menu(
     rows.append([{"text": "搜索其他站点", "callback_data": make_callback("ptscope", token)}])
     if search_keyword_suggestion:
         rows.append([{"text": "添加搜索关键词", "callback_data": make_callback("keyword", token)}])
-    rows.append([{"text": "暂缓3天", "callback_data": make_callback("snooze3d", token)}])
-    rows.append(
-        [
-            {"text": "忽略本次", "callback_data": make_callback("ignore", token)},
-            {"text": "结束", "callback_data": make_callback("close", token)},
-        ]
-    )
+    suppression_days = max(0, int(notification_suppression_days or 0))
+    if suppression_days > 0:
+        rows.append(
+            [{"text": f"{suppression_days}天内不通知", "callback_data": make_callback("suppress", token)}]
+        )
+    rows.append([{"text": "结束", "callback_data": make_callback("close", token)}])
     return rows
 
 
@@ -236,7 +237,20 @@ def build_identifier_candidate_menu(token: str, candidates: List[Dict[str, Any]]
     return buttons
 
 
-def build_rule_menu(token: str, suggestions: List[Dict[str, str]]) -> List[List[Dict[str, str]]]:
+def build_rule_menu(
+    token: str,
+    suggestions: List[Dict[str, str]],
+    custom_identifier_count: int = 0,
+    custom_release_group_count: int = 0,
+    custom_platform_count: int = 0,
+) -> List[List[Dict[str, str]]]:
+    """构造订阅规则调整菜单，并提供全局自定义识别词管理入口。
+
+    :param token: 当前诊断交互 token
+    :param suggestions: 从候选资源生成的订阅规则建议
+    :param custom_identifier_count: 当前全局自定义识别词数量
+    :return: Telegram inline keyboard 行列表
+    """
     buttons = [
         [
             {
@@ -248,11 +262,82 @@ def build_rule_menu(token: str, suggestions: List[Dict[str, str]]) -> List[List[
     ]
     buttons.append(
         [
+            {
+                "text": (
+                    f"自定义官组/平台（官组 {max(0, int(custom_release_group_count or 0))} / "
+                    f"平台 {max(0, int(custom_platform_count or 0))}）"
+                ),
+                "callback_data": make_callback("rule-dict", token),
+            }
+        ]
+    )
+    buttons.append(
+        [
+            {
+                "text": f"自定义识别词（{max(0, int(custom_identifier_count or 0))}条）",
+                "callback_data": make_callback("rule-custom", token),
+            }
+        ]
+    )
+    buttons.append(
+        [
             {"text": "返回", "callback_data": make_callback("back", token)},
             {"text": "结束", "callback_data": make_callback("close", token)},
         ]
     )
     return buttons
+
+
+def build_rule_dictionary_menu(
+    token: str,
+    release_group_count: int = 0,
+    platform_count: int = 0,
+) -> List[List[Dict[str, str]]]:
+    """构造自定义官组/平台词表管理菜单。
+
+    :param token: 当前诊断交互 token
+    :param release_group_count: 当前自定义官组数量
+    :param platform_count: 当前自定义平台数量
+    :return: Telegram inline keyboard 行列表
+    """
+    return [
+        [{"text": "新增官组", "callback_data": make_callback("rule-dict-add-group", token)}],
+        [{"text": "删除官组", "callback_data": make_callback("rule-dict-delete-group", token)}],
+        [{"text": "新增平台", "callback_data": make_callback("rule-dict-add-platform", token)}],
+        [{"text": "删除平台", "callback_data": make_callback("rule-dict-delete-platform", token)}],
+        [
+            {
+                "text": f"刷新（官组 {max(0, int(release_group_count or 0))} / 平台 {max(0, int(platform_count or 0))}）",
+                "callback_data": make_callback("rule-dict", token),
+            }
+        ],
+        [
+            {"text": "返回调整规则", "callback_data": make_callback("rule", token)},
+            {"text": "结束", "callback_data": make_callback("close", token)},
+        ],
+    ]
+
+
+def build_rule_custom_menu(token: str, custom_identifier_count: int = 0) -> List[List[Dict[str, str]]]:
+    """构造自定义识别词增删菜单。
+
+    增删内容通过 `/sprule <token> add|del <规则>` 传入，避免把正则文本塞进
+    Telegram callback_data；操作完成后会重新显示当前数量。
+
+    :param token: 当前诊断交互 token
+    :param custom_identifier_count: 当前全局自定义识别词数量
+    :return: Telegram inline keyboard 行列表
+    """
+    count = max(0, int(custom_identifier_count or 0))
+    return [
+        [{"text": "增加自定义", "callback_data": make_callback("rule-custom-add", token)}],
+        [{"text": "删除自定义", "callback_data": make_callback("rule-custom-delete", token)}],
+        [{"text": f"刷新（当前 {count} 条）", "callback_data": make_callback("rule-custom", token)}],
+        [
+            {"text": "返回调整规则", "callback_data": make_callback("rule", token)},
+            {"text": "结束", "callback_data": make_callback("close", token)},
+        ],
+    ]
 
 
 def build_rule_confirm_menu(confirm_token: str, back_token: str) -> List[List[Dict[str, str]]]:
