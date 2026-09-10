@@ -154,12 +154,16 @@
               </div>
               <VAlert v-if="identifierError" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="identifierError = ''">{{ identifierError }}</VAlert>
               <VAlert v-if="identifierMessage" type="success" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="identifierMessage = ''">{{ identifierMessage }}</VAlert>
+              <VAlert type="info" density="compact" variant="tonal" class="mb-3 text-caption">
+                AI 识别会调用 MoviePilot 当前配置的 AI，根据媒体文件名判断目标 TMDB，并自动写入识别词；不需要填写 TMDB ID。
+              </VAlert>
 
               <VRow class="sp-id-row" align="center">
                 <VCol cols="12"><VTextField v-model="identifierTitle" label="媒体文件名" placeholder="填写完整文件名或发布标题" density="compact" variant="outlined" hide-details clearable /></VCol>
                 <VCol cols="5" md="3"><VSelect v-model="identifierType" :items="mediaTypeOptions" label="类型" density="compact" variant="outlined" hide-details /></VCol>
                 <VCol cols="7" md="4"><VTextField v-model="identifierTmdbid" label="TMDB ID" placeholder="填写 TMDB 的 ID" density="compact" variant="outlined" hide-details clearable /></VCol>
                 <VCol cols="12" md="5" class="sp-id-actions">
+                  <VBtn color="primary" prepend-icon="mdi-brain" variant="flat" size="small" :loading="identifierBusy === 'auto'" :disabled="Boolean(identifierBusy)" @click="runIdentifierAction('auto')">AI 识别并写入</VBtn>
                   <VBtn color="primary" prepend-icon="mdi-link-variant-plus" variant="tonal" size="small" :loading="identifierBusy === 'force'" :disabled="Boolean(identifierBusy)" @click="runIdentifierAction('force')">强制绑定</VBtn>
                   <VBtn color="warning" prepend-icon="mdi-calendar-edit" variant="tonal" size="small" :loading="identifierBusy === 'year'" :disabled="Boolean(identifierBusy)" @click="runIdentifierAction('year')">修正年份</VBtn>
                 </VCol>
@@ -206,6 +210,73 @@
                 </VListItem>
               </VList>
               <div v-else class="sp-empty">暂无记录</div>
+
+              <section class="sp-config-section mt-3">
+                <div class="d-flex align-center mb-2">
+                  <div class="sp-section-title mb-0">自定义官组与平台</div>
+                  <VSpacer />
+                  <VBtn
+                    color="primary"
+                    prepend-icon="mdi-content-save"
+                    variant="flat"
+                    size="small"
+                    :loading="savingRuleDictionary"
+                    :disabled="!ruleDictionaryDirty"
+                    @click="saveRuleDictionary"
+                  >
+                    保存词表
+                  </VBtn>
+                  <VBtn icon="mdi-refresh" variant="text" size="small" :loading="ruleDictionaryLoading" @click="loadRuleDictionary" />
+                </div>
+                <VAlert v-if="ruleDictionaryError" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="ruleDictionaryError = ''">
+                  {{ ruleDictionaryError }}
+                </VAlert>
+                <VAlert v-if="ruleDictionaryHint" type="success" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="ruleDictionaryHint = ''">
+                  {{ ruleDictionaryHint }}
+                </VAlert>
+                <div class="sp-field-rows">
+                  <div class="sp-field-row">
+                    <div class="sp-field-info">
+                      <div class="sp-field-label">自定义官组</div>
+                      <div class="sp-field-hint">每行或逗号分隔；候选标题命中后，在网页与 Telegram 的调整规则中显示“添加官组”。</div>
+                    </div>
+                    <div class="sp-field-control sp-ctl-multiselect">
+                      <VCombobox
+                        v-model="config.custom_release_groups"
+                        label="官组关键词"
+                        variant="outlined"
+                        density="compact"
+                        multiple
+                        chips
+                        closable-chips
+                        clearable
+                        hide-details
+                        rounded="lg"
+                      />
+                    </div>
+                  </div>
+                  <div class="sp-field-row">
+                    <div class="sp-field-info">
+                      <div class="sp-field-label">自定义平台</div>
+                      <div class="sp-field-hint">每行或逗号分隔；候选标题命中后，在网页与 Telegram 的调整规则中显示“添加平台”。</div>
+                    </div>
+                    <div class="sp-field-control sp-ctl-multiselect">
+                      <VCombobox
+                        v-model="config.custom_platforms"
+                        label="平台关键词"
+                        variant="outlined"
+                        density="compact"
+                        multiple
+                        chips
+                        closable-chips
+                        clearable
+                        hide-details
+                        rounded="lg"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
 
             <!-- ===== F4 通知目标面板 ===== -->
@@ -523,6 +594,37 @@ const previewError = ref('')
 const previewContext = ref(null)
 const previewLoading = ref('')
 const ruleSuggestions = ref([])
+const ruleDictionaryLoading = ref(false)
+const savingRuleDictionary = ref(false)
+const ruleDictionaryError = ref('')
+const ruleDictionaryHint = ref('')
+const ruleDictionarySavedJson = ref('')
+
+function normalizedDictionaryList(value) {
+  const source = Array.isArray(value) ? value : String(value || '').split(/[,，\n]/)
+  const result = []
+  const seen = new Set()
+  for (const item of source) {
+    const text = String(item || '').trim().replace(/\s+/g, ' ')
+    const key = text.toLocaleLowerCase()
+    if (!text || seen.has(key)) continue
+    seen.add(key)
+    result.push(text)
+  }
+  return result
+}
+
+const ruleDictionaryDirty = computed(() => JSON.stringify({
+  release_groups: normalizedDictionaryList(config.custom_release_groups),
+  platforms: normalizedDictionaryList(config.custom_platforms),
+}) !== ruleDictionarySavedJson.value)
+
+function snapshotRuleDictionary() {
+  ruleDictionarySavedJson.value = JSON.stringify({
+    release_groups: normalizedDictionaryList(config.custom_release_groups),
+    platforms: normalizedDictionaryList(config.custom_platforms),
+  })
+}
 
 // ===== 选项 =====
 const categories = ref([])
@@ -693,7 +795,7 @@ function formatPreviewSites(value, emptyText = '-') {
 }
 
 function identifierModeText(mode) {
-  return { force: '强制绑定', manual: '强制绑定', year: '年份修正', auto: '旧版识别' }[mode] || '识别记录'
+  return { force: '强制绑定', manual: '强制绑定', year: '年份修正', auto: 'AI识别' }[mode] || '识别记录'
 }
 
 function identifierStatusText(statusValue) {
@@ -721,7 +823,60 @@ function applyInitialConfig(source = props.initialConfig) {
       initial.candidate_cache_days === undefined || initial.candidate_cache_days === null
         ? 3
         : Number(initial.candidate_cache_days),
+    notification_suppression_days:
+      initial.notification_suppression_days === undefined || initial.notification_suppression_days === null
+        ? 3
+        : Number(initial.notification_suppression_days),
+    custom_release_groups: normalizedDictionaryList(initial.custom_release_groups),
+    custom_platforms: normalizedDictionaryList(initial.custom_platforms),
   })
+  snapshotRuleDictionary()
+}
+
+async function loadRuleDictionary() {
+  ruleDictionaryLoading.value = true
+  ruleDictionaryError.value = ''
+  try {
+    const data = unwrap(await props.api.get('plugin/SubscribePlus/rule_dictionary')) || {}
+    config.custom_release_groups = normalizedDictionaryList(data.release_groups)
+    config.custom_platforms = normalizedDictionaryList(data.platforms)
+    snapshotRuleDictionary()
+    savedBaseline.value.custom_release_groups = [...config.custom_release_groups]
+    savedBaseline.value.custom_platforms = [...config.custom_platforms]
+  } catch (err) {
+    ruleDictionaryError.value = err?.message || '读取自定义官组和平台失败'
+  } finally {
+    ruleDictionaryLoading.value = false
+  }
+}
+
+async function saveRuleDictionary() {
+  savingRuleDictionary.value = true
+  ruleDictionaryError.value = ''
+  ruleDictionaryHint.value = ''
+  const payload = {
+    release_groups: normalizedDictionaryList(config.custom_release_groups),
+    platforms: normalizedDictionaryList(config.custom_platforms),
+  }
+  try {
+    const response = await props.api.post('plugin/SubscribePlus/rule_dictionary', payload)
+    const body = response?.data ?? response ?? {}
+    const data = body?.data ?? body
+    if (body.success === false || data.success === false) {
+      ruleDictionaryError.value = body.message || data.message || '保存自定义官组和平台失败'
+      return
+    }
+    config.custom_release_groups = normalizedDictionaryList(data.release_groups ?? payload.release_groups)
+    config.custom_platforms = normalizedDictionaryList(data.platforms ?? payload.platforms)
+    snapshotRuleDictionary()
+    savedBaseline.value.custom_release_groups = [...config.custom_release_groups]
+    savedBaseline.value.custom_platforms = [...config.custom_platforms]
+    ruleDictionaryHint.value = body.message || data.message || '自定义官组和平台已同步到网页与 Telegram'
+  } catch (err) {
+    ruleDictionaryError.value = err?.message || '保存自定义官组和平台失败'
+  } finally {
+    savingRuleDictionary.value = false
+  }
 }
 
 async function loadOptions() {
@@ -1033,19 +1188,21 @@ async function runIdentifierAction(action) {
   const tmdbid = identifierTmdbid.value.trim()
   identifierError.value = ''
   identifierMessage.value = ''
-  if (!title || !tmdbid) {
-    identifierError.value = '请填写媒体文件名和 TMDB ID'
+  if (!title || (action !== 'auto' && !tmdbid)) {
+    identifierError.value = action === 'auto' ? '请填写媒体文件名' : '请填写媒体文件名和 TMDB ID'
     return
   }
   identifierBusy.value = action
   try {
-    const endpoint = action === 'year' ? 'identifier_year' : 'identifier_manual'
-    const response = await props.api.post(`plugin/SubscribePlus/${endpoint}`, {
-      title,
-      media_type: identifierType.value,
-      tmdbid,
-    })
-    const result = readActionResponse(response, action === 'year' ? '已提交年份修正' : '已提交强制绑定')
+    const endpoint = action === 'auto' ? 'identifier_auto' : (action === 'year' ? 'identifier_year' : 'identifier_manual')
+    const payload = { title }
+    if (action !== 'auto') {
+      payload.media_type = identifierType.value
+      payload.tmdbid = tmdbid
+    }
+    const response = await props.api.post(`plugin/SubscribePlus/${endpoint}`, payload)
+    const fallback = action === 'auto' ? 'AI 识别处理完成' : (action === 'year' ? '已提交年份修正' : '已提交强制绑定')
+    const result = readActionResponse(response, fallback)
     if (!result.success) {
       identifierError.value = result.message
       return
@@ -1116,7 +1273,12 @@ async function previewRuleSuggestion(suggestion) {
 async function confirmRule() {
   if (!preview.value?.token) return
   try {
-    await props.api.post('plugin/SubscribePlus/rule_confirm', { token: preview.value.token })
+    const response = await props.api.post('plugin/SubscribePlus/rule_confirm', { token: preview.value.token })
+    const result = readActionResponse(response, '确认修改失败')
+    if (!result.success) {
+      previewError.value = result.message
+      return
+    }
     previewDialog.value = false
     await loadData()
   } catch (err) {
@@ -1130,8 +1292,11 @@ function buildConfigPayload() {
     delay_days: Number(config.delay_days),
     max_scan_subscribes: Number(config.max_scan_subscribes),
     candidate_cache_days: Number(config.candidate_cache_days),
+    notification_suppression_days: Number(config.notification_suppression_days),
     search_sites: Array.isArray(config.search_sites) ? [...config.search_sites] : [],
     selected_categories: Array.isArray(config.selected_categories) ? [...config.selected_categories] : [],
+    custom_release_groups: normalizedDictionaryList(config.custom_release_groups),
+    custom_platforms: normalizedDictionaryList(config.custom_platforms),
   }
 }
 
@@ -1157,6 +1322,7 @@ async function saveConfig() {
       const persisted = unwrap(verifyResponse)
       applyInitialConfig(persisted)
       snapshotBaseline()
+    snapshotRuleDictionary()
       saveMessage.value = body.message || data.message || '配置已保存并生效'
       saveSnackbar.value = true
       return
@@ -1194,6 +1360,7 @@ onMounted(() => {
   applyInitialConfig()
   snapshotBaseline()
   reloadAll()
+  loadRuleDictionary()
 })
 </script>
 
