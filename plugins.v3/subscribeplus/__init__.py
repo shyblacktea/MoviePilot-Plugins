@@ -134,7 +134,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.0"
+    plugin_version = "1.1.1"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -3545,7 +3545,9 @@ class SubscribePlus(_PluginBase):
         items = []
         for item in self._prune_downloaded_scan_results():
             ignore_key = self._ignore_key(item)
-            if store.is_ignored(ignore_key) or store.is_snoozed(ignore_key):
+            # JsonStore 没有 is_ignored（旧「永久忽略」语义已改为限期通知抑制），
+            # 这里与通知队列、诊断推送两处保持一致，统一按抑制期判断。
+            if store.is_notification_suppressed(ignore_key):
                 continue
             items.append(item)
 
