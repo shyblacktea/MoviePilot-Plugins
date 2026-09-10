@@ -48,12 +48,19 @@ def merge_include(old_include: str, new_pattern: str) -> str:
     return "|".join(parts)
 
 
-def _matched_platforms(title: str) -> List[str]:
+def _matched_platforms(title: str, extra_platforms: Iterable[str] | None = None) -> List[str]:
     platforms: List[str] = []
-    for keyword in PLATFORM_KEYWORDS:
+    keywords = list(PLATFORM_KEYWORDS)
+    known = {item.lower() for item in keywords}
+    for platform in extra_platforms or []:
+        value = str(platform or "").strip()
+        if value and value.lower() not in known:
+            keywords.append(value)
+            known.add(value.lower())
+    for keyword in keywords:
         if not re.search(rf"(?<![A-Za-z0-9]){re.escape(keyword)}(?![A-Za-z0-9])", title, re.I):
             continue
-        value = PLATFORM_DISPLAY.get(keyword, keyword)
+        value = PLATFORM_DISPLAY.get(keyword.lower(), keyword)
         if value not in platforms:
             platforms.append(value)
     return platforms
@@ -159,16 +166,18 @@ def _site_names(
 
 
 def build_rule_suggestions(
-    candidates: List[Dict[str, Any]], release_groups: Iterable[str] | None = None
+    candidates: List[Dict[str, Any]],
+    release_groups: Iterable[str] | None = None,
+    platforms: Iterable[str] | None = None,
 ) -> List[Dict[str, str]]:
     found: List[Dict[str, str]] = []
     extra_groups = _dedupe(release_groups or [])
     for item in candidates:
         site = str(item.get("site") or "").strip()
         title = str(item.get("title") or "")
-        platforms = _matched_platforms(title)
+        matched_platforms = _matched_platforms(title, platforms)
         groups = _matched_release_groups(title, site, extra_groups)
-        for platform in platforms:
+        for platform in matched_platforms:
             suggestion = {
                 "kind": "platform",
                 "value": platform,
@@ -306,7 +315,9 @@ def apply_include_preview(
 ) -> Dict[str, Any]:
     subscribe_id = int(preview["subscribe_id"])
     compile_include(preview.get("new_include") or "")
-    update_subscribe(subscribe_id, {"include": preview.get("new_include") or ""})
+    result = update_subscribe(subscribe_id, {"include": preview.get("new_include") or ""})
+    if not isinstance(result, dict) or result.get("updated") is not True:
+        raise ValueError("MoviePilot 订阅包含规则写入失败，未生成修改记录")
     return {
         "subscribe_id": subscribe_id,
         "subscribe_name": preview.get("subscribe_name") or "",
@@ -324,7 +335,9 @@ def apply_site_preview(
 ) -> Dict[str, Any]:
     subscribe_id = int(preview["subscribe_id"])
     new_sites = _normalize_site_ids(preview.get("new_sites"))
-    update_subscribe(subscribe_id, {"sites": new_sites})
+    result = update_subscribe(subscribe_id, {"sites": new_sites})
+    if not isinstance(result, dict) or result.get("updated") is not True:
+        raise ValueError("MoviePilot 订阅站点写入失败，未生成修改记录")
     old_value = ", ".join(preview.get("old_site_names") or [str(item) for item in preview.get("old_sites") or []])
     new_value = ", ".join(preview.get("new_site_names") or [str(item) for item in new_sites])
     return {
