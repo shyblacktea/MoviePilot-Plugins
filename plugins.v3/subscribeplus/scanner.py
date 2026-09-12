@@ -116,7 +116,7 @@ class SubscriptionScanner:
     def __init__(
         self,
         load_subscribes: Callable[[], List[Any]],
-        load_tmdb_episodes: Callable[[int, int, Optional[str]], List[Dict[str, Any]]],
+        load_tmdb_episodes: Callable[..., List[Dict[str, Any]]],
         is_episode_downloaded: Callable[[int, int, int], tuple[bool, str]],
         load_categories: Optional[Callable[[], List[Any]]] = None,
         resolve_subscribe_category: Optional[Callable[[Any], Optional[str]]] = None,
@@ -141,7 +141,13 @@ class SubscriptionScanner:
         ]
         return sorted(_ordered_unique(categories))
 
-    def scan(self, config: PluginConfig, site_resolver: SiteResolver, today: Optional[date] = None) -> List[DiagnosisInput]:
+    def scan(
+        self,
+        config: PluginConfig,
+        site_resolver: SiteResolver,
+        today: Optional[date] = None,
+        force_refresh: bool = False,
+    ) -> List[DiagnosisInput]:
         today = today or date.today()
         subscribes = list(self.load_subscribes() or [])
         if not subscribes:
@@ -173,7 +179,12 @@ class SubscriptionScanner:
             latest_downloaded_episode = max(downloaded_episodes or {0})
             recent_threshold = max(start_episode - 1, latest_downloaded_episode - RECENT_GAP_LOOKBACK)
             episode_group = getattr(subscribe, "episode_group", None)
-            for episode in self.load_tmdb_episodes(tmdbid, season, episode_group):
+            for episode in self.load_tmdb_episodes(
+                tmdbid,
+                season,
+                episode_group,
+                force_refresh=force_refresh,
+            ):
                 air_date = parse_air_date(episode.get("air_date"))
                 episode_number = int(episode.get("episode_number") or episode.get("episode") or 0)
                 if not air_date or not episode_number:

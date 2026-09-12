@@ -42,6 +42,7 @@ def build_main_menu(
     candidate_page_size: int | None = None,
     search_keyword_suggestion: str = "",
     notification_suppression_days: int = 3,
+    summary_token: str = "",
 ) -> List[List[Dict[str, str]]]:
     first_row = [{"text": "下载", "callback_data": make_callback("download", token)}]
     if allow_rule_update:
@@ -66,6 +67,8 @@ def build_main_menu(
         rows.append(
             [{"text": f"{suppression_days}天内不通知", "callback_data": make_callback("suppress", token)}]
         )
+    if summary_token:
+        rows.append([{"text": "返回汇总", "callback_data": make_callback("summary", token)}])
     rows.append([{"text": "结束", "callback_data": make_callback("close", token)}])
     return rows
 
@@ -153,6 +156,32 @@ def build_resource_menu(
             {"text": "结束", "callback_data": make_callback("close", token)},
         ]
     )
+    return buttons
+
+
+def build_scan_summary_menu(summary_token: str, count: int) -> List[List[Dict[str, str]]]:
+    """构造扫描结果汇总菜单：数字进入对应详情，关闭删除汇总消息。
+
+    :param summary_token: 汇总交互 token
+    :param count: 汇总中的候选数量
+    :return: Telegram inline keyboard 行列表
+    """
+    buttons: List[List[Dict[str, str]]] = []
+    indexes = max(0, int(count or 0))
+    row: List[Dict[str, str]] = []
+    for index in range(1, indexes + 1):
+        row.append(
+            {
+                "text": str(index),
+                "callback_data": make_callback(f"show{index}", summary_token),
+            }
+        )
+        if len(row) >= 5:
+            buttons.append(row)
+            row = []
+    if row:
+        buttons.append(row)
+    buttons.append([{"text": "关闭", "callback_data": make_callback("close", summary_token)}])
     return buttons
 
 
@@ -531,3 +560,25 @@ def render_notification_text(
         lines.extend(_candidate_detail_lines(candidates, limit=candidate_page_size, page=candidate_page))
     lines.append(f"搜索站点：{sites}")
     return "\n".join(lines)
+
+
+def render_scan_summary_text(items: List[Dict[str, Any]]) -> str:
+    """渲染扫描完成后的可处理项目汇总文本。
+
+    :param items: 扫描诊断项列表
+    :return: 汇总消息文本
+    """
+    rows = [f"扫描完成，共有 {len(items or [])} 部可处理："]
+    for index, item in enumerate(items or [], start=1):
+        title = _short_title(str(item.get("title") or "未命名"), limit=48)
+        season = int(item.get("season") or 0)
+        episodes = item.get("episodes") or []
+        episode_text = "/".join(
+            f"E{int(episode.get('episode') or 0):02d}"
+            for episode in episodes[:5]
+            if int(episode.get("episode") or 0)
+        )
+        season_text = f" S{season:02d}" if season else ""
+        rows.append(f"{index}. {title}{season_text}{episode_text}")
+    rows.append("\n请选择编号查看详情，或点击“关闭”删除本次扫描提示。")
+    return "\n".join(rows)

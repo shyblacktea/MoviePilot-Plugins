@@ -63,7 +63,7 @@
               <div class="d-flex align-center flex-wrap ga-1 mb-3">
                 <div class="sp-section-title mb-0">运行概览</div>
                 <VSpacer />
-                <VBtn color="primary" prepend-icon="mdi-radar" variant="tonal" size="small" :loading="scanning" @click="runScan">手动扫描</VBtn>
+                <VBtn color="primary" prepend-icon="mdi-calendar-refresh" variant="tonal" size="small" :loading="scanning" @click="runScan">刷新日历并扫描</VBtn>
                 <VBtn color="warning" prepend-icon="mdi-delete-sweep-outline" variant="text" size="small" :loading="clearing" @click="clearResults">清除诊断</VBtn>
                 <VBtn icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadData" />
               </div>
@@ -279,123 +279,7 @@
               </section>
             </div>
 
-            <!-- ===== F4 通知目标面板 ===== -->
-            <div v-show="activeGroup === 'notify_rules'" class="sp-pane">
-              <div class="d-flex align-center mb-2">
-                <div class="sp-section-title mb-0">F4通知目标面板</div>
-                <VSpacer />
-                <VBtn color="primary" prepend-icon="mdi-content-save" variant="flat" size="small" :loading="savingF4" :disabled="!f4Dirty" @click="saveF4Actions">保存系统通知目标</VBtn>
-                <VBtn icon="mdi-refresh" variant="text" size="small" :loading="f4Loading" @click="loadF4Options" />
-              </div>
-              <VAlert v-if="f4Error" type="error" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="f4Error = ''">{{ f4Error }}</VAlert>
-              <VAlert v-if="f4Hint" type="info" density="compact" variant="tonal" class="mb-3 text-caption" closable @click:close="f4Hint = ''">{{ f4Hint }}</VAlert>
-
-              <section class="sp-config-section">
-                <div class="sp-section-title">1. 系统通知目标（资源入库 / 资源下载 / 订阅）</div>
-                <div class="sp-field-rows">
-                  <div v-for="row in f4Rows" :key="row.type" class="sp-field-row">
-                    <div class="sp-field-info">
-                      <div class="sp-field-label">{{ row.label }}</div>
-                      <div class="sp-field-hint">控制 MoviePilot 该类型系统通知的投递目标；发群组表示按各通知渠道开关发送到群。</div>
-                    </div>
-                    <div class="sp-field-control sp-ctl-select">
-                      <VSelect
-                        v-model="row.action"
-                        :items="f4OptionItems"
-                        label="通知目标"
-                        item-title="title"
-                        item-value="value"
-                        density="compact"
-                        variant="outlined"
-                        hide-details
-                        rounded="lg"
-                        no-data-text="无可用选项"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <section class="sp-config-section mt-3">
-                <div class="sp-section-title">2. 订阅用户通知映射（SubscribePlus 诊断通知）</div>
-                <div class="sp-field-rows">
-                  <div class="sp-field-row">
-                    <div class="sp-field-info">
-                      <div class="sp-field-label">未单独配置的订阅用户默认目标</div>
-                      <div class="sp-field-hint">所有未在下方映射表中指定目标的订阅通知，发往此处选择的目标；留空则发到默认群组。</div>
-                    </div>
-                    <div class="sp-field-control sp-ctl-select">
-                      <VSelect
-                        v-model="defaultNotifyTargets"
-                        :items="notifyTargetOptions"
-                        label="默认通知目标"
-                        item-title="title"
-                        item-value="value"
-                        placeholder="默认：群组"
-                        density="compact"
-                        variant="outlined"
-                        hide-details
-                        rounded="lg"
-                        multiple
-                        chips
-                        closable-chips
-                        clearable
-                        no-data-text="无可用通知目标"
-                      />
-                    </div>
-                  </div>
-                  <div v-for="(row, index) in notifyRuleRows" :key="row.uid" class="sp-field-row">
-                    <div class="sp-field-info">
-                      <VSelect
-                        v-model="row.username"
-                        :items="notifyUsernameOptions"
-                        label="用户订阅"
-                        placeholder="选择订阅归属用户"
-                        density="compact"
-                        variant="outlined"
-                        hide-details
-                        rounded="lg"
-                        clearable
-                        no-data-text="无可用订阅用户"
-                      />
-                    </div>
-                    <div class="sp-field-control sp-ctl-select">
-                      <VSelect
-                        v-model="row.targets"
-                        :items="notifyTargetOptions"
-                        label="通知目标"
-                        item-title="title"
-                        item-value="value"
-                        placeholder="默认：群组"
-                        density="compact"
-                        variant="outlined"
-                        hide-details
-                        rounded="lg"
-                        multiple
-                        chips
-                        closable-chips
-                        clearable
-                        no-data-text="无可用通知目标"
-                      />
-                    </div>
-                    <div class="sp-field-actions">
-                      <VBtn icon="mdi-delete-outline" color="error" variant="text" size="small" @click="removeNotifyRuleRow(index)" />
-                    </div>
-                  </div>
-                </div>
-                <div class="d-flex align-center mt-2">
-                  <VBtn color="primary" prepend-icon="mdi-plus" variant="tonal" size="small" :disabled="!availableNotifyUsernames.length" @click="addNotifyRuleRow">
-                    添加映射
-                  </VBtn>
-                  <VBtn color="primary" prepend-icon="mdi-content-save" variant="flat" size="small" :loading="savingNotifyRules" :disabled="!notifyRulesDirty" @click="saveNotifyRules">保存映射</VBtn>
-                  <div v-if="!availableNotifyUsernames.length && notifyUsernameOptions.length" class="text-caption text-medium-emphasis ml-3">
-                    所有订阅用户均已配置
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            <!-- ===== 元数据驱动的配置 tab（scan/notify/cleanup）===== -->
+            <!-- ===== 元数据驱动的配置 tab（scan/cleanup）===== -->
             <div v-for="groupKey in configGroupKeys" v-show="activeGroup === groupKey" :key="groupKey" class="sp-pane">
               <section v-for="(section, sIdx) in sectionsOf(groupKey)" :key="section.title" class="sp-config-section">
                 <div class="sp-section-title">{{ (sIdx + 1) + '. ' + section.title }}</div>
@@ -425,6 +309,7 @@
               <section class="sp-dashboard-section">
                 <div class="sp-dashboard-title"><VIcon icon="mdi-clock-outline" color="primary" size="20" />运行节奏</div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-sync-outline" /><span>定时扫描</span><strong>{{ scanScheduleText }}</strong></div>
+                <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-refresh-outline" /><span>日历读取</span><strong>自动每 6 小时检查；手动强制刷新</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-alert-outline" /><span>超期检测</span><strong>播出后 {{ config.delay_days }} 天</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-message-processing-outline" /><span>通知方式</span><strong>队列逐条</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-database-clock-outline" /><span>候选缓存</span><strong>{{ candidateCacheText }}</strong></div>
@@ -630,66 +515,8 @@ function snapshotRuleDictionary() {
 const categories = ref([])
 const siteOptions = ref([])
 
-// ===== F4 通知目标面板 =====
-const f4Loading = ref(false)
-const savingF4 = ref(false)
-const f4Error = ref('')
-const f4Hint = ref('')
-const f4TypeLabels = { '资源下载': '资源下载', '整理入库': '资源入库', '订阅': '订阅' }
-const f4Rows = ref([])
-const f4OptionItems = ref([
-  { title: '发群组', value: 'all' },
-  { title: '用户+管理员', value: 'user,admin' },
-  { title: '仅用户', value: 'user' },
-  { title: '仅管理员', value: 'admin' },
-])
-const f4SavedJson = ref('')
-
-const f4Dirty = computed(() => {
-  const current = f4Rows.value
-    .filter(row => String(row.type || '').trim())
-    .map(row => `${String(row.type).trim()}\u0000${String(row.action || '').trim()}`)
-    .sort()
-  return JSON.stringify(current) !== f4SavedJson.value
-})
-
-// ===== 订阅通知管理 =====
-const notifyRulesLoading = ref(false)
-const savingNotifyRules = ref(false)
-const notifyRulesError = ref('')
-const notifyRulesHint = ref('')
-const notifyMeta = ref({ channelKind: '', channelPrefix: '', hasChannel: false })
-const notifyUsernameOptions = ref([])
-const notifyTargetOptions = ref([])
-const notifyRuleRows = ref([])
-const notifyRulesSavedJson = ref('')
-const defaultNotifyTargets = ref([])
-let notifyRowUid = 0
-let notifyRulesLoadedOnce = false
-
-const notifyRulesDirty = computed(() => {
-  const current = notifyRuleRows.value
-    .filter(row => String(row.username || '').trim() && (Array.isArray(row.targets) ? row.targets.length : String(row.target || '').trim()))
-    .map(row => `${String(row.username).trim()}\u0000${(Array.isArray(row.targets) ? [...row.targets].sort().join('|') : String(row.target || '').trim())}`)
-    .sort()
-  const currentWithDefault = {
-    default: (Array.isArray(defaultNotifyTargets.value) ? [...defaultNotifyTargets.value].sort().join('|') : String(defaultNotifyTargets.value || '').trim()),
-    rows: current,
-  }
-  return JSON.stringify(currentWithDefault) !== notifyRulesSavedJson.value
-})
-
-const availableNotifyUsernames = computed(() => {
-  const used = new Set(
-    notifyRuleRows.value
-      .map(row => String(row.username || '').trim())
-      .filter(Boolean),
-  )
-  return notifyUsernameOptions.value.filter(name => !used.has(name))
-})
-
 const currentGroup = computed(() => groups.find(g => g.key === activeGroup.value) || groups[0])
-const configGroupKeys = ['scan', 'notify', 'cleanup']
+const configGroupKeys = ['scan', 'cleanup']
 
 const reasonCount = computed(() => items.value.reduce((acc, item) => {
   acc[item.reason] = (acc[item.reason] || 0) + 1
@@ -703,8 +530,6 @@ const candidateTotal = computed(() => items.value.reduce(
 
 const enabledFeatureCount = computed(() => [
   Boolean(config.enabled),
-  Boolean(config.notify_tg),
-  Boolean(config.allow_tg_rule_update),
   config.season_pack_cleanup !== 'off',
   Boolean(config.season_pack_full_download),
   Number(config.candidate_cache_days) > 0,
@@ -823,10 +648,6 @@ function applyInitialConfig(source = props.initialConfig) {
       initial.candidate_cache_days === undefined || initial.candidate_cache_days === null
         ? 3
         : Number(initial.candidate_cache_days),
-    notification_suppression_days:
-      initial.notification_suppression_days === undefined || initial.notification_suppression_days === null
-        ? 3
-        : Number(initial.notification_suppression_days),
     custom_release_groups: normalizedDictionaryList(initial.custom_release_groups),
     custom_platforms: normalizedDictionaryList(initial.custom_platforms),
   })
@@ -926,165 +747,6 @@ async function loadData() {
 
 async function reloadAll() {
   await Promise.all([loadData(), loadOptions()])
-}
-
-// ===== F4 通知目标面板 =====
-async function loadF4Options() {
-  f4Loading.value = true
-  f4Error.value = ''
-  try {
-    const data = unwrap(await props.api.get('plugin/SubscribePlus/f4_options')) || {}
-    const types = Array.isArray(data.types) ? data.types : []
-    const current = data.current || {}
-    f4Rows.value = types.map(type => ({
-      type,
-      label: f4TypeLabels[type] || type,
-      action: String(current[type] || 'all'),
-    }))
-    const opts = Array.isArray(data.options) ? data.options : []
-    if (opts.length) f4OptionItems.value = opts
-    snapshotF4()
-  } catch (err) {
-    f4Error.value = err?.message || '读取系统通知目标配置失败'
-  } finally {
-    f4Loading.value = false
-  }
-}
-
-function snapshotF4() {
-  const current = f4Rows.value
-    .filter(row => String(row.type || '').trim())
-    .map(row => `${String(row.type).trim()}\u0000${String(row.action || '').trim()}`)
-    .sort()
-  f4SavedJson.value = JSON.stringify(current)
-}
-
-async function saveF4Actions() {
-  const actions = {}
-  for (const row of f4Rows.value) {
-    const type = String(row.type || '').trim()
-    const action = String(row.action || '').trim()
-    if (type && action) actions[type] = action
-  }
-  savingF4.value = true
-  f4Error.value = ''
-  f4Hint.value = ''
-  try {
-    const result = unwrap(await props.api.post('plugin/SubscribePlus/f4_actions', { actions })) || {}
-    if (result.success === false) {
-      f4Error.value = result.message || '保存失败'
-      return
-    }
-    snapshotF4()
-    f4Hint.value = result.message || `已保存 ${Object.keys(actions).length} 项系统通知目标`
-  } catch (err) {
-    f4Error.value = err?.message || '保存系统通知目标失败'
-  } finally {
-    savingF4.value = false
-  }
-}
-
-// ===== 订阅通知管理 =====
-async function loadNotifyRules() {
-  notifyRulesLoading.value = true
-  notifyRulesError.value = ''
-  try {
-    const data = unwrap(await props.api.get('plugin/SubscribePlus/notify_options')) || {}
-    notifyMeta.value = {
-      channelKind: data.channel_kind || '',
-      channelPrefix: data.channel_prefix || '',
-      channelCount: data.channel_count || (data.channel_kind ? 1 : 0),
-      hasChannel: Boolean(data.channel_kind),
-    }
-    notifyUsernameOptions.value = Array.isArray(data.usernames) ? [...data.usernames] : []
-    notifyTargetOptions.value = (Array.isArray(data.targets) ? data.targets : []).map(target => ({
-      title: target.title || String(target.id),
-      value: String(target.id),
-      source: target.source || '',
-      channel: target.channel || '',
-    }))
-    if (!data.channel_kind) {
-      notifyRulesError.value = '未检测到启用的消息通知渠道（Telegram/QQ），请先在系统设置中配置通知渠道'
-    }
-    const rules = data.rules || {}
-    notifyRuleRows.value = Object.keys(rules).map(username => {
-      const raw = rules[username]
-      const targetList = Array.isArray(raw) ? raw.map(String) : String(raw || '').split(',').filter(Boolean)
-      return {
-        uid: `row-${++notifyRowUid}`,
-        username,
-        targets: [...new Set(targetList)],
-      }
-    })
-    // 已配置映射但当前渠道选项缺失的用户也要保留展示
-    notifyRuleRows.value = notifyRuleRows.value.map(row => ({ ...row, uid: `row-${++notifyRowUid}` }))
-    const defaultRaw = data.default_target
-    defaultNotifyTargets.value = Array.isArray(defaultRaw)
-      ? [...new Set(defaultRaw.map(String).filter(Boolean))]
-      : String(defaultRaw || '').split(',').filter(Boolean)
-    snapshotNotifyRules()
-  } catch (err) {
-    notifyRulesError.value = err?.message || '读取订阅通知管理选项失败'
-  } finally {
-    notifyRulesLoading.value = false
-  }
-}
-
-function snapshotNotifyRules() {
-  const rows = notifyRuleRows.value
-    .filter(row => String(row.username || '').trim() && (Array.isArray(row.targets) ? row.targets.length : String(row.target || '').trim()))
-    .map(row => `${String(row.username).trim()}\u0000${(Array.isArray(row.targets) ? [...row.targets].sort().join('|') : String(row.target || '').trim())}`)
-    .sort()
-  notifyRulesSavedJson.value = JSON.stringify({
-    default: (Array.isArray(defaultNotifyTargets.value) ? [...defaultNotifyTargets.value].sort().join('|') : String(defaultNotifyTargets.value || '').trim()),
-    rows,
-  })
-}
-
-function addNotifyRuleRow() {
-  const candidate = availableNotifyUsernames.value[0] || ''
-  notifyRuleRows.value.push({
-    uid: `row-${++notifyRowUid}`,
-    username: candidate,
-    targets: [],
-  })
-}
-
-function removeNotifyRuleRow(index) {
-  notifyRuleRows.value.splice(index, 1)
-}
-
-async function saveNotifyRules() {
-  const rules = {}
-  for (const row of notifyRuleRows.value) {
-    const username = String(row.username || '').trim()
-    const targets = Array.isArray(row.targets) ? row.targets : (String(row.target || '').split(',').filter(Boolean))
-    const targetList = [...new Set(targets.map(t => String(t).trim()).filter(Boolean))]
-    if (username && targetList.length) rules[username] = targetList.join(',')
-  }
-  const defaultTargetList = [...new Set((Array.isArray(defaultNotifyTargets.value) ? defaultNotifyTargets.value : []).map(t => String(t).trim()).filter(Boolean))]
-  const defaultTarget = defaultTargetList.join(',')
-  savingNotifyRules.value = true
-  notifyRulesError.value = ''
-  notifyRulesHint.value = ''
-  try {
-    const result = unwrap(await props.api.post('plugin/SubscribePlus/notify_rules', { rules, default_target: defaultTarget })) || {}
-    if (result.success === false) {
-      notifyRulesError.value = result.message || '保存失败'
-      return
-    }
-    snapshotNotifyRules()
-    notifyRulesHint.value = result.message || `已保存 ${Object.keys(rules).length} 条订阅通知映射`
-    // 让配置页基线同步，避免把 notify_rules 当待保存项
-    if (typeof config !== 'undefined' && config) {
-      config.notify_rules = { ...rules }
-      config.default_notify_target = defaultTarget
-    }
-  } catch (err) {
-    notifyRulesError.value = err?.message || '保存订阅通知映射失败'
-  } finally {
-    savingNotifyRules.value = false
-  }
 }
 
 async function runScan() {
@@ -1290,9 +952,8 @@ function buildConfigPayload() {
   return {
     ...config,
     delay_days: Number(config.delay_days),
-    max_scan_subscribes: Number(config.max_scan_subscribes),
+
     candidate_cache_days: Number(config.candidate_cache_days),
-    notification_suppression_days: Number(config.notification_suppression_days),
     search_sites: Array.isArray(config.search_sites) ? [...config.search_sites] : [],
     selected_categories: Array.isArray(config.selected_categories) ? [...config.selected_categories] : [],
     custom_release_groups: normalizedDictionaryList(config.custom_release_groups),
@@ -1346,14 +1007,6 @@ watch(
   },
   { deep: true },
 )
-
-// 首次切到「F4通知目标面板」时加载系统通知目标与订阅用户映射
-watch(activeGroup, async value => {
-  if (value !== 'notify_rules') return
-  if (notifyRulesLoadedOnce) return
-  notifyRulesLoadedOnce = true
-  await Promise.all([loadF4Options(), loadNotifyRules()])
-})
 
 onMounted(() => {
   emit('layout', layoutRequest)

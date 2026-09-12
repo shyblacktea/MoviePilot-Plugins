@@ -16,7 +16,6 @@ const groups = [
   { key: 'rules', title: '规则记录', icon: 'mdi-history', desc: '订阅规则修改历史。' },
   { key: 'scan', title: '扫描设置', icon: 'mdi-tune-variant', desc: '订阅扫描周期、宽限天数与站点范围。' },
   { key: 'notify', title: '通知权限', icon: 'mdi-message-badge-outline', desc: 'Telegram 通知、重复提醒抑制与规则修改授权。' },
-  { key: 'notify_rules', title: 'F4通知目标面板', icon: 'mdi-bell-cog-outline', desc: '系统通知(入库/下载/订阅)目标 + 订阅用户映射。' },
   { key: 'cleanup', title: '清理与候选', icon: 'mdi-broom', desc: '整季包清理与候选下载缓存。' },
 ];
 
@@ -38,16 +37,13 @@ const fields = [
     label: '宽限天数', min: 0, unit: '天', cols: { md: 4 },
     hint: '单集播出超过 N 天仍未入库才触发诊断',
   },
+
   {
     key: 'cron', group: 'scan', section: '扫描窗口', type: 'text',
     label: 'Cron', cols: { md: 4 },
     hint: '每 6 小时建议写 0 */6 * * *', validate: 'cron',
   },
-  {
-    key: 'max_scan_subscribes', group: 'scan', section: '扫描窗口', type: 'number',
-    label: '订阅部数通知上限', min: 1, unit: '部', cols: { md: 4 },
-    hint: '单次扫描最多通知的订阅部数',
-  },
+
   {
     key: 'selected_categories', group: 'scan', section: '扫描范围', type: 'multiselect',
     label: '二级分类', optionsKey: 'categories', cols: { md: 6 },
@@ -108,7 +104,7 @@ const defaults = {
   cron: '0 9 * * *',
   selected_categories: [],
   search_sites: [],
-  max_scan_subscribes: 20,
+
   notify_tg: true,
   allow_tg_rule_update: false,
   season_pack_cleanup: 'off',
@@ -219,58 +215,40 @@ const _hoisted_51 = { class: "sp-field-row" };
 const _hoisted_52 = { class: "sp-field-control sp-ctl-multiselect" };
 const _hoisted_53 = { class: "sp-field-row" };
 const _hoisted_54 = { class: "sp-field-control sp-ctl-multiselect" };
-const _hoisted_55 = { class: "sp-pane" };
-const _hoisted_56 = { class: "d-flex align-center mb-2" };
-const _hoisted_57 = { class: "sp-config-section" };
-const _hoisted_58 = { class: "sp-field-rows" };
-const _hoisted_59 = { class: "sp-field-info" };
-const _hoisted_60 = { class: "sp-field-label" };
-const _hoisted_61 = { class: "sp-field-control sp-ctl-select" };
-const _hoisted_62 = { class: "sp-config-section mt-3" };
-const _hoisted_63 = { class: "sp-field-rows" };
-const _hoisted_64 = { class: "sp-field-row" };
-const _hoisted_65 = { class: "sp-field-control sp-ctl-select" };
-const _hoisted_66 = { class: "sp-field-info" };
-const _hoisted_67 = { class: "sp-field-control sp-ctl-select" };
-const _hoisted_68 = { class: "sp-field-actions" };
-const _hoisted_69 = { class: "d-flex align-center mt-2" };
-const _hoisted_70 = {
-  key: 0,
-  class: "text-caption text-medium-emphasis ml-3"
-};
-const _hoisted_71 = { class: "sp-section-title" };
-const _hoisted_72 = { class: "sp-field-rows" };
-const _hoisted_73 = { class: "sp-field-info" };
-const _hoisted_74 = { class: "sp-field-label" };
-const _hoisted_75 = {
+const _hoisted_55 = { class: "sp-section-title" };
+const _hoisted_56 = { class: "sp-field-rows" };
+const _hoisted_57 = { class: "sp-field-info" };
+const _hoisted_58 = { class: "sp-field-label" };
+const _hoisted_59 = {
   key: 0,
   class: "sp-field-hint"
 };
-const _hoisted_76 = {
+const _hoisted_60 = {
   class: "sp-dashboard",
   "aria-label": "运行表盘"
 };
-const _hoisted_77 = { class: "sp-dashboard-section" };
-const _hoisted_78 = { class: "sp-dashboard-title" };
-const _hoisted_79 = { class: "sp-dashboard-row" };
-const _hoisted_80 = { class: "sp-dashboard-row" };
-const _hoisted_81 = { class: "sp-dashboard-row" };
-const _hoisted_82 = { class: "sp-dashboard-row" };
-const _hoisted_83 = { class: "sp-dashboard-section" };
-const _hoisted_84 = { class: "sp-dashboard-title" };
-const _hoisted_85 = { class: "sp-dashboard-row" };
-const _hoisted_86 = { class: "sp-dashboard-row" };
-const _hoisted_87 = { class: "sp-dashboard-row" };
-const _hoisted_88 = { class: "sp-dashboard-row" };
-const _hoisted_89 = {
+const _hoisted_61 = { class: "sp-dashboard-section" };
+const _hoisted_62 = { class: "sp-dashboard-title" };
+const _hoisted_63 = { class: "sp-dashboard-row" };
+const _hoisted_64 = { class: "sp-dashboard-row" };
+const _hoisted_65 = { class: "sp-dashboard-row" };
+const _hoisted_66 = { class: "sp-dashboard-row" };
+const _hoisted_67 = { class: "sp-dashboard-row" };
+const _hoisted_68 = { class: "sp-dashboard-section" };
+const _hoisted_69 = { class: "sp-dashboard-title" };
+const _hoisted_70 = { class: "sp-dashboard-row" };
+const _hoisted_71 = { class: "sp-dashboard-row" };
+const _hoisted_72 = { class: "sp-dashboard-row" };
+const _hoisted_73 = { class: "sp-dashboard-row" };
+const _hoisted_74 = {
   key: 1,
   class: "sp-suggestion"
 };
-const _hoisted_90 = {
+const _hoisted_75 = {
   key: 2,
   class: "sp-preview-box"
 };
-const _hoisted_91 = { key: 0 };
+const _hoisted_76 = { key: 0 };
 
 const {computed,onMounted,reactive,ref,watch} = await importShared('vue');
 
@@ -388,64 +366,6 @@ function snapshotRuleDictionary() {
 // ===== 选项 =====
 const categories = ref([]);
 const siteOptions = ref([]);
-
-// ===== F4 通知目标面板 =====
-const f4Loading = ref(false);
-const savingF4 = ref(false);
-const f4Error = ref('');
-const f4Hint = ref('');
-const f4TypeLabels = { '资源下载': '资源下载', '整理入库': '资源入库', '订阅': '订阅' };
-const f4Rows = ref([]);
-const f4OptionItems = ref([
-  { title: '发群组', value: 'all' },
-  { title: '用户+管理员', value: 'user,admin' },
-  { title: '仅用户', value: 'user' },
-  { title: '仅管理员', value: 'admin' },
-]);
-const f4SavedJson = ref('');
-
-const f4Dirty = computed(() => {
-  const current = f4Rows.value
-    .filter(row => String(row.type || '').trim())
-    .map(row => `${String(row.type).trim()}\u0000${String(row.action || '').trim()}`)
-    .sort();
-  return JSON.stringify(current) !== f4SavedJson.value
-});
-
-// ===== 订阅通知管理 =====
-const notifyRulesLoading = ref(false);
-const savingNotifyRules = ref(false);
-const notifyRulesError = ref('');
-const notifyRulesHint = ref('');
-const notifyMeta = ref({ channelKind: '', channelPrefix: '', hasChannel: false });
-const notifyUsernameOptions = ref([]);
-const notifyTargetOptions = ref([]);
-const notifyRuleRows = ref([]);
-const notifyRulesSavedJson = ref('');
-const defaultNotifyTargets = ref([]);
-let notifyRowUid = 0;
-let notifyRulesLoadedOnce = false;
-
-const notifyRulesDirty = computed(() => {
-  const current = notifyRuleRows.value
-    .filter(row => String(row.username || '').trim() && (Array.isArray(row.targets) ? row.targets.length : String(row.target || '').trim()))
-    .map(row => `${String(row.username).trim()}\u0000${(Array.isArray(row.targets) ? [...row.targets].sort().join('|') : String(row.target || '').trim())}`)
-    .sort();
-  const currentWithDefault = {
-    default: (Array.isArray(defaultNotifyTargets.value) ? [...defaultNotifyTargets.value].sort().join('|') : String(defaultNotifyTargets.value || '').trim()),
-    rows: current,
-  };
-  return JSON.stringify(currentWithDefault) !== notifyRulesSavedJson.value
-});
-
-const availableNotifyUsernames = computed(() => {
-  const used = new Set(
-    notifyRuleRows.value
-      .map(row => String(row.username || '').trim())
-      .filter(Boolean),
-  );
-  return notifyUsernameOptions.value.filter(name => !used.has(name))
-});
 
 const currentGroup = computed(() => groups.find(g => g.key === activeGroup.value) || groups[0]);
 const configGroupKeys = ['scan', 'notify', 'cleanup'];
@@ -687,165 +607,6 @@ async function reloadAll() {
   await Promise.all([loadData(), loadOptions()]);
 }
 
-// ===== F4 通知目标面板 =====
-async function loadF4Options() {
-  f4Loading.value = true;
-  f4Error.value = '';
-  try {
-    const data = unwrap(await props.api.get('plugin/SubscribePlus/f4_options')) || {};
-    const types = Array.isArray(data.types) ? data.types : [];
-    const current = data.current || {};
-    f4Rows.value = types.map(type => ({
-      type,
-      label: f4TypeLabels[type] || type,
-      action: String(current[type] || 'all'),
-    }));
-    const opts = Array.isArray(data.options) ? data.options : [];
-    if (opts.length) f4OptionItems.value = opts;
-    snapshotF4();
-  } catch (err) {
-    f4Error.value = err?.message || '读取系统通知目标配置失败';
-  } finally {
-    f4Loading.value = false;
-  }
-}
-
-function snapshotF4() {
-  const current = f4Rows.value
-    .filter(row => String(row.type || '').trim())
-    .map(row => `${String(row.type).trim()}\u0000${String(row.action || '').trim()}`)
-    .sort();
-  f4SavedJson.value = JSON.stringify(current);
-}
-
-async function saveF4Actions() {
-  const actions = {};
-  for (const row of f4Rows.value) {
-    const type = String(row.type || '').trim();
-    const action = String(row.action || '').trim();
-    if (type && action) actions[type] = action;
-  }
-  savingF4.value = true;
-  f4Error.value = '';
-  f4Hint.value = '';
-  try {
-    const result = unwrap(await props.api.post('plugin/SubscribePlus/f4_actions', { actions })) || {};
-    if (result.success === false) {
-      f4Error.value = result.message || '保存失败';
-      return
-    }
-    snapshotF4();
-    f4Hint.value = result.message || `已保存 ${Object.keys(actions).length} 项系统通知目标`;
-  } catch (err) {
-    f4Error.value = err?.message || '保存系统通知目标失败';
-  } finally {
-    savingF4.value = false;
-  }
-}
-
-// ===== 订阅通知管理 =====
-async function loadNotifyRules() {
-  notifyRulesLoading.value = true;
-  notifyRulesError.value = '';
-  try {
-    const data = unwrap(await props.api.get('plugin/SubscribePlus/notify_options')) || {};
-    notifyMeta.value = {
-      channelKind: data.channel_kind || '',
-      channelPrefix: data.channel_prefix || '',
-      channelCount: data.channel_count || (data.channel_kind ? 1 : 0),
-      hasChannel: Boolean(data.channel_kind),
-    };
-    notifyUsernameOptions.value = Array.isArray(data.usernames) ? [...data.usernames] : [];
-    notifyTargetOptions.value = (Array.isArray(data.targets) ? data.targets : []).map(target => ({
-      title: target.title || String(target.id),
-      value: String(target.id),
-      source: target.source || '',
-      channel: target.channel || '',
-    }));
-    if (!data.channel_kind) {
-      notifyRulesError.value = '未检测到启用的消息通知渠道（Telegram/QQ），请先在系统设置中配置通知渠道';
-    }
-    const rules = data.rules || {};
-    notifyRuleRows.value = Object.keys(rules).map(username => {
-      const raw = rules[username];
-      const targetList = Array.isArray(raw) ? raw.map(String) : String(raw || '').split(',').filter(Boolean);
-      return {
-        uid: `row-${++notifyRowUid}`,
-        username,
-        targets: [...new Set(targetList)],
-      }
-    });
-    // 已配置映射但当前渠道选项缺失的用户也要保留展示
-    notifyRuleRows.value = notifyRuleRows.value.map(row => ({ ...row, uid: `row-${++notifyRowUid}` }));
-    const defaultRaw = data.default_target;
-    defaultNotifyTargets.value = Array.isArray(defaultRaw)
-      ? [...new Set(defaultRaw.map(String).filter(Boolean))]
-      : String(defaultRaw || '').split(',').filter(Boolean);
-    snapshotNotifyRules();
-  } catch (err) {
-    notifyRulesError.value = err?.message || '读取订阅通知管理选项失败';
-  } finally {
-    notifyRulesLoading.value = false;
-  }
-}
-
-function snapshotNotifyRules() {
-  const rows = notifyRuleRows.value
-    .filter(row => String(row.username || '').trim() && (Array.isArray(row.targets) ? row.targets.length : String(row.target || '').trim()))
-    .map(row => `${String(row.username).trim()}\u0000${(Array.isArray(row.targets) ? [...row.targets].sort().join('|') : String(row.target || '').trim())}`)
-    .sort();
-  notifyRulesSavedJson.value = JSON.stringify({
-    default: (Array.isArray(defaultNotifyTargets.value) ? [...defaultNotifyTargets.value].sort().join('|') : String(defaultNotifyTargets.value || '').trim()),
-    rows,
-  });
-}
-
-function addNotifyRuleRow() {
-  const candidate = availableNotifyUsernames.value[0] || '';
-  notifyRuleRows.value.push({
-    uid: `row-${++notifyRowUid}`,
-    username: candidate,
-    targets: [],
-  });
-}
-
-function removeNotifyRuleRow(index) {
-  notifyRuleRows.value.splice(index, 1);
-}
-
-async function saveNotifyRules() {
-  const rules = {};
-  for (const row of notifyRuleRows.value) {
-    const username = String(row.username || '').trim();
-    const targets = Array.isArray(row.targets) ? row.targets : (String(row.target || '').split(',').filter(Boolean));
-    const targetList = [...new Set(targets.map(t => String(t).trim()).filter(Boolean))];
-    if (username && targetList.length) rules[username] = targetList.join(',');
-  }
-  const defaultTargetList = [...new Set((Array.isArray(defaultNotifyTargets.value) ? defaultNotifyTargets.value : []).map(t => String(t).trim()).filter(Boolean))];
-  const defaultTarget = defaultTargetList.join(',');
-  savingNotifyRules.value = true;
-  notifyRulesError.value = '';
-  notifyRulesHint.value = '';
-  try {
-    const result = unwrap(await props.api.post('plugin/SubscribePlus/notify_rules', { rules, default_target: defaultTarget })) || {};
-    if (result.success === false) {
-      notifyRulesError.value = result.message || '保存失败';
-      return
-    }
-    snapshotNotifyRules();
-    notifyRulesHint.value = result.message || `已保存 ${Object.keys(rules).length} 条订阅通知映射`;
-    // 让配置页基线同步，避免把 notify_rules 当待保存项
-    if (typeof config !== 'undefined' && config) {
-      config.notify_rules = { ...rules };
-      config.default_notify_target = defaultTarget;
-    }
-  } catch (err) {
-    notifyRulesError.value = err?.message || '保存订阅通知映射失败';
-  } finally {
-    savingNotifyRules.value = false;
-  }
-}
-
 async function runScan() {
   scanning.value = true;
   error.value = '';
@@ -1049,7 +810,7 @@ function buildConfigPayload() {
   return {
     ...config,
     delay_days: Number(config.delay_days),
-    max_scan_subscribes: Number(config.max_scan_subscribes),
+
     candidate_cache_days: Number(config.candidate_cache_days),
     notification_suppression_days: Number(config.notification_suppression_days),
     search_sites: Array.isArray(config.search_sites) ? [...config.search_sites] : [],
@@ -1105,14 +866,6 @@ watch(
   },
   { deep: true },
 );
-
-// 首次切到「F4通知目标面板」时加载系统通知目标与订阅用户映射
-watch(activeGroup, async value => {
-  if (value !== 'notify_rules') return
-  if (notifyRulesLoadedOnce) return
-  notifyRulesLoadedOnce = true;
-  await Promise.all([loadF4Options(), loadNotifyRules()]);
-});
 
 onMounted(() => {
   emit('layout', layoutRequest);
@@ -1189,7 +942,7 @@ return (_ctx, _cache) => {
                     loading: saving.value,
                     onClick: saveConfig
                   }, {
-                    default: _withCtx(() => [...(_cache[23] || (_cache[23] = [
+                    default: _withCtx(() => [...(_cache[20] || (_cache[20] = [
                       _createTextVNode("保存修改", -1)
                     ]))]),
                     _: 1
@@ -1205,7 +958,7 @@ return (_ctx, _cache) => {
           ]),
           default: _withCtx(() => [
             _createVNode(_component_VCardTitle, { class: "text-h6 sp-header-title" }, {
-              default: _withCtx(() => [...(_cache[22] || (_cache[22] = [
+              default: _withCtx(() => [...(_cache[19] || (_cache[19] = [
                 _createTextVNode("订阅下载增强", -1)
               ]))]),
               _: 1
@@ -1316,18 +1069,18 @@ return (_ctx, _cache) => {
               _createElementVNode("div", _hoisted_14, [
                 _withDirectives(_createElementVNode("div", _hoisted_15, [
                   _createElementVNode("div", _hoisted_16, [
-                    _cache[26] || (_cache[26] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "运行概览", -1)),
+                    _cache[23] || (_cache[23] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "运行概览", -1)),
                     _createVNode(_component_VSpacer),
                     _createVNode(_component_VBtn, {
                       color: "primary",
-                      "prepend-icon": "mdi-radar",
+                      "prepend-icon": "mdi-calendar-refresh",
                       variant: "tonal",
                       size: "small",
                       loading: scanning.value,
                       onClick: runScan
                     }, {
-                      default: _withCtx(() => [...(_cache[24] || (_cache[24] = [
-                        _createTextVNode("手动扫描", -1)
+                      default: _withCtx(() => [...(_cache[21] || (_cache[21] = [
+                        _createTextVNode("刷新日历并扫描", -1)
                       ]))]),
                       _: 1
                     }, 8, ["loading"]),
@@ -1339,7 +1092,7 @@ return (_ctx, _cache) => {
                       loading: clearing.value,
                       onClick: clearResults
                     }, {
-                      default: _withCtx(() => [...(_cache[25] || (_cache[25] = [
+                      default: _withCtx(() => [...(_cache[22] || (_cache[22] = [
                         _createTextVNode("清除诊断", -1)
                       ]))]),
                       _: 1
@@ -1369,7 +1122,7 @@ return (_ctx, _cache) => {
                           ]),
                           _: 1
                         }),
-                        _cache[27] || (_cache[27] = _createElementVNode("div", { class: "text-caption text-medium-emphasis" }, "最近扫描", -1))
+                        _cache[24] || (_cache[24] = _createElementVNode("div", { class: "text-caption text-medium-emphasis" }, "最近扫描", -1))
                       ]),
                       _createElementVNode("div", _hoisted_20, _toDisplayString(status.value.last_scan || '-'), 1)
                     ]),
@@ -1389,7 +1142,7 @@ return (_ctx, _cache) => {
                           ]),
                           _: 1
                         }),
-                        _cache[28] || (_cache[28] = _createElementVNode("div", { class: "text-caption text-medium-emphasis" }, "待处理", -1))
+                        _cache[25] || (_cache[25] = _createElementVNode("div", { class: "text-caption text-medium-emphasis" }, "待处理", -1))
                       ]),
                       _createElementVNode("div", _hoisted_23, _toDisplayString(items.value.length), 1)
                     ]),
@@ -1409,7 +1162,7 @@ return (_ctx, _cache) => {
                           ]),
                           _: 1
                         }),
-                        _cache[29] || (_cache[29] = _createElementVNode("div", { class: "text-caption text-medium-emphasis" }, "可下载", -1))
+                        _cache[26] || (_cache[26] = _createElementVNode("div", { class: "text-caption text-medium-emphasis" }, "可下载", -1))
                       ]),
                       _createElementVNode("div", _hoisted_26, _toDisplayString(reasonCount.value.downloadable || 0), 1)
                     ]),
@@ -1429,7 +1182,7 @@ return (_ctx, _cache) => {
                           ]),
                           _: 1
                         }),
-                        _cache[30] || (_cache[30] = _createElementVNode("div", { class: "text-caption text-medium-emphasis" }, "规则修改", -1))
+                        _cache[27] || (_cache[27] = _createElementVNode("div", { class: "text-caption text-medium-emphasis" }, "规则修改", -1))
                       ]),
                       _createElementVNode("div", _hoisted_29, _toDisplayString(ruleRecords.value.length), 1)
                     ])
@@ -1506,7 +1259,7 @@ return (_ctx, _cache) => {
                                         class: "sp-candidate-table"
                                       }, {
                                         default: _withCtx(() => [
-                                          _cache[32] || (_cache[32] = _createElementVNode("thead", null, [
+                                          _cache[29] || (_cache[29] = _createElementVNode("thead", null, [
                                             _createElementVNode("tr", null, [
                                               _createElementVNode("th", null, "站点"),
                                               _createElementVNode("th", null, "标题"),
@@ -1530,7 +1283,7 @@ return (_ctx, _cache) => {
                                                     "prepend-icon": "mdi-file-eye-outline",
                                                     onClick: $event => (previewRule(item, candidate))
                                                   }, {
-                                                    default: _withCtx(() => [...(_cache[31] || (_cache[31] = [
+                                                    default: _withCtx(() => [...(_cache[28] || (_cache[28] = [
                                                       _createTextVNode("规则预览", -1)
                                                     ]))]),
                                                     _: 1
@@ -1557,7 +1310,7 @@ return (_ctx, _cache) => {
                 ]),
                 _withDirectives(_createElementVNode("div", _hoisted_38, [
                   _createElementVNode("div", _hoisted_39, [
-                    _cache[33] || (_cache[33] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "自定义识别词", -1)),
+                    _cache[30] || (_cache[30] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "自定义识别词", -1)),
                     _createVNode(_component_VSpacer),
                     _createVNode(_component_VChip, {
                       size: "small",
@@ -1625,7 +1378,7 @@ return (_ctx, _cache) => {
                     variant: "tonal",
                     class: "mb-3 text-caption"
                   }, {
-                    default: _withCtx(() => [...(_cache[34] || (_cache[34] = [
+                    default: _withCtx(() => [...(_cache[31] || (_cache[31] = [
                       _createTextVNode(" AI 识别会调用 MoviePilot 当前配置的 AI，根据媒体文件名判断目标 TMDB，并自动写入识别词；不需要填写 TMDB ID。 ", -1)
                     ]))]),
                     _: 1
@@ -1700,7 +1453,7 @@ return (_ctx, _cache) => {
                             disabled: Boolean(identifierBusy.value),
                             onClick: _cache[8] || (_cache[8] = $event => (runIdentifierAction('auto')))
                           }, {
-                            default: _withCtx(() => [...(_cache[35] || (_cache[35] = [
+                            default: _withCtx(() => [...(_cache[32] || (_cache[32] = [
                               _createTextVNode("AI 识别并写入", -1)
                             ]))]),
                             _: 1
@@ -1714,7 +1467,7 @@ return (_ctx, _cache) => {
                             disabled: Boolean(identifierBusy.value),
                             onClick: _cache[9] || (_cache[9] = $event => (runIdentifierAction('force')))
                           }, {
-                            default: _withCtx(() => [...(_cache[36] || (_cache[36] = [
+                            default: _withCtx(() => [...(_cache[33] || (_cache[33] = [
                               _createTextVNode("强制绑定", -1)
                             ]))]),
                             _: 1
@@ -1728,7 +1481,7 @@ return (_ctx, _cache) => {
                             disabled: Boolean(identifierBusy.value),
                             onClick: _cache[10] || (_cache[10] = $event => (runIdentifierAction('year')))
                           }, {
-                            default: _withCtx(() => [...(_cache[37] || (_cache[37] = [
+                            default: _withCtx(() => [...(_cache[34] || (_cache[34] = [
                               _createTextVNode("修正年份", -1)
                             ]))]),
                             _: 1
@@ -1787,7 +1540,7 @@ return (_ctx, _cache) => {
                 ]),
                 _withDirectives(_createElementVNode("div", _hoisted_45, [
                   _createElementVNode("div", _hoisted_46, [
-                    _cache[39] || (_cache[39] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "规则修改记录", -1)),
+                    _cache[36] || (_cache[36] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "规则修改记录", -1)),
                     _createVNode(_component_VSpacer),
                     (ruleRecords.value.length)
                       ? (_openBlock(), _createBlock(_component_VBtn, {
@@ -1799,7 +1552,7 @@ return (_ctx, _cache) => {
                           loading: clearingRules.value,
                           onClick: clearRuleRecords
                         }, {
-                          default: _withCtx(() => [...(_cache[38] || (_cache[38] = [
+                          default: _withCtx(() => [...(_cache[35] || (_cache[35] = [
                             _createTextVNode("清空", -1)
                           ]))]),
                           _: 1
@@ -1838,7 +1591,7 @@ return (_ctx, _cache) => {
                     : (_openBlock(), _createElementBlock("div", _hoisted_47, "暂无记录")),
                   _createElementVNode("section", _hoisted_48, [
                     _createElementVNode("div", _hoisted_49, [
-                      _cache[41] || (_cache[41] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "自定义官组与平台", -1)),
+                      _cache[38] || (_cache[38] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "自定义官组与平台", -1)),
                       _createVNode(_component_VSpacer),
                       _createVNode(_component_VBtn, {
                         color: "primary",
@@ -1849,7 +1602,7 @@ return (_ctx, _cache) => {
                         disabled: !ruleDictionaryDirty.value,
                         onClick: saveRuleDictionary
                       }, {
-                        default: _withCtx(() => [...(_cache[40] || (_cache[40] = [
+                        default: _withCtx(() => [...(_cache[37] || (_cache[37] = [
                           _createTextVNode(" 保存词表 ", -1)
                         ]))]),
                         _: 1
@@ -1896,7 +1649,7 @@ return (_ctx, _cache) => {
                       : _createCommentVNode("", true),
                     _createElementVNode("div", _hoisted_50, [
                       _createElementVNode("div", _hoisted_51, [
-                        _cache[42] || (_cache[42] = _createElementVNode("div", { class: "sp-field-info" }, [
+                        _cache[39] || (_cache[39] = _createElementVNode("div", { class: "sp-field-info" }, [
                           _createElementVNode("div", { class: "sp-field-label" }, "自定义官组"),
                           _createElementVNode("div", { class: "sp-field-hint" }, "每行或逗号分隔；候选标题命中后，在网页与 Telegram 的调整规则中显示“添加官组”。")
                         ], -1)),
@@ -1917,7 +1670,7 @@ return (_ctx, _cache) => {
                         ])
                       ]),
                       _createElementVNode("div", _hoisted_53, [
-                        _cache[43] || (_cache[43] = _createElementVNode("div", { class: "sp-field-info" }, [
+                        _cache[40] || (_cache[40] = _createElementVNode("div", { class: "sp-field-info" }, [
                           _createElementVNode("div", { class: "sp-field-label" }, "自定义平台"),
                           _createElementVNode("div", { class: "sp-field-hint" }, "每行或逗号分隔；候选标题命中后，在网页与 Telegram 的调整规则中显示“添加平台”。")
                         ], -1)),
@@ -1942,212 +1695,6 @@ return (_ctx, _cache) => {
                 ], 512), [
                   [_vShow, activeGroup.value === 'rules']
                 ]),
-                _withDirectives(_createElementVNode("div", _hoisted_55, [
-                  _createElementVNode("div", _hoisted_56, [
-                    _cache[45] || (_cache[45] = _createElementVNode("div", { class: "sp-section-title mb-0" }, "F4通知目标面板", -1)),
-                    _createVNode(_component_VSpacer),
-                    _createVNode(_component_VBtn, {
-                      color: "primary",
-                      "prepend-icon": "mdi-content-save",
-                      variant: "flat",
-                      size: "small",
-                      loading: savingF4.value,
-                      disabled: !f4Dirty.value,
-                      onClick: saveF4Actions
-                    }, {
-                      default: _withCtx(() => [...(_cache[44] || (_cache[44] = [
-                        _createTextVNode("保存系统通知目标", -1)
-                      ]))]),
-                      _: 1
-                    }, 8, ["loading", "disabled"]),
-                    _createVNode(_component_VBtn, {
-                      icon: "mdi-refresh",
-                      variant: "text",
-                      size: "small",
-                      loading: f4Loading.value,
-                      onClick: loadF4Options
-                    }, null, 8, ["loading"])
-                  ]),
-                  (f4Error.value)
-                    ? (_openBlock(), _createBlock(_component_VAlert, {
-                        key: 0,
-                        type: "error",
-                        density: "compact",
-                        variant: "tonal",
-                        class: "mb-3 text-caption",
-                        closable: "",
-                        "onClick:close": _cache[15] || (_cache[15] = $event => (f4Error.value = ''))
-                      }, {
-                        default: _withCtx(() => [
-                          _createTextVNode(_toDisplayString(f4Error.value), 1)
-                        ]),
-                        _: 1
-                      }))
-                    : _createCommentVNode("", true),
-                  (f4Hint.value)
-                    ? (_openBlock(), _createBlock(_component_VAlert, {
-                        key: 1,
-                        type: "info",
-                        density: "compact",
-                        variant: "tonal",
-                        class: "mb-3 text-caption",
-                        closable: "",
-                        "onClick:close": _cache[16] || (_cache[16] = $event => (f4Hint.value = ''))
-                      }, {
-                        default: _withCtx(() => [
-                          _createTextVNode(_toDisplayString(f4Hint.value), 1)
-                        ]),
-                        _: 1
-                      }))
-                    : _createCommentVNode("", true),
-                  _createElementVNode("section", _hoisted_57, [
-                    _cache[47] || (_cache[47] = _createElementVNode("div", { class: "sp-section-title" }, "1. 系统通知目标（资源入库 / 资源下载 / 订阅）", -1)),
-                    _createElementVNode("div", _hoisted_58, [
-                      (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(f4Rows.value, (row) => {
-                        return (_openBlock(), _createElementBlock("div", {
-                          key: row.type,
-                          class: "sp-field-row"
-                        }, [
-                          _createElementVNode("div", _hoisted_59, [
-                            _createElementVNode("div", _hoisted_60, _toDisplayString(row.label), 1),
-                            _cache[46] || (_cache[46] = _createElementVNode("div", { class: "sp-field-hint" }, "控制 MoviePilot 该类型系统通知的投递目标；发群组表示按各通知渠道开关发送到群。", -1))
-                          ]),
-                          _createElementVNode("div", _hoisted_61, [
-                            _createVNode(_component_VSelect, {
-                              modelValue: row.action,
-                              "onUpdate:modelValue": $event => ((row.action) = $event),
-                              items: f4OptionItems.value,
-                              label: "通知目标",
-                              "item-title": "title",
-                              "item-value": "value",
-                              density: "compact",
-                              variant: "outlined",
-                              "hide-details": "",
-                              rounded: "lg",
-                              "no-data-text": "无可用选项"
-                            }, null, 8, ["modelValue", "onUpdate:modelValue", "items"])
-                          ])
-                        ]))
-                      }), 128))
-                    ])
-                  ]),
-                  _createElementVNode("section", _hoisted_62, [
-                    _cache[51] || (_cache[51] = _createElementVNode("div", { class: "sp-section-title" }, "2. 订阅用户通知映射（SubscribePlus 诊断通知）", -1)),
-                    _createElementVNode("div", _hoisted_63, [
-                      _createElementVNode("div", _hoisted_64, [
-                        _cache[48] || (_cache[48] = _createElementVNode("div", { class: "sp-field-info" }, [
-                          _createElementVNode("div", { class: "sp-field-label" }, "未单独配置的订阅用户默认目标"),
-                          _createElementVNode("div", { class: "sp-field-hint" }, "所有未在下方映射表中指定目标的订阅通知，发往此处选择的目标；留空则发到默认群组。")
-                        ], -1)),
-                        _createElementVNode("div", _hoisted_65, [
-                          _createVNode(_component_VSelect, {
-                            modelValue: defaultNotifyTargets.value,
-                            "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => ((defaultNotifyTargets).value = $event)),
-                            items: notifyTargetOptions.value,
-                            label: "默认通知目标",
-                            "item-title": "title",
-                            "item-value": "value",
-                            placeholder: "默认：群组",
-                            density: "compact",
-                            variant: "outlined",
-                            "hide-details": "",
-                            rounded: "lg",
-                            multiple: "",
-                            chips: "",
-                            "closable-chips": "",
-                            clearable: "",
-                            "no-data-text": "无可用通知目标"
-                          }, null, 8, ["modelValue", "items"])
-                        ])
-                      ]),
-                      (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(notifyRuleRows.value, (row, index) => {
-                        return (_openBlock(), _createElementBlock("div", {
-                          key: row.uid,
-                          class: "sp-field-row"
-                        }, [
-                          _createElementVNode("div", _hoisted_66, [
-                            _createVNode(_component_VSelect, {
-                              modelValue: row.username,
-                              "onUpdate:modelValue": $event => ((row.username) = $event),
-                              items: notifyUsernameOptions.value,
-                              label: "用户订阅",
-                              placeholder: "选择订阅归属用户",
-                              density: "compact",
-                              variant: "outlined",
-                              "hide-details": "",
-                              rounded: "lg",
-                              clearable: "",
-                              "no-data-text": "无可用订阅用户"
-                            }, null, 8, ["modelValue", "onUpdate:modelValue", "items"])
-                          ]),
-                          _createElementVNode("div", _hoisted_67, [
-                            _createVNode(_component_VSelect, {
-                              modelValue: row.targets,
-                              "onUpdate:modelValue": $event => ((row.targets) = $event),
-                              items: notifyTargetOptions.value,
-                              label: "通知目标",
-                              "item-title": "title",
-                              "item-value": "value",
-                              placeholder: "默认：群组",
-                              density: "compact",
-                              variant: "outlined",
-                              "hide-details": "",
-                              rounded: "lg",
-                              multiple: "",
-                              chips: "",
-                              "closable-chips": "",
-                              clearable: "",
-                              "no-data-text": "无可用通知目标"
-                            }, null, 8, ["modelValue", "onUpdate:modelValue", "items"])
-                          ]),
-                          _createElementVNode("div", _hoisted_68, [
-                            _createVNode(_component_VBtn, {
-                              icon: "mdi-delete-outline",
-                              color: "error",
-                              variant: "text",
-                              size: "small",
-                              onClick: $event => (removeNotifyRuleRow(index))
-                            }, null, 8, ["onClick"])
-                          ])
-                        ]))
-                      }), 128))
-                    ]),
-                    _createElementVNode("div", _hoisted_69, [
-                      _createVNode(_component_VBtn, {
-                        color: "primary",
-                        "prepend-icon": "mdi-plus",
-                        variant: "tonal",
-                        size: "small",
-                        disabled: !availableNotifyUsernames.value.length,
-                        onClick: addNotifyRuleRow
-                      }, {
-                        default: _withCtx(() => [...(_cache[49] || (_cache[49] = [
-                          _createTextVNode(" 添加映射 ", -1)
-                        ]))]),
-                        _: 1
-                      }, 8, ["disabled"]),
-                      _createVNode(_component_VBtn, {
-                        color: "primary",
-                        "prepend-icon": "mdi-content-save",
-                        variant: "flat",
-                        size: "small",
-                        loading: savingNotifyRules.value,
-                        disabled: !notifyRulesDirty.value,
-                        onClick: saveNotifyRules
-                      }, {
-                        default: _withCtx(() => [...(_cache[50] || (_cache[50] = [
-                          _createTextVNode("保存映射", -1)
-                        ]))]),
-                        _: 1
-                      }, 8, ["loading", "disabled"]),
-                      (!availableNotifyUsernames.value.length && notifyUsernameOptions.value.length)
-                        ? (_openBlock(), _createElementBlock("div", _hoisted_70, " 所有订阅用户均已配置 "))
-                        : _createCommentVNode("", true)
-                    ])
-                  ])
-                ], 512), [
-                  [_vShow, activeGroup.value === 'notify_rules']
-                ]),
                 (_openBlock(), _createElementBlock(_Fragment, null, _renderList(configGroupKeys, (groupKey) => {
                   return _withDirectives(_createElementVNode("div", {
                     key: groupKey,
@@ -2158,17 +1705,17 @@ return (_ctx, _cache) => {
                         key: section.title,
                         class: "sp-config-section"
                       }, [
-                        _createElementVNode("div", _hoisted_71, _toDisplayString((sIdx + 1) + '. ' + section.title), 1),
-                        _createElementVNode("div", _hoisted_72, [
+                        _createElementVNode("div", _hoisted_55, _toDisplayString((sIdx + 1) + '. ' + section.title), 1),
+                        _createElementVNode("div", _hoisted_56, [
                           (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(section.fields, (field) => {
                             return (_openBlock(), _createElementBlock("div", {
                               key: field.key,
                               class: "sp-field-row"
                             }, [
-                              _createElementVNode("div", _hoisted_73, [
-                                _createElementVNode("div", _hoisted_74, _toDisplayString(field.label), 1),
+                              _createElementVNode("div", _hoisted_57, [
+                                _createElementVNode("div", _hoisted_58, _toDisplayString(field.label), 1),
                                 (field.hint)
-                                  ? (_openBlock(), _createElementBlock("div", _hoisted_75, _toDisplayString(field.hint), 1))
+                                  ? (_openBlock(), _createElementBlock("div", _hoisted_59, _toDisplayString(field.hint), 1))
                                   : _createCommentVNode("", true)
                               ]),
                               _createElementVNode("div", {
@@ -2266,65 +1813,70 @@ return (_ctx, _cache) => {
                   ])
                 }), 64))
               ]),
-              _createElementVNode("aside", _hoisted_76, [
-                _createElementVNode("section", _hoisted_77, [
-                  _createElementVNode("div", _hoisted_78, [
+              _createElementVNode("aside", _hoisted_60, [
+                _createElementVNode("section", _hoisted_61, [
+                  _createElementVNode("div", _hoisted_62, [
                     _createVNode(_component_VIcon, {
                       icon: "mdi-clock-outline",
                       color: "primary",
                       size: "20"
                     }),
-                    _cache[52] || (_cache[52] = _createTextVNode("运行节奏", -1))
+                    _cache[41] || (_cache[41] = _createTextVNode("运行节奏", -1))
                   ]),
-                  _createElementVNode("div", _hoisted_79, [
+                  _createElementVNode("div", _hoisted_63, [
                     _createVNode(_component_VIcon, { icon: "mdi-calendar-sync-outline" }),
-                    _cache[53] || (_cache[53] = _createElementVNode("span", null, "定时扫描", -1)),
+                    _cache[42] || (_cache[42] = _createElementVNode("span", null, "定时扫描", -1)),
                     _createElementVNode("strong", null, _toDisplayString(scanScheduleText.value), 1)
                   ]),
-                  _createElementVNode("div", _hoisted_80, [
+                  _createElementVNode("div", _hoisted_64, [
+                    _createVNode(_component_VIcon, { icon: "mdi-calendar-refresh-outline" }),
+                    _cache[43] || (_cache[43] = _createElementVNode("span", null, "日历读取", -1)),
+                    _cache[44] || (_cache[44] = _createElementVNode("strong", null, "自动每 6 小时检查；手动强制刷新", -1))
+                  ]),
+                  _createElementVNode("div", _hoisted_65, [
                     _createVNode(_component_VIcon, { icon: "mdi-calendar-alert-outline" }),
-                    _cache[54] || (_cache[54] = _createElementVNode("span", null, "超期检测", -1)),
+                    _cache[45] || (_cache[45] = _createElementVNode("span", null, "超期检测", -1)),
                     _createElementVNode("strong", null, "播出后 " + _toDisplayString(config.delay_days) + " 天", 1)
                   ]),
-                  _createElementVNode("div", _hoisted_81, [
+                  _createElementVNode("div", _hoisted_66, [
                     _createVNode(_component_VIcon, { icon: "mdi-message-processing-outline" }),
-                    _cache[55] || (_cache[55] = _createElementVNode("span", null, "通知方式", -1)),
-                    _cache[56] || (_cache[56] = _createElementVNode("strong", null, "队列逐条", -1))
+                    _cache[46] || (_cache[46] = _createElementVNode("span", null, "通知方式", -1)),
+                    _cache[47] || (_cache[47] = _createElementVNode("strong", null, "队列逐条", -1))
                   ]),
-                  _createElementVNode("div", _hoisted_82, [
+                  _createElementVNode("div", _hoisted_67, [
                     _createVNode(_component_VIcon, { icon: "mdi-database-clock-outline" }),
-                    _cache[57] || (_cache[57] = _createElementVNode("span", null, "候选缓存", -1)),
+                    _cache[48] || (_cache[48] = _createElementVNode("span", null, "候选缓存", -1)),
                     _createElementVNode("strong", null, _toDisplayString(candidateCacheText.value), 1)
                   ])
                 ]),
                 _createVNode(_component_VDivider, { class: "my-3" }),
-                _createElementVNode("section", _hoisted_83, [
-                  _createElementVNode("div", _hoisted_84, [
+                _createElementVNode("section", _hoisted_68, [
+                  _createElementVNode("div", _hoisted_69, [
                     _createVNode(_component_VIcon, {
                       icon: "mdi-chart-box-outline",
                       color: "primary",
                       size: "20"
                     }),
-                    _cache[58] || (_cache[58] = _createTextVNode("运行概况", -1))
+                    _cache[49] || (_cache[49] = _createTextVNode("运行概况", -1))
                   ]),
-                  _createElementVNode("div", _hoisted_85, [
+                  _createElementVNode("div", _hoisted_70, [
                     _createVNode(_component_VIcon, { icon: "mdi-history" }),
-                    _cache[59] || (_cache[59] = _createElementVNode("span", null, "最近扫描", -1)),
+                    _cache[50] || (_cache[50] = _createElementVNode("span", null, "最近扫描", -1)),
                     _createElementVNode("strong", null, _toDisplayString(lastScanText.value), 1)
                   ]),
-                  _createElementVNode("div", _hoisted_86, [
+                  _createElementVNode("div", _hoisted_71, [
                     _createVNode(_component_VIcon, { icon: "mdi-timer-sand" }),
-                    _cache[60] || (_cache[60] = _createElementVNode("span", null, "待处理", -1)),
+                    _cache[51] || (_cache[51] = _createElementVNode("span", null, "待处理", -1)),
                     _createElementVNode("strong", null, _toDisplayString(items.value.length), 1)
                   ]),
-                  _createElementVNode("div", _hoisted_87, [
+                  _createElementVNode("div", _hoisted_72, [
                     _createVNode(_component_VIcon, { icon: "mdi-download-box-outline" }),
-                    _cache[61] || (_cache[61] = _createElementVNode("span", null, "候选资源", -1)),
+                    _cache[52] || (_cache[52] = _createElementVNode("span", null, "候选资源", -1)),
                     _createElementVNode("strong", null, _toDisplayString(candidateTotal.value), 1)
                   ]),
-                  _createElementVNode("div", _hoisted_88, [
+                  _createElementVNode("div", _hoisted_73, [
                     _createVNode(_component_VIcon, { icon: "mdi-toggle-switch-outline" }),
-                    _cache[62] || (_cache[62] = _createElementVNode("span", null, "已启用功能", -1)),
+                    _cache[53] || (_cache[53] = _createElementVNode("span", null, "已启用功能", -1)),
                     _createElementVNode("strong", null, _toDisplayString(enabledFeatureCount.value) + "/6", 1)
                   ])
                 ])
@@ -2337,7 +1889,7 @@ return (_ctx, _cache) => {
     }),
     _createVNode(_component_VBottomSheet, {
       modelValue: mobileGroupSheet.value,
-      "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => ((mobileGroupSheet).value = $event))
+      "onUpdate:modelValue": _cache[15] || (_cache[15] = $event => ((mobileGroupSheet).value = $event))
     }, {
       default: _withCtx(() => [
         _createVNode(_component_VCard, {
@@ -2346,7 +1898,7 @@ return (_ctx, _cache) => {
         }, {
           default: _withCtx(() => [
             _createVNode(_component_VCardTitle, { class: "text-subtitle-1 font-weight-bold px-4 pt-4" }, {
-              default: _withCtx(() => [...(_cache[63] || (_cache[63] = [
+              default: _withCtx(() => [...(_cache[54] || (_cache[54] = [
                 _createTextVNode("选择配置分组", -1)
               ]))]),
               _: 1
@@ -2424,14 +1976,14 @@ return (_ctx, _cache) => {
     }, 8, ["modelValue"]),
     _createVNode(_component_VDialog, {
       modelValue: previewDialog.value,
-      "onUpdate:modelValue": _cache[20] || (_cache[20] = $event => ((previewDialog).value = $event)),
+      "onUpdate:modelValue": _cache[17] || (_cache[17] = $event => ((previewDialog).value = $event)),
       "max-width": "720"
     }, {
       default: _withCtx(() => [
         _createVNode(_component_VCard, null, {
           default: _withCtx(() => [
             _createVNode(_component_VCardTitle, { class: "text-subtitle-1" }, {
-              default: _withCtx(() => [...(_cache[64] || (_cache[64] = [
+              default: _withCtx(() => [...(_cache[55] || (_cache[55] = [
                 _createTextVNode("规则修改预览", -1)
               ]))]),
               _: 1
@@ -2453,8 +2005,8 @@ return (_ctx, _cache) => {
                     }))
                   : _createCommentVNode("", true),
                 (ruleSuggestions.value.length && !preview.value)
-                  ? (_openBlock(), _createElementBlock("div", _hoisted_89, [
-                      _cache[65] || (_cache[65] = _createElementVNode("div", { class: "text-caption text-medium-emphasis mb-2" }, "请选择要添加的官组、平台关键词或 PT 站点", -1)),
+                  ? (_openBlock(), _createElementBlock("div", _hoisted_74, [
+                      _cache[56] || (_cache[56] = _createElementVNode("div", { class: "text-caption text-medium-emphasis mb-2" }, "请选择要添加的官组、平台关键词或 PT 站点", -1)),
                       (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(ruleSuggestions.value, (suggestion) => {
                         return (_openBlock(), _createBlock(_component_VBtn, {
                           key: suggestion.pattern,
@@ -2474,9 +2026,9 @@ return (_ctx, _cache) => {
                     ]))
                   : _createCommentVNode("", true),
                 (preview.value)
-                  ? (_openBlock(), _createElementBlock("div", _hoisted_90, [
+                  ? (_openBlock(), _createElementBlock("div", _hoisted_75, [
                       (preview.value.selected_text)
-                        ? (_openBlock(), _createElementBlock("div", _hoisted_91, "已选择：" + _toDisplayString(preview.value.selected_text), 1))
+                        ? (_openBlock(), _createElementBlock("div", _hoisted_76, "已选择：" + _toDisplayString(preview.value.selected_text), 1))
                         : _createCommentVNode("", true),
                       (preview.value.field === 'sites')
                         ? (_openBlock(), _createElementBlock(_Fragment, { key: 1 }, [
@@ -2497,9 +2049,9 @@ return (_ctx, _cache) => {
                 _createVNode(_component_VSpacer),
                 _createVNode(_component_VBtn, {
                   variant: "text",
-                  onClick: _cache[19] || (_cache[19] = $event => (previewDialog.value = false))
+                  onClick: _cache[16] || (_cache[16] = $event => (previewDialog.value = false))
                 }, {
-                  default: _withCtx(() => [...(_cache[66] || (_cache[66] = [
+                  default: _withCtx(() => [...(_cache[57] || (_cache[57] = [
                     _createTextVNode("返回", -1)
                   ]))]),
                   _: 1
@@ -2510,7 +2062,7 @@ return (_ctx, _cache) => {
                   disabled: !preview.value?.token,
                   onClick: confirmRule
                 }, {
-                  default: _withCtx(() => [...(_cache[67] || (_cache[67] = [
+                  default: _withCtx(() => [...(_cache[58] || (_cache[58] = [
                     _createTextVNode("确认修改", -1)
                   ]))]),
                   _: 1
@@ -2526,7 +2078,7 @@ return (_ctx, _cache) => {
     }, 8, ["modelValue"]),
     _createVNode(_component_VSnackbar, {
       modelValue: saveSnackbar.value,
-      "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => ((saveSnackbar).value = $event)),
+      "onUpdate:modelValue": _cache[18] || (_cache[18] = $event => ((saveSnackbar).value = $event)),
       color: "success",
       location: "top",
       timeout: 2200
@@ -2541,6 +2093,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-c840a16c"]]);
+const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-abd7984c"]]);
 
 export { Config as default };

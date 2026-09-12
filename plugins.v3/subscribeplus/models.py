@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -25,7 +24,6 @@ class PluginConfig:
     cron: str = "0 9 * * *"
     selected_categories: List[str] = field(default_factory=list)
     search_sites: List[str] = field(default_factory=list)
-    max_scan_subscribes: int = 20
     notify_tg: bool = True
     allow_tg_rule_update: bool = False
     season_pack_cleanup: str = "off"
@@ -34,8 +32,7 @@ class PluginConfig:
     notification_suppression_days: int = 3
     custom_release_groups: List[str] = field(default_factory=list)
     custom_platforms: List[str] = field(default_factory=list)
-    notify_rules: Dict[str, str] = field(default_factory=dict)
-    default_notify_target: str = ""
+
 
     @classmethod
     def from_dict(cls, raw: Optional[Dict[str, Any]]) -> "PluginConfig":
@@ -49,7 +46,6 @@ class PluginConfig:
         config.delay_days = max(0, int(config.delay_days or 0))
         config.selected_categories = [str(item) for item in _as_list(config.selected_categories)]
         config.search_sites = [str(item) for item in _as_list(config.search_sites)]
-        config.max_scan_subscribes = max(1, int(config.max_scan_subscribes or 1))
         config.notify_tg = bool(config.notify_tg)
         config.allow_tg_rule_update = bool(config.allow_tg_rule_update)
         config.season_pack_full_download = bool(config.season_pack_full_download)
@@ -65,20 +61,7 @@ class PluginConfig:
             for item in _as_list(config.custom_platforms)
             if str(item).strip()
         ]
-        config.default_notify_target = str(config.default_notify_target or "").strip()
-        config.notify_rules = {
-            str(key): str(value)
-            for key, value in (config.notify_rules or {}).items()
-            if str(key).strip() and str(value).strip()
-        }
-        # 兼容旧配置：notify_rules 历史值可能是以分隔符拼出的多目标，统一拆分
-        config.notify_rules = {
-            str(key): ",".join(
-                item for item in re.split(r"[,，]", str(value or ""))
-                if item.strip()
-            )
-            for key, value in config.notify_rules.items()
-        }
+
         from .season_cleanup import normalize_cleanup_mode
 
         config.season_pack_cleanup = normalize_cleanup_mode(config.season_pack_cleanup)

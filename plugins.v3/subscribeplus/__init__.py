@@ -101,7 +101,7 @@ from .scanner import (
     episodes_in_seasoninfo,
     episodes_in_transfer_history,
 )
-from .scan_batch import select_scan_batch
+
 from .season_cleanup import CLEANUP_OFF, build_cleanup_plan, build_season_pack_match, normalize_cleanup_mode, parse_season_number
 from .sites import SiteResolver
 from .storage import JsonStore
@@ -120,21 +120,25 @@ from .telegram import (
     build_rule_dictionary_menu,
     build_rule_done_menu,
     build_rule_menu,
+    build_scan_summary_menu,
     make_token,
     render_identifier_fix_result_text,
     render_notification_text,
     render_rule_preview_text,
+    render_scan_summary_text,
 )
 
 
 PLUGIN_ID = "SubscribePlus"
+TMDB_CACHE_TTL_HOURS = 6
+TMDB_CACHE_RETENTION_DAYS = 90
 
 
 class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.1"
+    plugin_version = "1.1.2"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -161,6 +165,12 @@ class SubscribePlus(_PluginBase):
             self._store.prune_candidate_cache(self._plugin_config.candidate_cache_days)
         except Exception as exc:
             logger.warning(f"订阅下载增强清理候选缓存失败：{exc}")
+        try:
+            removed = self._store.prune_tmdb_cache(TMDB_CACHE_RETENTION_DAYS)
+            if removed:
+                logger.info(f"订阅下载增强清理 TMDB 日历缓存：删除 {removed} 条超过 {TMDB_CACHE_RETENTION_DAYS} 天的记录")
+        except Exception as exc:
+            logger.warning(f"订阅下载增强清理 TMDB 日历缓存失败：{exc}")
         self._site_resolver = SiteResolver(self._load_moviepilot_search_sites)
         self._scanner = SubscriptionScanner(
             load_subscribes=self._load_subscribes,
@@ -255,10 +265,6 @@ class SubscribePlus(_PluginBase):
             {"path": "/rule_dictionary", "endpoint": self.get_rule_dictionary_api, "methods": ["GET"], "auth": "bear", "summary": "获取自定义官组和平台"},
             {"path": "/rule_dictionary", "endpoint": self.save_rule_dictionary_api, "methods": ["POST"], "auth": "bear", "summary": "保存自定义官组和平台"},
             {"path": "/diagnose_one", "endpoint": self.diagnose_one_api, "methods": ["POST"], "auth": "bear", "summary": "manual single subscribe diagnosis"},
-            {"path": "/notify_options", "endpoint": self.get_notify_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取订阅通知管理选项"},
-            {"path": "/notify_rules", "endpoint": self.save_notify_rules_api, "methods": ["POST"], "auth": "bear", "summary": "保存订阅通知映射"},
-            {"path": "/f4_options", "endpoint": self.get_f4_options_api, "methods": ["GET"], "auth": "bear", "summary": "获取 F4 系统通知目标配置"},
-            {"path": "/f4_actions", "endpoint": self.save_f4_actions_api, "methods": ["POST"], "auth": "bear", "summary": "保存 F4 系统通知目标配置"},
             {"path": "/notify_test", "endpoint": self.notify_test_api, "methods": ["POST"], "auth": "bear", "summary": "发送测试通知"},
         ]
 
@@ -353,7 +359,7 @@ class SubscribePlus(_PluginBase):
     def get_site_options_api(self) -> Dict[str, Any]:
         return {"success": True, "data": {"items": self._ensure_site_resolver().available_sites()}}
 
-    # ---------- 订阅通知管理 ----------
+    # ---------- 订阅通知投递兼容 ----------
 
     def _load_notification_channels(self) -> List[Dict[str, Any]]:
         """读取启用的消息通知渠道配置。
@@ -365,6 +371,15 @@ class SubscribePlus(_PluginBase):
         except Exception as exc:
             logger.warning(f"订阅下载增强读取通知渠道失败: {exc}")
             return []
+
+    def _load_external_notify_config(self) -> Dict[str, Any]:
+        """读取独立“我就想通知到群组！”插件保存的订阅通知映射。"""
+        try:
+            config = self.systemconfig.get("plugin.NotifyToGroupShy") or {}
+            return config if isinstance(config, dict) else {}
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取独立通知目标配置失败: {exc}")
+            return {}
         try:
             channels = []
             for conf in get_notification_configs(include_disabled=False):
@@ -459,242 +474,6 @@ class SubscribePlus(_PluginBase):
                 result.append(normalized)
         return result
 
-    def _build_notify_target_options(self) -> Dict[str, Any]:
-        """从启用通知渠道构造订阅通知目标选项（多渠道统一列表）。
-
-        每个启用的通知渠道（telegram/qqbot…）都会产出候选目标，目标值统一带
-        渠道前缀（tg:/qq:）避免不同渠道 ID 撞车。返回结构：
-        {kind, prefix, targets: [{id, title, source, channel}]}
-        其中 kind/prefix 保留主渠道（telegram 优先）信息供前端兼容展示。
-
-        :return: 多渠道目标选项字典
-        """
-        channels = self._load_notification_channels()
-        if not channels:
-            return {"kind": "", "prefix": "", "targets": []}
-        # 主渠道：优先 telegram，其次 qqbot；与 post_message 默认路由保持一致。
-        ordered = sorted(
-            channels,
-            key=lambda item: 0 if item["type"] == "telegram" else (1 if item["type"] == "qqbot" else 2),
-        )
-        primary = ordered[0]
-        primary_type = primary.get("type", "") if isinstance(primary, dict) else ""
-        targets: List[Dict[str, str]] = []
-        seen: List[str] = []
-        for channel in ordered:
-            if not isinstance(channel, dict):
-                continue
-            channel_type = str(channel.get("type") or "").strip().lower()
-            prefix = self._channel_kind(channel_type)
-            if prefix not in ("tg", "qq"):
-                continue
-            config = channel.get("config") or {}
-            channel_label = "Telegram" if prefix == "tg" else "QQ"
-            if prefix == "tg":
-                group_ids = self._split_ids(config.get("TELEGRAM_CHAT_ID"))
-                admin_ids = self._split_ids(config.get("TELEGRAM_ADMINS"))
-                user_ids = self._split_ids(config.get("TELEGRAM_USERS"))
-                for group_id in group_ids:
-                    value = f"tg:{group_id}"
-                    if value not in seen:
-                        seen.append(value)
-                        targets.append({"id": value, "title": f"[{channel_label}] 群组 {group_id}", "source": "group", "channel": "tg"})
-                for admin_id in admin_ids:
-                    value = f"tg:{admin_id}"
-                    if value not in seen:
-                        seen.append(value)
-                        targets.append({"id": value, "title": f"[{channel_label}] 管理员 {admin_id}", "source": "admin", "channel": "tg"})
-                for user_id in user_ids:
-                    value = f"tg:{user_id}"
-                    if value not in seen:
-                        seen.append(value)
-                        targets.append({"id": value, "title": f"[{channel_label}] 用户白名单 {user_id}", "source": "user", "channel": "tg"})
-            elif prefix == "qq":
-                # QQ 渠道以管理员/群 openid 为候选主体。
-                admin_ids = self._split_ids(config.get("QQBOT_ADMINS"))
-                group_ids = self._split_ids(config.get("QQ_GROUP_OPENID") or config.get("QQ_GROUP"))
-                open_ids = self._split_ids(config.get("QQ_OPENID"))
-                for group_id in group_ids:
-                    value = f"qq:group:{group_id}"
-                    if value not in seen:
-                        seen.append(value)
-                        targets.append({"id": value, "title": f"[{channel_label}] 群 {group_id}", "source": "group", "channel": "qq"})
-                for admin_id in admin_ids:
-                    value = f"qq:{admin_id}"
-                    if value not in seen:
-                        seen.append(value)
-                        targets.append({"id": value, "title": f"[{channel_label}] 管理员 {admin_id}", "source": "admin", "channel": "qq"})
-                for open_id in open_ids:
-                    value = f"qq:{open_id}"
-                    if value not in seen:
-                        seen.append(value)
-                        targets.append({"id": value, "title": f"[{channel_label}] 用户 {open_id}", "source": "user", "channel": "qq"})
-        return {
-            "kind": primary_type,
-            "prefix": self._channel_kind(primary_type),
-            "targets": targets,
-        }
-
-    def _collect_subscribe_usernames(self) -> List[str]:
-        """收集订阅归属用户（username）去重列表。"""
-        usernames: List[str] = []
-        for subscribe in self._load_subscribes() or []:
-            username = str(getattr(subscribe, "username", "") or "").strip()
-            if username and username not in usernames:
-                usernames.append(username)
-        return usernames
-
-    def get_notify_options_api(self) -> Dict[str, Any]:
-        """返回订阅通知管理所需选项：通知目标候选 + 订阅用户列表 + 现有映射。"""
-        try:
-            target_options = self._build_notify_target_options()
-            usernames = self._collect_subscribe_usernames()
-            return {
-                "success": True,
-                "data": {
-                    "channel_kind": target_options.get("kind", ""),
-                    "channel_prefix": target_options.get("prefix", ""),
-                    "channel_count": len({
-                        str(target.get("channel") or "") for target in target_options.get("targets", [])
-                        if target.get("channel")
-                    }) or (1 if target_options.get("prefix") else 0),
-                    "targets": target_options.get("targets", []),
-                    "usernames": usernames,
-                    "rules": {
-                        str(username).strip(): self._split_targets(target)
-                        for username, target in (self._plugin_config.notify_rules or {}).items()
-                        if str(username).strip() and str(target).strip()
-                    },
-                    "default_target": self._split_targets(
-                        str(self._plugin_config.default_notify_target or "").strip()
-                    ),
-                },
-            }
-        except Exception as exc:
-            logger.error(f"订阅下载增强获取通知管理选项失败: {exc}", exc_info=True)
-            return {"success": False, "message": str(exc)}
-
-    def save_notify_rules_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
-        """保存订阅通知映射与默认通知目标。
-
-        :param payload: {rules: {username: target_id}, default_target: target_id}
-        :return: {success, message}
-        """
-        payload = payload or {}
-        raw_rules = payload.get("rules") or {}
-        rules = {
-            str(username).strip(): ",".join(self._split_targets(target))
-            for username, target in raw_rules.items()
-            if str(username).strip()
-        }
-        # 去掉拆分后为空的映射（用户清空该行目标）
-        rules = {name: targets for name, targets in rules.items() if targets}
-        default_target = ",".join(self._split_targets(payload.get("default_target")))
-        try:
-            merged = self._plugin_config.to_dict()
-            merged["notify_rules"] = rules
-            merged["default_notify_target"] = default_target
-            self.update_config(merged)
-            self.init_plugin(merged)
-            return {"success": True, "message": f"已保存 {len(rules)} 条订阅通知映射（支持多目标）"}
-        except Exception as exc:
-            logger.error(f"订阅下载增强保存通知映射失败: {exc}", exc_info=True)
-            return {"success": False, "message": str(exc)}
-
-    # ---------- F4 系统通知目标面板 ----------
-
-    # F4 面板控制的三类宿主通知消息类型（中文名与宿主 MessageType/通知开关一致）
-    F4_SWITCH_TYPES: List[str] = ["资源下载", "整理入库", "订阅"]
-
-    # action 可选值：all=发群组；user,admin=用户+管理员；user=仅用户；admin=仅管理员
-    F4_ACTION_OPTIONS: List[Dict[str, str]] = [
-        {"value": "all", "title": "发群组"},
-        {"value": "user,admin", "title": "用户+管理员"},
-        {"value": "user", "title": "仅用户"},
-        {"value": "admin", "title": "仅管理员"},
-    ]
-
-    def _read_f4_actions(self) -> Dict[str, str]:
-        """读取宿主通知开关中 F4 三档的当前 action。
-
-        :return: {消息类型: action 字符串}，缺省补空串
-        """
-        result: Dict[str, str] = {}
-        try:
-            from app.db.systemconfig_oper import SystemConfigOper
-
-            oper = SystemConfigOper()
-            key = getattr(SystemConfigKey, "NotificationSwitchs", "NotificationSwitchs")
-            switches = oper.get(key) or []
-            for switch in switches or []:
-                if not isinstance(switch, dict):
-                    continue
-                stype = str(switch.get("type") or "").strip()
-                if stype in self.F4_SWITCH_TYPES:
-                    result[stype] = str(switch.get("action") or "").strip()
-        except Exception as exc:
-            logger.warning(f"订阅下载增强读取 F4 通知开关失败: {exc}")
-        for stype in self.F4_SWITCH_TYPES:
-            result.setdefault(stype, "")
-        return result
-
-    def get_f4_options_api(self) -> Dict[str, Any]:
-        """返回 F4 通知目标面板选项：三档当前 action + 可选值定义。"""
-        try:
-            current = self._read_f4_actions()
-            return {
-                "success": True,
-                "data": {
-                    "types": self.F4_SWITCH_TYPES,
-                    "options": self.F4_ACTION_OPTIONS,
-                    "current": current,
-                },
-            }
-        except Exception as exc:
-            logger.error(f"订阅下载增强获取 F4 通知目标失败: {exc}", exc_info=True)
-            return {"success": False, "message": str(exc)}
-
-    def save_f4_actions_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
-        """保存 F4 通知目标配置到宿主通知开关。
-
-        :param payload: {actions: {消息类型: action}}
-        :return: {success, message}
-        """
-        payload = payload or {}
-        raw_actions = payload.get("actions") or {}
-        valid_actions = {option["value"] for option in self.F4_ACTION_OPTIONS}
-        updates: Dict[str, str] = {}
-        for stype in self.F4_SWITCH_TYPES:
-            value = str(raw_actions.get(stype) or "").strip()
-            if value in valid_actions:
-                updates[stype] = value
-        if not updates:
-            return {"success": False, "message": "没有可保存的 F4 通知目标"}
-        try:
-            from app.db.systemconfig_oper import SystemConfigOper
-
-            oper = SystemConfigOper()
-            key = getattr(SystemConfigKey, "NotificationSwitchs", "NotificationSwitchs")
-            switches = oper.get(key) or []
-            # 保留宿主其它类型开关，仅更新 F4 三档
-            for switch in switches or []:
-                if isinstance(switch, dict) and str(switch.get("type") or "").strip() in updates:
-                    switch["action"] = updates[str(switch.get("type") or "").strip()]
-            # 宿主缺失的类型补上
-            existing_types = {
-                str(switch.get("type") or "").strip()
-                for switch in switches or []
-                if isinstance(switch, dict)
-            }
-            for stype, action in updates.items():
-                if stype not in existing_types:
-                    switches.append({"type": stype, "action": action})
-            oper.set(key, switches)
-            return {"success": True, "message": f"已保存 {len(updates)} 项 F4 通知目标"}
-        except Exception as exc:
-            logger.error(f"订阅下载增强保存 F4 通知目标失败: {exc}", exc_info=True)
-            return {"success": False, "message": str(exc)}
-
     def get_results_api(self) -> Dict[str, Any]:
         store = self._ensure_store()
         return {
@@ -768,7 +547,8 @@ class SubscribePlus(_PluginBase):
         payload = self._extract_payload(payload)
         notify_value = payload.get("notify", True)
         notify = str(notify_value).strip().lower() not in {"0", "false", "no", "off"}
-        item, error = self._build_single_diagnosis_input(payload)
+        # 单条诊断也是用户主动点击的读取入口，和“刷新日历并扫描”一样强制更新日历。
+        item, error = self._build_single_diagnosis_input(payload, force_refresh=True)
         if not item:
             return {"success": False, "count": 0, "message": error or "no diagnosable subscription item"}
 
@@ -908,17 +688,15 @@ class SubscribePlus(_PluginBase):
         resolver = self._ensure_site_resolver()
 
         results = []
-        inputs = scanner.scan(config, resolver)
+        # 手动扫描是用户明确要求刷新日历的入口；定时扫描使用固定缓存策略。
+        force_calendar_refresh = source == "manual"
+        inputs = scanner.scan(config, resolver, force_refresh=force_calendar_refresh)
         logger.info(f"订阅下载增强扫描统计：{getattr(scanner, 'last_scan_stats', {})}")
-        cursor = store.load_scan_cursor()
-        batch, next_cursor = select_scan_batch(inputs, config.max_scan_subscribes, cursor)
-        store.save_scan_cursor(next_cursor)
         logger.info(
-            "订阅下载增强扫描批次："
-            f"候选={len(inputs)}，本批={len(batch)}，起点={cursor}，下次起点={next_cursor}，"
-            f"订阅={[item.title for item in batch]}"
+            "订阅下载增强扫描结果："
+            f"候选={len(inputs)}，本轮全部处理，订阅={[item.title for item in inputs]}"
         )
-        for item in batch:
+        for item in inputs:
             diagnosis = self._diagnose_item(item)
             if not diagnosis:
                 continue
@@ -929,7 +707,11 @@ class SubscribePlus(_PluginBase):
             self._notify_each_show(results)
         return {"success": True, "count": len(results), "source": source}
 
-    def _build_single_diagnosis_input(self, payload: Dict[str, Any]) -> Tuple[Optional[DiagnosisInput], str]:
+    def _build_single_diagnosis_input(
+        self,
+        payload: Dict[str, Any],
+        force_refresh: bool = False,
+    ) -> Tuple[Optional[DiagnosisInput], str]:
         subscribe_id = safe_int(payload.get("subscribe_id") or payload.get("sid") or payload.get("id"), 0)
         if not subscribe_id:
             return None, "missing subscribe_id"
@@ -959,7 +741,12 @@ class SubscribePlus(_PluginBase):
             if downloaded:
                 return None, f"{title} S{season:02d}E{episode_number:02d} is already downloaded"
             air_date = ""
-            for episode in self._load_tmdb_episodes(tmdbid, season, episode_group):
+            for episode in self._load_tmdb_episodes(
+                tmdbid,
+                season,
+                episode_group,
+                force_refresh=force_refresh,
+            ):
                 number = safe_int(episode.get("episode_number") or episode.get("episode"), 0)
                 if number == episode_number:
                     air_date = str(episode.get("air_date") or "")
@@ -997,7 +784,11 @@ class SubscribePlus(_PluginBase):
             resolve_subscribe_category=self._resolve_subscribe_category,
             load_downloaded_episodes=self._load_downloaded_episodes,
         )
-        inputs = scanner.scan(single_config, self._ensure_site_resolver())
+        inputs = scanner.scan(
+            single_config,
+            self._ensure_site_resolver(),
+            force_refresh=force_refresh,
+        )
         if not inputs:
             return None, f"{title or subscribe_id} has no stale episode to diagnose"
         return inputs[0], ""
@@ -1454,8 +1245,36 @@ class SubscribePlus(_PluginBase):
             if store.is_notification_suppressed(ignore_key):
                 continue
             pending.append(item)
-        store.save_notification_queue(pending)
-        self._notify_next_queued_show()
+        if not pending:
+            return
+
+        # 扫描结果不再按队列逐条弹出。按通知目标分组，保证不同订阅用户的
+        # 映射仍然生效；同一目标只收到一条本轮扫描汇总消息。
+        groups: Dict[Tuple[str, ...], List[Dict[str, Any]]] = {}
+        for item in pending:
+            targets = tuple(self._resolve_notify_userids(item))
+            groups.setdefault(targets, []).append(item)
+        for userids, items in groups.items():
+            self._notify_scan_summary(items, list(userids))
+
+    def _notify_scan_summary(self, items: List[Dict[str, Any]], userids: List[str]) -> None:
+        """发送一条扫描结果汇总，并保存编号选择所需的交互状态。
+
+        :param items: 当前通知目标对应的诊断项
+        :param userids: Telegram 通知目标列表
+        """
+        summary_token = self._save_scan_summary(items)
+        message_kwargs = {
+            "mtype": NotificationType.Plugin if NotificationType else None,
+            "title": "订阅下载增强：扫描结果",
+            "text": render_scan_summary_text(items),
+            "buttons": build_scan_summary_menu(summary_token, len(items)),
+            "save_history": False,
+        }
+        try:
+            self._post_message_to_targets(userids, message_kwargs)
+        except Exception as exc:
+            logger.warning(f"订阅下载增强发送扫描汇总失败: {exc}")
 
     @staticmethod
     def _notification_title(item: Any = None) -> str:
@@ -1566,7 +1385,8 @@ class SubscribePlus(_PluginBase):
 
         :return: 目标 userid 列表；无可用目标返回空列表
         """
-        targets = self._split_targets(str(self._plugin_config.default_notify_target or "").strip())
+        external_config = self._load_external_notify_config()
+        targets = self._split_targets(str(external_config.get("default_notify_target") or "").strip())
         if not targets:
             fallback = self._default_group_chat_id()
             targets = [fallback] if fallback else []
@@ -1588,7 +1408,7 @@ class SubscribePlus(_PluginBase):
         :return: 目标 userid 列表；无可用目标返回空列表
         """
         username = str(item.get("username") or "").strip()
-        rules = self._plugin_config.notify_rules or {}
+        rules = self._load_external_notify_config().get("notify_rules") or {}
         raw_targets: List[str] = []
         if username:
             raw_targets = self._split_targets(str(rules.get(username) or "").strip())
@@ -1704,8 +1524,14 @@ class SubscribePlus(_PluginBase):
         op, _, token = command.partition(":")
         logger.info(f"订阅下载增强处理 Telegram 回调：{op}:{token}")
         if op == "close":
+            state = self._ensure_store().load_interaction(token)
             self._ensure_store().delete_interaction(token)
-            if token != "spmenu":
+            if state and state.get("summary_token"):
+                self._ensure_store().delete_interaction(str(state.get("summary_token")))
+            elif state and state.get("view") == "scan_summary":
+                # 新的扫描汇总关闭后只删除这条汇总消息，不推进旧式通知队列。
+                pass
+            elif token != "spmenu":
                 self._notify_next_queued_show()
             if not self._delete_callback_message(event_data):
                 self._post_callback_message(event_data, title="订阅下载增强", text="已关闭本次交互。", save_history=False)
@@ -1713,6 +1539,48 @@ class SubscribePlus(_PluginBase):
         state = self._ensure_store().load_interaction(token)
         if not state:
             self._post_callback_message(event_data, title="订阅下载增强", text="交互已过期，请重新扫描。", save_history=False)
+            return
+
+        if op == "summary":
+            summary_token = str(state.get("summary_token") or "").strip()
+            summary_state = self._ensure_store().load_interaction(summary_token) if summary_token else None
+            if not summary_state or summary_state.get("view") != "scan_summary":
+                self._post_callback_message(event_data, title="订阅下载增强", text="扫描汇总已过期，请重新扫描。", save_history=False)
+                return
+            self._ensure_store().delete_interaction(token)
+            items = summary_state.get("items") or []
+            self._post_callback_message(
+                event_data,
+                title="订阅下载增强：扫描结果",
+                text=render_scan_summary_text(items),
+                buttons=build_scan_summary_menu(summary_token, len(items)),
+                save_history=False,
+            )
+            return
+
+        if op.startswith("show") and op[4:].isdigit() and state.get("view") == "scan_summary":
+            index = int(op[4:]) - 1
+            items = state.get("items") or []
+            if not (0 <= index < len(items)):
+                self._post_callback_message(event_data, title="订阅下载增强", text="汇总中的项目不存在。", save_history=False)
+                return
+            diagnosis = items[index]
+            detail_token = self._save_interaction(diagnosis, summary_token=token)
+            self._post_callback_message(
+                event_data,
+                title=self._notification_title(diagnosis),
+                text=render_notification_text(diagnosis),
+                buttons=build_main_menu(
+                    detail_token,
+                    self._plugin_config.allow_tg_rule_update,
+                    can_identifier_fix=diagnosis.get("reason") == "recognition_issue",
+                    candidate_count=len(diagnosis.get("candidates") or []),
+                    search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
+                    notification_suppression_days=self._plugin_config.notification_suppression_days,
+                    summary_token=token,
+                ),
+                save_history=False,
+            )
             return
 
         diagnosis = state.get("diagnosis") or {}
@@ -1747,6 +1615,7 @@ class SubscribePlus(_PluginBase):
                     candidate_count=len(diagnosis.get("candidates") or []),
                     search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                     notification_suppression_days=self._plugin_config.notification_suppression_days,
+                    summary_token=state.get("summary_token") or "",
                 ),
                 save_history=False,
             )
@@ -1765,6 +1634,7 @@ class SubscribePlus(_PluginBase):
                     candidate_page=page,
                     search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                     notification_suppression_days=self._plugin_config.notification_suppression_days,
+                    summary_token=state.get("summary_token") or "",
                 ),
                 save_history=False,
             )
@@ -1891,6 +1761,7 @@ class SubscribePlus(_PluginBase):
                             candidate_count=len(diagnosis.get("candidates") or []),
                             search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                             notification_suppression_days=self._plugin_config.notification_suppression_days,
+                            summary_token=state.get("summary_token") or "",
                         ),
                         save_history=False,
                     )
@@ -1946,6 +1817,7 @@ class SubscribePlus(_PluginBase):
                     candidate_count=len(diagnosis.get("candidates") or []),
                     search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                     notification_suppression_days=self._plugin_config.notification_suppression_days,
+                    summary_token=state.get("summary_token") or "",
                 ),
                 save_history=False,
             )
@@ -2162,6 +2034,7 @@ class SubscribePlus(_PluginBase):
                     candidate_count=len(diagnosis.get("candidates") or []),
                     search_keyword_suggestion=diagnosis.get("search_keyword_suggestion") or "",
                     notification_suppression_days=self._plugin_config.notification_suppression_days,
+                    summary_token=state.get("summary_token") or "",
                 ),
                 save_history=False,
             )
@@ -3814,7 +3687,13 @@ class SubscribePlus(_PluginBase):
             "data": {"added": [], "recheck": recheck},
         }
 
-    def _save_interaction(self, diagnosis: Dict[str, Any]) -> str:
+    def _save_interaction(self, diagnosis: Dict[str, Any], summary_token: str = "") -> str:
+        """保存单条诊断交互，可选记录返回的扫描汇总 token。
+
+        :param diagnosis: 单条诊断项
+        :param summary_token: 来源扫描汇总 token
+        :return: 单条详情交互 token
+        """
         token = make_token(
             {
                 "subscribe_id": diagnosis.get("subscribe_id"),
@@ -3823,11 +3702,45 @@ class SubscribePlus(_PluginBase):
                 "created_at": diagnosis.get("created_at"),
             }
         )
+        state = {
+            "view": "main",
+            "diagnosis": diagnosis,
+            "expires_at": (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds"),
+        }
+        if summary_token:
+            state["summary_token"] = summary_token
+        self._ensure_store().save_interaction(
+            token,
+            state,
+        )
+        return token
+
+    def _save_scan_summary(self, items: List[Dict[str, Any]]) -> str:
+        """保存一次扫描的汇总状态并返回汇总 token。
+
+        :param items: 扫描诊断项列表
+        :return: 汇总交互 token
+        """
+        created_at = datetime.now().isoformat(timespec="microseconds")
+        token = make_token(
+            {
+                "view": "scan_summary",
+                "created_at": created_at,
+                "items": [
+                    {
+                        "subscribe_id": item.get("subscribe_id"),
+                        "season": item.get("season"),
+                        "created_at": item.get("created_at"),
+                    }
+                    for item in items
+                ],
+            }
+        )
         self._ensure_store().save_interaction(
             token,
             {
-                "view": "main",
-                "diagnosis": diagnosis,
+                "view": "scan_summary",
+                "items": items,
                 "expires_at": (datetime.now() + timedelta(hours=12)).isoformat(timespec="seconds"),
             },
         )
@@ -4108,10 +4021,35 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强识别订阅分类失败 {subscribe_label}: {exc}")
         return None
 
-    def _load_tmdb_episodes(self, tmdbid: int, season: int, episode_group: Optional[str]) -> List[Dict[str, Any]]:
+    @staticmethod
+    def _tmdb_cache_is_fresh(cached: Optional[Dict[str, Any]], cache_hours: int = TMDB_CACHE_TTL_HOURS) -> bool:
+        """判断插件保存的 TMDB 季集日历是否仍在配置的缓存期限内。"""
+        if not isinstance(cached, dict) or cache_hours <= 0:
+            return False
+        updated_at = cached.get("updated_at")
+        if not updated_at:
+            return False
+        try:
+            return datetime.fromisoformat(str(updated_at)) >= datetime.now() - timedelta(hours=cache_hours)
+        except (TypeError, ValueError):
+            return False
+
+    def _load_tmdb_episodes(
+        self,
+        tmdbid: int,
+        season: int,
+        episode_group: Optional[str],
+        force_refresh: bool = False,
+    ) -> List[Dict[str, Any]]:
+        """读取某季日历，按缓存期限自动更新，手动扫描可强制刷新。"""
         cache_key = f"{tmdbid}:{season}:{episode_group or ''}"
         cached = self._ensure_store().load_tmdb_cache(cache_key)
-        if cached and cached.get("episodes"):
+        cached_episodes = cached.get("episodes") if isinstance(cached, dict) else None
+        if (
+            not force_refresh
+            and isinstance(cached_episodes, list)
+            and self._tmdb_cache_is_fresh(cached)
+        ):
             return cached["episodes"]
         try:
             from app.chain.tmdb import TmdbChain
@@ -4131,6 +4069,9 @@ class SubscribePlus(_PluginBase):
             return normalized
         except Exception as exc:
             logger.warning(f"订阅下载增强读取 TMDB 剧集失败 TMDB={tmdbid} S{season}: {exc}")
+            # TMDB 临时不可用时保留旧日历，避免一次网络故障让扫描结果整体消失。
+            if isinstance(cached_episodes, list):
+                return cached_episodes
             return []
 
     @staticmethod

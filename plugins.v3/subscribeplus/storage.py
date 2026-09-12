@@ -166,6 +166,27 @@ class JsonStore:
     def load_tmdb_cache(self, key: str) -> Optional[Dict[str, Any]]:
         return self._read("tmdb_cache.json", {}).get(key)
 
+    def prune_tmdb_cache(self, retention_days: int = 90) -> int:
+        """清理超过保留期限的 TMDB 季集日历缓存记录。"""
+        cache = self._read("tmdb_cache.json", {})
+        if not isinstance(cache, dict):
+            return 0
+        cutoff = datetime.now() - timedelta(days=max(0, int(retention_days or 0)))
+        removed = 0
+        for key in list(cache.keys()):
+            payload = cache.get(key)
+            updated_at = payload.get("updated_at") if isinstance(payload, dict) else None
+            try:
+                expired = not updated_at or datetime.fromisoformat(str(updated_at)) < cutoff
+            except (TypeError, ValueError):
+                expired = True
+            if expired:
+                cache.pop(key, None)
+                removed += 1
+        if removed:
+            self._write("tmdb_cache.json", cache)
+        return removed
+
 
     def save_notification_queue(self, items: List[Dict[str, Any]]):
         self._write("notification_queue.json", items or [])

@@ -11,8 +11,6 @@ export const groups = [
   { key: 'identifier', title: '识别词工具', icon: 'mdi-tag-plus-outline', desc: '按 TMDB 强制绑定媒体或修正年份。' },
   { key: 'rules', title: '规则记录', icon: 'mdi-history', desc: '订阅规则修改历史。' },
   { key: 'scan', title: '扫描设置', icon: 'mdi-tune-variant', desc: '订阅扫描周期、宽限天数与站点范围。' },
-  { key: 'notify', title: '通知权限', icon: 'mdi-message-badge-outline', desc: 'Telegram 通知、重复提醒抑制与规则修改授权。' },
-  { key: 'notify_rules', title: 'F4通知目标面板', icon: 'mdi-bell-cog-outline', desc: '系统通知(入库/下载/订阅)目标 + 订阅用户映射。' },
   { key: 'cleanup', title: '清理与候选', icon: 'mdi-broom', desc: '整季包清理与候选下载缓存。' },
 ]
 
@@ -34,16 +32,13 @@ export const fields = [
     label: '宽限天数', min: 0, unit: '天', cols: { md: 4 },
     hint: '单集播出超过 N 天仍未入库才触发诊断',
   },
+
   {
     key: 'cron', group: 'scan', section: '扫描窗口', type: 'text',
     label: 'Cron', cols: { md: 4 },
     hint: '每 6 小时建议写 0 */6 * * *', validate: 'cron',
   },
-  {
-    key: 'max_scan_subscribes', group: 'scan', section: '扫描窗口', type: 'number',
-    label: '订阅部数通知上限', min: 1, unit: '部', cols: { md: 4 },
-    hint: '单次扫描最多通知的订阅部数',
-  },
+
   {
     key: 'selected_categories', group: 'scan', section: '扫描范围', type: 'multiselect',
     label: '二级分类', optionsKey: 'categories', cols: { md: 6 },
@@ -53,24 +48,6 @@ export const fields = [
     key: 'search_sites', group: 'scan', section: '扫描范围', type: 'multiselect',
     label: 'PT搜索范围', optionsKey: 'sites', clearable: true, cols: { md: 6 },
     hint: '插件诊断搜索的站点，留空用 MP 默认搜索站点',
-  },
-
-  // ---- 通知权限 ----
-  {
-    key: 'notify_tg', group: 'notify', section: '通知渠道', type: 'switch',
-    label: 'Telegram 独立通知', color: 'primary', cols: { md: 6 },
-    hint: '每部剧单独发送 Telegram 诊断通知',
-  },
-  {
-    key: 'allow_tg_rule_update', group: 'notify', section: '授权', type: 'switch',
-    label: '允许 TG 修改订阅规则', color: 'warning', cols: { md: 6 },
-    hint: '开启后可在 Telegram 交互中直接写入订阅过滤规则',
-    alert: '开启后可通过 Telegram 交互直接调整订阅过滤规则，请谨慎授权。',
-  },
-  {
-    key: 'notification_suppression_days', group: 'notify', section: '重复提醒抑制', type: 'number',
-    label: '不通知天数', min: 0, unit: '天', cols: { md: 6 },
-    hint: '同一诊断选择“不通知”后，在此期限内不再重复提醒；0 表示关闭',
   },
 
   // ---- 清理与候选 ----
@@ -104,13 +81,10 @@ export const defaults = {
   cron: '0 9 * * *',
   selected_categories: [],
   search_sites: [],
-  max_scan_subscribes: 20,
-  notify_tg: true,
-  allow_tg_rule_update: false,
+
   season_pack_cleanup: 'off',
   season_pack_full_download: false,
   candidate_cache_days: 3,
-  notification_suppression_days: 3,
   custom_release_groups: [],
   custom_platforms: [],
 }
