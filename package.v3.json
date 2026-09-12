@@ -74,7 +74,7 @@
   "NotifyToGroupShy": {
     "name": "我就想通知到群组！",
     "description": "独立管理资源入库、资源下载及添加订阅/订阅完成的系统通知目标。",
-    "icon": "",
+    "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/notifytogroupshy.png",
     "version": "0.0.1",
     "author": "shyblacktea",
     "level": 1,
