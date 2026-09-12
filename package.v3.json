@@ -70,5 +70,18 @@
     "history": {
       "v0.0.1": "fix: 适配 MoviePilot V3 媒体身份 API，修复 DownloadHistory.tmdbid 与 TransferHistoryOper.get_by_type_tmdbid 报错；feat: 由路径名称格式化改造为独立插件「下载目录滤镜」，首次加载自动迁移原插件配置与处理记录。"
     }
+  },
+  "NotifyToGroupShy": {
+    "name": "我就想通知到群组！",
+    "description": "独立管理资源入库、资源下载及添加订阅/订阅完成的系统通知目标。",
+    "icon": "",
+    "version": "0.0.1",
+    "author": "shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "v0.0.1": "新增：承载完整 F4 通知目标面板，独立管理系统通知目标与订阅用户通知映射。"
+    }
   }
 }
