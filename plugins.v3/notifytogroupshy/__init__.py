@@ -21,7 +21,7 @@ class NotifyToGroupShy(_PluginBase):
 
     plugin_name = "我就想通知到群组！"
     plugin_desc = "管理资源入库、资源下载、添加订阅/订阅完成及订阅用户通知目标。"
-    plugin_icon = ""
+    plugin_icon = "notifytogroupshy.png"
     plugin_version = "0.0.1"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
