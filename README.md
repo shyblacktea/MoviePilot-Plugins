@@ -14,6 +14,7 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 
 ### 工具类
 
+- [我就想通知到群组！](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/notifytogroupshy)：独立管理资源入库、资源下载及添加订阅/订阅完成的系统通知目标。
 - [清理无效插件](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/cleaninvalidplugin)：扫描、清理或重新安装数据库中无法加载的插件记录。
 - [下载目录滤镜](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/downloaddirfilter)：根据自定义格式修改MP下载种子的保存路径、种子名称。
 
