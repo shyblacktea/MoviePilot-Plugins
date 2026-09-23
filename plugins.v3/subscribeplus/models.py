@@ -168,6 +168,7 @@ class DiagnosisItem:
     subscription_site_progress: List[Dict[str, Any]] = field(default_factory=list)
     search_keyword_suggestion: str = ""
     username: str = ""
+    search_stats: Dict[str, int] = field(default_factory=dict)
     created_at: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
 
     def to_dict(self) -> Dict[str, Any]:
