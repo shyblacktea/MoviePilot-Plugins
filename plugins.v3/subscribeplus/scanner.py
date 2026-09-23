@@ -6,6 +6,7 @@ from typing import Any, Callable, Dict, Iterable, List, Optional
 
 from .models import DiagnosisInput, PluginConfig, StaleEpisode
 from .sites import SiteResolver
+from .models import normalize_identity, subscribe_identity
 
 
 RECENT_GAP_LOOKBACK = 2
@@ -13,10 +14,19 @@ RECENT_GAP_LOOKBACK = 2
 
 UNCATEGORIZED = "未分类"
 TV_TYPE_VALUES = {"电视剧", "tv", "episode"}
+TMDB_SOURCE_VALUES = {"themoviedb", "tmdb"}
 
 
 def normalize_category(category: Optional[str]) -> str:
     return str(category).strip() if category else UNCATEGORIZED
+
+
+def _tmdbid_of(media_source: str, media_id: str) -> int:
+    """仅在 TMDB 来源下把原生 ID 暴露为 tmdbid，其他来源返回 0。"""
+    if str(media_source or "").strip().lower() not in TMDB_SOURCE_VALUES:
+        return 0
+    raw = str(media_id or "").strip()
+    return int(raw) if raw.isdigit() else 0
 
 
 def _ordered_unique(values: Iterable[Any]) -> List[str]:
@@ -68,10 +78,10 @@ def _season_value(item: Dict[str, Any]) -> Optional[int]:
 
 
 def episode_in_transfer_history(
-    histories: Iterable[Dict[str, Any]], tmdbid: int, season: int, episode: int
+    histories: Iterable[Dict[str, Any]], media_source: str, media_id: str, season: int, episode: int
 ) -> bool:
     for item in histories:
-        if int(item.get("tmdbid") or 0) != int(tmdbid):
+        if not _history_identity_matches(item, media_source, media_id):
             continue
         if _season_value(item) != int(season):
             continue
@@ -101,10 +111,12 @@ def episodes_in_seasoninfo(seasoninfo: Any, season: int) -> set[int]:
     return episodes
 
 
-def episodes_in_transfer_history(histories: Iterable[Dict[str, Any]], tmdbid: int, season: int) -> set[int]:
+def episodes_in_transfer_history(
+    histories: Iterable[Dict[str, Any]], media_source: str, media_id: str, season: int
+) -> set[int]:
     episodes: set[int] = set()
     for item in histories:
-        if int(item.get("tmdbid") or 0) != int(tmdbid):
+        if not _history_identity_matches(item, media_source, media_id):
             continue
         if _season_value(item) != int(season):
             continue
@@ -112,18 +124,35 @@ def episodes_in_transfer_history(histories: Iterable[Dict[str, Any]], tmdbid: in
     return episodes
 
 
+def _history_identity_matches(item: Dict[str, Any], media_source: str, media_id: str) -> bool:
+    """按规范媒体身份匹配整理历史，兼容旧记录仅保存 TMDB ID 的形态。"""
+    source, identity = normalize_identity(
+        item.get("media_source") or item.get("source"),
+        item.get("media_id"),
+    )
+    if source and identity:
+        return source == str(media_source or "").strip().lower() and identity == str(media_id or "").strip()
+    legacy = str(item.get("tmdbid") or "").strip()
+    if legacy and legacy != "0":
+        return legacy == str(media_id or "").strip()
+    return False
+
+
 class SubscriptionScanner:
     def __init__(
         self,
         load_subscribes: Callable[[], List[Any]],
-        load_tmdb_episodes: Callable[..., List[Dict[str, Any]]],
-        is_episode_downloaded: Callable[[int, int, int], tuple[bool, str]],
+        load_episodes: Callable[..., List[Dict[str, Any]]],
+        is_episode_downloaded: Callable[[str, str, int, int], tuple[bool, str]],
         load_categories: Optional[Callable[[], List[Any]]] = None,
         resolve_subscribe_category: Optional[Callable[[Any], Optional[str]]] = None,
-        load_downloaded_episodes: Optional[Callable[[int, int], set[int]]] = None,
+        load_downloaded_episodes: Optional[Callable[[str, str, int], set[int]]] = None,
+        load_tmdb_episodes: Optional[Callable[..., List[Dict[str, Any]]]] = None,
     ):
         self.load_subscribes = load_subscribes
-        self.load_tmdb_episodes = load_tmdb_episodes
+        # load_tmdb_episodes 为旧参数名，保留以便外部按旧签名构造扫描器。
+        self.load_episodes = load_episodes or load_tmdb_episodes
+        self.load_tmdb_episodes = self.load_episodes
         self.is_episode_downloaded = is_episode_downloaded
         self.load_categories = load_categories
         self.resolve_subscribe_category = resolve_subscribe_category
@@ -161,11 +190,12 @@ class SubscriptionScanner:
             if not self._is_tv(subscribe):
                 stats["non_tv"] += 1
                 continue
-            tmdbid = int(getattr(subscribe, "tmdbid", 0) or getattr(subscribe, "media_id", 0) or 0)
+            # V3 起订阅主身份为 media_source + media_id；tmdbid 仅作旧宿主回落。
+            media_source, media_id = subscribe_identity(subscribe)
             season_raw = getattr(subscribe, "season", 0) or getattr(subscribe, "seasons", 0) or 0
             season_match = re.search(r"\d+", str(season_raw))
             season = int(season_match.group(0)) if season_match else 0
-            if not tmdbid or not season:
+            if not media_id or not season:
                 stats["missing_identity"] += 1
                 continue
             category = self._subscribe_category(subscribe)
@@ -174,13 +204,14 @@ class SubscriptionScanner:
                 continue
 
             stale_episodes = []
-            downloaded_episodes = self._downloaded_episodes(tmdbid, season)
+            downloaded_episodes = self._downloaded_episodes(media_source, media_id, season)
             start_episode = int(getattr(subscribe, "start_episode", 0) or 0)
             latest_downloaded_episode = max(downloaded_episodes or {0})
             recent_threshold = max(start_episode - 1, latest_downloaded_episode - RECENT_GAP_LOOKBACK)
             episode_group = getattr(subscribe, "episode_group", None)
-            for episode in self.load_tmdb_episodes(
-                tmdbid,
+            for episode in self.load_episodes(
+                media_source,
+                media_id,
                 season,
                 episode_group,
                 force_refresh=force_refresh,
@@ -193,7 +224,9 @@ class SubscriptionScanner:
                     continue
                 if not should_check_episode(air_date, config.delay_days, today):
                     continue
-                downloaded, evidence = self.is_episode_downloaded(tmdbid, season, episode_number)
+                downloaded, evidence = self.is_episode_downloaded(
+                    media_source, media_id, season, episode_number
+                )
                 if downloaded:
                     downloaded_episodes.add(episode_number)
                     recent_threshold = max(recent_threshold, episode_number)
@@ -212,9 +245,11 @@ class SubscriptionScanner:
                     DiagnosisInput(
                         subscribe_id=int(getattr(subscribe, "id", 0) or 0),
                         title=str(getattr(subscribe, "name", "") or getattr(subscribe, "title", "")),
-                        tmdbid=tmdbid,
+                        tmdbid=_tmdbid_of(media_source, media_id),
                         season=season,
                         category=category,
+                        media_source=media_source,
+                        media_id=media_id,
                         include=str(getattr(subscribe, "include", "") or ""),
                         sites=site_resolver.resolve_for_category(config, category),
                         episodes=stale_episodes,
@@ -249,10 +284,14 @@ class SubscriptionScanner:
             return normalize_category(self.resolve_subscribe_category(subscribe))
         return UNCATEGORIZED
 
-    def _downloaded_episodes(self, tmdbid: int, season: int) -> set[int]:
+    def _downloaded_episodes(self, media_source: str, media_id: str, season: int) -> set[int]:
         if not self.load_downloaded_episodes:
             return set()
         try:
-            return {int(item) for item in (self.load_downloaded_episodes(tmdbid, season) or set()) if int(item or 0) > 0}
+            return {
+                int(item)
+                for item in (self.load_downloaded_episodes(media_source, media_id, season) or set())
+                if int(item or 0) > 0
+            }
         except Exception:
             return set()
