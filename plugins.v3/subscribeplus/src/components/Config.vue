@@ -279,7 +279,7 @@
               </section>
             </div>
 
-            <!-- ===== 元数据驱动的配置 tab（scan/cleanup）===== -->
+            <!-- ===== 元数据驱动的配置 tab（scan/notify/cleanup）===== --><!-- ===== 元数据驱动的配置 tab（scan/notify/cleanup）===== -->
             <div v-for="groupKey in configGroupKeys" v-show="activeGroup === groupKey" :key="groupKey" class="sp-pane">
               <section v-for="(section, sIdx) in sectionsOf(groupKey)" :key="section.title" class="sp-config-section">
                 <div class="sp-section-title">{{ (sIdx + 1) + '. ' + section.title }}</div>
@@ -292,7 +292,7 @@
                     <div class="sp-field-control" :class="'sp-ctl-' + field.type">
                       <VSwitch v-if="field.type === 'switch'" v-model="config[field.key]" :color="field.color || 'primary'" inset hide-details density="compact" />
                       <VTextField v-else-if="field.type === 'number'" v-model.number="config[field.key]" type="number" :min="field.min" variant="outlined" density="compact" hide-details rounded="lg" />
-                      <VTextField v-else-if="field.type === 'text'" v-model="config[field.key]" variant="outlined" density="compact" hide-details="auto" rounded="lg" :error-messages="field.validate === 'cron' ? cronError : ''" />
+                      <VTextField v-else-if="field.type === 'text'" v-model="config[field.key]" :type="field.secret ? 'password' : 'text'" :autocomplete="field.secret ? 'new-password' : undefined" variant="outlined" density="compact" hide-details="auto" rounded="lg" :error-messages="field.validate === 'cron' ? cronError : ''" />
                       <VSelect v-else-if="field.type === 'select'" v-model="config[field.key]" :items="field.options" item-title="title" item-value="value" variant="outlined" density="compact" hide-details rounded="lg" />
                       <VSelect v-else-if="field.type === 'multiselect'" v-model="config[field.key]" :items="optionsFor(field)" item-title="title" item-value="value" variant="outlined" density="compact" multiple chips closable-chips :clearable="field.clearable" hide-details rounded="lg" />
                     </div>
@@ -311,7 +311,7 @@
                 <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-sync-outline" /><span>定时扫描</span><strong>{{ scanScheduleText }}</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-refresh-outline" /><span>日历读取</span><strong>自动每 6 小时检查；手动强制刷新</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-alert-outline" /><span>超期检测</span><strong>播出后 {{ config.delay_days }} 天</strong></div>
-                <div class="sp-dashboard-row"><VIcon icon="mdi-message-processing-outline" /><span>通知方式</span><strong>队列逐条</strong></div>
+                <div class="sp-dashboard-row"><VIcon icon="mdi-message-processing-outline" /><span>通知方式</span><strong>按通知目标分组汇总</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-database-clock-outline" /><span>候选缓存</span><strong>{{ candidateCacheText }}</strong></div>
               </section>
 
@@ -322,7 +322,7 @@
                 <div class="sp-dashboard-row"><VIcon icon="mdi-history" /><span>最近扫描</span><strong>{{ lastScanText }}</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-timer-sand" /><span>待处理</span><strong>{{ items.length }}</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-download-box-outline" /><span>候选资源</span><strong>{{ candidateTotal }}</strong></div>
-                <div class="sp-dashboard-row"><VIcon icon="mdi-toggle-switch-outline" /><span>已启用功能</span><strong>{{ enabledFeatureCount }}/6</strong></div>
+                <div class="sp-dashboard-row"><VIcon icon="mdi-toggle-switch-outline" /><span>已启用功能</span><strong>{{ enabledFeatureCount }}/5</strong></div>
               </section>
             </aside>
           </div>
@@ -516,7 +516,7 @@ const categories = ref([])
 const siteOptions = ref([])
 
 const currentGroup = computed(() => groups.find(g => g.key === activeGroup.value) || groups[0])
-const configGroupKeys = ['scan', 'cleanup']
+const configGroupKeys = ['scan', 'notify', 'cleanup']
 
 const reasonCount = computed(() => items.value.reduce((acc, item) => {
   acc[item.reason] = (acc[item.reason] || 0) + 1
@@ -530,8 +530,9 @@ const candidateTotal = computed(() => items.value.reduce(
 
 const enabledFeatureCount = computed(() => [
   Boolean(config.enabled),
-  config.season_pack_cleanup !== 'off',
-  Boolean(config.season_pack_full_download),
+  Boolean(config.notify_tg),
+  Boolean(config.allow_tg_rule_update),
+  Boolean(config.season_pack_enabled),
   Number(config.candidate_cache_days) > 0,
 ].filter(Boolean).length)
 
@@ -633,6 +634,17 @@ function identifierStatusColor(statusValue) {
 
 function applyInitialConfig(source = props.initialConfig) {
   const initial = source && typeof source === 'object' ? source : {}
+  const legacyCleanup = String(initial.season_pack_cleanup || 'off').toLowerCase()
+  const seasonPackEnabled = initial.season_pack_enabled === undefined
+    ? Boolean(
+        initial.season_pack_full_download
+        || initial.season_pack_replace_enabled
+        || legacyCleanup !== 'off'
+        || String(initial.season_pack_qb_cleanup || 'off').toLowerCase() !== 'off'
+      )
+    : Boolean(initial.season_pack_enabled)
+  const seasonPackQbCleanup = initial.season_pack_qb_cleanup
+    || (initial.season_pack_replace_delete_qb ? 'task' : 'off')
   Object.assign(config, {
     ...config,
     ...initial,
@@ -642,12 +654,18 @@ function applyInitialConfig(source = props.initialConfig) {
     search_sites: Array.isArray(initial.search_sites)
       ? [...initial.search_sites]
       : [],
-    season_pack_cleanup: initial.season_pack_cleanup || 'off',
-    season_pack_full_download: Boolean(initial.season_pack_full_download),
+    season_pack_enabled: seasonPackEnabled,
+    season_pack_qb_cleanup: seasonPackQbCleanup,
+    mv3_url: initial.mv3_url || '',
+    mv3_api_token: initial.mv3_api_token || '',
     candidate_cache_days:
       initial.candidate_cache_days === undefined || initial.candidate_cache_days === null
         ? 3
         : Number(initial.candidate_cache_days),
+    notification_suppression_days:
+      initial.notification_suppression_days === undefined || initial.notification_suppression_days === null
+        ? 3
+        : Number(initial.notification_suppression_days),
     custom_release_groups: normalizedDictionaryList(initial.custom_release_groups),
     custom_platforms: normalizedDictionaryList(initial.custom_platforms),
   })
@@ -949,16 +967,25 @@ async function confirmRule() {
 }
 
 function buildConfigPayload() {
-  return {
+  const payload = {
     ...config,
     delay_days: Number(config.delay_days),
 
     candidate_cache_days: Number(config.candidate_cache_days),
+    notification_suppression_days: Number(config.notification_suppression_days),
     search_sites: Array.isArray(config.search_sites) ? [...config.search_sites] : [],
     selected_categories: Array.isArray(config.selected_categories) ? [...config.selected_categories] : [],
     custom_release_groups: normalizedDictionaryList(config.custom_release_groups),
     custom_platforms: normalizedDictionaryList(config.custom_platforms),
   }
+  for (const key of [
+    'season_pack_cleanup',
+    'season_pack_full_download',
+    'season_pack_replace_enabled',
+    'season_pack_replace_delete_qb',
+    'season_pack_replace_delay_days',
+  ]) delete payload[key]
+  return payload
 }
 
 async function saveConfig() {
