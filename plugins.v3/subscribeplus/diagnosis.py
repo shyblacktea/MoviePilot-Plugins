@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 from .models import DiagnosisInput, DiagnosisItem
@@ -37,6 +37,7 @@ class DiagnosisResult:
     reason: str
     candidates: List[Dict[str, Any]]
     message: str
+    stats: Dict[str, int] = field(default_factory=dict)
 
 
 def extract_season_episode(title: str) -> Tuple[Optional[int], Optional[int]]:
@@ -196,28 +197,42 @@ def classify_results(
 ) -> DiagnosisResult:
     normalized = [normalize_search_result(item) for item in results]
     target_episodes = _target_episode_set(episode)
+    season_hits = [
+        item for item in normalized
+        if int(item.get("season") or season) in (0, int(season))
+    ]
     episode_hits = [
-        item
-        for item in normalized
+        item for item in season_hits
         if _matches_target_episode(item, season, target_episodes)
     ]
+    stats = {
+        "raw": len(normalized),
+        "season": len(season_hits),
+        "target_episode": len(episode_hits),
+        "recognized": 0,
+        "include_passed": 0,
+    }
     if not episode_hits:
-        return DiagnosisResult("no_pt_resource", [], "未搜索到覆盖目标集的 PT 资源")
+        return DiagnosisResult("no_pt_resource", [], "搜索完成，但没有覆盖目标缺失集的资源", stats)
 
     recognized = [item for item in episode_hits if item.get("recognized")]
+    stats["recognized"] = len(recognized)
     if not recognized:
-        return DiagnosisResult("recognition_issue", episode_hits, "资源存在，但无法稳定识别到目标 TMDB 或季集")
+        return DiagnosisResult("recognition_issue", episode_hits, "存在覆盖目标集的资源，但无法稳定识别媒体或季集", stats)
 
     if include_pattern:
         try:
             regex = re.compile(include_pattern, re.I)
         except re.error:
-            return DiagnosisResult("rule_blocked", recognized, "订阅包含规则正则无效，资源无法正常匹配")
+            return DiagnosisResult("rule_blocked", recognized, "存在目标集资源，但订阅包含规则正则无效", stats)
         passed = [item for item in recognized if regex.search(item.get("title") or "")]
+        stats["include_passed"] = len(passed)
         if not passed:
-            return DiagnosisResult("rule_blocked", recognized, "资源存在且识别正确，但被订阅包含规则拦截")
+            return DiagnosisResult("rule_blocked", recognized, "存在目标集资源且识别正确，但被订阅包含规则拦截", stats)
+    else:
+        stats["include_passed"] = len(recognized)
 
-    return DiagnosisResult("downloadable", recognized, "存在可下载候选资源")
+    return DiagnosisResult("downloadable", recognized, "存在覆盖目标缺失集的可下载候选资源", stats)
 
 
 class TorrentDiagnoser:
@@ -259,4 +274,5 @@ class TorrentDiagnoser:
             candidates=diagnosis.candidates,
             sites=item.sites,
             username=item.username,
+            search_stats=diagnosis.stats or {},
         )
