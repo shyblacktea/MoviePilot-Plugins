@@ -94,8 +94,8 @@ export const fields = [
   {
     key: 'mv3_api_token', group: 'cleanup', section: 'MV3 整理记录查询（可选）', type: 'text',
     label: 'MV3 API Token', cols: { md: 6 }, secret: true,
-    hint: '使用 MV3 的 Bearer Token；不填写账号或密码',
-    alert: '仅用于按精确源路径查询 MV3 已整理记录；不会调用 MV3 删除接口。未配置时不影响 qB 直接删除任务和源文件。',
+    hint: '使用 MV3 的 API Key；请求通过 X-API-Key 头传递，不填写账号或密码',
+    alert: '仅用于按精确源路径查询 MV3 已整理记录；使用 X-API-Key 请求头，不会调用 MV3 删除接口。未配置时不影响 qB 直接删除任务和源文件。',
   },
   {
     key: 'candidate_cache_days', group: 'cleanup', section: '候选下载', type: 'number',

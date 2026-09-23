@@ -98,8 +98,8 @@ const fields = [
   {
     key: 'mv3_api_token', group: 'cleanup', section: 'MV3 整理记录查询（可选）', type: 'text',
     label: 'MV3 API Token', cols: { md: 6 }, secret: true,
-    hint: '使用 MV3 的 Bearer Token；不填写账号或密码',
-    alert: '仅用于按精确源路径查询 MV3 已整理记录；不会调用 MV3 删除接口。未配置时不影响 qB 直接删除任务和源文件。',
+    hint: '使用 MV3 的 API Key；请求通过 X-API-Key 头传递，不填写账号或密码',
+    alert: '仅用于按精确源路径查询 MV3 已整理记录；使用 X-API-Key 请求头，不会调用 MV3 删除接口。未配置时不影响 qB 直接删除任务和源文件。',
   },
   {
     key: 'candidate_cache_days', group: 'cleanup', section: '候选下载', type: 'number',
@@ -237,31 +237,43 @@ const _hoisted_59 = {
   class: "sp-field-hint"
 };
 const _hoisted_60 = {
+  key: 0,
+  class: "d-flex align-center flex-wrap ga-3 mt-3"
+};
+const _hoisted_61 = {
+  key: 0,
+  class: "text-caption text-success"
+};
+const _hoisted_62 = {
+  key: 1,
+  class: "text-caption text-error"
+};
+const _hoisted_63 = {
   class: "sp-dashboard",
   "aria-label": "运行表盘"
 };
-const _hoisted_61 = { class: "sp-dashboard-section" };
-const _hoisted_62 = { class: "sp-dashboard-title" };
-const _hoisted_63 = { class: "sp-dashboard-row" };
-const _hoisted_64 = { class: "sp-dashboard-row" };
-const _hoisted_65 = { class: "sp-dashboard-row" };
+const _hoisted_64 = { class: "sp-dashboard-section" };
+const _hoisted_65 = { class: "sp-dashboard-title" };
 const _hoisted_66 = { class: "sp-dashboard-row" };
 const _hoisted_67 = { class: "sp-dashboard-row" };
-const _hoisted_68 = { class: "sp-dashboard-section" };
-const _hoisted_69 = { class: "sp-dashboard-title" };
+const _hoisted_68 = { class: "sp-dashboard-row" };
+const _hoisted_69 = { class: "sp-dashboard-row" };
 const _hoisted_70 = { class: "sp-dashboard-row" };
-const _hoisted_71 = { class: "sp-dashboard-row" };
-const _hoisted_72 = { class: "sp-dashboard-row" };
+const _hoisted_71 = { class: "sp-dashboard-section" };
+const _hoisted_72 = { class: "sp-dashboard-title" };
 const _hoisted_73 = { class: "sp-dashboard-row" };
-const _hoisted_74 = {
+const _hoisted_74 = { class: "sp-dashboard-row" };
+const _hoisted_75 = { class: "sp-dashboard-row" };
+const _hoisted_76 = { class: "sp-dashboard-row" };
+const _hoisted_77 = {
   key: 1,
   class: "sp-suggestion"
 };
-const _hoisted_75 = {
+const _hoisted_78 = {
   key: 2,
   class: "sp-preview-box"
 };
-const _hoisted_76 = { key: 0 };
+const _hoisted_79 = { key: 0 };
 
 const {computed,onMounted,reactive,ref,watch} = await importShared('vue');
 
@@ -324,6 +336,9 @@ const clearingRules = ref(false);
 const clearingIdentifiers = ref(false);
 const deletingRuleId = ref('');
 const deletingResultId = ref('');
+const mv3Testing = ref(false);
+const mv3TestMessage = ref('');
+const mv3TestError = ref('');
 
 // ===== 识别词 =====
 const identifierTitle = ref('');
@@ -630,6 +645,28 @@ async function loadData() {
 
 async function reloadAll() {
   await Promise.all([loadData(), loadOptions()]);
+}
+
+async function testMv3() {
+  mv3Testing.value = true;
+  mv3TestMessage.value = '';
+  mv3TestError.value = '';
+  try {
+    const response = await props.api.post('plugin/SubscribePlus/mv3_test', {
+      mv3_url: config.mv3_url,
+      mv3_api_token: config.mv3_api_token,
+    });
+    const body = response?.data ?? response ?? {};
+    const data = body?.data ?? body;
+    if (body.success === false || data.success === false) {
+      throw new Error(body.message || data.message || 'MV3 连通性测试失败')
+    }
+    mv3TestMessage.value = body.message || data.message || 'MV3 连通性测试成功（只读）';
+  } catch (err) {
+    mv3TestError.value = err?.message || 'MV3 连通性测试失败';
+  } finally {
+    mv3Testing.value = false;
+  }
 }
 
 async function runScan() {
@@ -1840,7 +1877,30 @@ return (_ctx, _cache) => {
                                 }, null, 8, ["text"]))
                               : _createCommentVNode("", true)
                           ], 64))
-                        }), 128))
+                        }), 128)),
+                        (groupKey === 'cleanup' && section.title === 'MV3 整理记录查询（可选）')
+                          ? (_openBlock(), _createElementBlock("div", _hoisted_60, [
+                              _createVNode(_component_VBtn, {
+                                color: "info",
+                                variant: "tonal",
+                                size: "small",
+                                "prepend-icon": "mdi-connection",
+                                loading: mv3Testing.value,
+                                onClick: testMv3
+                              }, {
+                                default: _withCtx(() => [...(_cache[41] || (_cache[41] = [
+                                  _createTextVNode("测试 MV3 连通性", -1)
+                                ]))]),
+                                _: 1
+                              }, 8, ["loading"]),
+                              (mv3TestMessage.value)
+                                ? (_openBlock(), _createElementBlock("span", _hoisted_61, _toDisplayString(mv3TestMessage.value), 1))
+                                : _createCommentVNode("", true),
+                              (mv3TestError.value)
+                                ? (_openBlock(), _createElementBlock("span", _hoisted_62, _toDisplayString(mv3TestError.value), 1))
+                                : _createCommentVNode("", true)
+                            ]))
+                          : _createCommentVNode("", true)
                       ]))
                     }), 128))
                   ]), [
@@ -1848,70 +1908,70 @@ return (_ctx, _cache) => {
                   ])
                 }), 64))
               ]),
-              _createElementVNode("aside", _hoisted_60, [
-                _createElementVNode("section", _hoisted_61, [
-                  _createElementVNode("div", _hoisted_62, [
+              _createElementVNode("aside", _hoisted_63, [
+                _createElementVNode("section", _hoisted_64, [
+                  _createElementVNode("div", _hoisted_65, [
                     _createVNode(_component_VIcon, {
                       icon: "mdi-clock-outline",
                       color: "primary",
                       size: "20"
                     }),
-                    _cache[41] || (_cache[41] = _createTextVNode("运行节奏", -1))
-                  ]),
-                  _createElementVNode("div", _hoisted_63, [
-                    _createVNode(_component_VIcon, { icon: "mdi-calendar-sync-outline" }),
-                    _cache[42] || (_cache[42] = _createElementVNode("span", null, "定时扫描", -1)),
-                    _createElementVNode("strong", null, _toDisplayString(scanScheduleText.value), 1)
-                  ]),
-                  _createElementVNode("div", _hoisted_64, [
-                    _createVNode(_component_VIcon, { icon: "mdi-calendar-refresh-outline" }),
-                    _cache[43] || (_cache[43] = _createElementVNode("span", null, "日历读取", -1)),
-                    _cache[44] || (_cache[44] = _createElementVNode("strong", null, "自动每 6 小时检查；手动强制刷新", -1))
-                  ]),
-                  _createElementVNode("div", _hoisted_65, [
-                    _createVNode(_component_VIcon, { icon: "mdi-calendar-alert-outline" }),
-                    _cache[45] || (_cache[45] = _createElementVNode("span", null, "超期检测", -1)),
-                    _createElementVNode("strong", null, "播出后 " + _toDisplayString(config.delay_days) + " 天", 1)
+                    _cache[42] || (_cache[42] = _createTextVNode("运行节奏", -1))
                   ]),
                   _createElementVNode("div", _hoisted_66, [
-                    _createVNode(_component_VIcon, { icon: "mdi-message-processing-outline" }),
-                    _cache[46] || (_cache[46] = _createElementVNode("span", null, "通知方式", -1)),
-                    _cache[47] || (_cache[47] = _createElementVNode("strong", null, "按通知目标分组汇总", -1))
+                    _createVNode(_component_VIcon, { icon: "mdi-calendar-sync-outline" }),
+                    _cache[43] || (_cache[43] = _createElementVNode("span", null, "定时扫描", -1)),
+                    _createElementVNode("strong", null, _toDisplayString(scanScheduleText.value), 1)
                   ]),
                   _createElementVNode("div", _hoisted_67, [
+                    _createVNode(_component_VIcon, { icon: "mdi-calendar-refresh-outline" }),
+                    _cache[44] || (_cache[44] = _createElementVNode("span", null, "日历读取", -1)),
+                    _cache[45] || (_cache[45] = _createElementVNode("strong", null, "自动每 6 小时检查；手动强制刷新", -1))
+                  ]),
+                  _createElementVNode("div", _hoisted_68, [
+                    _createVNode(_component_VIcon, { icon: "mdi-calendar-alert-outline" }),
+                    _cache[46] || (_cache[46] = _createElementVNode("span", null, "超期检测", -1)),
+                    _createElementVNode("strong", null, "播出后 " + _toDisplayString(config.delay_days) + " 天", 1)
+                  ]),
+                  _createElementVNode("div", _hoisted_69, [
+                    _createVNode(_component_VIcon, { icon: "mdi-message-processing-outline" }),
+                    _cache[47] || (_cache[47] = _createElementVNode("span", null, "通知方式", -1)),
+                    _cache[48] || (_cache[48] = _createElementVNode("strong", null, "按通知目标分组汇总", -1))
+                  ]),
+                  _createElementVNode("div", _hoisted_70, [
                     _createVNode(_component_VIcon, { icon: "mdi-database-clock-outline" }),
-                    _cache[48] || (_cache[48] = _createElementVNode("span", null, "候选缓存", -1)),
+                    _cache[49] || (_cache[49] = _createElementVNode("span", null, "候选缓存", -1)),
                     _createElementVNode("strong", null, _toDisplayString(candidateCacheText.value), 1)
                   ])
                 ]),
                 _createVNode(_component_VDivider, { class: "my-3" }),
-                _createElementVNode("section", _hoisted_68, [
-                  _createElementVNode("div", _hoisted_69, [
+                _createElementVNode("section", _hoisted_71, [
+                  _createElementVNode("div", _hoisted_72, [
                     _createVNode(_component_VIcon, {
                       icon: "mdi-chart-box-outline",
                       color: "primary",
                       size: "20"
                     }),
-                    _cache[49] || (_cache[49] = _createTextVNode("运行概况", -1))
-                  ]),
-                  _createElementVNode("div", _hoisted_70, [
-                    _createVNode(_component_VIcon, { icon: "mdi-history" }),
-                    _cache[50] || (_cache[50] = _createElementVNode("span", null, "最近扫描", -1)),
-                    _createElementVNode("strong", null, _toDisplayString(lastScanText.value), 1)
-                  ]),
-                  _createElementVNode("div", _hoisted_71, [
-                    _createVNode(_component_VIcon, { icon: "mdi-timer-sand" }),
-                    _cache[51] || (_cache[51] = _createElementVNode("span", null, "待处理", -1)),
-                    _createElementVNode("strong", null, _toDisplayString(items.value.length), 1)
-                  ]),
-                  _createElementVNode("div", _hoisted_72, [
-                    _createVNode(_component_VIcon, { icon: "mdi-download-box-outline" }),
-                    _cache[52] || (_cache[52] = _createElementVNode("span", null, "候选资源", -1)),
-                    _createElementVNode("strong", null, _toDisplayString(candidateTotal.value), 1)
+                    _cache[50] || (_cache[50] = _createTextVNode("运行概况", -1))
                   ]),
                   _createElementVNode("div", _hoisted_73, [
+                    _createVNode(_component_VIcon, { icon: "mdi-history" }),
+                    _cache[51] || (_cache[51] = _createElementVNode("span", null, "最近扫描", -1)),
+                    _createElementVNode("strong", null, _toDisplayString(lastScanText.value), 1)
+                  ]),
+                  _createElementVNode("div", _hoisted_74, [
+                    _createVNode(_component_VIcon, { icon: "mdi-timer-sand" }),
+                    _cache[52] || (_cache[52] = _createElementVNode("span", null, "待处理", -1)),
+                    _createElementVNode("strong", null, _toDisplayString(items.value.length), 1)
+                  ]),
+                  _createElementVNode("div", _hoisted_75, [
+                    _createVNode(_component_VIcon, { icon: "mdi-download-box-outline" }),
+                    _cache[53] || (_cache[53] = _createElementVNode("span", null, "候选资源", -1)),
+                    _createElementVNode("strong", null, _toDisplayString(candidateTotal.value), 1)
+                  ]),
+                  _createElementVNode("div", _hoisted_76, [
                     _createVNode(_component_VIcon, { icon: "mdi-toggle-switch-outline" }),
-                    _cache[53] || (_cache[53] = _createElementVNode("span", null, "已启用功能", -1)),
+                    _cache[54] || (_cache[54] = _createElementVNode("span", null, "已启用功能", -1)),
                     _createElementVNode("strong", null, _toDisplayString(enabledFeatureCount.value) + "/5", 1)
                   ])
                 ])
@@ -1933,7 +1993,7 @@ return (_ctx, _cache) => {
         }, {
           default: _withCtx(() => [
             _createVNode(_component_VCardTitle, { class: "text-subtitle-1 font-weight-bold px-4 pt-4" }, {
-              default: _withCtx(() => [...(_cache[54] || (_cache[54] = [
+              default: _withCtx(() => [...(_cache[55] || (_cache[55] = [
                 _createTextVNode("选择配置分组", -1)
               ]))]),
               _: 1
@@ -2018,7 +2078,7 @@ return (_ctx, _cache) => {
         _createVNode(_component_VCard, null, {
           default: _withCtx(() => [
             _createVNode(_component_VCardTitle, { class: "text-subtitle-1" }, {
-              default: _withCtx(() => [...(_cache[55] || (_cache[55] = [
+              default: _withCtx(() => [...(_cache[56] || (_cache[56] = [
                 _createTextVNode("规则修改预览", -1)
               ]))]),
               _: 1
@@ -2040,8 +2100,8 @@ return (_ctx, _cache) => {
                     }))
                   : _createCommentVNode("", true),
                 (ruleSuggestions.value.length && !preview.value)
-                  ? (_openBlock(), _createElementBlock("div", _hoisted_74, [
-                      _cache[56] || (_cache[56] = _createElementVNode("div", { class: "text-caption text-medium-emphasis mb-2" }, "请选择要添加的官组、平台关键词或 PT 站点", -1)),
+                  ? (_openBlock(), _createElementBlock("div", _hoisted_77, [
+                      _cache[57] || (_cache[57] = _createElementVNode("div", { class: "text-caption text-medium-emphasis mb-2" }, "请选择要添加的官组、平台关键词或 PT 站点", -1)),
                       (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(ruleSuggestions.value, (suggestion) => {
                         return (_openBlock(), _createBlock(_component_VBtn, {
                           key: suggestion.pattern,
@@ -2061,9 +2121,9 @@ return (_ctx, _cache) => {
                     ]))
                   : _createCommentVNode("", true),
                 (preview.value)
-                  ? (_openBlock(), _createElementBlock("div", _hoisted_75, [
+                  ? (_openBlock(), _createElementBlock("div", _hoisted_78, [
                       (preview.value.selected_text)
-                        ? (_openBlock(), _createElementBlock("div", _hoisted_76, "已选择：" + _toDisplayString(preview.value.selected_text), 1))
+                        ? (_openBlock(), _createElementBlock("div", _hoisted_79, "已选择：" + _toDisplayString(preview.value.selected_text), 1))
                         : _createCommentVNode("", true),
                       (preview.value.field === 'sites')
                         ? (_openBlock(), _createElementBlock(_Fragment, { key: 1 }, [
@@ -2086,7 +2146,7 @@ return (_ctx, _cache) => {
                   variant: "text",
                   onClick: _cache[16] || (_cache[16] = $event => (previewDialog.value = false))
                 }, {
-                  default: _withCtx(() => [...(_cache[57] || (_cache[57] = [
+                  default: _withCtx(() => [...(_cache[58] || (_cache[58] = [
                     _createTextVNode("返回", -1)
                   ]))]),
                   _: 1
@@ -2097,7 +2157,7 @@ return (_ctx, _cache) => {
                   disabled: !preview.value?.token,
                   onClick: confirmRule
                 }, {
-                  default: _withCtx(() => [...(_cache[58] || (_cache[58] = [
+                  default: _withCtx(() => [...(_cache[59] || (_cache[59] = [
                     _createTextVNode("确认修改", -1)
                   ]))]),
                   _: 1
@@ -2128,6 +2188,6 @@ return (_ctx, _cache) => {
 }
 
 };
-const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-9120f98e"]]);
+const Config = /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',"data-v-82ba4fd8"]]);
 
 export { Config as default };

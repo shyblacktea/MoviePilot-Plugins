@@ -301,6 +301,11 @@
                 <template v-for="field in section.fields" :key="field.key + '-alert'">
                   <VAlert v-if="field.alert" class="mt-3" type="info" variant="tonal" density="compact" :text="field.alert" />
                 </template>
+                <div v-if="groupKey === 'cleanup' && section.title === 'MV3 整理记录查询（可选）'" class="d-flex align-center flex-wrap ga-3 mt-3">
+                  <VBtn color="info" variant="tonal" size="small" prepend-icon="mdi-connection" :loading="mv3Testing" @click="testMv3">测试 MV3 连通性</VBtn>
+                  <span v-if="mv3TestMessage" class="text-caption text-success">{{ mv3TestMessage }}</span>
+                  <span v-if="mv3TestError" class="text-caption text-error">{{ mv3TestError }}</span>
+                </div>
               </section>
             </div>
             </div>
@@ -459,6 +464,9 @@ const clearingRules = ref(false)
 const clearingIdentifiers = ref(false)
 const deletingRuleId = ref('')
 const deletingResultId = ref('')
+const mv3Testing = ref(false)
+const mv3TestMessage = ref('')
+const mv3TestError = ref('')
 
 // ===== 识别词 =====
 const identifierTitle = ref('')
@@ -765,6 +773,28 @@ async function loadData() {
 
 async function reloadAll() {
   await Promise.all([loadData(), loadOptions()])
+}
+
+async function testMv3() {
+  mv3Testing.value = true
+  mv3TestMessage.value = ''
+  mv3TestError.value = ''
+  try {
+    const response = await props.api.post('plugin/SubscribePlus/mv3_test', {
+      mv3_url: config.mv3_url,
+      mv3_api_token: config.mv3_api_token,
+    })
+    const body = response?.data ?? response ?? {}
+    const data = body?.data ?? body
+    if (body.success === false || data.success === false) {
+      throw new Error(body.message || data.message || 'MV3 连通性测试失败')
+    }
+    mv3TestMessage.value = body.message || data.message || 'MV3 连通性测试成功（只读）'
+  } catch (err) {
+    mv3TestError.value = err?.message || 'MV3 连通性测试失败'
+  } finally {
+    mv3Testing.value = false
+  }
 }
 
 async function runScan() {

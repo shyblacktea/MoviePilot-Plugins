@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import federation from '@originjs/vite-plugin-federation'
-import { rmSync } from 'node:fs'
+import { readdirSync, rmSync } from 'node:fs'
 
 // 生产联邦包由宿主提供 Vuetify/MDI 基础样式；开发服务器则保留依赖样式，保证本地预览可用。
 const vuetifyFilter = {
@@ -20,10 +20,12 @@ function removeUnreachableSharedAssets() {
     name: 'remove-unreachable-shared-assets',
     apply: 'build',
     closeBundle() {
-      rmSync(new URL('./dist/assets/__federation_shared_vuetify', import.meta.url), {
-        recursive: true,
-        force: true,
-      })
+      const assetsDir = new URL('./dist/assets', import.meta.url)
+      for (const name of readdirSync(assetsDir)) {
+        if (name.startsWith('__federation_shared_vuetify')) {
+          rmSync(new URL(`./dist/assets/${name}`, import.meta.url), { recursive: true, force: true })
+        }
+      }
     },
   }
 }

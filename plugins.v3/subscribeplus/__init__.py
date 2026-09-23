@@ -290,6 +290,7 @@ class SubscribePlus(_PluginBase):
             {"path": "/rule_dictionary", "endpoint": self.save_rule_dictionary_api, "methods": ["POST"], "auth": "bear", "summary": "保存自定义官组和平台"},
             {"path": "/diagnose_one", "endpoint": self.diagnose_one_api, "methods": ["POST"], "auth": "bear", "summary": "manual single subscribe diagnosis"},
             {"path": "/notify_test", "endpoint": self.notify_test_api, "methods": ["POST"], "auth": "bear", "summary": "发送测试通知"},
+            {"path": "/mv3_test", "endpoint": self.mv3_test_api, "methods": ["POST"], "auth": "bear", "summary": "只读测试 MV3 连通性"},
             {"path": "/season_pack/preview", "endpoint": self.season_pack_preview_api, "methods": ["POST"], "auth": "bear", "summary": "预览完播剧集整季包替换"},
         ]
 
@@ -303,6 +304,47 @@ class SubscribePlus(_PluginBase):
             {"title": "SubscribePlus 测试通知", "text": "SubscribePlus Telegram 通知链路测试成功。"},
         )
         return {"success": True, "message": "测试通知已发送"}
+
+    def mv3_test_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        """使用当前或页面临时填写的配置，只读测试 MV3 事件接口连通性。"""
+        data = self._extract_payload(payload)
+        mv3_url = str(data.get("mv3_url") or getattr(self._plugin_config, "mv3_url", "") or "").strip()
+        mv3_token = str(
+            data.get("mv3_api_token")
+            or getattr(self._plugin_config, "mv3_api_token", "")
+            or ""
+        ).strip()
+        base = self._mv3_base_url(mv3_url)
+        if not base or not mv3_token:
+            return {
+                "success": False,
+                "message": "请先填写 MV3 网站地址和 API Key",
+                "data": {"configured": False, "read_only": True},
+            }
+
+        response = self._mv3_request(
+            "GET",
+            "monitor/events",
+            params={"page": 1, "page_size": 1},
+            base_url=base,
+            token=mv3_token,
+        )
+        if response is None:
+            return {
+                "success": False,
+                "message": "MV3 连通性测试失败，请检查地址、API Key 和网络",
+                "data": {"configured": True, "read_only": True, "endpoint": f"{base}/monitor/events"},
+            }
+        return {
+            "success": True,
+            "message": "MV3 连通性测试成功（只读）",
+            "data": {
+                "configured": True,
+                "read_only": True,
+                "endpoint": f"{base}/monitor/events",
+                "response_type": type(response).__name__,
+            },
+        }
 
     def get_page(self) -> Optional[List[dict]]:
         return None
@@ -3712,24 +3754,38 @@ class SubscribePlus(_PluginBase):
         text = str(value or "").strip().replace("\\", "/")
         return re.sub(r"/+", "/", text).rstrip("/")
 
-    def _mv3_base_url(self) -> str:
+    def _mv3_base_url(self, value: Optional[str] = None) -> str:
         """返回 MV3 API 根地址；配置填写网站地址，不包含 /api/v1。"""
-        value = str(getattr(self._plugin_config, "mv3_url", "") or "").strip().rstrip("/")
-        if value.endswith("/api/v1"):
-            value = value[:-7].rstrip("/")
-        return f"{value}/api/v1" if value else ""
+        base = str(
+            value if value is not None else getattr(self._plugin_config, "mv3_url", "")
+            or ""
+        ).strip().rstrip("/")
+        if base.endswith("/api/v1"):
+            base = base[:-7].rstrip("/")
+        return f"{base}/api/v1" if base else ""
 
-    def _mv3_request(self, method: str, path: str, *, params: Optional[Dict[str, Any]] = None) -> Optional[Any]:
-        """使用 MV3 Bearer Token 调用只读整理记录接口。"""
-        base = self._mv3_base_url()
-        token = str(getattr(self._plugin_config, "mv3_api_token", "") or "").strip()
-        if not base or not token:
+    def _mv3_request(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        base_url: Optional[str] = None,
+        token: Optional[str] = None,
+    ) -> Optional[Any]:
+        """使用 MV3 X-API-Key 调用只读整理记录接口。"""
+        base = base_url or self._mv3_base_url()
+        api_token = str(
+            token if token is not None else getattr(self._plugin_config, "mv3_api_token", "")
+            or ""
+        ).strip()
+        if not base or not api_token:
             logger.info("订阅下载增强未配置 MV3 网站地址或 API Token，跳过整理记录补充查询")
             return None
         try:
             from app.sdk.network import RequestUtils
 
-            headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+            headers = {"X-API-Key": api_token, "Accept": "application/json"}
             request = RequestUtils(
                 headers=headers,
                 timeout=20,
