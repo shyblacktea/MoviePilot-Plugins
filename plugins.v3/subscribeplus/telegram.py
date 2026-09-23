@@ -5,7 +5,6 @@ import json
 from typing import Any, Dict, List
 
 
-PLUGIN_ID = "SubscribePlus"
 MAX_CALLBACK_BYTES = 64
 CANDIDATE_PAGE_SIZE = 3
 RESOURCE_PAGE_SIZE = 5
@@ -16,8 +15,19 @@ def make_token(payload: Dict[str, Any]) -> str:
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:10]
 
 
-def make_callback(action: str, token: str) -> str:
-    callback = f"[PLUGIN]{PLUGIN_ID}|{action}:{token}"
+def _default_plugin_id() -> str:
+    """读取当前宿主绑定的插件实例 ID，未绑定时回退到源插件 ID。"""
+    try:
+        from app.runtime.log import current_plugin_instance_id
+
+        return str(current_plugin_instance_id() or "SubscribePlus")
+    except Exception:
+        return "SubscribePlus"
+
+
+def make_callback(action: str, token: str, plugin_id: str | None = None) -> str:
+    """生成带插件命名空间的 Telegram 回调数据。"""
+    callback = f"[PLUGIN]{plugin_id or _default_plugin_id()}|{action}:{token}"
     if len(callback.encode("utf-8")) > MAX_CALLBACK_BYTES:
         raise ValueError("Telegram callback_data 超过长度限制")
     return callback
