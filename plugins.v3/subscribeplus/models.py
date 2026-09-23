@@ -2,7 +2,33 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
+
+
+DEFAULT_MEDIA_SOURCE = "themoviedb"
+
+
+def normalize_identity(media_source: Any, media_id: Any) -> Tuple[str, str]:
+    """把媒体来源与原生 ID 归一为字符串身份，任一侧无效时返回空身份。"""
+    source = str(media_source or "").strip().lower()
+    identity = str(media_id or "").strip()
+    if not source or not identity or identity == "0":
+        return "", ""
+    return source, identity
+
+
+def subscribe_identity(subscribe: Any) -> Tuple[str, str]:
+    """读取订阅的规范媒体身份，兼容旧宿主仅保存 tmdbid 的记录。"""
+    source, identity = normalize_identity(
+        getattr(subscribe, "media_source", None),
+        getattr(subscribe, "media_id", None),
+    )
+    if source and identity:
+        return source, identity
+    legacy = str(getattr(subscribe, "tmdbid", 0) or 0).strip()
+    if legacy and legacy != "0":
+        return DEFAULT_MEDIA_SOURCE, legacy
+    return "", ""
 
 
 def _as_list(value: Any) -> List[Any]:
@@ -26,8 +52,10 @@ class PluginConfig:
     search_sites: List[str] = field(default_factory=list)
     notify_tg: bool = True
     allow_tg_rule_update: bool = False
-    season_pack_cleanup: str = "off"
-    season_pack_full_download: bool = False
+    season_pack_enabled: bool = False
+    season_pack_qb_cleanup: str = "off"
+    mv3_url: str = ""
+    mv3_api_token: str = ""
     candidate_cache_days: int = 3
     notification_suppression_days: int = 3
     custom_release_groups: List[str] = field(default_factory=list)
@@ -48,7 +76,21 @@ class PluginConfig:
         config.search_sites = [str(item) for item in _as_list(config.search_sites)]
         config.notify_tg = bool(config.notify_tg)
         config.allow_tg_rule_update = bool(config.allow_tg_rule_update)
-        config.season_pack_full_download = bool(config.season_pack_full_download)
+        if "season_pack_enabled" in raw:
+            config.season_pack_enabled = bool(raw.get("season_pack_enabled"))
+        else:
+            legacy_cleanup = str(raw.get("season_pack_cleanup") or "off").strip().lower()
+            config.season_pack_enabled = bool(
+                raw.get("season_pack_full_download")
+                or raw.get("season_pack_replace_enabled")
+                or legacy_cleanup != "off"
+                or str(raw.get("season_pack_qb_cleanup") or "off").strip().lower() != "off"
+            )
+        # 兼容旧版“完播整季包替换”开关：统一迁移到最终集整季包策略。
+        if "season_pack_qb_cleanup" not in raw and raw.get("season_pack_replace_delete_qb"):
+            config.season_pack_qb_cleanup = "task"
+        config.mv3_url = str(config.mv3_url or "").strip().rstrip("/")
+        config.mv3_api_token = str(config.mv3_api_token or "").strip()
         config.candidate_cache_days = max(0, int(config.candidate_cache_days or 0))
         config.notification_suppression_days = max(0, int(config.notification_suppression_days or 0))
         config.custom_release_groups = [
@@ -62,9 +104,9 @@ class PluginConfig:
             if str(item).strip()
         ]
 
-        from .season_cleanup import normalize_cleanup_mode
+        from .season_cleanup import normalize_qb_cleanup_mode
 
-        config.season_pack_cleanup = normalize_cleanup_mode(config.season_pack_cleanup)
+        config.season_pack_qb_cleanup = normalize_qb_cleanup_mode(config.season_pack_qb_cleanup)
         config.cron = str(config.cron or "0 9 * * *")
         return config
 
@@ -90,6 +132,9 @@ class DiagnosisInput:
     tmdbid: int
     season: int
     category: str
+    # V3 规范媒体身份；tmdbid 仅保留为 TMDB 来源下的兼容字段。
+    media_source: str = ""
+    media_id: str = ""
     include: str = ""
     sites: List[str] = field(default_factory=list)
     episodes: List[StaleEpisode] = field(default_factory=list)
@@ -110,6 +155,8 @@ class DiagnosisItem:
     category: str
     reason: str
     message: str
+    media_source: str = ""
+    media_id: str = ""
     episodes: List[Dict[str, Any]] = field(default_factory=list)
     candidates: List[Dict[str, Any]] = field(default_factory=list)
     sites: List[str] = field(default_factory=list)
