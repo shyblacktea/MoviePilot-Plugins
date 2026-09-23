@@ -160,7 +160,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.6"
+    plugin_version = "1.1.7"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -764,10 +764,12 @@ class SubscribePlus(_PluginBase):
         # 手动扫描是用户明确要求刷新日历的入口；定时扫描使用固定缓存策略。
         force_calendar_refresh = source == "manual"
         inputs = scanner.scan(config, resolver, force_refresh=force_calendar_refresh)
-        logger.info(f"订阅下载增强扫描统计：{getattr(scanner, 'last_scan_stats', {})}")
+        scan_stats = getattr(scanner, "last_scan_stats", {})
+        logger.info(f"订阅下载增强扫描统计：{scan_stats}")
         logger.info(
             "订阅下载增强扫描结果："
-            f"候选={len(inputs)}，本轮全部处理，订阅={[item.title for item in inputs]}"
+            f"缺集订阅={len(inputs)}，本轮全部处理，"
+            f"订阅={[item.title for item in inputs]}"
         )
         for item in inputs:
             diagnosis = self._diagnose_item(item)
@@ -1583,7 +1585,8 @@ class SubscribePlus(_PluginBase):
         logger.info(
             "订阅下载增强发现订阅站点缺集但其他站点存在目标集："
             f"{self._format_item_log_context(item)}，订阅站点={','.join(subscription_sites) or '-'}，"
-            f"其他站点={','.join(other_sites)}，候选={len(result.candidates)}"
+            f"其他站点={','.join(other_sites)}，"
+            f"目标集候选={len(result.candidates)}，搜索统计={result.search_stats}"
         )
         return result
 
