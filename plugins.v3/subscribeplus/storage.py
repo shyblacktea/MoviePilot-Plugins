@@ -69,6 +69,36 @@ class JsonStore:
     def load_scan_meta(self) -> Dict[str, Any]:
         return self._read("scan_meta.json", {})
 
+    def save_season_pack_watch(self, watch: Dict[str, Any]) -> None:
+        """保存一个等待整季包整理完成的下载监听记录。"""
+        download_hash = str(watch.get("download_hash") or "").strip()
+        if not download_hash:
+            return
+        watches = [
+            item
+            for item in self.load_season_pack_watches()
+            if str(item.get("download_hash") or "").strip() != download_hash
+        ]
+        watches.insert(0, dict(watch))
+        self._write("season_pack_watches.json", watches[:200])
+
+    def load_season_pack_watches(self) -> List[Dict[str, Any]]:
+        """读取等待整季包整理完成的下载监听记录。"""
+        value = self._read("season_pack_watches.json", [])
+        return value if isinstance(value, list) else []
+
+    def delete_season_pack_watch(self, download_hash: str) -> None:
+        """删除已处理或已失效的整季包监听记录。"""
+        target = str(download_hash or "").strip()
+        if not target:
+            return
+        watches = [
+            item
+            for item in self.load_season_pack_watches()
+            if str(item.get("download_hash") or "").strip() != target
+        ]
+        self._write("season_pack_watches.json", watches)
+
     def load_scan_cursor(self) -> int:
         return int(self._read("scan_cursor.json", {}).get("cursor") or 0)
 
