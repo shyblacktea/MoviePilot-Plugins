@@ -185,6 +185,20 @@ def build_scan_summary_menu(summary_token: str, count: int) -> List[List[Dict[st
     return buttons
 
 
+def build_summary_back_menu(token: str) -> List[List[Dict[str, str]]]:
+    """构造仅含返回汇总与结束的菜单，用于抑制通知或触发搜索后的确认消息。
+
+    :param token: 详情交互 token（返回汇总时由它解析 summary_token）
+    :return: Telegram inline keyboard 行列表
+    """
+    return [
+        [
+            {"text": "返回汇总", "callback_data": make_callback("summary", token)},
+            {"text": "结束", "callback_data": make_callback("close", token)},
+        ]
+    ]
+
+
 def build_pending_menu(items: List[tuple[str, Dict[str, Any]]]) -> List[List[Dict[str, str]]]:
     buttons: List[List[Dict[str, str]]] = []
     for token, item in items[:20]:
