@@ -51,6 +51,7 @@ class JsonStore:
                     os.unlink(temp_name)
                 except FileNotFoundError:
                     pass
+            self._read_cache.pop(name, None)
 
     def save_scan_results(self, results: List[Dict[str, Any]]):
         for result in results or []:
@@ -99,18 +100,14 @@ class JsonStore:
         ]
         self._write("season_pack_watches.json", watches)
 
-    def load_scan_cursor(self) -> int:
-        return int(self._read("scan_cursor.json", {}).get("cursor") or 0)
-
-    def save_scan_cursor(self, cursor: int):
-        self._write("scan_cursor.json", {"cursor": max(int(cursor or 0), 0)})
-
     def clear_scan_results(self):
-        for name in ("scan_results.json", "scan_meta.json", "scan_cursor.json"):
+        for name in ("scan_results.json", "scan_meta.json"):
             try:
                 self._path(name).unlink(missing_ok=True)
             except OSError:
                 pass
+        self._read_cache.pop("scan_results.json", None)
+        self._read_cache.pop("scan_meta.json", None)
 
     def append_rule_record(self, record: Dict[str, Any]):
         if not record.get("record_id"):
