@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from datetime import date, timedelta
 from typing import Any, Iterable, List, Set
 
 
@@ -9,6 +10,11 @@ CLEANUP_OFF = "off"
 CLEANUP_RECORD = "record"
 CLEANUP_SOURCE = "source"
 CLEANUP_MODES = {CLEANUP_OFF, CLEANUP_RECORD, CLEANUP_SOURCE}
+
+QB_CLEANUP_OFF = "off"
+QB_CLEANUP_TASK = "task"
+QB_CLEANUP_SOURCE = "source"
+QB_CLEANUP_MODES = {QB_CLEANUP_OFF, QB_CLEANUP_TASK, QB_CLEANUP_SOURCE}
 
 _EPISODE_RE = re.compile(r"E(\d{1,4})(?:\s*[-~]\s*E?(\d{1,4}))?", re.IGNORECASE)
 _SEASON_RE = re.compile(r"S(\d{1,2})(?!\s*E\d)", re.IGNORECASE)
@@ -38,6 +44,48 @@ class SeasonPackMatch:
     season: int = 0
 
 
+def is_single_episode_title(title: str) -> bool:
+    """判断资源标题是否明确表示单集，供替换整季包前筛选旧 qB 任务。"""
+    return bool(_SINGLE_EPISODE_RE.search(str(title or "")))
+
+
+def is_completed_by_air_date(episodes: Iterable[Any], today, delay_days: int = 0) -> tuple[bool, int, str]:
+    """按最后一集播出日期判断季集是否完播，返回状态、最终集号和日期。"""
+    episode_dates = {}
+    episode_numbers = set()
+    for item in episodes or []:
+        if isinstance(item, dict):
+            number = item.get("episode_number") or item.get("episode")
+            air_date = item.get("air_date")
+        else:
+            number = getattr(item, "episode_number", None) or getattr(item, "episode", None)
+            air_date = getattr(item, "air_date", None)
+        try:
+            number = int(number)
+        except (TypeError, ValueError):
+            continue
+        if number < 1:
+            continue
+        episode_numbers.add(number)
+        if not air_date:
+            continue
+        if hasattr(air_date, "isoformat"):
+            air_date = air_date.isoformat()
+        try:
+            episode_dates[number] = date.fromisoformat(str(air_date)[:10])
+        except ValueError:
+            continue
+    if not episode_numbers:
+        return False, 0, "missing finale air date"
+    final_episode = max(episode_numbers)
+    if episode_numbers != set(range(1, final_episode + 1)):
+        return False, final_episode, "incomplete episode metadata"
+    final_date = episode_dates.get(final_episode)
+    if not final_date:
+        return False, final_episode, "missing finale air date"
+    return final_date + timedelta(days=max(0, int(delay_days))) <= today, final_episode, final_date.isoformat()
+
+
 def normalize_cleanup_mode(value: Any) -> str:
     if isinstance(value, bool):
         return CLEANUP_SOURCE if value else CLEANUP_OFF
@@ -55,6 +103,27 @@ def normalize_cleanup_mode(value: Any) -> str:
     }
     normalized = aliases.get(normalized, normalized)
     return normalized if normalized in CLEANUP_MODES else CLEANUP_OFF
+
+
+def normalize_qb_cleanup_mode(value: Any) -> str:
+    """规范化整季包完成后的 qB 旧单集清理模式。"""
+    if isinstance(value, bool):
+        return QB_CLEANUP_TASK if value else QB_CLEANUP_OFF
+    normalized = str(value or "").strip().lower()
+    aliases = {
+        "record": QB_CLEANUP_TASK,
+        "delete": QB_CLEANUP_TASK,
+        "task_only": QB_CLEANUP_TASK,
+        "source_file": QB_CLEANUP_SOURCE,
+        "delete_source": QB_CLEANUP_SOURCE,
+        "delete_files": QB_CLEANUP_SOURCE,
+        "true": QB_CLEANUP_TASK,
+        "false": QB_CLEANUP_OFF,
+        "none": QB_CLEANUP_OFF,
+        "": QB_CLEANUP_OFF,
+    }
+    normalized = aliases.get(normalized, normalized)
+    return normalized if normalized in QB_CLEANUP_MODES else QB_CLEANUP_OFF
 
 
 def parse_episode_numbers(value: Any) -> Set[int]:
@@ -90,7 +159,17 @@ def is_season_pack_title(title: str, season: int) -> bool:
     text = str(title or "")
     if not text:
         return False
+    explicit_seasons = {
+        int(match.group(1))
+        for match in re.finditer(r"\bS(\d{1,2})(?=[\s._-]*E|\b)", text, re.IGNORECASE)
+    }
+    if explicit_seasons and explicit_seasons != {int(season)}:
+        return False
     if re.search(r"\bComplete\b|全集|全季|整季", text, re.IGNORECASE):
+        return True
+    # 明确的 E01-E12 / E01~E12 也是全集包；单个 E12 仍然不是。
+    episode_numbers = parse_episode_numbers(text)
+    if len(episode_numbers) > 1:
         return True
     if _SINGLE_EPISODE_RE.search(text):
         return False
