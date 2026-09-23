@@ -71,6 +71,9 @@ except Exception:  # pragma: no cover - lets local unit tests import this packag
         CustomIdentifiers = "CustomIdentifiers"
 
 from .diagnosis import TorrentDiagnoser, normalize_search_result
+from .diagnosis_service import DiagnosisService
+from .download_service import DownloadService
+from .search_service import SubscriptionSearchService
 from .identifiers import (
     build_force_identifier_rule,
     build_force_identifier_block,
@@ -179,10 +182,19 @@ class SubscribePlus(_PluginBase):
     _category_cache: Dict[str, str]
     _custom_release_groups_cache: List[str]
 
+    def _instance_plugin_id(self) -> str:
+        """返回当前运行实例 ID，供回调命名空间和下载用户名使用。"""
+        try:
+            from app.runtime.log import current_plugin_instance_id
+
+            return str(current_plugin_instance_id() or self.__class__.__name__)
+        except Exception:
+            return self.__class__.__name__
+
     def init_plugin(self, config: dict = None):
         self._config = config or {}
         self._plugin_config = PluginConfig.from_dict(self._config)
-        self._store = JsonStore(self.get_data_path(PLUGIN_ID))
+        self._store = JsonStore(self.get_data_path())
         try:
             self._store.prune_candidate_cache(self._plugin_config.candidate_cache_days)
         except Exception as exc:
@@ -203,6 +215,8 @@ class SubscribePlus(_PluginBase):
             load_downloaded_episodes=self._load_downloaded_episodes,
         )
         self._diagnoser = TorrentDiagnoser(self._search_torrents)
+        self._download_service = None
+        self._search_service = None
         self._download_contexts = {}
         self._category_cache = {}
         self._custom_release_groups_cache = []
@@ -367,6 +381,9 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强停止服务清理缓存失败：{exc}")
         self._scanner = None
         self._diagnoser = None
+        self._diagnosis_service = None
+        self._download_service = None
+        self._search_service = None
         self._site_resolver = None
 
     def get_config_api(self) -> Dict[str, Any]:
@@ -891,7 +908,7 @@ class SubscribePlus(_PluginBase):
                     if context:
                         from app.chain.download import DownloadChain
 
-                        DownloadChain().download_single(context=context, username=PLUGIN_ID)
+                        DownloadChain().download_single(context=context, username=self._instance_plugin_id())
                         result["action"] = "download_submitted"
                     else:
                         result["action"] = "candidate_context_missing"
@@ -1211,23 +1228,37 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强解析搜索站点名称失败：{exc}")
 
     def _diagnose_item_inner(self, item: DiagnosisInput) -> Optional[DiagnosisItem]:
-        mp_search = self._run_moviepilot_subscribe_search_for_item(item)
-        mp_diagnosis = self._diagnose_with_moviepilot_subscription_scope(item, mp_search)
-        if mp_diagnosis.candidates:
-            if mp_diagnosis.reason == "downloadable":
-                logger.info(
-                    "订阅下载增强触发 MP 订阅搜索后发现可匹配资源，已交给 MP 下载处理："
-                    f"{self._format_item_log_context(item)}"
-                )
-                return None
-            return mp_diagnosis
-        other_site_diagnosis = self._diagnose_other_sites_when_subscription_scope_missing(item, mp_search, mp_diagnosis)
-        if other_site_diagnosis and other_site_diagnosis.candidates:
-            return other_site_diagnosis
-        logger.info(f"订阅下载增强：{item.title} 在 MP 订阅搜索范围内没有候选资源，不再执行插件 PT 范围兜底搜索")
-        return None
+        """通过诊断服务执行一部订阅的编排。"""
+        return self._ensure_diagnosis_service().diagnose(item)
+
+    def _ensure_diagnosis_service(self) -> DiagnosisService:
+        """创建并返回当前插件实例的诊断编排服务。"""
+        service = getattr(self, "_diagnosis_service", None)
+        if service is None:
+            service = DiagnosisService(
+                run_moviepilot_search=self._run_moviepilot_subscribe_search_for_item,
+                diagnose_moviepilot_scope=self._diagnose_with_moviepilot_subscription_scope,
+                diagnose_other_sites=self._diagnose_other_sites_when_subscription_scope_missing,
+                log_info=logger.info,
+                format_item_context=self._format_item_log_context,
+            )
+            self._diagnosis_service = service
+        return service
 
     def _run_moviepilot_subscribe_search_for_item(self, item: DiagnosisInput) -> Dict[str, Any]:
+        """通过搜索服务观察 MoviePilot 原生订阅搜索。"""
+        return self._ensure_search_service().search(item)
+
+    def _ensure_search_service(self) -> SubscriptionSearchService:
+        """创建并返回当前插件实例的订阅搜索服务。"""
+        service = getattr(self, "_search_service", None)
+        if service is None:
+            service = SubscriptionSearchService(self._observe_moviepilot_subscribe_search)
+            self._search_service = service
+        return service
+
+    def _observe_moviepilot_subscribe_search(self, item: DiagnosisInput) -> Dict[str, Any]:
+        """挂接宿主搜索解析过程并捕获原始及规则匹配结果。"""
         captured: Dict[str, Any] = {
             "matched_contexts": [],
             "diagnostic_contexts": [],
@@ -1893,7 +1924,8 @@ class SubscribePlus(_PluginBase):
         def handle_message_action(self, event):
             event_data = getattr(event, "event_data", None) or {}
             plugin_id = event_data.get("plugin_id")
-            if plugin_id and plugin_id != PLUGIN_ID:
+            instance_id = self._instance_plugin_id()
+            if plugin_id and plugin_id not in {PLUGIN_ID, instance_id}:
                 return
             action = event_data.get("text") or event_data.get("action") or event_data.get("callback_data") or ""
             if str(action).strip().startswith("/ci"):
@@ -1905,7 +1937,8 @@ class SubscribePlus(_PluginBase):
             if str(action).strip().startswith("/sp"):
                 self._handle_sp_command_text(str(action), event_data)
                 return
-            if not str(action).startswith(f"[PLUGIN]{PLUGIN_ID}|") and plugin_id != PLUGIN_ID:
+            callback_prefixes = tuple(f"[PLUGIN]{value}|" for value in {PLUGIN_ID, instance_id})
+            if not str(action).startswith(callback_prefixes) and plugin_id not in {PLUGIN_ID, instance_id}:
                 return
             self._handle_callback(str(action), event_data)
 
@@ -1963,7 +1996,10 @@ class SubscribePlus(_PluginBase):
 
     def _handle_callback(self, action: str, event_data: Dict[str, Any]):
         command = action
-        if action.startswith(f"[PLUGIN]{PLUGIN_ID}|"):
+        instance_id = self._instance_plugin_id()
+        if action.startswith(f"[PLUGIN]{instance_id}|"):
+            command = action.split("|", 1)[1]
+        elif action.startswith(f"[PLUGIN]{PLUGIN_ID}|"):
             command = action.split("|", 1)[1]
         op, _, token = command.partition(":")
         logger.info(f"订阅下载增强处理 Telegram 回调：{op}:{token}")
@@ -3040,16 +3076,12 @@ class SubscribePlus(_PluginBase):
     def _get_llm_sync(cls):
         """获取可同步调用的 LLM 实例。
 
-        兼容 app.helper.llm 与 app.agent.llm 两个导入路径，并在 get_llm
-        返回协程时安全地同步等待其结果。
+        通过 V3 app.agent.llm 获取 LLM；返回协程时安全地同步等待其结果。
         """
         try:
             from app.agent.llm import LLMHelper
-        except Exception:
-            try:
-                from app.agent.llm import LLMHelper
-            except Exception as exc:
-                raise RuntimeError("AI 未配置或 LLMHelper 不可用") from exc
+        except ImportError as exc:
+            raise RuntimeError("AI 未配置或 LLMHelper 不可用") from exc
 
         llm = LLMHelper.get_llm(streaming=False)
         if hasattr(llm, "__await__"):
@@ -3445,56 +3477,35 @@ class SubscribePlus(_PluginBase):
             return {"success": False, "message": f"触发 MP 原生订阅搜索失败：{exc}"}
 
     def _download_candidate(self, diagnosis: Dict[str, Any], index: int, event_data: Optional[Dict[str, Any]] = None):
-        event_data = event_data or {}
-        candidates = diagnosis.get("candidates") or []
-        if not (0 <= index < len(candidates)):
-            self._post_callback_message(event_data, title="订阅下载增强", text="候选资源不存在。", save_history=False)
-            return
-        candidate = candidates[index]
-        candidate_id = candidate.get("download_payload") or candidate.get("candidate_id")
-        context = self._download_contexts.get(str(candidate_id))
-        from_cache = False
-        if not context:
-            # 内存上下文丢失（如插件重载/重启），尝试从本地缓存重建
-            try:
-                cached = self._ensure_store().load_candidate_cache(
-                    str(candidate_id),
-                    self._plugin_config.candidate_cache_days,
-                )
-                if cached:
-                    context = self._rebuild_context_from_cache(cached)
-                    from_cache = bool(context)
-            except Exception as exc:
-                logger.warning(f"订阅下载增强读取候选缓存失败: {exc}")
-        if not context:
-            result = self._start_moviepilot_subscribe_search(diagnosis)
-            text = result.get("message") or "已触发 MP 原生订阅搜索"
-            if result.get("success"):
-                text = f"候选下载上下文已失效，{text}"
-            else:
-                text = f"候选下载上下文已失效，且{text}"
-            self._post_callback_message(event_data, title="订阅下载增强", text=text, save_history=False)
-            return
-        try:
-            from app.chain.download import DownloadChain
+        """通过下载服务提交候选，保留原回调入口。"""
+        self._ensure_download_service().download_candidate(diagnosis, index, event_data)
 
-            DownloadChain().download_single(context=context, username=PLUGIN_ID)
-            logger.info(
-                "订阅下载增强提交候选资源下载成功："
-                f"{self._format_diagnosis_log_context(diagnosis, candidate)}，"
-                f"站点={candidate.get('site_name') or candidate.get('site') or '未知'}，"
-                f"候选={candidate.get('title') or candidate_id or '未知'}，"
-                f"来源={'本地缓存重建' if from_cache else '内存上下文'}"
+    def _ensure_download_service(self) -> DownloadService:
+        """创建并返回当前插件实例的下载服务。"""
+        service = getattr(self, "_download_service", None)
+        if service is None:
+            service = DownloadService(
+                get_context=lambda candidate_id: self._download_contexts.get(str(candidate_id)),
+                load_cached_context=lambda candidate_id: self._rebuild_context_from_cache(
+                    self._ensure_store().load_candidate_cache(
+                        str(candidate_id), self._plugin_config.candidate_cache_days
+                    ) or {}
+                ),
+                start_native_search=self._start_moviepilot_subscribe_search,
+                submit_context=lambda context: self._submit_download_context(context),
+                post_message=self._post_callback_message,
+                log_info=logger.info,
+                log_warning=logger.warning,
+                format_context=self._format_diagnosis_log_context,
             )
-            done_text = "已提交下载任务（缓存重建）。" if from_cache else "已提交下载任务。"
-            self._post_callback_message(event_data, title="订阅下载增强", text=done_text, save_history=False)
-        except Exception as exc:
-            log_exception = getattr(logger, "exception", None)
-            if callable(log_exception):
-                log_exception("订阅下载增强提交候选资源下载失败")
-            else:
-                logger.warning(f"订阅下载增强提交候选资源下载失败: {exc}")
-            self._post_callback_message(event_data, title="订阅下载增强", text=f"提交下载失败：{exc}", save_history=False)
+            self._download_service = service
+        return service
+
+    @staticmethod
+    def _submit_download_context(context: Any) -> None:
+        """通过 MoviePilot 下载链提交上下文。"""
+        from app.chain.download import DownloadChain
+        DownloadChain().download_single(context=context, username=self._instance_plugin_id())
 
     def _delete_callback_message(self, event_data: Dict[str, Any]) -> bool:
         try:
@@ -5192,7 +5203,7 @@ class SubscribePlus(_PluginBase):
 
     def _ensure_store(self) -> JsonStore:
         if not self._store:
-            self._store = JsonStore(self.get_data_path(PLUGIN_ID))
+            self._store = JsonStore(self.get_data_path())
         return self._store
 
     def _ensure_site_resolver(self) -> SiteResolver:
