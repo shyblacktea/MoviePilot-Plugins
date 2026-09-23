@@ -39,6 +39,7 @@
     "history": {
       "v1.1.6": "refactor: 将完播整季包搜索、旧 qB 单集任务清理和 MV3 整理记录补充查询统一并入 SubscribePlus 唯一主扫描服务；移除独立维护定时入口，手动扫描与预览保持非破坏性。feat: source 模式由 qB 使用 delete_file=true 直接删除精确匹配的旧单集任务及源文件；MV3 仅按完整源路径查询 processed 整理记录，不执行删除，也不作为 qB 清理前置条件。fix: 保留同剧、同季、同目录、已完成单集、精确 hash 等安全匹配条件，并在缺少 MV3 配置时仍允许 qB 按配置清理。",
       "v1.1.5": "refactor: 将全集包清理、qB 全选下载和完播整季包替换合并为一个最终集整季包开关；MP DownloadAdded 严格匹配旧单集任务，qB 固定仅删任务。source 模式新增 MV3 地址与 Bearer API Token，只对完整源路径唯一匹配的 processed 事件级联删除，成功后再移除 qB 任务；鉴权、查询或删除失败均持久化等待重试，不依赖 MP 转移记录，也不触碰媒体库目标文件。",
+      "v1.1.4": "feat: 增加完播电视剧的最终集整季包处理，按最后一集播出日期搜索整季包，命中 MoviePilot DownloadAdded 后自动全选 qB 种子文件。fix: 强化整季包识别及旧单集匹配，按同剧、同季、同保存目录和集号范围筛选，避免普通单集资源误触发。",
       "v1.1.3": "fix: 适配 MoviePilot V3 媒体身份模型——订阅/整理历史/媒体库缓存/PT 搜索/分类解析全部改用规范身份 media_source + media_id，不再只读已被 V3 移除的 tmdbid。修复扫描时 30 条订阅全部命中 category_skipped、规则引擎从未触发的根因；同时修复 SearchChain 解析入口改名（_parse_result）、SubscribeOper.list_by_tmdbid 已移除、MediaServerOper.exists/TransferHistoryOper.get_by 不接受 tmdbid 等 4 处同类 V3 接口失效。非 TMDB 来源（Bangumi/AniList 等）改用统一识别结果的季集清单，旧数据仍按 TMDB 兼容回落。",
       "v1.1.2": "refactor: 将资源入库、资源下载、添加订阅/订阅完成的系统通知目标面板拆为独立插件；SubscribePlus 仅保留订阅用户通知映射。",
       "v1.1.1": "fix: 修复 /sp 待处理列表的无效调用——_handle_sp_command_text 引用了 JsonStore 不存在的 is_ignored（旧「永久忽略」语义残留），改为统一的 is_notification_suppressed 限期抑制判定，避免按下 /sp 时抛 AttributeError。",
