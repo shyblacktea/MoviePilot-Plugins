@@ -246,7 +246,11 @@ def dedupe_identifier_blocks(existing: Iterable[str], lines: Iterable[str]) -> L
 
 
 def refresh_identifier_runtime_cache(import_module=_import_module) -> None:
-    metainfo = import_module("app.core.metainfo")
+    try:
+        metainfo = import_module("app.domain.metainfo")
+    except ImportError:
+        # 仅兼容尚未完成 V3 迁移的旧宿主；V3 主路径不依赖 app.core。
+        metainfo = import_module("app.core.metainfo")
     clear_cache = getattr(metainfo, "clear_rust_parse_options_cache", None)
     if callable(clear_cache):
         clear_cache()
