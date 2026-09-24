@@ -1,47 +1,74 @@
 # PLEX 302 反向代理
 
-`Plex302ReverseProxy` 在独立端口运行一个 Plex 反向代理，对播放/下载流请求返回 302 直链跳转，配合 STRM 与顶置路径规则把媒体流量从 MoviePilot/Plex 服务器卸载到最终存储直链（如 115、Alist、CD2 等）。
+`Plex302ReverseProxy` 是 MoviePilot V3 插件，在独立端口运行 Plex 反向代理，将播放或下载流请求解析为最终直链并返回 302，减少 Plex 中转流量。
+
+- 插件 ID：`Plex302ReverseProxy`
+- 当前版本：`1.0.0`
+- 插件目录：`plugins.v3/plex302reverseproxy/`
+- 适用版本：MoviePilot V3（`>=3.0.0`）
+- 作者：`shyblacktea`
+
+## 工作流程
+
+```text
+Plex 请求 → 解析 Part / STRM / 路径规则 → 获取最终直链 → 返回 302 → 失败时按配置回退
+```
+
+代理服务与 MoviePilot 主进程分离运行，配置变化可能触发代理重建。
 
 ## 主要功能
 
-- 播放/下载流请求（`/library/parts/.../file`）解析媒体真实地址并返回 302 直链。
-- 支持 `.strm` 文件：通过 Plex download 接口解析 STRM 内部指向的远程地址。
-- 顶置路径规则：`路径前缀 => 目标URL`，命中后把本地路径替换为直链再 302。
-- 强制 DirectPlay：改写转码决策，避免 Plex 转码使 302 直链失效。
-- 转码起始请求（含 `.mpd` / `.m3u8`）也尝试解析并 302，兼容官方客户端。
-- 元数据 API 拦截缓存 `Part.key -> file` 映射；单集详情页后台预热 STRM 解析。
-- WebSocket 通知/事件流双向代理。
+### 直链跳转
 
-## 缓存与性能
+- 处理 Plex 播放和下载流请求。
+- 支持 STRM 文件内容解析。
+- 支持“路径前缀 => 目标 URL”顶置替换规则。
+- 可强制 DirectPlay，减少转码对直链的影响。
+- 兼容 `.mpd`、`.m3u8` 等转码起始请求。
 
-- 直链解析结果按路径缓存（默认 900s），跨客户端复用。
-- Part 路径映射缓存（默认 3600s），减少对 Plex API 的反查。
-- 并发相同播放请求单飞合并：起播时客户端的重试/多连接只触发一次上游解析，其余请求等待同一结果，显著降低起播延迟。
+### 请求优化
 
-## 更新日志
+- 缓存 Part 路径与直链解析结果。
+- 对相同播放请求进行 single-flight 合并，减少重复上游解析。
+- 支持 WebSocket 通知和事件流双向代理。
+- 在单集详情或元数据请求阶段预热部分解析结果。
 
-### v0.2.1
+## 配置说明
 
-- 优化起播速度：并发相同播放请求单飞合并（single-flight），相同 part 的重试/多连接只解析一次直链，其余复用同一结果。
-- 收敛热路径（起播关键路径）上游请求超时至 5s，避免单次慢请求拖满起播。
+- `启用插件`：控制独立代理服务。
+- `Plex 地址`：Plex 服务地址和访问凭据。
+- `监听地址/端口`：代理服务绑定位置。
+- `强制 DirectPlay`：是否改写转码决策。
+- `顶置路径规则`：每行一条，格式为 `路径前缀 => 目标 URL`。
+- `直链缓存时间`：控制解析结果缓存有效期。
+- `Part 映射缓存时间`：控制 Plex Part 路径映射缓存有效期。
 
-### v0.2.0
+## 数据和安全边界
 
-- 修复 Plex 官方客户端 STRM 播放：补齐 `.mpd` / `.m3u8` 转码路由。
-- 增强 STRM 解析逻辑与直链缓存。
+- 代理可能暴露 Plex 播放流和访问凭据对应的网络能力，应限制监听地址和防火墙范围。
+- 顶置路径规则会改变播放请求目标，配置错误可能导致跳转失败或访问错误地址。
+- 插件主要修改响应和请求路由，不负责媒体库刮削、文件整理或下载。
+- 缓存失效、上游超时或直链不可用时，应允许请求安全回退。
 
-### v0.1.0
+## 版本记录
 
-- 初始版本：Plex 播放/下载流 302 直链、STRM 解析、顶置路径规则、强制 DirectPlay、WebSocket 代理。
+### v1.0.0
 
--------
+- 迁移到 MoviePilot V3 专用实现。
+- 保留 302 直链、STRM 解析、顶置路径规则、DirectPlay 和 WebSocket 代理能力。
+- 新增纯响应式媒体流信息投影，默认关闭，不覆盖已有字段，不伪造 Stream ID。
+- 收敛起播热路径超时，并保留 single-flight 合并和转码路由兼容。
+
+## 说明
+
+本插件适合需要让 Plex 播放请求跳转到外部存储直链的部署环境。启用前请确认代理端口、Plex 地址和网络访问范围。
+
+## 发布信息
+
+- 插件 ID：`Plex302ReverseProxy`
+- 插件目录：`plugins.v3/plex302reverseproxy/`
+- 当前版本：`1.0.0`
 
 ## 致谢
 
-本插件的 302 直链跳转思路与实现参考了以下项目，特此感谢：
-
-- [chen3861229/embyExternalUrl](https://github.com/chen3861229/embyExternalUrl/blob/main/README.zh-Hans.md) — Emby/Plex 直链重定向方案的先行实现
-- [thsrite/MediaLinker](https://github.com/thsrite/MediaLinker/blob/main/README.md) — 媒体服务器直链代理方案
-- [DDSRem-Dev/MoviePilot-Plugins](https://github.com/DDSRem-Dev/MoviePilot-Plugins) — MoviePilot 插件生态与 115 直链相关实现
-
-本版本为小 k 自用维护版，感谢以上作者和 MoviePilot 社区。
+感谢 MoviePilot 社区及相关媒体直链代理项目提供思路和基础能力。
