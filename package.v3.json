@@ -37,7 +37,7 @@
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
-      "v1.0.0": "feat: 新增 Plex TMDB 重复条目扫描与合并功能。"
+      "v1.0.0": "版本线整理：把 v0.3.0~v0.7.3 的开发迭代与 TMDB 重复条目扫描合并功能折叠为首个正式版。包含：由 Plex302ReverseProxy 改造为 PLEX 工具箱（STRM 媒体流信息补全 + Vue 配置详情页）、媒体流信息自动补全与播放停止后增量补全、目录匹配/刮削辅助/缺封面扫描、播前媒体流信息补全（覆盖继续观看与直接起播）、五功能 Tab 与 Helper 健康检查、播前补全结果持久化修复、播放队列复用补全触发修复与 Part→ratingKey 缓存兜底。"
     }
   },
   "DownloadDirFilter": {
@@ -51,6 +51,51 @@
     "release": true,
     "history": {
       "v0.0.1": "fix: 适配 MoviePilot V3 媒体身份 API，修复 DownloadHistory.tmdbid 与 TransferHistoryOper.get_by_type_tmdbid 报错；feat: 由路径名称格式化改造为独立插件「下载目录滤镜」，首次加载自动迁移原插件配置与处理记录。"
+    }
+  },
+  "SilentBrowserCleanup": {
+    "name": "静默清理残留浏览器",
+    "description": "由 MoviePilot 内部调度器清理过期 Playwright/Chromium 进程，不发送通知。",
+    "icon": "Chrome_A.png",
+    "version": "1.0.0",
+    "author": "shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": false,
+    "history": {
+      "v1.0.0": "新增：改用 MoviePilot 内部调度器直接清理过期 Chromium 进程，完全绕过 Agent 广播链路，执行时不发送 Telegram 通知。"
+    }
+  },
+  "Plex302ReverseProxy": {
+    "name": "PLEX 302 反向代理",
+    "description": "Plex 302 反向代理 + 纯响应式媒体流信息投影。在 Plex 响应里补 Media/Part/Stream 字段，完全不写 Plex 数据库，用于对照验证「不写库能否达到效果」。（小k自用版）",
+    "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
+    "version": "1.0.0",
+    "author": "shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "v1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），日志改用 app.sdk.logging；新增纯响应式媒体流信息投影（默认关闭）——只补 Plex 缺失字段、绝不覆盖已有值、绝不伪造 Stream ID，Plex 已物化（Stream 均带正数 id）时直接透传，仅播前 decision 路径同步等待冷探测，Part.size 支持 Range 兜底纠正。含 v0.2.1 的 single-flight 合并与热路径超时收敛、v0.2.0 的 .mpd/.m3u8 转码路由、v0.1.0 的 302 直链与 WebSocket 代理。"
+    }
+  },
+  "SubscribePlus": {
+    "name": "订阅下载增强",
+    "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）",
+    "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png",
+    "version": "1.1.7",
+    "author": "shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "v1.1.7": "恢复已验证的 SubscribePlus V3 版本，保留诊断、搜索、下载服务拆分及分身回调隔离。",
+      "v1.1.2": "refactor: 将资源入库、资源下载、添加订阅/订阅完成的系统通知目标面板拆为独立插件；SubscribePlus 仅保留订阅用户通知映射。",
+      "v1.1.1": "fix: 修复 /sp 待处理列表的无效调用——_handle_sp_command_text 引用了 JsonStore 不存在的 is_ignored（旧「永久忽略」语义残留），改为统一的 is_notification_suppressed 限期抑制判定，避免按下 /sp 时抛 AttributeError。",
+      "v1.1.0": "feat: AI 识别词链路改造——写后验证改为写前门禁：写入前先与宿主识别结果、目标 TMDB ID 解出的权威名称/别名对齐校验，冲突或无法验证时不写入全局识别词（比对只使用权威名称，不使用 AI 自述名称，避免同义反复导致被编造的 TMDB ID 通过）；写入前先刷新宿主配置快照并把新规则置顶，避免用旧快照覆盖别处刚新增的识别词；生成的绑定规则改用窄锚点且不再写死季集，一条规则覆盖整季任意集数。",
+      "v1.0.2": "fix: 适配 MoviePilot V3 分类策略——二级分类改读宿主 MediaClassificationPolicy（systemconfig active.categories 中 media_type=电视剧 且启用的分类名），不再调用已移除的 MediaChain().media_category()，修复「读取二级分类策略失败」告警；旧宿主回退兼容保留。",
+      "v1.0.1": "feat: 订阅用户通知目标重构——渠道统一按 tg:/qq: 前缀解析；F4 通知目标面板（原「订阅通知管理」）升级为多选多投，默认通知目标与每用户映射均可同时选择群组/用户/管理员等目标并循环投递；兼容旧单值与脏数据自动归一。",
+      "v1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），旧导入 app.core.*/app.helper.*/app.log 统一迁移到 app.sdk.*（events/logging/media/services/network）与 app.agent.llm；版本 0.24 -> 1.0.0。"
     }
   }
 }
