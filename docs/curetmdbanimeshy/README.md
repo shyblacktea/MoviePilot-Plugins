@@ -1,34 +1,73 @@
-# CTMDbA魔改版（番剧季信息分离）
+# CTMDbA 魔改版
 
-`CureTMDbAnimeShy` 是面向 MoviePilot 的番剧季信息分离插件：对 TMDb 上被合并为一季的番剧进行季信息分离。（小k自用版）
+`CureTMDbAnimeShy` 用于修正 TMDB 将部分番剧合并为一季时产生的季信息问题，并通过独立的 CureTMDb 服务提供元数据修正能力。
+
+- 插件 ID：`CureTMDbAnimeShy`
+- 当前版本：`0.0.1`
+- 插件目录：`plugins.v3/curetmdbanimeshy/`
+- 适用版本：MoviePilot V3（`>=3.0.0`）
+- 作者：`Attente, shyblacktea`
+
+## 工作流程
+
+```text
+读取配置 → 启动独立 CureTMDb 服务 → 获取 Bangumi / TMDB 季信息 → 按规则修正媒体元数据
+```
 
 ## 主要功能
 
-- 对 TMDb 上被合并为一季的番剧进行季信息分离。
-- 通过本地 Go 服务代理 TheMovieDb API 请求，实现季号/集号修正。
-- 支持 Bangumi API 辅助匹配，支持自定义分季数据源。
+### 季信息修正
 
-## 更新日志
+- 处理 TMDB 将多季番剧合并为一季的场景。
+- 支持按播出窗口推断季号。
+- 支持集数越界宽限和改写阈值控制。
+- 通过独立插件 ID 与原版 `CureTMDbAnime` 区分。
 
-### 0.0.1
+### 独立服务
 
-- 迁移到 MoviePilot V3 专用实现（`plugins.v3` + `package.v3.json`）。
-- 旧导入 `app.core.*`/`app.helper.*`/`app.utils.*`/`app.log` 统一迁移到 `app.sdk.*`。
-- 独立插件 ID `CureTMDbAnimeShy`，杜绝与原版 `CureTMDbAnime` 来源冲突。
+- 可配置服务监听端口，默认 `8632`。
+- 支持配置 Bangumi API 地址及是否使用 MoviePilot 代理。
+- 支持配置修正数据源。
+- 服务由插件生命周期负责启动和停止。
+
+## 配置说明
+
+- `启用插件`：是否启用插件及其后台服务，默认关闭。
+- `端口`：独立服务监听端口，默认 `8632`。
+- `启用元数据修正`：是否执行季信息修正，默认开启。
+- `按播出窗口推断季号`：是否在缺少明确季信息时按播出窗口推断。
+- `集数越界宽限`：允许的集数偏差范围，默认 `2`。
+- `改写阈值`：触发元数据改写的阈值，默认 `16`。
+- `Bangumi API URL`：Bangumi API 地址，默认 `https://api.bgm.tv`。
+- `Bangumi 使用代理`：是否使用 MoviePilot 网络代理，默认开启。
+- `来源`：修正数据源地址。
+
+## 数据和安全边界
+
+- 插件配置通过 MoviePilot 插件配置接口保存。
+- 服务端口必须避免与其他进程冲突。
+- 外部数据源不可用时不应把不完整结果当作可靠季信息。
+- 修改范围限于媒体元数据修正，不负责下载、订阅或文件整理。
+- 插件停止或重载时应释放独立服务和相关进程。
+
+## 版本记录
+
+### v0.0.1
+
+- 迁移到 MoviePilot V3 专用实现。
+- 使用 `app.sdk.*` 体系接入配置、媒体、网络和日志能力。
+- 使用独立插件 ID，避免与原版插件冲突。
+
+## 说明
+
+本插件适合已经确认存在 TMDB 季信息合并问题的番剧。首次启用前请确认端口、Bangumi API 和修正数据源配置。
 
 ## 发布信息
 
 - 插件 ID：`CureTMDbAnimeShy`
-- 适用版本：MoviePilot V3（`>=3.0.0`）
-- 插件目录：`plugins.v3/curetmdbanimeshy/`
+- 插件目录：`curetmdbanimeshy`
 - 当前版本：`0.0.1`
-- Release Tag：`CureTMDbAnimeShy_v0.0.1`
-- Release 资产：`curetmdbanimeshy_v0.0.1.zip`
 
 ## 致谢
 
-- 原作者：[Attente](https://github.com/wikrin)
-- 原插件仓库：[wikrin/MoviePilot-Plugins](https://github.com/wikrin/MoviePilot-Plugins)
-- 二进制/数据源：[wikrin/CureTMDb](https://github.com/wikrin/CureTMDb)
-
-本版本基于原作者的 CureTMDbAnime 插件改造，二进制仍由原作者 wikrin 编译分发，感谢原作者和 MoviePilot 社区。
+感谢 MoviePilot 社区和相关开源项目提供的插件机制与媒体数据能力。
