@@ -1,81 +1,85 @@
 # PLEX 工具箱
 
-`PlexToolbox` 是 Plex 综合工具插件：302 反向代理 + STRM 媒体流信息补全（Emby 数据源写入 Plex 库）+ 刮削辅助工具。由 `Plex302ReverseProxy` 改造扩展而来。
+`PlexToolbox` 是 Plex 综合维护插件，整合 302 反向代理、STRM 媒体流信息补全、刮削辅助、缺海报修复和 TMDB 重复条目合并。
+
+- 插件 ID：`PlexToolbox`
+- 当前 V3 版本：`1.0.0`
+- V2 版本线：`0.7.3`
+- V2 源码目录：`plugins.v2/plextoolbox/`
+- V3 源码目录：`plugins.v3/plextoolbox/`
+- 适用版本：MoviePilot V3（`>=3.0.0`）
+- 作者：`shyblacktea`
+
+## 工作流程
+
+```text
+读取 Plex / Emby / helper 配置 → 执行代理、补全、刮削或媒体维护 → 展示结果和历史 → 用户确认高影响操作
+```
+
+各功能区相对独立，未配置对应服务时不会执行该功能。
+
 
 ## 主要功能
 
 ### 302 反向代理
 
-- 播放/下载请求按 STRM 内容或顶置路径规则 302 重定向到直链，避免 Plex 中转流量。
-- 转码决策强制 DirectPlay，避免转码使 302 失效。
-- 元数据响应自动缓存 Part 路径，单集详情页预热 STRM 解析，加快起播。
-- 并发相同请求单飞合并，只触发一次上游解析。
-- WebSocket 通知双向代理。
+- 播放和下载请求按 STRM 内容或路径规则返回 302 直链。
+- 可强制 DirectPlay，减少转码导致的直链失效。
+- 缓存 Part 路径，合并相同起播请求，并代理 WebSocket 事件。
 
 ### STRM 媒体流信息补全
 
-- Plex 自身无法探测 STRM 直链的媒体流信息（编码/分辨率/音轨/字幕/时长），本功能从 Emby 读取同名文件的 MediaStreams，经部署在 Plex 所在机器上的 helper 小服务直接写入 Plex 数据库。
-- 支持手动全量、定时全量、播放停止后增量补全（本集 + 后 N 集，已补全自动跳过）。
-- 播放停止触发来源：反代嗅探 `/:/timeline?state=stopped` 或 Plex Webhook。
-- 数据页展示最近一次补全结果与播放补全历史，支持一键清理。
+- 从 Emby 读取同名媒体的编码、分辨率、音轨、字幕和时长信息。
+- 通过部署在 Plex 所在机器的 helper 写入 Plex 数据库。
+- 支持手动全量、定时全量、播放停止后增量和播前补全。
+- 支持查看最近结果和补全历史。
 
-### 刮削辅助
+### 刮削和媒体维护
 
-- 一键取消匹配（重读 NFO），支持 dry-run 预览与执行后自动 rematch。
-- 扫描缺封面条目并调用 MoviePilot 刮削生成 NFO + 封面。
-- 缺 poster.jpg 补全：电影从 TMDB 取海报（原产语言 → zh → 无字 → 任意），剧集优先复制季内 `Season X/poster.jpg` 到剧根，无则回退 TMDB，修复后自动 refresh。
+- 对指定媒体库执行取消匹配、重读 NFO 和重新匹配。
+- 扫描缺海报条目，并按配置调用 TMDB 或 MoviePilot 刮削。
+- 支持缺 `poster.jpg` 补全。
+- 支持扫描 TMDB ID 相同的重复条目并合并处理。
 
 ## helper 部署
 
-写库 helper（`helper/plex_mediainfo_helper.py`，纯标准库）需部署在 Plex 所在机器，提供 `/health`、`/dbinfo`、`/busy`、`/write`、`/write_batch` 接口，token 用 `X-PTH-Token` 头校验。详见 [helper/README.md](../../plugins.v2/plextoolbox/helper/README.md)。
+写库 helper 位于 `helper/plex_mediainfo_helper.py`，提供 `/health`、`/dbinfo`、`/busy`、`/write` 和 `/write_batch` 接口。helper 需要部署在 Plex 所在机器，并使用 `X-PTH-Token` 校验请求。
 
-## 更新日志
+详细部署说明见 [helper/README.md](../../plugins.v2/plextoolbox/helper/README.md)。
 
-### v1.0.0（V3）
+## 配置说明
 
-- 新增合并 Plex 中 TMDB ID 相同重复条目的功能，源码位于 `plugins.v3/plextoolbox/`。
-- V2 `0.7.3` 保持原样，与 V3 `1.0.0` 并行维护。
+- `302 反向代理`：Plex 地址、Token、监听地址、监听端口、DirectPlay 和路径规则。
+- `媒体流补全`：Emby 地址、媒体库范围、helper 地址、Token、补全触发方式和后续集数窗口。
+- `刮削辅助`：媒体库、dry-run、重匹配和封面补全策略。
+- `数据页`：查看运行状态、最近结果、播放补全历史和清理入口。
 
-### v0.7.3
+反代配置变化可能重启独立代理；补全配置变化不会无条件重启代理。
 
-- 修复 Plex 复用已有播放队列或自动连播时没有重新创建 `playQueues`，导致播前补全不触发的问题。
-- 缓存媒体 Part 对应的 `ratingKey`，直接请求媒体文件起播时也会执行播前补全兜底。
-- 移除桌面弹窗 `820px` 固定高度上限，消除高屏幕下弹窗底部的大块空白。
+## 数据和安全边界
 
-### v0.7.2
+- Plex Token、Emby 凭据和 helper Token 属于敏感配置，不应写入日志或提交到仓库。
+- helper 具备写入 Plex 数据库的能力，必须限制监听地址并配置强 Token。
+- 取消匹配、重匹配、写库、合并重复条目和清理历史均可能改变媒体库状态。
+- dry-run 只用于预览，不等同于实际执行。
+- 302 代理、媒体流补全和刮削辅助可单独使用，互不替代。
 
-- 修复播前补全成功但“最近一次补全”和历史记录没有对应剧集信息的问题。
-- 播前结果现在会持久化，并正确显示实际执行时间。
+## 版本记录
 
-### v0.7.1
+### V3 v1.0.0
 
-- 配置页和数据页统一为五个功能 Tab，并增加常驻运行节奏与运行概况表盘。
-- 媒体流信息在播放前补全当前条目及设置的后续集，不再使用播放停止补全和 Cron 全库补全。
-- 播前去重窗口由界面配置控制，并仅处理用户已选择的 Plex 媒体库。
-- 每 5 分钟检查 Helper，连续失败 3 次后发送一次插件通知，恢复后自动重置。
+- 新增 TMDB ID 相同重复条目的扫描和合并功能。
+- 将 V2 功能整理为 V3 独立插件，保留 302 代理、媒体流补全和刮削辅助。
+- 使用 Vue 联邦配置页和数据页。
 
-### v0.7.0
+### V2 v0.7.3 及更早版本
 
-- 新增播前补全：反代拦截 `playQueues` 创建（覆盖「继续观看」点击即播、不经过详情页的场景），起播前同步补全该条目媒体流信息。3 秒等待预算，超时自动放行播放、补全转后台继续；同条目 10 分钟冷却去重。播前仅补当前条目（最快路径），后续集数仍由播放停止后的增量补全接管。
+- 保留 V2 版本的播前补全、播放停止增量补全、Helper 健康检查、刮削辅助、缺封面修复和播放历史功能。
+- V2 与 V3 版本线并行维护，具体变更以对应 package 和 Release 为准。
 
-### v0.6.0
+## 说明
 
-- 数据页新增「最近一次补全 / 补全历史」一键清理按钮（后端 `/clear_completion_data` API）。
-- 反代稳定性优化：非关键路径（图片转码 / 推荐位等高频轮询）连接失败降为 DEBUG 日志，不再刷屏；连接失败日志不再输出完整堆栈；httpx 连接池 keepalive 上限 20 → 50，过期 30s → 60s。
-
-### v0.5.0
-
-- 新增「目录匹配/刮削」栏：一键对指定 Plex 库取消匹配重读 NFO（支持 dry-run 预览与执行后自动 rematch）；扫描缺封面条目（Plex 无封面或目录仅含 strm）并调用 MoviePilot 刮削生成 NFO + 封面，可选刮削后自动取消匹配让 Plex 重读。
-
-### v0.4.0
-
-- 新增媒体流信息补全自动触发：启用后自动全量、定时全量、播放停止后针对本次条目补全（反代嗅探 / Plex Webhook），带去重窗口与「本集 + 后 N 集」增量窗口。
-
-### v0.3.0
-
-- 由 Plex302ReverseProxy 改造为 PLEX 工具箱：302 反代作为子功能保留，新增 STRM 媒体流信息补全（Emby 数据源 + helper 写库），Vue 联邦前端配置页与数据页。
-
--------
+这是 Plex 综合维护工具，不是 Plex 本体或 Emby 本体。涉及写库、重匹配和批量维护前，请先备份相关数据库和媒体元数据。
 
 ## 发布信息
 
@@ -83,17 +87,7 @@
 - V2 源码目录：`plugins.v2/plextoolbox/`
 - V3 源码目录：`plugins.v3/plextoolbox/`
 - 当前版本：`V2 0.7.3；V3 1.0.0`
-- V2 Release Tag：`PlexToolbox_v0.7.3`
-- V2 Release 资产：沿用原有 `PlexToolbox_v0.7.3` Release
-- V3 Release Tag：`PlexToolbox_v1.0.0`
-- V3 Release 资产：`plextoolbox_v1.0.0.zip`
 
 ## 致谢
 
-本插件的 302 直链跳转思路与实现参考了以下项目，特此感谢：
-
-- [chen3861229/embyExternalUrl](https://github.com/chen3861229/embyExternalUrl/blob/main/README.zh-Hans.md) — Emby/Plex 直链重定向方案的先行实现
-- [thsrite/MediaLinker](https://github.com/thsrite/MediaLinker/blob/main/README.md) — 媒体服务器直链代理方案
-- [DDSRem-Dev/MoviePilot-Plugins](https://github.com/DDSRem-Dev/MoviePilot-Plugins) — MoviePilot 插件生态与 115 直链相关实现
-
-本版本为小 k 自用维护版，感谢以上作者和 MoviePilot 社区。
+感谢相关媒体直链代理项目、MoviePilot 插件生态和 Plex/Emby 社区提供思路与基础能力。
