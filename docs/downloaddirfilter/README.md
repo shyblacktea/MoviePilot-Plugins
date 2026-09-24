@@ -1,33 +1,73 @@
 # 下载目录滤镜
 
-`DownloadDirFilter` 是面向 MoviePilot 的下载目录整理插件：根据自定义格式修改 MP 下载种子的保存路径与种子名称。（小k自用版）
+`DownloadDirFilter` 用于在下载任务加入后按自定义格式调整种子保存路径和种子名称，并保留下载历史、转移历史与旧插件数据兼容能力。
+
+- 插件 ID：`DownloadDirFilter`
+- 当前版本：`0.0.1`
+- 插件目录：`plugins.v3/downloaddirfilter/`
+- 适用版本：MoviePilot V3（`>=3.0.0`）
+- 作者：`shyblacktea`
+
+## 工作流程
+
+```text
+下载任务加入 → 读取媒体和任务信息 → 按格式生成目录与名称 → 调用下载器处理 → 更新历史记录
+```
 
 ## 主要功能
 
-- 按自定义格式修改下载种子的保存路径与种子名称。
-- 支持 TMDB 识别信息参与路径与名称格式化。
-- 首次加载自动迁移原「路径名称格式化」插件的配置与全部处理记录。
+### 路径和名称处理
 
-## 更新日志
+- 按自定义格式修改下载保存路径。
+- 按规则修改种子名称和文件名称。
+- 支持 qBittorrent、Transmission 等下载器适配。
+- 处理下载任务加入事件，并支持后台服务补偿检查。
 
-### 0.0.1
+### 历史记录兼容
 
-- 由路径名称格式化（FormatDownPath）改造为独立插件「下载目录滤镜」。
-- 适配 MoviePilot V3 媒体身份 API，修复 `DownloadHistory.tmdbid` 与 `TransferHistoryOper.get_by_type_tmdbid` 报错。
-- 首次加载自动迁移原插件配置与全部处理记录。
+- 读取 MoviePilot 下载历史和转移历史。
+- 使用媒体身份、任务 hash 和历史记录辅助恢复。
+- 支持从历史记录恢复未完成的任务处理状态。
+- 旧配置和旧处理记录仅在缺失时迁移，不覆盖现有数据。
+
+## 配置说明
+
+配置项以当前插件页面为准，主要包括：
+
+- 插件启用状态。
+- 路径格式和名称格式。
+- 下载器及任务处理范围。
+- 定时补偿检查周期。
+- 历史记录恢复入口。
+
+格式修改前请先用少量任务验证，确认路径模板不会产生重复目录或覆盖风险。
+
+## 数据和安全边界
+
+- 插件可能移动下载器任务路径并重命名种子或文件，属于有副作用的下载管理操作。
+- 处理前应保留下载器和 MoviePilot 历史信息，便于失败恢复。
+- 插件不负责删除媒体库目标文件。
+- 路径格式错误、下载器不可用或历史缺失时，应优先保留任务并记录失败。
+- 迁移逻辑应保持幂等，不重复导入旧记录。
+
+## 版本记录
+
+### v0.0.1
+
+- 从旧版路径名称格式化功能整理为独立插件 `DownloadDirFilter`。
+- 适配 MoviePilot V3 媒体身份接口。
+- 首次加载支持迁移旧插件配置与处理记录。
+
+## 说明
+
+这是下载任务路径和名称处理插件，不是媒体库整理器。涉及批量路径变更前，请先备份任务记录并使用小范围任务验证模板。
 
 ## 发布信息
 
 - 插件 ID：`DownloadDirFilter`
-- 适用版本：MoviePilot V3（`>=3.0.0`）
-- 插件目录：`plugins.v3/downloaddirfilter/`
+- 插件目录：`downloaddirfilter`
 - 当前版本：`0.0.1`
-- Release Tag：`DownloadDirFilter_v0.0.1`
-- Release 资产：`downloaddirfilter_v0.0.1.zip`
 
 ## 致谢
 
-- 原作者：[Attente](https://github.com/wikrin)
-- 原仓库：[wikrin/MoviePilot-Plugins](https://github.com/wikrin/MoviePilot-Plugins)
-
-本版本基于原作者的路径名称格式化插件改造，感谢原作者和 MoviePilot 社区。
+感谢 MoviePilot 社区提供下载任务、历史记录和插件扩展能力。
