@@ -14,9 +14,8 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 
 ### 工具类
 
-- [我就想通知到群组！](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/notifytogroupshy)：独立管理资源入库、资源下载及添加订阅/订阅完成的系统通知目标。
 - [清理无效插件](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/cleaninvalidplugin)：扫描、清理或重新安装数据库中无法加载的插件记录。
-- [下载目录滤镜](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/downloaddirfilter)：根据自定义格式修改MP下载种子的保存路径、种子名称。
+- [下载目录滤镜](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/downloaddirfilter)：根据自定义格式修改 MP 下载种子的保存路径、种子名称。
 
 ### 订阅类
 
@@ -29,7 +28,7 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 
 ### 媒体服务器类
 
-- [PLEX 工具箱](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/plextoolbox)：Plex 302 反向代理 + STRM 媒体流信息补全（Emby/ffprobe 数据源写入 Plex 库）。
+- [PLEX 工具箱](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/plextoolbox)：Plex 302 反向代理、STRM 媒体流信息补全、刮削辅助和 TMDB 重复条目合并。
 - [PLEX 302 反向代理](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/plex302reverseproxy)：Plex 302 反向代理，自动代理 HTTP 链接跳转最终地址，支持 STRM 与路径规则直链。
 
 ## 致谢
