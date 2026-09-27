@@ -46,7 +46,6 @@ def _as_list(value: Any) -> List[Any]:
 @dataclass
 class PluginConfig:
     enabled: bool = False
-    delay_days: int = 1
     cron: str = "0 9 * * *"
     selected_categories: List[str] = field(default_factory=list)
     search_sites: List[str] = field(default_factory=list)
@@ -58,6 +57,8 @@ class PluginConfig:
     mv3_api_token: str = ""
     candidate_cache_days: int = 3
     notification_suppression_days: int = 3
+    paused_external_recovery_enabled: bool = False
+    paused_external_recovery_days: int = 7
     custom_release_groups: List[str] = field(default_factory=list)
     custom_platforms: List[str] = field(default_factory=list)
 
@@ -71,7 +72,7 @@ class PluginConfig:
                 setattr(config, key, raw[key])
 
         config.enabled = bool(config.enabled)
-        config.delay_days = max(0, int(config.delay_days or 0))
+
         config.selected_categories = [str(item) for item in _as_list(config.selected_categories)]
         config.search_sites = [str(item) for item in _as_list(config.search_sites)]
         config.notify_tg = bool(config.notify_tg)
@@ -93,6 +94,8 @@ class PluginConfig:
         config.mv3_api_token = str(config.mv3_api_token or "").strip()
         config.candidate_cache_days = max(0, int(config.candidate_cache_days or 0))
         config.notification_suppression_days = max(0, int(config.notification_suppression_days or 0))
+        config.paused_external_recovery_enabled = bool(config.paused_external_recovery_enabled)
+        config.paused_external_recovery_days = max(1, int(config.paused_external_recovery_days or 7))
         config.custom_release_groups = [
             str(item).strip()
             for item in _as_list(config.custom_release_groups)
@@ -118,7 +121,7 @@ class PluginConfig:
 class StaleEpisode:
     season: int
     episode: int
-    air_date: str
+
     evidence: str = "未在媒体库缓存或整理历史中命中"
 
     def to_dict(self) -> Dict[str, Any]:
