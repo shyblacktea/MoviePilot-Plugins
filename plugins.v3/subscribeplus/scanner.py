@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-from datetime import date, datetime, timedelta
 from typing import Any, Callable, Dict, Iterable, List, Optional
 
 from .models import DiagnosisInput, PluginConfig, StaleEpisode
@@ -40,20 +39,6 @@ def _ordered_unique(values: Iterable[Any]) -> List[str]:
         seen.add(category)
     return result
 
-
-def should_check_episode(air_date: date, delay_days: int, today: date) -> bool:
-    return air_date + timedelta(days=delay_days) <= today
-
-
-def parse_air_date(value: Any) -> Optional[date]:
-    if isinstance(value, date):
-        return value
-    if not value:
-        return None
-    try:
-        return datetime.strptime(str(value)[:10], "%Y-%m-%d").date()
-    except ValueError:
-        return None
 
 
 def _episode_numbers(raw: Any) -> set[int]:
@@ -142,17 +127,15 @@ class SubscriptionScanner:
     def __init__(
         self,
         load_subscribes: Callable[[], List[Any]],
-        load_episodes: Callable[..., List[Dict[str, Any]]],
-        is_episode_downloaded: Callable[[str, str, int, int], tuple[bool, str]],
+        is_episode_downloaded: Callable[[str, str, int, int], tuple[bool, str]] = lambda *_args: (False, ""),
         load_categories: Optional[Callable[[], List[Any]]] = None,
         resolve_subscribe_category: Optional[Callable[[Any], Optional[str]]] = None,
         load_downloaded_episodes: Optional[Callable[[str, str, int], set[int]]] = None,
-        load_tmdb_episodes: Optional[Callable[..., List[Dict[str, Any]]]] = None,
+
     ):
         self.load_subscribes = load_subscribes
-        # load_tmdb_episodes 为旧参数名，保留以便外部按旧签名构造扫描器。
-        self.load_episodes = load_episodes or load_tmdb_episodes
-        self.load_tmdb_episodes = self.load_episodes
+
+
         self.is_episode_downloaded = is_episode_downloaded
         self.load_categories = load_categories
         self.resolve_subscribe_category = resolve_subscribe_category
@@ -174,21 +157,64 @@ class SubscriptionScanner:
         self,
         config: PluginConfig,
         site_resolver: SiteResolver,
-        today: Optional[date] = None,
-        force_refresh: bool = False,
+        **_: Any,
     ) -> List[DiagnosisInput]:
-        today = today or date.today()
         subscribes = list(self.load_subscribes() or [])
         if not subscribes:
+            self.last_scan_stats = {
+                "total": 0, "non_tv": 0, "paused": 0, "pending": 0,
+                "not_active": 0, "unknown_state": 0, "missing_identity": 0,
+                "category_skipped": 0, "no_stale": 0, "candidates": 0,
+                "state_counts": {}, "skipped": [],
+            }
             return []
         selected_categories = set(config.selected_categories or self._collect_categories_from(subscribes))
         results: List[DiagnosisInput] = []
-        stats = {"total": len(subscribes), "non_tv": 0, "missing_identity": 0,
-                 "category_skipped": 0, "no_stale": 0}
+        stats = {
+            "total": len(subscribes), "non_tv": 0, "paused": 0,
+            "pending": 0, "not_active": 0, "unknown_state": 0,
+            "missing_identity": 0, "category_skipped": 0, "no_stale": 0,
+            "state_counts": {}, "skipped": [],
+        }
+
+        def record_skip(subscribe: Any, reason: str, state: str = "") -> None:
+            """记录单条订阅的可诊断跳过原因。"""
+            source, identity = subscribe_identity(subscribe)
+            raw_season = _field(subscribe, "season", _field(subscribe, "seasons", ""))
+            stats["skipped"].append({
+                "subscribe_id": _field(subscribe, "id", None),
+                "title": str(_field(subscribe, "name", "") or _field(subscribe, "title", "") or ""),
+                "media_source": source,
+                "media_id": identity,
+                "season": raw_season,
+                "category": self._subscribe_category(subscribe) if self._is_tv(subscribe) else "",
+                "state": state,
+                "reason": reason,
+            })
 
         for subscribe in subscribes:
+            state = str(_field(subscribe, "state", "") or "").strip().upper()
+            if state:
+                state_counts = stats["state_counts"]
+                state_counts[state] = state_counts.get(state, 0) + 1
             if not self._is_tv(subscribe):
                 stats["non_tv"] += 1
+                record_skip(subscribe, "non_tv", state)
+                continue
+            # R 可搜索，P 可搜索但待定；S、N 不进入诊断/原生搜索。
+            if state == "S":
+                stats["paused"] += 1
+                record_skip(subscribe, "paused", state)
+                continue
+            if state == "P":
+                stats["pending"] += 1
+            elif state == "N":
+                stats["not_active"] += 1
+                record_skip(subscribe, "not_active", state)
+                continue
+            elif state and state != "R":
+                stats["unknown_state"] += 1
+                record_skip(subscribe, "unknown_state", state)
                 continue
             # V3 起订阅主身份为 media_source + media_id；tmdbid 仅作旧宿主回落。
             media_source, media_id = subscribe_identity(subscribe)
@@ -197,45 +223,36 @@ class SubscriptionScanner:
             season = int(season_match.group(0)) if season_match else 0
             if not media_id or not season:
                 stats["missing_identity"] += 1
+                record_skip(subscribe, "missing_identity", state)
                 continue
             category = self._subscribe_category(subscribe)
             if category not in selected_categories:
                 stats["category_skipped"] += 1
+                record_skip(subscribe, "category_skipped", state)
                 continue
 
             stale_episodes = []
+            total_episode = int(_field(subscribe, "total_episode", 0) or 0)
+            start_episode = int(_field(subscribe, "start_episode", 0) or 1)
             downloaded_episodes = self._downloaded_episodes(media_source, media_id, season)
-            start_episode = int(getattr(subscribe, "start_episode", 0) or 0)
-            latest_downloaded_episode = max(downloaded_episodes or {0})
-            recent_threshold = max(start_episode - 1, latest_downloaded_episode - RECENT_GAP_LOOKBACK)
-            episode_group = getattr(subscribe, "episode_group", None)
-            for episode in self.load_episodes(
-                media_source,
-                media_id,
-                season,
-                episode_group,
-                force_refresh=force_refresh,
-            ):
-                air_date = parse_air_date(episode.get("air_date"))
-                episode_number = int(episode.get("episode_number") or episode.get("episode") or 0)
-                if not air_date or not episode_number:
-                    continue
-                if episode_number <= recent_threshold:
-                    continue
-                if not should_check_episode(air_date, config.delay_days, today):
+            if total_episode <= 0:
+                stats["missing_episode_metadata"] = stats.get("missing_episode_metadata", 0) + 1
+                record_skip(subscribe, "missing_episode_metadata", state)
+                continue
+            target_episodes = range(max(1, start_episode), total_episode + 1)
+            for episode_number in target_episodes:
+                if episode_number in downloaded_episodes:
                     continue
                 downloaded, evidence = self.is_episode_downloaded(
                     media_source, media_id, season, episode_number
                 )
                 if downloaded:
                     downloaded_episodes.add(episode_number)
-                    recent_threshold = max(recent_threshold, episode_number)
                     continue
                 stale_episodes.append(
                     StaleEpisode(
                         season=season,
                         episode=episode_number,
-                        air_date=air_date.isoformat(),
                         evidence=evidence,
                     )
                 )
@@ -258,6 +275,7 @@ class SubscriptionScanner:
                 )
             else:
                 stats["no_stale"] += 1
+                record_skip(subscribe, "no_stale", state)
         self.last_scan_stats = stats | {"candidates": len(results)}
         return results
 
@@ -271,12 +289,12 @@ class SubscriptionScanner:
 
     @staticmethod
     def _is_tv(subscribe: Any) -> bool:
-        raw_type = getattr(subscribe, "type", "") or ""
+        raw_type = _field(subscribe, "type", "") or ""
         return str(raw_type).strip().lower() in TV_TYPE_VALUES
 
     def _subscribe_category(self, subscribe: Any) -> str:
         explicit_category = (
-            str(getattr(subscribe, "media_category", "") or getattr(subscribe, "category", "") or "").strip()
+            str(_field(subscribe, "media_category", "") or _field(subscribe, "category", "") or "").strip()
         )
         if explicit_category:
             return normalize_category(explicit_category)
@@ -285,6 +303,7 @@ class SubscriptionScanner:
         return UNCATEGORIZED
 
     def _downloaded_episodes(self, media_source: str, media_id: str, season: int) -> set[int]:
+        """读取已下载集号；媒体来源和原生 ID 始终成对传递。"""
         if not self.load_downloaded_episodes:
             return set()
         try:
@@ -295,3 +314,10 @@ class SubscriptionScanner:
             }
         except Exception:
             return set()
+
+
+def _field(value: Any, name: str, default: Any = None) -> Any:
+    """同时支持订阅 ORM 对象与字典快照读取字段。"""
+    if isinstance(value, dict):
+        return value.get(name, default)
+    return getattr(value, name, default)
