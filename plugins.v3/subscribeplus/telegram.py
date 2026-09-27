@@ -553,9 +553,7 @@ def render_notification_text(
     candidate_page_size: int = CANDIDATE_PAGE_SIZE,
 ) -> str:
     episodes = item.get("episodes") or []
-    episode_text = ", ".join(
-        f"E{episode.get('episode')}({episode.get('air_date')})" for episode in episodes[:10]
-    )
+    episode_text = ", ".join(f"E{episode.get('episode')}" for episode in episodes[:10])
     site_display = item.get("site_names") or item.get("sites") or []
     sites = ", ".join(str(s) for s in site_display) or "MP 默认搜索站点"
     candidates = item.get("candidates") or []
@@ -586,13 +584,21 @@ def render_notification_text(
     return "\n".join(lines)
 
 
-def render_scan_summary_text(items: List[Dict[str, Any]]) -> str:
+def render_scan_summary_text(items: List[Dict[str, Any]], scan_stats: Optional[Dict[str, Any]] = None) -> str:
     """渲染扫描完成后的可处理项目汇总文本。
 
     :param items: 扫描诊断项列表
     :return: 汇总消息文本
     """
+    stats = scan_stats or {}
     rows = [f"扫描完成，共有 {len(items or [])} 部可处理："]
+    if stats:
+        rows.append(
+            "扫描统计："
+            f"订阅 {stats.get('total', 0)} 条，暂停 {stats.get('paused', 0)} 条，"
+            f"分类跳过 {stats.get('category_skipped', 0)} 条，"
+            f"身份缺失 {stats.get('missing_identity', 0)} 条。"
+        )
     for index, item in enumerate(items or [], start=1):
         title = _short_title(str(item.get("title") or "未命名"), limit=48)
         season = int(item.get("season") or 0)
