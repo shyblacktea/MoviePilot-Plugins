@@ -163,7 +163,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.7"
+    plugin_version = "1.1.8"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -1014,39 +1014,66 @@ class SubscribePlus(_PluginBase):
         downloader: str = "",
         pack_hash: str = "",
     ) -> List[Dict[str, Any]]:
-        """在一次 DownloadAdded 触发的 qB 查询中筛选旧单集任务。"""
+        """在一次 DownloadAdded 触发的 qB 查询中筛选旧单集任务。
+
+        主匹配依据为「剧名 + 季号 + 单集集数 + 已完成」；`save_path` 只作为
+        同目录加分项，不再作为硬性条件，避免新整季包目录读取失败或旧单集
+        位于其他下载目录时完全匹配不到。每条被排除的任务都会输出原因，
+        便于定位「旧 qB 任务=0」的具体卡点。
+        """
         client, client_name = self._get_qb_client(downloader)
         if not client:
+            logger.info("订阅下载增强旧单集匹配跳过：未找到可用的 qBittorrent 实例")
             return []
         tasks, error = client.get_torrents()
         if error:
+            logger.warning(f"订阅下载增强旧单集匹配跳过：读取 qB 任务失败，{error}")
             return []
 
         show_key = self._media_title_key(title)
         expected_path = self._path_key(save_path)
+        if not expected_path:
+            logger.info(
+                "订阅下载增强旧单集匹配未取得整季包保存目录，将只按剧名/季号/集数匹配："
+                f"{title} S{int(season or 0):02d}"
+            )
         pack_hash_key = str(pack_hash or "").strip().casefold()
         selected = []
+        skipped: Dict[str, List[str]] = {}
         for task in tasks or []:
             task_hash = str(self._read_cleanup_value(task, "hash") or "").strip()
             task_title = str(self._read_cleanup_value(task, "name", "title") or "").strip()
             task_path = str(self._read_cleanup_value(task, "save_path") or "").strip()
             if not task_hash or task_hash.casefold() == pack_hash_key:
                 continue
-            if not self._torrent_completed(task):
+            if not task_title:
+                skipped.setdefault("缺少标题", []).append(task_hash)
                 continue
-            if not task_title or not is_single_episode_title(task_title):
+            if not self._torrent_completed(task):
+                skipped.setdefault("未完成", []).append(task_title)
+                continue
+            if not is_single_episode_title(task_title):
+                skipped.setdefault("非单集标题", []).append(task_title)
                 continue
             if self._title_season_number(task_title) != int(season or 0):
+                skipped.setdefault("季号不符", []).append(task_title)
                 continue
             task_show_key = self._media_title_key(task_title)
             if not show_key or task_show_key != show_key:
-                continue
-            task_path_key = self._path_key(task_path)
-            if not expected_path or not task_path_key or task_path_key != expected_path:
+                skipped.setdefault("剧名不符", []).append(task_title)
                 continue
             episodes = parse_episode_numbers(task_title)
             if len(episodes) != 1 or total_episode and any(episode > total_episode for episode in episodes):
+                skipped.setdefault("集数越界或多集", []).append(task_title)
                 continue
+            task_path_key = self._path_key(task_path)
+            same_path = bool(expected_path and task_path_key and task_path_key == expected_path)
+            if not same_path:
+                # 同剧同季同集且已完成，路径不同不再排除，仅记录供审计。
+                logger.info(
+                    "订阅下载增强旧单集匹配到不同保存目录，按剧名/季号/集数继续处理："
+                    f"{task_title}，任务目录={task_path or '未知'}，整季包目录={save_path or '未知'}"
+                )
             source_paths = []
             try:
                 media_extensions = {
@@ -1086,7 +1113,25 @@ class SubscribePlus(_PluginBase):
                 "downloader": client_name,
                 "episodes": sorted(episodes),
                 "source_paths": list(dict.fromkeys(source_paths)),
+                "same_save_path": same_path,
             })
+        if not selected:
+            details = "；".join(
+                f"{reason}={len(items)}({', '.join(items[:3])})"
+                for reason, items in skipped.items()
+            )
+            logger.info(
+                "订阅下载增强旧单集匹配结果为空："
+                f"整季包={title} S{int(season or 0):02d}，qB任务总数={len(tasks or [])}，"
+                f"排除原因={details or '无同季单集任务'}"
+            )
+        else:
+            same_path_count = sum(1 for task in selected if task.get("same_save_path"))
+            logger.info(
+                "订阅下载增强旧单集匹配完成："
+                f"整季包={title} S{int(season or 0):02d}，命中={len(selected)}，"
+                f"其中同保存目录={same_path_count}，不同目录={len(selected) - same_path_count}"
+            )
         return selected
 
     def _qb_save_path_for_hash(self, download_hash: str, downloader: str = "") -> str:
@@ -3537,6 +3582,18 @@ class SubscribePlus(_PluginBase):
         event_data = getattr(event, "event_data", None) or {}
         if not isinstance(event_data, dict):
             return
+        source_keyword = self._parse_season_pack_subscribe_source(event_data.get("source"))
+        if not source_keyword:
+            logger.info("订阅下载增强跳过 qB 整季包处理：DownloadAdded 来源不是有效订阅来源")
+            return
+        subscribe_id = safe_int(source_keyword.get("id"), 0)
+        if not subscribe_id:
+            logger.info("订阅下载增强跳过 qB 整季包处理：订阅来源缺少有效订阅 ID")
+            return
+        subscribe = self._get_subscribe(subscribe_id)
+        if not subscribe:
+            logger.info(f"订阅下载增强跳过 qB 整季包处理：订阅不存在，id={subscribe_id}")
+            return
         context = event_data.get("context")
         meta = self._read_cleanup_value(context, "meta_info")
         media = self._read_cleanup_value(context, "media_info")
@@ -3563,6 +3620,18 @@ class SubscribePlus(_PluginBase):
         )
         episodes.update(parse_episode_numbers(event_data.get("episodes")))
         if not (media_source and media_id and season and title):
+            return
+        subscribe_source, subscribe_media_id = subscribe_identity(subscribe)
+        subscribe_season = safe_int(self._read_cleanup_value(subscribe, "season"), 0)
+        if (
+            (subscribe_source, subscribe_media_id) != (media_source, media_id)
+            or subscribe_season != season
+            or safe_int(self._read_cleanup_value(source_keyword, "season"), 0) != season
+        ):
+            logger.info(
+                "订阅下载增强跳过 qB 整季包处理：下载媒体身份或季号与订阅不一致，"
+                f"subscribe_id={subscribe_id}，{title} S{season:02d}"
+            )
             return
         season_completed, final_episode, final_air_date = is_completed_by_air_date(
             self._load_episodes(
@@ -3651,6 +3720,17 @@ class SubscribePlus(_PluginBase):
             f"MV3整理记录={cleanup_result['mv3'].get('ok', 0)}，"
             f"全选={'成功' if full_download.get('ok') else '失败'}"
         )
+
+    @staticmethod
+    def _parse_season_pack_subscribe_source(source: Any) -> Optional[Dict[str, Any]]:
+        """仅解析宿主明确标记的 Subscribe 来源，拒绝普通或格式异常的下载来源。"""
+        if not isinstance(source, str) or not source.startswith("Subscribe|"):
+            return None
+        try:
+            payload = json.loads(source.split("|", 1)[1])
+        except (IndexError, json.JSONDecodeError, TypeError):
+            return None
+        return payload if isinstance(payload, dict) else None
 
     @staticmethod
     def _object_identity(value: Any) -> Tuple[str, str]:
