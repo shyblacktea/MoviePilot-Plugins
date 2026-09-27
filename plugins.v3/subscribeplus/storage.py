@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 from threading import Lock
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -53,12 +53,16 @@ class JsonStore:
                     pass
             self._read_cache.pop(name, None)
 
-    def save_scan_results(self, results: List[Dict[str, Any]]):
+    def save_scan_results(self, results: List[Dict[str, Any]], scan_stats: Optional[Dict[str, Any]] = None):
+        """保存扫描结果、扫描时间和可观测统计。"""
         for result in results or []:
             if isinstance(result, dict) and not result.get("result_id"):
                 result["result_id"] = self._new_record_id()
         self._write("scan_results.json", results)
-        self._write("scan_meta.json", {"last_scan_at": datetime.now().isoformat(timespec="seconds")})
+        self._write("scan_meta.json", {
+            "last_scan_at": datetime.now().isoformat(timespec="seconds"),
+            "scan_stats": dict(scan_stats or {}),
+        })
 
     def load_scan_results(self) -> List[Dict[str, Any]]:
         return self._read("scan_results.json", [])
@@ -184,35 +188,6 @@ class JsonStore:
         states = self._read("interactions.json", {})
         states.pop(token, None)
         self._write("interactions.json", states)
-
-    def save_tmdb_cache(self, key: str, value: Dict[str, Any]):
-        cache = self._read("tmdb_cache.json", {})
-        cache[key] = value
-        self._write("tmdb_cache.json", cache)
-
-    def load_tmdb_cache(self, key: str) -> Optional[Dict[str, Any]]:
-        return self._read("tmdb_cache.json", {}).get(key)
-
-    def prune_tmdb_cache(self, retention_days: int = 90) -> int:
-        """清理超过保留期限的 TMDB 季集日历缓存记录。"""
-        cache = self._read("tmdb_cache.json", {})
-        if not isinstance(cache, dict):
-            return 0
-        cutoff = datetime.now() - timedelta(days=max(0, int(retention_days or 0)))
-        removed = 0
-        for key in list(cache.keys()):
-            payload = cache.get(key)
-            updated_at = payload.get("updated_at") if isinstance(payload, dict) else None
-            try:
-                expired = not updated_at or datetime.fromisoformat(str(updated_at)) < cutoff
-            except (TypeError, ValueError):
-                expired = True
-            if expired:
-                cache.pop(key, None)
-                removed += 1
-        if removed:
-            self._write("tmdb_cache.json", cache)
-        return removed
 
 
     def save_notification_queue(self, items: List[Dict[str, Any]]):
