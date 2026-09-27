@@ -117,7 +117,7 @@ from .scanner import (
 from .season_cleanup import (
     QB_CLEANUP_OFF,
     QB_CLEANUP_SOURCE,
-    is_completed_by_air_date,
+
     is_season_pack_title,
     is_single_episode_title,
     normalize_qb_cleanup_mode,
@@ -151,8 +151,6 @@ from .telegram import (
 
 
 PLUGIN_ID = "SubscribePlus"
-TMDB_CACHE_TTL_HOURS = 6
-TMDB_CACHE_RETENTION_DAYS = 90
 TMDB_SOURCE_VALUES = {"themoviedb", "tmdb"}
 # V3 解析入口名称；旧宿主仍使用私有名称。
 PARSE_RESULT_ATTR = "_parse_result"
@@ -161,7 +159,7 @@ LEGACY_PARSE_RESULT_ATTR = "_SearchChain__parse_result"
 
 class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
-    plugin_desc = "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
+    plugin_desc = "按订阅目标集数检测电视剧缺集，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
     plugin_version = "1.1.8"
     plugin_author = "shyblacktea"
@@ -199,16 +197,10 @@ class SubscribePlus(_PluginBase):
             self._store.prune_candidate_cache(self._plugin_config.candidate_cache_days)
         except Exception as exc:
             logger.warning(f"订阅下载增强清理候选缓存失败：{exc}")
-        try:
-            removed = self._store.prune_tmdb_cache(TMDB_CACHE_RETENTION_DAYS)
-            if removed:
-                logger.info(f"订阅下载增强清理 TMDB 日历缓存：删除 {removed} 条超过 {TMDB_CACHE_RETENTION_DAYS} 天的记录")
-        except Exception as exc:
-            logger.warning(f"订阅下载增强清理 TMDB 日历缓存失败：{exc}")
+
         self._site_resolver = SiteResolver(self._load_moviepilot_search_sites)
         self._scanner = SubscriptionScanner(
             load_subscribes=self._load_subscribes,
-            load_episodes=self._load_episodes,
             is_episode_downloaded=self._is_episode_downloaded,
             load_categories=self._load_tv_categories,
             resolve_subscribe_category=self._resolve_subscribe_category,
@@ -431,6 +423,7 @@ class SubscribePlus(_PluginBase):
                 "enabled": self.get_state(),
                 "config": self._plugin_config.to_dict(),
                 "last_scan": store.load_scan_meta().get("last_scan_at"),
+                "scan_stats": store.load_scan_meta().get("scan_stats", {}),
                 "count": len(results),
                 "counts": counts,
                 "rule_records": store.load_rule_records()[:20],
@@ -636,7 +629,7 @@ class SubscribePlus(_PluginBase):
         payload = self._extract_payload(payload)
         notify_value = payload.get("notify", True)
         notify = str(notify_value).strip().lower() not in {"0", "false", "no", "off"}
-        # 单条诊断也是用户主动点击的读取入口，和“刷新日历并扫描”一样强制更新日历。
+        # 单条诊断按订阅目标集数和实际已下载集数判断。
         item, error = self._build_single_diagnosis_input(payload, force_refresh=True)
         if not item:
             return {"success": False, "count": 0, "message": error or "no diagnosable subscription item"}
@@ -776,11 +769,10 @@ class SubscribePlus(_PluginBase):
         store = self._ensure_store()
         scanner = self._ensure_scanner()
         resolver = self._ensure_site_resolver()
+        recovery = self._recover_stale_external_pauses() if source == "schedule" else {}
 
         results = []
-        # 手动扫描是用户明确要求刷新日历的入口；定时扫描使用固定缓存策略。
-        force_calendar_refresh = source == "manual"
-        inputs = scanner.scan(config, resolver, force_refresh=force_calendar_refresh)
+        inputs = scanner.scan(config, resolver)
         scan_stats = getattr(scanner, "last_scan_stats", {})
         logger.info(f"订阅下载增强扫描统计：{scan_stats}")
         logger.info(
@@ -794,9 +786,13 @@ class SubscribePlus(_PluginBase):
                 continue
             results.append(diagnosis.to_dict())
 
-        store.save_scan_results(results)
+        try:
+            store.save_scan_results(results, scan_stats=scan_stats)
+        except TypeError:
+            # 兼容旧的内存/测试存储适配器，真实 JsonStore 支持 scan_stats。
+            store.save_scan_results(results)
         if config.notify_tg:
-            self._notify_each_show(results)
+            self._notify_each_show(results, scan_stats=scan_stats)
 
         maintenance = None
         if source == "schedule" and config.season_pack_enabled:
@@ -819,16 +815,57 @@ class SubscribePlus(_PluginBase):
                 maintenance = {"success": False, "error": str(exc)}
                 logger.warning(f"订阅下载增强主扫描整季包维护失败：{exc}")
 
-        result = {"success": True, "count": len(results), "source": source}
+        result = {"success": True, "count": len(results), "source": source, "paused_recovery": recovery}
         if maintenance is not None:
             result["maintenance"] = maintenance
         return result
 
+    def _recover_stale_external_pauses(self) -> Dict[str, Any]:
+        """恢复订阅助手留下的超时 external 暂停，并触发一次原生搜索。"""
+        config = self._plugin_config
+        summary = {"enabled": bool(config.paused_external_recovery_enabled), "checked": 0, "recovered": 0, "skipped": []}
+        if not config.paused_external_recovery_enabled:
+            return summary
+        try:
+            from app.db.oper.plugindata import PluginDataOper
+            tasks = PluginDataOper().get_data("SubscribeAssistantEnhanced", "subscribes") or {}
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取订阅助手暂停记录失败：{exc}")
+            summary["skipped"].append({"reason": "pause_data_unavailable"})
+            return summary
+        now = datetime.now().timestamp()
+        threshold = max(1, int(config.paused_external_recovery_days or 7)) * 86400
+        for subscribe in self._load_subscribes() or []:
+            if str(getattr(subscribe, "state", "") or "") != "S":
+                continue
+            summary["checked"] += 1
+            task = tasks.get(str(getattr(subscribe, "id", "")), {}) if isinstance(tasks, dict) else {}
+            if not isinstance(task, dict) or task.get("pause_reason") != "external":
+                summary["skipped"].append({"subscribe_id": getattr(subscribe, "id", None), "reason": "not_external"})
+                continue
+            try:
+                pause_since = float(task.get("pause_since") or 0)
+            except (TypeError, ValueError):
+                pause_since = 0
+            if not pause_since or now - pause_since < threshold:
+                summary["skipped"].append({"subscribe_id": getattr(subscribe, "id", None), "reason": "below_threshold"})
+                continue
+            result = self._update_subscribe(int(getattr(subscribe, "id", 0)), {"state": "R"})
+            if not result.get("updated"):
+                summary["skipped"].append({"subscribe_id": getattr(subscribe, "id", None), "reason": "resume_failed"})
+                continue
+            summary["recovered"] += 1
+            try:
+                from app.chain.subscribe import SubscribeChain
+                SubscribeChain().search(sid=int(subscribe.id), state=None, manual=False)
+            except Exception as exc:
+                logger.warning(f"订阅下载增强暂停兜底已恢复但原生搜索失败：id={subscribe.id}，{exc}")
+        return summary
+
     def run_season_pack_replace(self, dry_run: bool = False) -> Dict[str, Any]:
-        """按最后一集播出日期搜索整季包，并可在下载成功后清理旧 qB 单集任务。"""
+        """按订阅目标集数搜索整季包，并可在下载成功后清理旧 qB 单集任务。"""
         if not dry_run and not self._plugin_config.season_pack_enabled:
             return {"dry_run": False, "enabled": False, "items": []}
-        today = datetime.now().date()
         items = []
         for subscribe in self._load_subscribes() or []:
             if not self._is_tv_subscribe(subscribe):
@@ -837,26 +874,20 @@ class SubscribePlus(_PluginBase):
             season = safe_int(getattr(subscribe, "season", 0), 0)
             if not source or not media_id or not season:
                 continue
-            episodes = self._load_episodes(
-                source,
-                media_id,
-                season,
-                getattr(subscribe, "episode_group", None),
-                force_refresh=False,
-            )
-            completed, final_episode, final_air_date = is_completed_by_air_date(
-                episodes,
-                today,
-                self._plugin_config.delay_days,
-            )
-            if not completed:
+            total_episode = safe_int(getattr(subscribe, "total_episode", 0), 0)
+            start_episode = max(1, safe_int(getattr(subscribe, "start_episode", 1), 1))
+            downloaded = self._load_downloaded_episodes(source, media_id, season)
+            target_episodes = set(range(start_episode, total_episode + 1)) if total_episode else set()
+            if not target_episodes or not target_episodes.issubset(downloaded | set(range(1, start_episode))):
                 continue
+            final_episode = total_episode
+            final_air_date = ""
             category = str(getattr(subscribe, "media_category", "") or "").strip()
             search_sites = self._ensure_site_resolver().resolve_for_category(self._plugin_config, category)
             item = DiagnosisInput(
                 subscribe_id=safe_int(getattr(subscribe, "id", 0), 0),
                 title=str(getattr(subscribe, "name", "") or getattr(subscribe, "title", "") or ""),
-                tmdbid=safe_int(getattr(subscribe, "tmdbid", 0), 0),
+                tmdbid=safe_int(media_id, 0) if source in TMDB_SOURCE_VALUES else 0,
                 season=season,
                 category=category,
                 media_source=source,
@@ -1201,18 +1232,6 @@ class SubscribePlus(_PluginBase):
             )
             if downloaded:
                 return None, f"{title} S{season:02d}E{episode_number:02d} is already downloaded"
-            air_date = ""
-            for episode in self._load_episodes(
-                media_source,
-                media_id,
-                season,
-                episode_group,
-                force_refresh=force_refresh,
-            ):
-                number = safe_int(episode.get("episode_number") or episode.get("episode"), 0)
-                if number == episode_number:
-                    air_date = str(episode.get("air_date") or "")
-                    break
             return (
                 DiagnosisInput(
                     subscribe_id=subscribe_id,
@@ -1228,7 +1247,6 @@ class SubscribePlus(_PluginBase):
                         StaleEpisode(
                             season=season,
                             episode=episode_number,
-                            air_date=air_date,
                             evidence=evidence or "manual single episode diagnosis",
                         )
                     ],
@@ -1242,7 +1260,7 @@ class SubscribePlus(_PluginBase):
             single_config.selected_categories = [category]
         scanner = SubscriptionScanner(
             lambda: [subscribe],
-            self._load_episodes,
+            lambda *_args, **_kwargs: [],
             self._is_episode_downloaded,
             load_categories=self._load_tv_categories,
             resolve_subscribe_category=self._resolve_subscribe_category,
@@ -1251,7 +1269,6 @@ class SubscribePlus(_PluginBase):
         inputs = scanner.scan(
             single_config,
             self._ensure_site_resolver(),
-            force_refresh=force_refresh,
         )
         if not inputs:
             return None, f"{title or subscribe_id} has no stale episode to diagnose"
@@ -1702,7 +1719,7 @@ class SubscribePlus(_PluginBase):
                 StaleEpisode(
                     season=safe_int(raw.get("season"), season) if isinstance(raw, dict) else season,
                     episode=episode,
-                    air_date=str(raw.get("air_date") or "") if isinstance(raw, dict) else "",
+
                     evidence=str(raw.get("evidence") or "来自当前 Telegram 诊断记录") if isinstance(raw, dict) else "来自当前 Telegram 诊断记录",
                 )
             )
@@ -1749,7 +1766,7 @@ class SubscribePlus(_PluginBase):
         result["message"] = f"搜索其他站点完成（{stamp}）：{site_label}，命中 {len(result.get('candidates') or [])} 个候选"
         return result
 
-    def _notify_each_show(self, results: List[Dict[str, Any]]):
+    def _notify_each_show(self, results: List[Dict[str, Any]], scan_stats: Optional[Dict[str, Any]] = None):
         store = self._ensure_store()
         pending = []
         for item in results:
@@ -1767,9 +1784,14 @@ class SubscribePlus(_PluginBase):
             targets = tuple(self._resolve_notify_userids(item))
             groups.setdefault(targets, []).append(item)
         for userids, items in groups.items():
-            self._notify_scan_summary(items, list(userids))
+            self._notify_scan_summary(items, list(userids), scan_stats=scan_stats)
 
-    def _notify_scan_summary(self, items: List[Dict[str, Any]], userids: List[str]) -> None:
+    def _notify_scan_summary(
+        self,
+        items: List[Dict[str, Any]],
+        userids: List[str],
+        scan_stats: Optional[Dict[str, Any]] = None,
+    ) -> None:
         """发送一条扫描结果汇总，并保存编号选择所需的交互状态。
 
         :param items: 当前通知目标对应的诊断项
@@ -1779,7 +1801,7 @@ class SubscribePlus(_PluginBase):
         message_kwargs = {
             "mtype": NotificationType.Plugin if NotificationType else None,
             "title": "订阅下载增强：扫描结果",
-            "text": render_scan_summary_text(items),
+            "text": render_scan_summary_text(items, scan_stats=scan_stats),
             "buttons": build_scan_summary_menu(summary_token, len(items)),
             "save_history": False,
         }
@@ -3574,7 +3596,7 @@ class SubscribePlus(_PluginBase):
         return
 
     def _remember_season_pack_download(self, event) -> None:
-        """登记命中最终播出集的整季包，并立即将 qB 文件全部设为下载。"""
+        """登记覆盖订阅目标集数的整季包，并立即将 qB 文件全部设为下载。"""
         config = getattr(self, "_plugin_config", PluginConfig.from_dict({}))
         qb_mode = normalize_qb_cleanup_mode(getattr(config, "season_pack_qb_cleanup", QB_CLEANUP_OFF))
         if not config.enabled or not config.season_pack_enabled:
@@ -3623,27 +3645,30 @@ class SubscribePlus(_PluginBase):
             return
         subscribe_source, subscribe_media_id = subscribe_identity(subscribe)
         subscribe_season = safe_int(self._read_cleanup_value(subscribe, "season"), 0)
+        source_media_source, source_media_id = normalize_identity(
+            self._read_cleanup_value(source_keyword, "media_source"),
+            self._read_cleanup_value(source_keyword, "media_id"),
+        )
+        source_season = safe_int(self._read_cleanup_value(source_keyword, "season"), 0)
         if (
             (subscribe_source, subscribe_media_id) != (media_source, media_id)
             or subscribe_season != season
-            or safe_int(self._read_cleanup_value(source_keyword, "season"), 0) != season
+            or (source_media_source and source_media_id and (source_media_source, source_media_id) != (media_source, media_id))
+            or (source_season and source_season != season)
         ):
             logger.info(
                 "订阅下载增强跳过 qB 整季包处理：下载媒体身份或季号与订阅不一致，"
                 f"subscribe_id={subscribe_id}，{title} S{season:02d}"
             )
             return
-        season_completed, final_episode, final_air_date = is_completed_by_air_date(
-            self._load_episodes(
-                media_source,
-                media_id,
-                season,
-                self._read_cleanup_value(media, "episode_group"),
-                force_refresh=False,
-            ),
-            datetime.now().date(),
-            config.delay_days,
-        )
+        subscribe_total = safe_int(self._read_cleanup_value(subscribe, "total_episode"), 0)
+        subscribe_start = max(1, safe_int(self._read_cleanup_value(subscribe, "start_episode"), 1))
+        target_episodes = set(range(subscribe_start, subscribe_total + 1)) if subscribe_total else set()
+        # DownloadAdded 事件本身代表目标资源已进入 qB；此处只用订阅目标集数
+        # 和资源标题覆盖范围判断是否为全集包，不再要求日历或先验完播事实。
+        season_completed = bool(target_episodes)
+        final_episode = subscribe_total
+        final_air_date = ""
         is_pack = is_season_pack_title(title, season)
         if not season_completed or not final_episode or not is_pack:
             return
@@ -3652,7 +3677,7 @@ class SubscribePlus(_PluginBase):
             # 不能用 MP 事件中的分集信息把 E01-E06 之类部分包扩成整季包。
             return
         if not title_episodes:
-            # 对明确的 Sxx/Complete 整季包，标题没有逐集范围时按播出日历补齐。
+            # 对明确的 Sxx/Complete 整季包，标题没有逐集范围时按订阅目标集数补齐。
             episodes = set(range(1, final_episode + 1))
         episodes = {episode for episode in episodes if 0 < episode <= final_episode}
         if final_episode not in episodes or len(episodes) < 2:
@@ -3714,7 +3739,7 @@ class SubscribePlus(_PluginBase):
         else:
             self._ensure_store().delete_season_pack_watch(download_hash)
         logger.info(
-            "订阅下载增强登记最终播出集整季包："
+            "订阅下载增强登记目标集数整季包："
             f"{title} S{season:02d}E{final_episode:02d} hash={download_hash}，"
             f"旧 qB 任务={len(old_tasks)}，已清理={cleanup_result['qb'].get('ok', 0)}，"
             f"MV3整理记录={cleanup_result['mv3'].get('ok', 0)}，"
@@ -4746,138 +4771,6 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强识别订阅分类失败 {subscribe_label}: {exc}")
         return None
 
-    @staticmethod
-    def _tmdb_cache_is_fresh(cached: Optional[Dict[str, Any]], cache_hours: int = TMDB_CACHE_TTL_HOURS) -> bool:
-        """判断插件保存的 TMDB 季集日历是否仍在配置的缓存期限内。"""
-        if not isinstance(cached, dict) or cache_hours <= 0:
-            return False
-        updated_at = cached.get("updated_at")
-        if not updated_at:
-            return False
-        try:
-            return datetime.fromisoformat(str(updated_at)) >= datetime.now() - timedelta(hours=cache_hours)
-        except (TypeError, ValueError):
-            return False
-
-    def _load_episodes(
-        self,
-        media_source: str,
-        media_id: str,
-        season: int,
-        episode_group: Optional[str],
-        force_refresh: bool = False,
-    ) -> List[Dict[str, Any]]:
-        """读取某季日历，按缓存期限自动更新，手动扫描可强制刷新。
-
-        只有 TMDB 来源有独立的分集日历接口；Bangumi、AniList 等来源改用
-        统一识别结果中的季集清单，避免把非 TMDB 的媒体 ID 当作 TMDB ID 使用。
-        """
-        cache_key = f"{media_source}:{media_id}:{season}:{episode_group or ''}"
-        cached = self._ensure_store().load_tmdb_cache(cache_key)
-        cached_episodes = cached.get("episodes") if isinstance(cached, dict) else None
-        if (
-            not force_refresh
-            and isinstance(cached_episodes, list)
-            and self._tmdb_cache_is_fresh(cached)
-        ):
-            return cached["episodes"]
-        try:
-            normalized = self._fetch_episodes(media_source, media_id, season, episode_group)
-            if not normalized:
-                # 空日历通常是数据源暂无数据，保留旧缓存避免扫描结果整体消失。
-                return cached_episodes if isinstance(cached_episodes, list) else []
-            self._ensure_store().save_tmdb_cache(
-                cache_key,
-                {"episodes": normalized, "updated_at": datetime.now().isoformat(timespec="seconds")},
-            )
-            return normalized
-        except Exception as exc:
-            logger.warning(
-                f"订阅下载增强读取剧集日历失败 {media_source}:{media_id} S{season}: {exc}"
-            )
-            # TMDB 临时不可用时保留旧日历，避免一次网络故障让扫描结果整体消失。
-            if isinstance(cached_episodes, list):
-                return cached_episodes
-            return []
-
-
-    def _fetch_episodes(
-        self,
-        media_source: str,
-        media_id: str,
-        season: int,
-        episode_group: Optional[str],
-    ) -> List[Dict[str, Any]]:
-        """按媒体来源获取某季的分集与播出日期。"""
-        if str(media_source or "").strip().lower() in TMDB_SOURCE_VALUES and str(media_id).strip().isdigit():
-            from app.chain.tmdb import TmdbChain
-
-            episodes = TmdbChain().tmdb_episodes(
-                tmdbid=int(media_id),
-                season=season,
-                episode_group=episode_group,
-            ) or []
-            return [
-                {
-                    "episode_number": getattr(episode, "episode_number", None)
-                    or getattr(episode, "episode", None),
-                    "air_date": str(getattr(episode, "air_date", "") or ""),
-                }
-                for episode in episodes
-            ]
-        return self._fetch_source_episodes(media_source, media_id, season, episode_group)
-
-    def _fetch_source_episodes(
-        self,
-        media_source: str,
-        media_id: str,
-        season: int,
-        episode_group: Optional[str],
-    ) -> List[Dict[str, Any]]:
-        """从非 TMDB 来源的识别结果推导季集清单。
-
-        这类来源没有分集播出日历，只能按季整体判断：使用分集自带的播出
-        日期，缺失时回落该季的发行日期；连季级日期都拿不到时返回空日历，
-        避免把尚未播出的集误判为已播出。
-        """
-        try:
-            from app.chain.media import MediaChain
-            from app.schemas.media import normalize_media_source
-        except Exception:
-            from app.chain import MediaChain
-            from app.schemas.media import normalize_media_source
-
-        source = normalize_media_source(media_source)
-        if not source:
-            return []
-        mediainfo = MediaChain().recognize_media(
-            mtype=MediaType.TV,
-            media_source=source,
-            media_id=str(media_id),
-            episode_group=episode_group or None,
-        )
-        if not mediainfo:
-            return []
-        episode_numbers = sorted(
-            int(number)
-            for number in ((getattr(mediainfo, "seasons", None) or {}).get(season) or [])
-            if str(number).isdigit() and int(number) > 0
-        )
-        if not episode_numbers:
-            return []
-        season_air_date = str(
-            getattr(mediainfo, "release_date", "") or getattr(mediainfo, "first_air_date", "") or ""
-        )
-        if not season_air_date:
-            logger.info(
-                "订阅下载增强：非 TMDB 来源缺少季播出日期，跳过日历构建 "
-                f"{media_source}:{media_id} S{season}"
-            )
-            return []
-        return [
-            {"episode_number": number, "air_date": season_air_date}
-            for number in episode_numbers
-        ]
 
     @staticmethod
     def _season_labels(season: int) -> List[str]:
@@ -5295,7 +5188,6 @@ class SubscribePlus(_PluginBase):
         if not self._scanner:
             self._scanner = SubscriptionScanner(
                 self._load_subscribes,
-                self._load_episodes,
                 self._is_episode_downloaded,
                 load_categories=self._load_tv_categories,
                 resolve_subscribe_category=self._resolve_subscribe_category,
