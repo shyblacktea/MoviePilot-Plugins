@@ -63,7 +63,7 @@
               <div class="d-flex align-center flex-wrap ga-1 mb-3">
                 <div class="sp-section-title mb-0">运行概览</div>
                 <VSpacer />
-                <VBtn color="primary" prepend-icon="mdi-calendar-refresh" variant="tonal" size="small" :loading="scanning" @click="runScan">刷新日历并扫描</VBtn>
+                <VBtn color="primary" prepend-icon="mdi-radar" variant="tonal" size="small" :loading="scanning" @click="runScan">扫描订阅缺集</VBtn>
                 <VBtn color="warning" prepend-icon="mdi-delete-sweep-outline" variant="text" size="small" :loading="clearing" @click="clearResults">清除诊断</VBtn>
                 <VBtn icon="mdi-refresh" variant="text" size="small" :loading="loading" @click="loadData" />
               </div>
@@ -71,7 +71,7 @@
               <div class="sp-stat-grid mb-4">
                 <div class="sp-stat">
                   <div class="d-flex align-center ga-2 mb-1">
-                    <VAvatar color="primary" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-calendar-clock" size="17" /></VAvatar>
+                    <VAvatar color="primary" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-radar" size="17" /></VAvatar>
                     <div class="text-caption text-medium-emphasis">最近扫描</div>
                   </div>
                   <div class="text-subtitle-2 font-weight-bold sp-stat-value">{{ status.last_scan || '-' }}</div>
@@ -97,7 +97,18 @@
                   </div>
                   <div class="text-subtitle-1 font-weight-bold">{{ ruleRecords.length }}</div>
                 </div>
+                <div class="sp-stat">
+                  <div class="d-flex align-center ga-2 mb-1">
+                    <VAvatar color="secondary" variant="tonal" size="28" rounded="lg"><VIcon icon="mdi-pause-circle-outline" size="17" /></VAvatar>
+                    <div class="text-caption text-medium-emphasis">暂停订阅</div>
+                  </div>
+                  <div class="text-subtitle-1 font-weight-bold">{{ scanStats.paused || 0 }}</div>
+                </div>
               </div>
+              <VAlert v-if="scanStats.total" type="info" variant="tonal" density="compact" class="mb-4">
+                本次扫描：{{ scanStats.total || 0 }} 条订阅，进入诊断 {{ scanStats.candidates || 0 }} 条；
+                跳过 {{ skippedCount }} 条，其中暂停 {{ scanStats.paused || 0 }} 条、分类未命中 {{ scanStats.category_skipped || 0 }} 条、身份缺失 {{ scanStats.missing_identity || 0 }} 条。
+              </VAlert>
 
               <template v-if="items.length">
                 <VCard v-for="item in items" :key="item.result_id || (item.subscribe_id + '-' + item.created_at)" flat class="sp-inner-card mb-3">
@@ -113,7 +124,7 @@
                   <VCardText class="pa-3">
                     <div class="mb-2">
                       <VChip v-for="episode in item.episodes || []" :key="episode.episode" size="small" variant="tonal" class="mr-1 mb-1">
-                        E{{ episode.episode }} / {{ episode.air_date }}
+                        E{{ episode.episode }}
                       </VChip>
                     </div>
                     <div class="text-caption text-medium-emphasis mb-2">{{ item.message }}</div>
@@ -314,8 +325,7 @@
               <section class="sp-dashboard-section">
                 <div class="sp-dashboard-title"><VIcon icon="mdi-clock-outline" color="primary" size="20" />运行节奏</div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-sync-outline" /><span>定时扫描</span><strong>{{ scanScheduleText }}</strong></div>
-                <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-refresh-outline" /><span>日历读取</span><strong>自动每 6 小时检查；手动强制刷新</strong></div>
-                <div class="sp-dashboard-row"><VIcon icon="mdi-calendar-alert-outline" /><span>超期检测</span><strong>播出后 {{ config.delay_days }} 天</strong></div>
+                <div class="sp-dashboard-row"><VIcon icon="mdi-counter" /><span>缺集判断</span><strong>订阅目标集数 − 实际已下载集数</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-message-processing-outline" /><span>通知方式</span><strong>按通知目标分组汇总</strong></div>
                 <div class="sp-dashboard-row"><VIcon icon="mdi-database-clock-outline" /><span>候选缓存</span><strong>{{ candidateCacheText }}</strong></div>
               </section>
@@ -547,6 +557,10 @@ const enabledFeatureCount = computed(() => [
 const scanScheduleText = computed(() => describeCron(config.cron))
 const candidateCacheText = computed(() => Number(config.candidate_cache_days) > 0 ? `${config.candidate_cache_days} 天` : '已关闭')
 const lastScanText = computed(() => formatCompactDateTime(status.value.last_scan))
+const scanStats = computed(() => status.value.scan_stats || {})
+const skippedCount = computed(() => Array.isArray(scanStats.value.skipped)
+  ? scanStats.value.skipped.length
+  : Math.max(Number(scanStats.value.total || 0) - Number(scanStats.value.candidates || 0), 0))
 
 function describeCron(value) {
   const cron = String(value || '').trim()
@@ -999,7 +1013,7 @@ async function confirmRule() {
 function buildConfigPayload() {
   const payload = {
     ...config,
-    delay_days: Number(config.delay_days),
+
 
     candidate_cache_days: Number(config.candidate_cache_days),
     notification_suppression_days: Number(config.notification_suppression_days),
@@ -1013,7 +1027,7 @@ function buildConfigPayload() {
     'season_pack_full_download',
     'season_pack_replace_enabled',
     'season_pack_replace_delete_qb',
-    'season_pack_replace_delay_days',
+
   ]) delete payload[key]
   return payload
 }
