@@ -3,7 +3,7 @@
 `SubscribePlus` 用于检测电视剧订阅：按订阅目标集数与媒体库/整理历史实际已下载集数计算缺集，插件会优先复用 MoviePilot 原生订阅搜索结果，并分析原因是暂无资源、识别问题，还是订阅规则没有命中。
 
 - 插件 ID：`SubscribePlus`
-- 当前版本：`1.1.8`
+- 当前版本：`1.1.9`
 - 插件目录：`plugins.v3/subscribeplus/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`shyblacktea`
@@ -352,8 +352,8 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
 - 当前版本：`1.1.8`
-- Release tag：`SubscribePlus_v1.1.8`
-- Release 资产：`subscribeplus_v1.1.8.zip`
+- Release tag：`SubscribePlus_v1.1.9`
+- Release 资产：`subscribeplus_v1.1.9.zip`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 
 ## 致谢
