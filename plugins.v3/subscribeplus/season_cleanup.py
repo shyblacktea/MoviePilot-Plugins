@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from datetime import date, timedelta
 from typing import Any, Iterable, List, Set
 
 
@@ -48,42 +47,6 @@ def is_single_episode_title(title: str) -> bool:
     """判断资源标题是否明确表示单集，供替换整季包前筛选旧 qB 任务。"""
     return bool(_SINGLE_EPISODE_RE.search(str(title or "")))
 
-
-def is_completed_by_air_date(episodes: Iterable[Any], today, delay_days: int = 0) -> tuple[bool, int, str]:
-    """按最后一集播出日期判断季集是否完播，返回状态、最终集号和日期。"""
-    episode_dates = {}
-    episode_numbers = set()
-    for item in episodes or []:
-        if isinstance(item, dict):
-            number = item.get("episode_number") or item.get("episode")
-            air_date = item.get("air_date")
-        else:
-            number = getattr(item, "episode_number", None) or getattr(item, "episode", None)
-            air_date = getattr(item, "air_date", None)
-        try:
-            number = int(number)
-        except (TypeError, ValueError):
-            continue
-        if number < 1:
-            continue
-        episode_numbers.add(number)
-        if not air_date:
-            continue
-        if hasattr(air_date, "isoformat"):
-            air_date = air_date.isoformat()
-        try:
-            episode_dates[number] = date.fromisoformat(str(air_date)[:10])
-        except ValueError:
-            continue
-    if not episode_numbers:
-        return False, 0, "missing finale air date"
-    final_episode = max(episode_numbers)
-    if episode_numbers != set(range(1, final_episode + 1)):
-        return False, final_episode, "incomplete episode metadata"
-    final_date = episode_dates.get(final_episode)
-    if not final_date:
-        return False, final_episode, "missing finale air date"
-    return final_date + timedelta(days=max(0, int(delay_days))) <= today, final_episode, final_date.isoformat()
 
 
 def normalize_cleanup_mode(value: Any) -> str:
