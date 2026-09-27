@@ -10,7 +10,7 @@ export const groups = [
   { key: 'overview', title: '运行概览', icon: 'mdi-view-dashboard-outline', desc: '扫描状态、待处理诊断与快捷操作。' },
   { key: 'identifier', title: '识别词工具', icon: 'mdi-tag-plus-outline', desc: '按 TMDB 强制绑定媒体或修正年份。' },
   { key: 'rules', title: '规则记录', icon: 'mdi-history', desc: '订阅规则修改历史。' },
-  { key: 'scan', title: '扫描设置', icon: 'mdi-tune-variant', desc: '订阅扫描周期、宽限天数与站点范围。' },
+  { key: 'scan', title: '扫描设置', icon: 'mdi-tune-variant', desc: '订阅扫描周期、目标集数与站点范围。' },
   { key: 'notify', title: '通知权限', icon: 'mdi-message-badge-outline', desc: 'Telegram 通知、重复提醒抑制与规则修改授权。' },
   { key: 'cleanup', title: '清理与候选', icon: 'mdi-broom', desc: '整季包清理与候选下载缓存。' },
 ]
@@ -27,11 +27,6 @@ export const fields = [
     key: 'enabled', group: 'scan', section: '运行状态', type: 'switch',
     label: '启用插件', color: 'success',
     hint: '开启后插件将处于激活状态',
-  },
-  {
-    key: 'delay_days', group: 'scan', section: '扫描窗口', type: 'number',
-    label: '宽限天数', min: 0, unit: '天', cols: { md: 4 },
-    hint: '单集播出超过 N 天仍未入库才触发诊断',
   },
 
   {
@@ -67,6 +62,16 @@ export const fields = [
     key: 'notification_suppression_days', group: 'notify', section: '重复提醒抑制', type: 'number',
     label: '不通知天数', min: 0, unit: '天', cols: { md: 6 },
     hint: '同一诊断选择“不通知”后，在此期限内不再重复提醒；0 表示关闭',
+  },
+  {
+    key: 'paused_external_recovery_enabled', group: 'scan', section: '暂停订阅兜底', type: 'switch',
+    label: '启用外部暂停超时恢复', color: 'warning', cols: { md: 6 },
+    hint: '仅恢复记录为 external 且超过阈值的暂停订阅，不处理用户手动暂停',
+  },
+  {
+    key: 'paused_external_recovery_days', group: 'scan', section: '暂停订阅兜底', type: 'number',
+    label: '外部暂停恢复阈值', min: 1, unit: '天', cols: { md: 6 },
+    hint: '暂停超过此天数后恢复为启用状态，默认 7 天',
   },
 
   // ---- 清理与候选 ----
@@ -107,7 +112,7 @@ export const fields = [
 /** 配置默认值（与后端 PluginConfig 对齐） */
 export const defaults = {
   enabled: false,
-  delay_days: 1,
+
   cron: '0 9 * * *',
   selected_categories: [],
   search_sites: [],
@@ -120,6 +125,8 @@ export const defaults = {
   mv3_api_token: '',
   candidate_cache_days: 3,
   notification_suppression_days: 3,
+  paused_external_recovery_enabled: false,
+  paused_external_recovery_days: 7,
   custom_release_groups: [],
   custom_platforms: [],
 }
