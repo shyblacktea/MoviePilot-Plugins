@@ -46,11 +46,11 @@ class CureTMDbAnimeShy(_PluginBase):
     # 插件名称
     plugin_name = "CTMDbA魔改版"
     # 插件描述
-    plugin_desc = "对 TMDb 上被合并为一季的番剧进行季信息分离。（小k自用版）"
+    plugin_desc = "对 TMDb 上被合并为一季的番剧进行季信息分离，优先使用 TVDB 拆分依据。（小k自用版）"
     # 插件图标
-    plugin_icon = "curetmdbanimeshy.png"
+    plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/curetmdbanimeshy.png"
     # 插件版本
-    plugin_version = "0.0.1"
+    plugin_version = "0.0.2"
     # 插件作者
     plugin_author = "Attente,shyblacktea"
     # 作者主页
@@ -64,7 +64,7 @@ class CureTMDbAnimeShy(_PluginBase):
     # 二进制文件
     binary_name = "curetmdbanime"
     # 二进制文件版本
-    binary_version = "1.3.1"
+    binary_version = "1.4.0"
     # 二进制下载仓库（二进制仍由原作者 wikrin 编译分发）
     binary_repo = "https://github.com/wikrin"
 
