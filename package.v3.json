@@ -3,12 +3,13 @@
     "name": "CTMDbA魔改版",
     "description": "对 TMDb 上被合并为一季的番剧进行季信息分离，优先使用 TVDB 拆分依据。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/curetmdbanimeshy.png",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": "Attente,shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
+      "v0.0.3": "日志降噪：普通请求和分季明细降为 DEBUG，保留错误、警告和实际修正结果；移除配套服务 debug 启动参数并对 URL 凭据脱敏。",
       "v0.0.2": "适配上游 CureTMDbAnime 2.4.0：新增 TVDB 作为拆分依据并优先使用；二进制版本更新至 1.4.0。",
       "v0.0.1": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），旧导入 app.core.*/app.helper.*/app.utils.*/app.log 统一迁移到 app.sdk.*，独立插件 ID CureTMDbAnimeShy 杜绝与原版 CureTMDbAnime 来源冲突。"
     }

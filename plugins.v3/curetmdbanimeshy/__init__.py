@@ -14,6 +14,7 @@ from app.sdk.network import RequestUtils
 from app.sdk.utilities import SystemUtils
 
 from .engine import MetaCorrectionUseCase
+from .log_output import classify_service_line
 from .patch import MonkeyPatchManager
 
 
@@ -50,7 +51,7 @@ class CureTMDbAnimeShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/curetmdbanimeshy.png"
     # 插件版本
-    plugin_version = "0.0.2"
+    plugin_version = "0.0.3"
     # 插件作者
     plugin_author = "Attente,shyblacktea"
     # 作者主页
@@ -387,7 +388,6 @@ class CureTMDbAnimeShy(_PluginBase):
         # 构建命令行参数列表
         cmd_args = [
             executable_path.as_posix(),
-            "--debug",
             "--port",
             str(self.config.port),
             "--data-dir",
@@ -442,15 +442,11 @@ class CureTMDbAnimeShy(_PluginBase):
         import selectors
 
         def log_output_line(line: str):
-            if line.strip():
-                parts = line.strip().split(" ", 3)
-                log_level = parts[0][1:-1].lower()
-                log_func = (
-                    logger.debug
-                    if log_level == "gin"
-                    else getattr(logger, log_level, logger.critical)
-                )
-                log_func(f"🔗  {parts[-1].strip()}")
+            """转发经分级及脱敏处理的服务输出。"""
+            result = classify_service_line(line)
+            if result:
+                level, message = result
+                getattr(logger, level)(f"🔗  {message}")
 
         streams = [stream for stream in (process.stdout, process.stderr) if stream]
         with selectors.DefaultSelector() as sel:

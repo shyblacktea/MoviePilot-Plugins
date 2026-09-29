@@ -3,7 +3,7 @@
 `CureTMDbAnimeShy` 用于修正 TMDB 将部分番剧合并为一季时产生的季信息问题，并通过独立的 CureTMDb 服务提供元数据修正能力。
 
 - 插件 ID：`CureTMDbAnimeShy`
-- 当前版本：`0.0.2`
+- 当前版本：`0.0.3`
 - 插件目录：`plugins.v3/curetmdbanimeshy/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`Attente, shyblacktea`
@@ -53,6 +53,12 @@
 
 ## 版本记录
 
+### v0.0.3
+
+- 普通 API 请求、分季尝试、无需拆分和逐季明细降为 DEBUG，保留错误、警告、数据源选中和实际季集修正结果。
+- 移除配套服务的 debug 启动参数，查询 URL 中的凭据参数在转发日志前自动脱敏。
+- 保留上游已有的分季逻辑、TVDB/Bangumi/TMDB 缓存策略，不改变媒体识别行为。
+
 ### v0.0.2
 
 - 适配上游 CureTMDbAnime `2.4.0` 的 TVDB 拆分逻辑。
@@ -72,10 +78,10 @@
 
 - 插件 ID：`CureTMDbAnimeShy`
 - 插件目录：`curetmdbanimeshy`
-- 当前版本：`0.0.2`
-- Release 标签：`CureTMDbAnimeShy_v0.0.2`
-- Release 安装包：`curetmdbanimeshy_v0.0.2.zip`
-- [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/CureTMDbAnimeShy_v0.0.2)
+- 当前版本：`0.0.3`
+- Release 标签：`CureTMDbAnimeShy_v0.0.3`
+- Release 安装包：`curetmdbanimeshy_v0.0.3.zip`
+- [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/CureTMDbAnimeShy_v0.0.3)
 
 ## 致谢
 
