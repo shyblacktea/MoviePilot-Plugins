@@ -114,7 +114,7 @@
     "author": "Attente,shyblacktea",
     "level": 2,
     "system_version": ">=3.0.0",
-    "release": false,
+    "release": true,
     "history": {
       "v0.0.1": "从原版 FollowUp 独立改造，保留 JSON 配置页并适配 MoviePilot V3 媒体身份字段。"
     }
