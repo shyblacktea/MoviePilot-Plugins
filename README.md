@@ -19,6 +19,7 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 
 ### 订阅类
 
+- [续作跟进魔改版](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/followupshy)：根据媒体库或订阅历史检查系列续作并通知订阅，独立插件 ID `FollowUpShy`，适配 MoviePilot V3。
 - [订阅下载增强](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/subscribeplus)：检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。
 - [手动订阅助手](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/manualsubscribeassistantshy)：完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。
 
