@@ -1940,6 +1940,9 @@ class MetaCorrectionUseCase:
         absolute_to_point = {idx: point for point, idx in point_to_absolute.items()}
 
         def parse_tmdb_episode(raw: object) -> tuple[EpisodePoint | None, date | None]:
+            """兼容宿主结构化剧集对象与旧版字典。"""
+            if callable(getattr(raw, "model_dump", None)):
+                raw = raw.model_dump()
             if not isinstance(raw, dict):
                 return None, None
             season = raw.get("season_number")
@@ -1967,7 +1970,11 @@ class MetaCorrectionUseCase:
 
         production_cycles: list[ProductionCycle] = []
         season_info = sorted(
-            mediainfo.season_info, key=lambda item: item.get("season_number", 0)
+            (
+                item.model_dump() if callable(getattr(item, "model_dump", None)) else item
+                for item in mediainfo.season_info
+            ),
+            key=lambda item: item.get("season_number", 0),
         )
         for info in season_info:
             season = info.get("season_number")
