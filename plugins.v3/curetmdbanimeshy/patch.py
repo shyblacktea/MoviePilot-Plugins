@@ -1,5 +1,7 @@
 import sys
 import inspect
+import asyncio
+from functools import wraps
 from typing import Optional, Callable
 from urllib.parse import urlparse
 
@@ -13,6 +15,7 @@ from app.application.torrent.download import TorrentHelper
 from app.sdk.logging import logger
 from app.modules.themoviedb.tmdbv3api.tmdb import TMDb
 from app.sdk.string import StringUtils
+from app.chain.media import MediaChain
 
 
 class MonkeyPatchManager:
@@ -220,7 +223,7 @@ class MonkeyPatchManager:
         self.patch_torrent_info_cache()
         self.patch_job_manager(func)
         self.patch_torrent_helper(func)
-        self.patch_mediainfo(func)
+        self.patch_media_recognition(func)
 
     def patch_torrent_info_cache(self):
         """
@@ -351,6 +354,30 @@ class MonkeyPatchManager:
             return original_set_category(instance, cat)
 
         self.patch(MediaInfo, "set_category", new_set_category)
+
+    def patch_media_recognition(self, func: Callable):
+        """识别完成后显式修正输入元数据，不依赖分类方法或调用栈变量。"""
+        original_sync = MediaChain.recognize_by_meta
+        original_async = MediaChain.async_recognize_by_meta
+
+        @wraps(original_sync)
+        def recognize(instance, metainfo, *args, **kwargs):
+            """保留同步识别参数和返回对象，并修正同一份输入元数据。"""
+            mediainfo = original_sync(instance, metainfo, *args, **kwargs)
+            if mediainfo is not None:
+                func(metainfo, mediainfo)
+            return mediainfo
+
+        @wraps(original_async)
+        async def async_recognize(instance, metainfo, *args, **kwargs):
+            """异步识别后在线程中执行含同步网络请求的修正逻辑。"""
+            mediainfo = await original_async(instance, metainfo, *args, **kwargs)
+            if mediainfo is not None:
+                await asyncio.to_thread(func, metainfo, mediainfo)
+            return mediainfo
+
+        self.patch(MediaChain, "recognize_by_meta", recognize)
+        self.patch(MediaChain, "async_recognize_by_meta", async_recognize)
 
     def is_patched(self):
 
