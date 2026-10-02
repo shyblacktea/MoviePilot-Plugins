@@ -85,9 +85,9 @@
 - 插件 ID：`CureTMDbAnimeShy`
 - 插件目录：`curetmdbanimeshy`
 - 当前版本：`0.0.4`
-- Release 标签：`CureTMDbAnimeShy_v0.0.3`
-- Release 安装包：`curetmdbanimeshy_v0.0.3.zip`
-- [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/CureTMDbAnimeShy_v0.0.3)
+- Release 标签：`CureTMDbAnimeShy_v0.0.4`
+- Release 安装包：`curetmdbanimeshy_v0.0.4.zip`
+- [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/CureTMDbAnimeShy_v0.0.4)
 
 ## 致谢
 
