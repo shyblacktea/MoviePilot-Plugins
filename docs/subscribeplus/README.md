@@ -3,7 +3,7 @@
 `SubscribePlus` 用于检测电视剧订阅：按订阅目标集数与媒体库/整理历史实际已下载集数计算缺集，插件会优先复用 MoviePilot 原生订阅搜索结果，并分析原因是暂无资源、识别问题，还是订阅规则没有命中。
 
 - 插件 ID：`SubscribePlus`
-- 当前版本：`1.1.9`
+- 当前版本：`1.1.10`
 - 插件目录：`plugins.v3/subscribeplus/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`shyblacktea`
@@ -117,6 +117,14 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 - Telegram、站点和下载器凭据属于敏感配置，不应写入日志或提交到仓库。
 
 ## 版本记录
+
+### v1.1.10
+
+- 本轮订阅搜索为空时只提示待复核，其他站点候选不能证明订阅站点没有资源。
+- 扫描汇总分别显示目标尚未入库范围、候选覆盖范围和诊断原因；不再把前五个缺集当作命中集数。
+- 下载接受事件按媒体身份、季号和明确集数剔除旧候选，相关汇总与详情按钮失效；提交下载不代表已经入库。
+- 不新增自动重试搜索或下载。已发送 Telegram 消息因缺少消息定位信息不主动编辑或删除；旧按钮失效后需重新查看诊断。
+- 修复候选缓存清理缺少 `timedelta` 导入的问题。
 
 ### v1.1.9
 
@@ -357,9 +365,10 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`1.1.9`
-- Release tag：`SubscribePlus_v1.1.9`
-- Release 资产：`subscribeplus_v1.1.9.zip`
+- 当前版本：`1.1.10`
+- Release tag：`SubscribePlus_v1.1.10`
+- Release 资产：`subscribeplus_v1.1.10.zip`
+- [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/SubscribePlus_v1.1.10)
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 
 ## 致谢
