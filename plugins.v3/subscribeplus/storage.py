@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 from threading import Lock
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -188,6 +188,53 @@ class JsonStore:
         states = self._read("interactions.json", {})
         states.pop(token, None)
         self._write("interactions.json", states)
+
+    def invalidate_downloaded_candidates(self, media_source: str, media_id: str, season: int, episodes: set[int]) -> None:
+        """按下载接受事件撤销候选和旧交互，不把提交下载标记为已入库。
+
+        仅使用事件明确给出的集数；无集数的整季包不推断覆盖范围。
+        """
+        if not media_source or not media_id or not season or not episodes:
+            return
+
+        def matches(item):
+            """仅匹配相同来源、媒体 ID 和季号的诊断。"""
+            return (str(item.get("media_source") or ""), str(item.get("media_id") or ""),
+                    int(item.get("season") or 0)) == (media_source, media_id, season)
+
+        changed_ids = set()
+        refreshed = []
+        for item in self.load_scan_results():
+            if not matches(item):
+                refreshed.append(item)
+                continue
+            remaining = [ep for ep in item.get("episodes") or [] if int(ep.get("episode") or 0) not in episodes]
+            if len(remaining) == len(item.get("episodes") or []):
+                refreshed.append(item)
+                continue
+            changed_ids.add(item.get("subscribe_id"))
+            candidates = []
+            targets = {int(ep.get("episode") or 0) for ep in remaining}
+            for candidate in item.get("candidates") or []:
+                covered = {int(ep) for ep in candidate.get("episodes") or []}
+                if not covered and candidate.get("episode"):
+                    covered = {int(candidate["episode"])}
+                if covered & targets:
+                    candidates.append(candidate)
+            if remaining and candidates:
+                refreshed.append({**item, "episodes": remaining, "candidates": candidates})
+        if not changed_ids:
+            return
+        self.replace_scan_results(refreshed)
+        states = self._read("interactions.json", {})
+        kept = {}
+        for token, state in states.items():
+            items = state.get("items") or [state.get("diagnosis") or {}]
+            if not any(matches(item) and item.get("subscribe_id") in changed_ids for item in items):
+                kept[token] = state
+        self._write("interactions.json", kept)
+        queue = self.load_notification_queue()
+        self.save_notification_queue([item for item in queue if not (matches(item) and item.get("subscribe_id") in changed_ids)])
 
 
     def save_notification_queue(self, items: List[Dict[str, Any]]):
