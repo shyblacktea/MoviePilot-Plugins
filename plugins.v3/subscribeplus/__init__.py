@@ -161,7 +161,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "按订阅目标集数检测电视剧缺集，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.10"
+    plugin_version = "1.1.11"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -635,7 +635,7 @@ class SubscribePlus(_PluginBase):
             return {"success": False, "count": 0, "message": error or "no diagnosable subscription item"}
 
         diagnosis = self._diagnose_item(item)
-        results = [diagnosis.to_dict()] if diagnosis else []
+        results = self._refresh_scan_results([diagnosis.to_dict()]) if diagnosis else []
         self._ensure_store().save_scan_results(results)
         if notify and self._plugin_config.notify_tg and results:
             self._notify_each_show(results)
@@ -785,6 +785,10 @@ class SubscribePlus(_PluginBase):
             if not diagnosis:
                 continue
             results.append(diagnosis.to_dict())
+
+        # 其他站点诊断可能重新构造缺集列表；保存和通知前按最新媒体库、
+        # 整理历史再复核一次，避免已入库集被重新带回通知。
+        results = self._refresh_scan_results(results)
 
         try:
             store.save_scan_results(results, scan_stats=scan_stats)
@@ -4547,6 +4551,15 @@ class SubscribePlus(_PluginBase):
             refreshed.append(updated)
         if changed:
             store.replace_scan_results(refreshed)
+        return refreshed
+
+    def _refresh_scan_results(self, results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """在保存或发送扫描结果前按当前媒体库状态做一次新鲜复核。"""
+        refreshed: List[Dict[str, Any]] = []
+        for item in results or []:
+            updated = self._refresh_scan_result_item(item)
+            if updated is not None:
+                refreshed.append(updated)
         return refreshed
 
     def _load_subscribes(self) -> List[Any]:
