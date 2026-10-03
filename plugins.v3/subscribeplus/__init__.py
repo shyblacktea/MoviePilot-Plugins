@@ -161,7 +161,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "按订阅目标集数检测电视剧缺集，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.8"
+    plugin_version = "1.1.10"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -1661,12 +1661,12 @@ class SubscribePlus(_PluginBase):
 
         original_reason = result.reason
         if result.reason in {"downloadable", "rule_blocked"}:
-            result.reason = "site_scope_blocked"
-            result.message = "订阅站点暂无目标集，其他 PT 站点存在目标集资源"
+            result.reason = "search_unconfirmed"
+            result.message = "本轮订阅范围搜索未获取目标候选，原因待复核；其他 PT 站点存在候选，不代表订阅站点没有资源"
             if original_reason == "rule_blocked":
                 result.message += "，但可能仍被订阅包含规则拦截"
         elif result.reason == "recognition_issue":
-            result.message = "订阅站点暂无目标集，其他 PT 站点存在目标集资源，但识别异常"
+            result.message = "本轮订阅范围搜索未获取目标候选，原因待复核；其他 PT 站点候选识别异常"
 
         result.source = "plugin_pt_scope"
         result.original_reason = original_reason
@@ -1676,7 +1676,7 @@ class SubscribePlus(_PluginBase):
         result.subscription_site_names = self._ensure_site_resolver().names_for(subscription_sites)
         result.subscription_site_progress = self._build_subscription_site_progress(item, mp_search, subscription_sites)
         logger.info(
-            "订阅下载增强发现订阅站点缺集但其他站点存在目标集："
+            "订阅下载增强本轮订阅范围未获取目标候选，其他站点命中（待复核）："
             f"{self._format_item_log_context(item)}，订阅站点={','.join(subscription_sites) or '-'}，"
             f"其他站点={','.join(other_sites)}，"
             f"目标集候选={len(result.candidates)}，搜索统计={result.search_stats}"
@@ -1982,6 +1982,10 @@ class SubscribePlus(_PluginBase):
         @eventmanager.register(EventType.DownloadAdded)
         def handle_download_added(self, event):
             """监听订阅最终集整季包，先全选新包并登记后续清理。"""
+            try:
+                self._invalidate_downloaded_diagnosis(event)
+            except Exception as exc:
+                logger.warning(f"订阅下载增强撤销已提交下载的旧诊断失败：{exc}")
             try:
                 self._remember_season_pack_download(event)
             except Exception as exc:
@@ -3594,6 +3598,19 @@ class SubscribePlus(_PluginBase):
     def _handle_transfer_complete_cleanup(self, _event):
         """整季包统一由 DownloadAdded 处理，TransferComplete 不再重复清理。"""
         return
+
+    def _invalidate_downloaded_diagnosis(self, event) -> None:
+        """使用下载事件明确身份和集数撤销旧提示，不执行搜索或下载。"""
+        if not getattr(self, "_plugin_config", PluginConfig.from_dict({})).enabled:
+            return
+        data = getattr(event, "event_data", None) or {}
+        context = data.get("context")
+        media = self._read_cleanup_value(context, "media_info")
+        meta = self._read_cleanup_value(context, "meta_info")
+        media_source, media_id = self._object_identity(media)
+        season = safe_int(self._read_cleanup_value(meta, "begin_season", "season"), 0)
+        episodes = {safe_int(ep, 0) for ep in data.get("episodes") or [] if safe_int(ep, 0) > 0}
+        self._ensure_store().invalidate_downloaded_candidates(media_source, media_id, season, episodes)
 
     def _remember_season_pack_download(self, event) -> None:
         """登记覆盖订阅目标集数的整季包，并立即将 qB 文件全部设为下载。"""
