@@ -591,7 +591,7 @@ def render_scan_summary_text(items: List[Dict[str, Any]], scan_stats: Optional[D
     :return: 汇总消息文本
     """
     stats = scan_stats or {}
-    rows = [f"扫描完成，共有 {len(items or [])} 部可处理："]
+    rows = [f"扫描完成，共有 {len(items or [])} 部需确认："]
     if stats:
         rows.append(
             "扫描统计："
@@ -609,6 +609,19 @@ def render_scan_summary_text(items: List[Dict[str, Any]], scan_stats: Optional[D
             if int(episode.get("episode") or 0)
         )
         season_text = f" S{season:02d}" if season else ""
-        rows.append(f"{index}. {title}{season_text}{episode_text}")
+        if len(episodes) > 5:
+            episode_text += f" 等，共 {len(episodes)} 集"
+        covered = set()
+        targets = {int(ep.get("episode") or 0) for ep in episodes}
+        for candidate in item.get("candidates") or []:
+            if int(candidate.get("season") or season) != season:
+                continue
+            values = candidate.get("episodes") or [candidate.get("episode") or 0]
+            covered.update(int(ep) for ep in values if int(ep or 0) in targets)
+        coverage = "/".join(f"E{ep:02d}" for ep in sorted(covered)[:10]) or "未确认"
+        if len(covered) > 10:
+            coverage += f" 等，共 {len(covered)} 集"
+        rows.append(f"{index}. {title}{season_text}；目标尚未入库：{episode_text or '未知'}")
+        rows.append(f"候选覆盖：{coverage}（不代表全部可下载）；{item.get('message') or item.get('reason') or '待复核'}")
     rows.append("\n请选择编号查看详情，或点击“关闭”删除本次扫描提示。")
     return "\n".join(rows)
