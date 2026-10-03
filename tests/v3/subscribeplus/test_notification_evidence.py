@@ -128,3 +128,24 @@ def test_cache_prune_has_timedelta_dependency():
         store = storage.JsonStore(Path(directory))
         store._write("candidate_cache.json", {"old": {"cached_at": "2020-01-01T00:00:00"}})
         assert store.prune_candidate_cache(1) == 1
+
+
+def test_scan_results_are_refreshed_before_save_or_notify():
+    """诊断阶段带回已入库集时，保存前复核必须将其剔除。"""
+    with plugin_modules() as (plugin, _, _):
+        instance = object.__new__(plugin.SubscribePlus)
+        calls = []
+        instance._refresh_scan_result_item = lambda item: calls.append(item) or (
+            {**item, "episodes": [{"episode": 195}]}
+        )
+        result = instance._refresh_scan_results([{"episodes": [{"episode": 194}, {"episode": 195}]}])
+        assert calls
+        assert result == [{"episodes": [{"episode": 195}]}]
+
+
+def test_scan_results_drop_item_when_fresh_library_check_finds_all():
+    """当前媒体库覆盖全部缺集时，不应产生保存或通知项目。"""
+    with plugin_modules() as (plugin, _, _):
+        instance = object.__new__(plugin.SubscribePlus)
+        instance._refresh_scan_result_item = lambda _item: None
+        assert instance._refresh_scan_results([{"subscribe_id": 284}]) == []
