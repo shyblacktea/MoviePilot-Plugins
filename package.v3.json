@@ -84,14 +84,15 @@
   },
   "SubscribePlus": {
     "name": "订阅下载增强",
-    "description": "检测已播出但未入库的电视剧订阅，并分析 PT 资源、识别和订阅规则原因。（小k自用版）",
+    "description": "按订阅目标集数检测电视剧缺集，并分析 PT 资源、识别和订阅规则原因。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png",
-    "version": "1.1.9",
+    "version": "1.1.10",
     "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
+      "v1.1.10": "空搜索诊断降级为待复核，不断言订阅站点无资源；汇总区分目标尚未入库范围与候选覆盖范围；下载接受后剔除候选并使相关旧交互失效；修复缓存清理 timedelta 缺失。",
       "v1.1.9": "修复 V3 插件在多实例/分身环境下的命名空间与数据隔离问题；完善 MV3 只读连通性测试和完播整季包预览，并统一定时链路串行处理，避免重复扫描与并发清理。",
       "v1.1.8": "增强 V3 稳定性与运维安全：增加 MV3 只读连通性测试和完播整季包只读预览；统一定时链路串行处理，避免重复扫描、重复整季包处理和并发清理；完善媒体身份、分身回调命名空间、实例数据目录与候选下载缓存隔离；继续保留诊断、搜索、下载服务拆分。",
       "v1.1.7": "恢复已验证的 SubscribePlus V3 版本，保留诊断、搜索、下载服务拆分及分身回调隔离。",
