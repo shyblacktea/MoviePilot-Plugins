@@ -52,7 +52,7 @@ class FollowUpShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/notifytogroupshy.png"
     # 插件版本
-    plugin_version = "0.0.1"
+    plugin_version = "0.0.2"
     # 插件作者
     plugin_author = "Attente,shyblacktea"
     # 作者主页
@@ -414,10 +414,16 @@ class FollowUpShy(_PluginBase):
         if not items_for_full_recognition:
             return
 
+        subscribed_items = self._get_subscribed_items()
+
         for mtype, tmdbid in items_for_full_recognition:
 
             mediainfo = self.chain.recognize_media(media_source=MediaSource.TMDB, media_id=str(tmdbid), mtype=MediaType(mtype))
             if not mediainfo:
+                continue
+
+            if self._is_subscribed(mediainfo, subscribed_items):
+                logger.info(f"{mediainfo.title_year} 已存在订阅，跳过续作通知")
                 continue
 
             if mediainfo.type == MediaType.MOVIE:
@@ -465,6 +471,7 @@ class FollowUpShy(_PluginBase):
         tmdbchain = TmdbChain()
 
         logger.info(f"开始检查 {len(collections)} 个电影合集...")
+        subscribed_items = self._get_subscribed_items()
         for collection_id, followinfo in collections.items():
             if not followinfo.get("follow_up"):
                 continue
@@ -513,6 +520,10 @@ class FollowUpShy(_PluginBase):
                     f"{latest_part.title} 非院线发行日期: {next_air_date if next_air_date else '暂无'}，不符合提醒条件")
                 continue
 
+            if self._is_subscribed(latest_part, subscribed_items):
+                logger.info(f"{latest_part.title_year} 已存在订阅，跳过续作通知")
+                continue
+
             msg_title = f"🆕 {followinfo.get('name')} 有新的电影即将上线！"
             msg_text = (
                 f"🎬 最新电影：{latest_part.title_year}\n"
@@ -553,7 +564,7 @@ class FollowUpShy(_PluginBase):
 
     def _need_follow_up(self, ignore: set[tuple[str, int]], collections: dict[str, dict]) -> set[tuple[str, int]]:
         # 订阅
-        subscriptions = {(sub.type, int(sub.media_id)) for sub in SubscribeOper().list() if str(sub.media_source) == str(MediaSource.TMDB) and sub.media_id}
+        subscriptions = self._get_subscribed_items()
         # 已发送跟进通知
         notified_items = {_key for data in self.get_data() if (_key := self.parse_key(data.key))}
 
@@ -582,6 +593,20 @@ class FollowUpShy(_PluginBase):
         serveritems = self.get_media_server_items(exclude=excluded_items)
         subscribehis = {(sub.type, int(sub.media_id)) for sub in self.get_subscribe_history(exclude=excluded_items) if str(sub.media_source) == str(MediaSource.TMDB) and sub.media_id} if self.config.check_sub_history else set()
         return serveritems.union(subscribehis)
+
+    @staticmethod
+    def _get_subscribed_items() -> set[tuple[str, int]]:
+        """返回当前所有 TMDB 订阅的媒体身份，用于统一抑制重复通知。"""
+        return {
+            (sub.type, int(sub.media_id))
+            for sub in SubscribeOper().list()
+            if str(sub.media_source) == str(MediaSource.TMDB) and sub.media_id
+        }
+
+    @staticmethod
+    def _is_subscribed(mediainfo: MediaInfo, subscribed_items: set[tuple[str, int]]) -> bool:
+        """按媒体类型和 TMDB ID 判断目标续作是否已经订阅。"""
+        return (mediainfo.type.value, int(mediainfo.tmdb_id)) in subscribed_items
 
     @eventmanager.register(EventType.MessageAction)
     def message_action(self, event: Event):
