@@ -52,7 +52,7 @@ class FollowUpShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/notifytogroupshy.png"
     # 插件版本
-    plugin_version = "0.0.2"
+    plugin_version = "0.0.3"
     # 插件作者
     plugin_author = "Attente,shyblacktea"
     # 作者主页
@@ -639,12 +639,42 @@ class FollowUpShy(_PluginBase):
         self.post_message(title=title, text=text, mtype=NotificationType.Plugin, buttons=buttons)
         self.save_data(_key, self.clean_media_info(mediainfo))
 
+    def _prepare_subscribe_payload(self, data: dict) -> dict:
+        """
+        规范化订阅新增参数，剔除旧版残留字段 (tmdbid/doubanid/bangumiid) 并适配 V3
+        """
+        if not data:
+            return {}
+        payload = dict(data)
+        media_id = payload.pop("tmdbid", None) or payload.get("media_id")
+        payload.pop("doubanid", None)
+        payload.pop("bangumiid", None)
+
+        media_source = payload.get("media_source") or MediaSource.TMDB
+        if isinstance(media_source, str):
+            try:
+                media_source = MediaSource(media_source)
+            except Exception:
+                media_source = MediaSource.TMDB
+        payload["media_source"] = media_source
+        if media_id is not None:
+            payload["media_id"] = str(media_id)
+
+        mtype = payload.get("mtype")
+        if isinstance(mtype, str):
+            try:
+                payload["mtype"] = MediaType(mtype)
+            except Exception:
+                pass
+        return payload
+
     def _handle_add(self, channel, source, userid, original_message_id, original_chat_id, _key: str):
         data = self.get_data(_key) or {}
         if not data:
             msg, buttons = "信息已过时", None
         else:
-            sid, msg = SubscribeChain().add(**data, username=self.plugin_name)
+            payload = self._prepare_subscribe_payload(data)
+            sid, msg = SubscribeChain().add(**payload, username=self.plugin_name)
             if sid:
                 self.del_data(_key)
                 self.chain.delete_message(channel, source, original_message_id, original_chat_id)
@@ -665,7 +695,7 @@ class FollowUpShy(_PluginBase):
         self.post_message(
             channel=channel,
             source=source,
-            title=f"已忽略订阅 {data['title']} ({data["year"]})" if data else f"已忽略订阅 {_key}",
+            title=f"已忽略订阅 {data.get('title')} ({data.get('year')})" if data and data.get('title') else f"已忽略订阅 {_key}",
             userid=userid,
             original_message_id=original_message_id,
             original_chat_id=original_chat_id
@@ -705,24 +735,32 @@ class FollowUpShy(_PluginBase):
 
     def clean_media_info(self, mediainfo: MediaInfo) -> dict:
         """
-        清洗 mediainfo 对象，仅保留关键字段用于存储或传输
+        清洗 mediainfo 对象，仅保留关键字段用于存储或传输，适配 V3 订阅字段模型
         """
         if not mediainfo:
             return {}
-        season = mediainfo.number_of_seasons
+        season = None
+        if mediainfo.type == MediaType.TV:
+            if mediainfo.next_episode_to_air and isinstance(mediainfo.next_episode_to_air, dict):
+                season = mediainfo.next_episode_to_air.get("season_number")
+            if season is None:
+                season = mediainfo.number_of_seasons or 1
         # 查询订阅历史
         history = self.get_subscribe_history(media_id=str(mediainfo.tmdb_id), type=mediainfo.type)
         total_episode = next((item.total_episode for item in history if item.season == season), 0)
-        return {
-            'title': mediainfo.title,
-            'year': mediainfo.year,
-            "tmdbid": mediainfo.tmdb_id,
-            "doubanid": mediainfo.douban_id,
-            "bangumiid": mediainfo.bangumi_id,
+        payload = {
+            "title": mediainfo.title,
+            "year": mediainfo.year,
+            "mtype": mediainfo.type.value if mediainfo.type else None,
+            "media_source": MediaSource.TMDB.value,
+            "media_id": str(mediainfo.tmdb_id),
             "episode_group": mediainfo.episode_group,
-            "season": season,
-            "start_episode": total_episode + 1 if total_episode else 0,
-            }
+        }
+        if season is not None:
+            payload["season"] = season
+        if total_episode:
+            payload["start_episode"] = total_episode + 1
+        return payload
 
     def get_ignore_keys(self) -> set[tuple[str, int]]:
         _keys = self.get_data("ignore_keys") or []
