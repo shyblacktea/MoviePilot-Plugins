@@ -114,12 +114,13 @@
     "name": "续作跟进魔改版",
     "description": "续作跟进的独立 V3 适配版，修复媒体身份字段兼容。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/notifytogroupshy.png",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": "Attente,shyblacktea",
     "level": 2,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
+      "v0.0.3": "fix: 修复追加订阅时包含旧版字段 (tmdbid/doubanid/bangumiid) 导致 V3 订阅写入未知字段报错的问题；规范 clean_media_info 媒体身份并兼容历史未清理的缓存数据。",
       "v0.0.2": "fix: 已存在订阅的续作不再发送重复通知，仅提醒尚未订阅的媒体。",
       "v0.0.1": "从原版 FollowUp 独立改造，保留 JSON 配置页并适配 MoviePilot V3 媒体身份字段。"
     }
