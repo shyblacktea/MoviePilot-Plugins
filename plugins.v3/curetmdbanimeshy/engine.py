@@ -26,6 +26,25 @@ from .models import (
 )
 
 
+def _parse_iso_date(value: object) -> date | None:
+    """
+    将 `YYYY-MM-DD` 文本安全转换为日期 - 用于播出日期比较
+
+    :param value: 原始日期字段, 可能为 None、date 或字符串
+    :return: 解析成功返回 date, 否则返回 None
+    """
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    if isinstance(value, str) and value.strip():
+        try:
+            return datetime.strptime(value.strip()[:10], "%Y-%m-%d").date()
+        except ValueError:
+            return None
+    return None
+
+
 def _range_is_absolute_contiguous(
     context: ShowContext,
     episode_range: EpisodeRange,
@@ -600,7 +619,7 @@ class RangeDecisionEngine:
 
     ) -> bool:
         """检查目标季的播出时间是否与资源发布日期发生明显冲突。"""
-        release_date = release_info.release_date.isoformat()
+        release_date = _parse_iso_date(release_info.release_date)
         for point in target_points:
             if point.season != matched_cycle.cycle_id:
                 continue
@@ -614,13 +633,26 @@ class RangeDecisionEngine:
                 else matched_season_episodes[episode_index - self.grace_episodes]
             )
 
-            if episode_info.air_date > release_date:
+            # TMDB 未定档的集次 air_date 为空, 无法判断冲突时按未定档处理,
+            # 不拒绝候选, 同时避免与日期比较时抛出 TypeError
+            air_date = _parse_iso_date(getattr(episode_info, "air_date", None))
+            if air_date is None or release_date is None:
+                logger.debug(
+                    "%s 跳过播出窗口冲突检查; 目标=%s 缺少可比对的播出日期(发布日期=%s, 播出日期=%s)",
+                    release_info.title,
+                    point.format(),
+                    release_info.release_date,
+                    getattr(episode_info, "air_date", None),
+                )
+                continue
+
+            if air_date > release_date:
                 logger.debug(
                     "%s 拒绝候选策略`按播出窗口推断季号`; 目标超出播出窗口 目标=%s, 发布日期=%s, 播出日期=%s ",
                     release_info.title,
                     point.format(),
                     release_date,
-                    matched_season_episodes[episode_index].air_date,
+                    getattr(episode_info, "air_date", None),
                 )
                 return True
 
