@@ -120,10 +120,8 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 ### v1.1.12
 
-- 修复 v1.1.10 / v1.1.11 发布包多套一层版本目录（`subscribeplus_vX/subscribeplus/__init__.py`）导致 MoviePilot 安装器剥离一层顶层目录后仍找不到插件根入口、安装返回 `插件加载失败` 的问题。
-- 本版由 CI 在插件目录内部打包，zip 入口为 `subscribeplus/__init__.py`，与 v1.1.9 布局一致。
-- 修正 v1.1.9 资产内 `plugin_version` 仍为 `1.1.8` 的版本声明不一致问题。
-- 发布流程（`.github/workflows/release.yml`）与版本校验脚本新增 `package.v3.json` / `plugins.v3/` 支持。
+- 修复 v1.1.10 / v1.1.11 安装后插件加载失败的问题，本版可正常安装使用。
+- 修正 v1.1.9 版本号显示不正确的问题。
 
 ### v1.1.11
 
