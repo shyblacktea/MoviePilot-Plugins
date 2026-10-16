@@ -161,7 +161,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "按订阅目标集数检测电视剧缺集，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.11"
+    plugin_version = "1.1.12"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"

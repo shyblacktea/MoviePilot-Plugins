@@ -3,7 +3,7 @@
 `SubscribePlus` 用于检测电视剧订阅：按订阅目标集数与媒体库/整理历史实际已下载集数计算缺集，插件会优先复用 MoviePilot 原生订阅搜索结果，并分析原因是暂无资源、识别问题，还是订阅规则没有命中。
 
 - 插件 ID：`SubscribePlus`
-- 当前版本：`1.1.11`
+- 当前版本：`1.1.12`
 - 插件目录：`plugins.v3/subscribeplus/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`shyblacktea`
@@ -117,6 +117,13 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 - Telegram、站点和下载器凭据属于敏感配置，不应写入日志或提交到仓库。
 
 ## 版本记录
+
+### v1.1.12
+
+- 修复 v1.1.10 / v1.1.11 发布包多套一层版本目录（`subscribeplus_vX/subscribeplus/__init__.py`）导致 MoviePilot 安装器剥离一层顶层目录后仍找不到插件根入口、安装返回 `插件加载失败` 的问题。
+- 本版由 CI 在插件目录内部打包，zip 入口为 `subscribeplus/__init__.py`，与 v1.1.9 布局一致。
+- 修正 v1.1.9 资产内 `plugin_version` 仍为 `1.1.8` 的版本声明不一致问题。
+- 发布流程（`.github/workflows/release.yml`）与版本校验脚本新增 `package.v3.json` / `plugins.v3/` 支持。
 
 ### v1.1.11
 
@@ -371,10 +378,10 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`1.1.11`
-- Release tag：`SubscribePlus_v1.1.11`
-- Release 资产：`subscribeplus_v1.1.11.zip`
-- [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/SubscribePlus_v1.1.11)
+- 当前版本：`1.1.12`
+- Release tag：`SubscribePlus_v1.1.12`
+- Release 资产：`subscribeplus_v1.1.12.zip`
+- [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/SubscribePlus_v1.1.12)
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 
 ## 致谢

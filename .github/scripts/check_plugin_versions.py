@@ -28,7 +28,12 @@ def _load_package(path: Path) -> dict:
 def _plugin_dir(package_file: Path, plugin_id: str) -> Path | None:
     """按 package 文件定位对应插件目录，避免 v1/v2 同名插件互相串线。"""
     plugin_id_lc = plugin_id.lower()
-    base_dir = Path("plugins.v2") if package_file.name == "package.v2.json" else Path("plugins")
+    if package_file.name == "package.v2.json":
+        base_dir = Path("plugins.v2")
+    elif package_file.name == "package.v3.json":
+        base_dir = Path("plugins.v3")
+    else:
+        base_dir = Path("plugins")
     candidate = package_file.parent / base_dir / plugin_id_lc
     return candidate if candidate.is_dir() else None
 
@@ -36,7 +41,12 @@ def _plugin_dir(package_file: Path, plugin_id: str) -> Path | None:
 def _expected_plugin_dir(package_file: Path, plugin_id: str) -> Path:
     """返回 package 条目对应的插件目录，用于缺失目录时输出可定位错误。"""
     plugin_id_lc = plugin_id.lower()
-    base_dir = Path("plugins.v2") if package_file.name == "package.v2.json" else Path("plugins")
+    if package_file.name == "package.v2.json":
+        base_dir = Path("plugins.v2")
+    elif package_file.name == "package.v3.json":
+        base_dir = Path("plugins.v3")
+    else:
+        base_dir = Path("plugins")
     return package_file.parent / base_dir / plugin_id_lc
 
 
