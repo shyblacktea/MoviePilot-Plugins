@@ -36,14 +36,13 @@
     "name": "PLEX 工具箱",
     "description": "Plex 302 反向代理、STRM 媒体流信息补全、缺海报修复与 TMDB 重复条目合并。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
-      "v1.0.0": "版本线整理：把 v0.3.0~v0.7.3 的开发迭代与 TMDB 重复条目扫描合并功能折叠为首个正式版。包含：由 Plex302ReverseProxy 改造为 PLEX 工具箱（STRM 媒体流信息补全 + Vue 配置详情页）、媒体流信息自动补全与播放停止后增量补全、目录匹配/刮削辅助/缺封面扫描、播前媒体流信息补全（覆盖继续观看与直接起播）、五功能 Tab 与 Helper 健康检查、播前补全结果持久化修复、播放队列复用补全触发修复与 Part→ratingKey 缓存兜底。",
-      "v1.0.1": "本人已转 MoviePilot 核心贡献者 @InfinityPacer 倾力打造的项目：Cirvel 🎬\n\nSTRM 播放永久免费\n\n故此插件不再更新！\n\n官网 https://cirvel.tidewren.com\n频道 @cirvel_news"
+      "v1.0.0": "版本线整理：把 v0.3.0~v0.7.3 的开发迭代与 TMDB 重复条目扫描合并功能折叠为首个正式版。包含：由 Plex302ReverseProxy 改造为 PLEX 工具箱（STRM 媒体流信息补全 + Vue 配置详情页）、媒体流信息自动补全与播放停止后增量补全、目录匹配/刮削辅助/缺封面扫描、播前媒体流信息补全（覆盖继续观看与直接起播）、五功能 Tab 与 Helper 健康检查、播前补全结果持久化修复、播放队列复用补全触发修复与 Part→ratingKey 缓存兜底。\n\n本人已转 MoviePilot 核心贡献者 @InfinityPacer 倾力打造的项目：Cirvel 🎬\n\nSTRM 播放永久免费\n\n故此插件不再更新！\n\n官网 https://cirvel.tidewren.com\n频道 @cirvel_news"
     }
   },
   "DownloadDirFilter": {
@@ -76,14 +75,13 @@
     "name": "PLEX 302 反向代理",
     "description": "Plex 302 反向代理 + 纯响应式媒体流信息投影。在 Plex 响应里补 Media/Part/Stream 字段，完全不写 Plex 数据库，用于对照验证「不写库能否达到效果」。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
-      "v1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），日志改用 app.sdk.logging；新增纯响应式媒体流信息投影（默认关闭）——只补 Plex 缺失字段、绝不覆盖已有值、绝不伪造 Stream ID，Plex 已物化（Stream 均带正数 id）时直接透传，仅播前 decision 路径同步等待冷探测，Part.size 支持 Range 兜底纠正。含 v0.2.1 的 single-flight 合并与热路径超时收敛、v0.2.0 的 .mpd/.m3u8 转码路由、v0.1.0 的 302 直链与 WebSocket 代理。",
-      "v1.0.1": "本人已转 MoviePilot 核心贡献者 @InfinityPacer 倾力打造的项目：Cirvel 🎬\n\nSTRM 播放永久免费\n\n故此插件不再更新！\n\n官网 https://cirvel.tidewren.com\n频道 @cirvel_news"
+      "v1.0.0": "feat: 迁移到 MoviePilot V3 专用实现（plugins.v3 + package.v3.json），日志改用 app.sdk.logging；新增纯响应式媒体流信息投影（默认关闭）——只补 Plex 缺失字段、绝不覆盖已有值、绝不伪造 Stream ID，Plex 已物化（Stream 均带正数 id）时直接透传，仅播前 decision 路径同步等待冷探测，Part.size 支持 Range 兜底纠正。含 v0.2.1 的 single-flight 合并与热路径超时收敛、v0.2.0 的 .mpd/.m3u8 转码路由、v0.1.0 的 302 直链与 WebSocket 代理。\n\n本人已转 MoviePilot 核心贡献者 @InfinityPacer 倾力打造的项目：Cirvel 🎬\n\nSTRM 播放永久免费\n\n故此插件不再更新！\n\n官网 https://cirvel.tidewren.com\n频道 @cirvel_news"
     }
   },
   "SubscribePlus": {

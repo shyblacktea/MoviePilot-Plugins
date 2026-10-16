@@ -63,7 +63,7 @@ class PlexToolbox(_PluginBase):
     plugin_name = "PLEX 工具箱"
     plugin_desc = "Plex 302 反向代理、STRM 媒体流信息补全、缺海报修复与 TMDB 重复条目合并。"
     plugin_icon = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png"
-    plugin_version = "1.0.1"
+    plugin_version = "1.0.0"
     plugin_author = "shyblacktea,MoviePilot助手"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "plextoolbox_"

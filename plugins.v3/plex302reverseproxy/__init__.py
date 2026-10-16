@@ -57,7 +57,7 @@ class Plex302ReverseProxy(_PluginBase):
         "Plex 302 反向代理 + 纯响应式媒体流信息投影（不写 Plex 数据库）。（小k自用版）"
     )
     plugin_icon = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Plugins/refs/heads/main/icons/Plex_A.png"
-    plugin_version = "1.0.1"
+    plugin_version = "1.0.0"
     plugin_version_history = {
         "1.0.0": """本人已转 MoviePilot 核心贡献者 @InfinityPacer 倾力打造的项目：Cirvel 🎬
 
