@@ -26,7 +26,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "观众站守护者"
     plugin_desc = "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.4"
+    plugin_version = "0.0.5"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -43,6 +43,7 @@ class AudiencesKeeper(_PluginBase):
     _cf_cron: str = "0 */2 * * *"
     _notify: bool = True
     _onlyonce: bool = False
+    _proxy: str = ""
 
     def init_plugin(self, config: dict | None = None) -> None:
         """
@@ -58,6 +59,7 @@ class AudiencesKeeper(_PluginBase):
         self._cf_cron = str(config.get("cf_cron") or "0 */2 * * *").strip()
         self._notify = bool(config.get("notify", True))
         self._onlyonce = bool(config.get("onlyonce", False))
+        self._proxy = str(config.get("proxy") or "").strip()
 
         if bool(config.get("clear_history", False)):
             logger.info("【观众站守护者】收到清空历史记录请求，正在清空...")
@@ -186,7 +188,7 @@ class AudiencesKeeper(_PluginBase):
             {
                 "path": "/clear_history",
                 "endpoint": self.api_clear_history,
-                "methods": ["POST"],
+                "methods": ["GET", "POST"],
                 "auth": "bear",
                 "summary": "清空执行记录",
             },
@@ -255,7 +257,7 @@ class AudiencesKeeper(_PluginBase):
         if self._notify:
             self._send_notify(
                 title="🎬 观众站每日签到" + ("成功" if success else "未完成"),
-                text=f"状态：{'✅ 成功' if success else '⚠️ 需关注'}\n结果反馈：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                text=f"状态：{'✅ 成功' if success else '⚠️ 需关注'}\n结果反馈：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n💬 重新签到：发送 /audiences_signin"
             )
 
     def run_cf_job(self) -> None:
@@ -267,7 +269,7 @@ class AudiencesKeeper(_PluginBase):
         if self._notify:
             self._send_notify(
                 title="🛡️ 观众站 CF 盾更新" + ("成功" if success else "失败"),
-                text=f"状态：{'✅ 成功' if success else '❌ 失败'}\n详情：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                text=f"状态：{'✅ 成功' if success else '❌ 失败'}\n详情：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n💬 重新过盾：发送 /audiences_cookie"
             )
 
     def do_signin(self) -> tuple[bool, str]:
@@ -291,7 +293,7 @@ class AudiencesKeeper(_PluginBase):
 
         logger.info(f"【观众站守护者】启动仿真浏览器访问 {target_url} 执行签到（站点 ID: {site['id']}）...")
         try:
-            with launch_browser_context(headless=True) as ctx:
+            with launch_browser_context(headless=True, **self._browser_kwargs()) as ctx:
                 ctx.add_cookies(cookies)
                 page = ctx.pages[0] if ctx.pages else ctx.new_page()
                 page.goto(target_url, wait_until="domcontentloaded", timeout=35000)
@@ -319,23 +321,18 @@ class AudiencesKeeper(_PluginBase):
                     self._append_history("每日签到", True, msg)
                     return True, msg
 
-                # 2. 若未签到，寻找 Turnstile iframe 并模拟点击
-                logger.info("【观众站守护者】检测到尚未签到，正在寻找 Turnstile 人机验证框...")
-                for attempt in range(4):
-                    if self._click_turnstile_if_present(page):
-                        logger.info("【观众站守护者】已定位并点击 Cloudflare Turnstile 验证框，等待验证提交...")
-                        break
-                    page.wait_for_timeout(1500)
+                # 2. 尚未签到：执行 Turnstile 求解（多策略点击 + 长轮询令牌）
+                logger.info("【观众站守护者】检测到尚未签到，开始求解 Turnstile 人机验证...")
+                ts_ok, ts_diag = self._solve_turnstile(page)
 
-                # 3. 严格轮询等待提交完成（必须出现成功图标、今天已签到卡片或顶部状态栏变绿）
+                # 3. 等待表单提交后的结果（DOM 卡片状态为准）
                 final_msg = ""
                 success = False
-                for _ in range(12):
-                    page.wait_for_timeout(2000)
+                for _ in range(10):
+                    page.wait_for_timeout(1500)
                     has_success = page.locator(".attendance-card__icon--success").count() > 0
                     has_done = page.locator(".attendance-card--done, .attendance-card__icon--done").count() > 0
                     is_now_attended = page.locator(".site-userbar__compact-tool--attended").count() > 0
-
                     cur_title = (
                         page.locator(".attendance-card__title").first.inner_text().strip()
                         if page.locator(".attendance-card__title").count() > 0
@@ -346,7 +343,6 @@ class AudiencesKeeper(_PluginBase):
                         if page.locator(".attendance-card__desc").count() > 0
                         else ""
                     )
-
                     if has_success or "签到成功" in cur_title:
                         success = True
                         final_msg = cur_desc or "签到成功！本次签到奖励已发放到账户。"
@@ -357,12 +353,7 @@ class AudiencesKeeper(_PluginBase):
                         break
 
                 if not final_msg:
-                    # 如果仍然停留在人机验证卡片，明确反馈人机未通过或未提交，绝不谎报成功
-                    has_form = page.locator(".attendance-card__form").count() > 0
-                    if has_form or "人机" in cur_title:
-                        final_msg = "Turnstile 人机验证未在限定时间内完成自动提交，请稍后重试或检查网络。"
-                    else:
-                        final_msg = cur_desc or "签到结果未能明确确认，请前往网页端查看。"
+                    final_msg = f"签到未完成：{ts_diag}"
 
                 # 提取并回存最新 Cookies
                 self._save_cookies_from_context(ctx, site)
@@ -392,7 +383,7 @@ class AudiencesKeeper(_PluginBase):
 
         logger.info(f"【观众站守护者】启动浏览器访问种子列表页 {target_url} 穿透 CF 并洗白搜索限制（站点 ID: {site['id']}）...")
         try:
-            with launch_browser_context(headless=True) as ctx:
+            with launch_browser_context(headless=True, **self._browser_kwargs()) as ctx:
                 if cookies:
                     ctx.add_cookies(cookies)
                 page = ctx.pages[0] if ctx.pages else ctx.new_page()
@@ -423,20 +414,149 @@ class AudiencesKeeper(_PluginBase):
             self._append_history("过盾与刷新", False, err)
             return False, err
 
+    def _browser_kwargs(self) -> dict:
+        """
+        组装浏览器启动参数：可选代理 + 固定中文环境。
+        """
+        kw: dict[str, Any] = {
+            "locale": "zh-CN",
+            "timezone": "Asia/Shanghai",
+            "viewport": {"width": 1600, "height": 1000},
+        }
+        if self._proxy:
+            kw["proxy"] = self._proxy
+        return kw
+
+    def _get_cf_token(self, page: Any) -> str:
+        """
+        读取 Turnstile 当前令牌（兼容 cf-token 隐藏域与标准 response 输入）。
+        """
+        try:
+            token = page.evaluate(
+                "() => {"
+                "  const a = document.getElementById('cf-token');"
+                "  if (a && a.value) return a.value;"
+                "  const b = document.querySelector('[name=cf-turnstile-response]');"
+                "  if (b && b.value) return b.value;"
+                "  return '';"
+                "}"
+            )
+            return token or ""
+        except Exception:
+            return ""
+
     def _click_turnstile_if_present(self, page: Any) -> bool:
         """
-        遍历各 Frame 定位并点击 Turnstile 复选框。
+        尝试点击 Turnstile 复选框：iframe 内 checkbox → 坐标点击 → 组件点击。
+        """
+        # 策略 1：frame 内真实 checkbox
+        try:
+            fl = page.frame_locator("iframe[src*='challenges.cloudflare.com']")
+            cb = fl.locator("input[type=checkbox]")
+            if cb.count() > 0:
+                cb.first.click(timeout=2500, force=True)
+                logger.debug("【观众站守护者】Turnstile: iframe checkbox 已点击")
+                return True
+        except Exception as e:
+            logger.debug(f"【观众站守护者】Turnstile iframe checkbox 点击失败: {e}")
+
+        # 策略 2：按真实鼠标坐标点击组件左侧（checkbox 所在区域）
+        try:
+            widget = page.locator(".cf-turnstile")
+            if widget.count() > 0:
+                widget.first.scroll_into_view_if_needed(timeout=2000)
+                page.wait_for_timeout(300)
+                box = widget.first.bounding_box()
+                if box:
+                    x = box["x"] + 30
+                    y = box["y"] + box["height"] / 2
+                    page.mouse.move(x, y, steps=8)
+                    page.wait_for_timeout(150)
+                    page.mouse.click(x, y)
+                    logger.debug("【观众站守护者】Turnstile: 已按坐标点击复选框区域")
+                    return True
+        except Exception as e:
+            logger.debug(f"【观众站守护者】Turnstile 坐标点击失败: {e}")
+
+        # 策略 3：直接点击组件容器
+        try:
+            page.locator(".cf-turnstile").first.click(timeout=2500, force=True)
+            logger.debug("【观众站守护者】Turnstile: 已点击组件容器")
+            return True
+        except Exception as e:
+            logger.debug(f"【观众站守护者】Turnstile 组件点击失败: {e}")
+        return False
+
+    def _turnstile_state(self, page: Any) -> str:
+        """
+        读取 Turnstile iframe 当前状态文本，用于失败诊断。
         """
         for frame in page.frames:
-            if "challenges.cloudflare.com" in frame.url or "turnstile" in frame.url:
+            if "challenges.cloudflare.com" in frame.url:
                 try:
-                    cb = frame.locator("input[type=checkbox], .ctp-checkbox-label, body")
-                    if cb.count() > 0:
-                        cb.first.click(timeout=3000)
-                        return True
-                except Exception as e:
-                    logger.debug(f"点击 Turnstile 略过: {e}")
-        return False
+                    txt = frame.evaluate(
+                        "() => document.body ? document.body.innerText.replace(/\\s+/g,' ').trim().slice(0,80) : ''"
+                    )
+                    if txt:
+                        return txt
+                    if "Checking your Browser" in (frame.content() or ""):
+                        return "Checking your Browser"
+                except Exception:
+                    continue
+        return ""
+
+    def _solve_turnstile(self, page: Any, timeout_s: int = 60) -> tuple[bool, str]:
+        """
+        求解 Turnstile：多策略点击 + 长轮询令牌，返回 (是否成功, 诊断描述)。
+
+        失败诊断可区分三类原因：
+        - 当前网络出口被 Cloudflare 风控（长期停在 Checking your Browser）；
+        - 组件未渲染 / 页面结构异常；
+        - 点击后仍未下发令牌（需人工介入）。
+        """
+        import time as _time
+
+        # 等组件渲染
+        try:
+            page.wait_for_selector(".cf-turnstile", timeout=12000)
+        except Exception:
+            return False, "页面上未找到 Turnstile 组件（页面结构可能已变更）"
+
+        deadline = _time.time() + timeout_s
+        clicks = 0
+        stuck_rounds = 0
+        last_state = ""
+
+        while _time.time() < deadline:
+            token = self._get_cf_token(page)
+            if token:
+                logger.info("【观众站守护者】Turnstile 令牌已获取，等待表单自动提交...")
+                return True, "已获取 Turnstile 令牌"
+
+            state = self._turnstile_state(page)
+            if state:
+                last_state = state
+                if "Checking your Browser" in state:
+                    stuck_rounds += 1
+
+            # 仍在人机验证环节且点击次数未用尽 → 继续尝试点击
+            if clicks < 3:
+                if self._click_turnstile_if_present(page):
+                    clicks += 1
+                    logger.info(f"【观众站守护者】第 {clicks} 次尝试点击 Turnstile 复选框...")
+
+            page.wait_for_timeout(2000)
+
+        # 超时诊断
+        if stuck_rounds >= 5 or "Checking your Browser" in last_state:
+            return False, (
+                "Turnstile 长时间停留在『Checking your Browser』，说明当前网络的出口 IP 被 "
+                "Cloudflare 判定为高风险（常见于机房/VPN/被标记的代理节点）。请在插件配置里"
+                "填写一条能过盾的代理，或让 MoviePilot 所在网络直连后再试。"
+            )
+        if not last_state:
+            return False, "Turnstile 组件存在但未返回任何状态，可能被浏览器插件或网络中间设备拦截。"
+        return False, f"Turnstile 未在 {timeout_s} 秒内下发令牌（组件状态：{last_state[:40]}）。"
 
     def _save_cookies_from_context(self, ctx: Any, site: dict) -> tuple[str, str, bool]:
         """
@@ -659,6 +779,21 @@ class AudiencesKeeper(_PluginBase):
                                     },
                                 ],
                             },
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12},
+                                "content": [
+                                    {
+                                        "component": "VTextField",
+                                        "props": {
+                                            "model": "proxy",
+                                            "label": "浏览器专用代理（可选）",
+                                            "hint": "形如 http://192.168.0.x:7890 或 socks5://ip:port。Turnstile 一直卡在 Checking your Browser 时填写可解决",
+                                            "clearable": True,
+                                        },
+                                    },
+                                ],
+                            },
                         ],
                     },
                     {
@@ -774,6 +909,7 @@ class AudiencesKeeper(_PluginBase):
             "notify": True,
             "onlyonce": False,
             "clear_history": False,
+            "proxy": "",
         }
 
     def get_page(self) -> list[dict]:
@@ -833,6 +969,22 @@ class AudiencesKeeper(_PluginBase):
                     ],
                 })
             return rows
+
+        clear_url = (
+            f"/api/v1/plugin/{self.__class__.__name__}/clear_history"
+            f"?apikey={settings.API_TOKEN}"
+        )
+        clear_btn = {
+            "component": "VBtn",
+            "props": {
+                "size": "x-small",
+                "color": "error",
+                "variant": "tonal",
+                "href": clear_url,
+                "text": "清空记录",
+                "prepend-icon": "mdi-delete-sweep",
+            },
+        }
 
         cf_history = self.get_data("cf_history") or []
         signin_history = self.get_data("signin_history") or []
@@ -945,7 +1097,14 @@ class AudiencesKeeper(_PluginBase):
                                 "component": "VCard",
                                 "props": {"variant": "outlined", "class": "pa-3"},
                                 "content": [
-                                    {"component": "h4", "props": {"class": "mb-2"}, "text": "📅 每日签到记录"},
+                                    {
+                                        "component": "div",
+                                        "props": {"class": "d-flex align-center justify-space-between mb-2"},
+                                        "content": [
+                                            {"component": "h4", "text": "📅 每日签到记录"},
+                                            clear_btn,
+                                        ],
+                                    },
                                     {
                                         "component": "VTable",
                                         "props": {"density": "compact"},
@@ -989,7 +1148,14 @@ class AudiencesKeeper(_PluginBase):
                                 "component": "VCard",
                                 "props": {"variant": "outlined", "class": "pa-3"},
                                 "content": [
-                                    {"component": "h4", "props": {"class": "mb-2"}, "text": "🛡️ CF 过盾与 Cookie 更新记录"},
+                                    {
+                                        "component": "div",
+                                        "props": {"class": "d-flex align-center justify-space-between mb-2"},
+                                        "content": [
+                                            {"component": "h4", "text": "🛡️ CF 过盾与 Cookie 更新记录"},
+                                            clear_btn,
+                                        ],
+                                    },
                                     {
                                         "component": "VTable",
                                         "props": {"density": "compact"},
