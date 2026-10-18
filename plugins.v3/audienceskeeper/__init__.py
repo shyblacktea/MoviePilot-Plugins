@@ -26,7 +26,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "观众站守护者"
     plugin_desc = "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.6"
+    plugin_version = "0.0.7"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -159,6 +159,69 @@ class AudiencesKeeper(_PluginBase):
             logger.info("【观众站守护者】收到远程命令，立即过盾更新 Cookie...")
             self.run_cf_job()
 
+    @eventmanager.register(EventType.MessageAction)
+    def message_action(self, event: Event) -> None:
+        """
+        处理通知里的按钮回调：原消息原地刷新结果，不新增消息。
+        """
+        data = event.event_data or {}
+        pid = str(data.get("plugin_id") or "")
+        if pid not in (self.__class__.__name__, self.plugin_config_prefix):
+            return
+        if not self._enabled:
+            return
+
+        action = str(data.get("text") or "").strip().lower()
+        if action not in ("signin", "cf"):
+            return
+
+        channel = data.get("channel")
+        source = data.get("source")
+        userid = data.get("userid")
+        msg_id = data.get("original_message_id")
+        chat_id = data.get("original_chat_id")
+        logger.info(f"【观众站守护者】收到按钮回调：{action}（来自 {userid}）")
+
+        def _run() -> None:
+            doing = "📅 正在签到" if action == "signin" else "🛡️ 正在刷新 CF 盾"
+            try:
+                self._send_notify(
+                    title=doing + "…",
+                    text=f"已收到指令，正在启动浏览器执行，请稍候。\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                    channel=channel,
+                    source=source,
+                    userid=userid,
+                    original_message_id=msg_id,
+                    original_chat_id=chat_id,
+                )
+            except Exception:
+                pass
+
+            if action == "signin":
+                success, msg = self.do_signin()
+                title = "🎬 观众站每日签到" + ("成功" if success else "未完成")
+                body = f"状态：{'✅ 成功' if success else '⚠️ 需关注'}\n结果反馈：{msg}"
+                key = "signin"
+            else:
+                success, msg = self.do_refresh_cf()
+                title = "🛡️ 观众站 CF 盾更新" + ("成功" if success else "失败")
+                body = f"状态：{'✅ 成功' if success else '❌ 失败'}\n详情：{msg}"
+                key = "cf"
+
+            self._send_notify(
+                title=title,
+                text=f"{body}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                buttons=self._action_buttons(key),
+                channel=channel,
+                source=source,
+                userid=userid,
+                original_message_id=msg_id,
+                original_chat_id=chat_id,
+            )
+
+        import threading
+        threading.Thread(target=_run, daemon=True).start()
+
     def get_api(self) -> list[dict[str, Any]]:
         """
         注册插件动态后端 API。
@@ -248,6 +311,20 @@ class AudiencesKeeper(_PluginBase):
         self.run_cf_job()
         self.run_signin_job()
 
+    def _action_buttons(self, primary: str) -> list[list[dict]]:
+        """
+        构造交互按钮：主操作 + 另一项操作，点击后即时执行。
+        """
+        pid = self.__class__.__name__
+        pairs = {
+            "signin": [("🔁 重新签到", "signin"), ("🛡️ 刷新CF盾", "cf")],
+            "cf": [("🛡️ 重新过盾", "cf"), ("📅 立即签到", "signin")],
+        }
+        return [[
+            {"text": text, "callback_data": f"[PLUGIN]{pid}|{action}"}
+            for text, action in pairs.get(primary, [])
+        ]]
+
     def run_signin_job(self) -> None:
         """
         执行签到任务包装。
@@ -257,7 +334,8 @@ class AudiencesKeeper(_PluginBase):
         if self._notify:
             self._send_notify(
                 title="🎬 观众站每日签到" + ("成功" if success else "未完成"),
-                text=f"状态：{'✅ 成功' if success else '⚠️ 需关注'}\n结果反馈：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n💬 重新签到：发送 /audiences_signin"
+                text=f"状态：{'✅ 成功' if success else '⚠️ 需关注'}\n结果反馈：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                buttons=self._action_buttons("signin"),
             )
 
     def run_cf_job(self) -> None:
@@ -269,7 +347,8 @@ class AudiencesKeeper(_PluginBase):
         if self._notify:
             self._send_notify(
                 title="🛡️ 观众站 CF 盾更新" + ("成功" if success else "失败"),
-                text=f"状态：{'✅ 成功' if success else '❌ 失败'}\n详情：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n💬 重新过盾：发送 /audiences_cookie"
+                text=f"状态：{'✅ 成功' if success else '❌ 失败'}\n详情：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                buttons=self._action_buttons("cf"),
             )
 
     def do_signin(self) -> tuple[bool, str]:
@@ -765,12 +844,18 @@ class AudiencesKeeper(_PluginBase):
             cf_hist.insert(0, record)
             self.save_data("cf_history", cf_hist[:15])
 
-    def _send_notify(self, title: str, text: str) -> None:
+    def _send_notify(self, title: str, text: str,
+                     buttons: Optional[list[list[dict]]] = None, **kwargs: Any) -> None:
+        """
+        发送通知；buttons 传按钮矩阵，kwargs 可带 original_message_id 等用于原地编辑。
+        """
         try:
             self.post_message(
                 mtype=NotificationType.SiteMessage,
                 title=title,
                 text=text,
+                buttons=buttons,
+                **kwargs,
             )
         except Exception as e:
             logger.warning(f"【观众站守护者】发送通知异常: {e}")
