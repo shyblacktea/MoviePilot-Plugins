@@ -3,7 +3,7 @@
 `DownloadDirFilter` 用于在下载任务加入后按自定义格式调整种子保存路径和种子名称，并保留下载历史、转移历史与旧插件数据兼容能力。
 
 - 插件 ID：`DownloadDirFilter`
-- 当前版本：`0.0.1`
+- 当前版本：`0.0.2`
 - 插件目录：`plugins.v3/downloaddirfilter/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`shyblacktea`
@@ -52,6 +52,10 @@
 
 ## 版本记录
 
+### v0.0.2
+
+- 全面适配 MoviePilot V3 SDK 规范，移除废弃的 app.core 与 app.helper 依赖，修复下载历史多条件更新查询逻辑。
+
 ### v0.0.1
 
 - 从旧版路径名称格式化功能整理为独立插件 `DownloadDirFilter`。
@@ -66,7 +70,7 @@
 
 - 插件 ID：`DownloadDirFilter`
 - 插件目录：`downloaddirfilter`
-- 当前版本：`0.0.1`
+- 当前版本：`0.0.2`
 
 ## 致谢
 

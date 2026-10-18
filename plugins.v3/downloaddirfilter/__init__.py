@@ -8,22 +8,19 @@ from typing import Any, Optional, Union
 from apscheduler.triggers.cron import CronTrigger
 from sqlalchemy.orm import Session
 
-from app.core.config import settings
-from app.core.context import MediaInfo, Context
-from app.core.event import eventmanager, Event
-from app.core.meta.metabase import MetaBase
-from app.core.metainfo import MetaInfo, MetaInfoPath
-from app.db.downloadhistory_oper import DownloadHistoryOper, DownloadHistory, DownloadFiles
-from app.db.transferhistory_oper import TransferHistoryOper
 from app.db import db_update
-from app.helper.downloader import DownloaderHelper
-from app.log import logger
+from app.db.oper.downloadhistory import DownloadHistoryOper, DownloadHistory, DownloadFiles
+from app.db.oper.transferhistory import TransferHistoryOper
 from app.modules.filemanager.transhandler import TransHandler
 from app.modules.qbittorrent import Qbittorrent
 from app.modules.transmission import Transmission
-from app.plugins import _PluginBase
-from app.schemas.types import EventType, MediaSource, MediaType
-from app.schemas.types import SystemConfigKey
+from app.schemas.types import EventType, MediaSource, MediaType, SystemConfigKey
+from app.sdk.config import settings
+from app.sdk.events import Event, eventmanager
+from app.sdk.logging import logger
+from app.sdk.media import Context, MediaInfo, MetaBase, MetaInfo, MetaInfoPath
+from app.sdk.plugin import _PluginBase
+from app.sdk.services import DownloaderHelper
 
 
 @dataclass
@@ -224,7 +221,7 @@ class DownloadDirFilter(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/downloaddirfilter.png"
     # 插件版本
-    plugin_version = "0.0.1"
+    plugin_version = "0.0.2"
     # 插件作者
     plugin_author = "shyblacktea"
     # 作者主页
@@ -949,14 +946,20 @@ class DownloadDirFilter(_PluginBase):
     @db_update
     def update_download_file_by_hash(db: Session, db_id: int, torrent_hash: str, payload: dict[str, Any]):
         payload = {k: v for k, v in payload.items() if v is not None}
+        if not payload:
+            return
         db.query(DownloadFiles).filter(
-            DownloadFiles.download_hash == torrent_hash \
-                and DownloadFiles.id == db_id).update(payload)
+            DownloadFiles.download_hash == torrent_hash,
+            DownloadFiles.id == db_id
+        ).update(payload)
 
     @staticmethod
     @db_update
     def update_download_history_by_hash(db: Session, db_id: int, torrent_hash: str, payload: dict[str, Any]):
         payload = {k: v for k, v in payload.items() if v is not None}
+        if not payload:
+            return
         db.query(DownloadHistory).filter(
-            DownloadHistory.download_hash == torrent_hash \
-                and DownloadHistory.id == db_id).update(payload)
+            DownloadHistory.download_hash == torrent_hash,
+            DownloadHistory.id == db_id
+        ).update(payload)

@@ -13,17 +13,17 @@ from sqlalchemy.orm import Session
 # 项目库
 from app.chain.mediaserver import MediaServerChain
 from app.chain.subscribe import SubscribeChain
-from app.core.config import global_vars
-from app.core.context import MediaInfo
-from app.core.event import eventmanager, Event
-from app.db.models.subscribehistory import SubscribeHistory
-from app.db.subscribe_oper import SubscribeOper
 from app.db import db_query
-from app.helper.service import ServiceConfigHelper
-from app.log import logger
+from app.db.oper.subscribe import SubscribeOper
+from app.db.oper.subscribehistory import SubscribeHistory
 from app.modules.themoviedb.tmdbapi import TmdbApi
-from app.plugins import _PluginBase
 from app.schemas.types import EventType, MediaSource, MediaType, NotificationType
+from app.sdk.config import global_vars
+from app.sdk.events import Event, eventmanager
+from app.sdk.logging import logger
+from app.sdk.media import MediaInfo
+from app.sdk.plugin import _PluginBase
+from app.sdk.services import ServiceConfigHelper
 
 
 class FollowUpShyConfig(BaseModel):
@@ -52,7 +52,7 @@ class FollowUpShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/notifytogroupshy.png"
     # 插件版本
-    plugin_version = "0.0.3"
+    plugin_version = "0.0.4"
     # 插件作者
     plugin_author = "Attente,shyblacktea"
     # 作者主页

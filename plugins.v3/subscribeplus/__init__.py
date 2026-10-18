@@ -25,7 +25,7 @@ except Exception:  # pragma: no cover - MoviePilot runtime dependency
 try:
     from app.sdk.events import eventmanager
     from app.sdk.logging import logger
-    from app.plugins import _PluginBase
+    from app.sdk.plugin import _PluginBase
     from app.schemas.types import EventType, MediaType, MediaSource, NotificationType, SystemConfigKey
 except Exception:  # pragma: no cover - lets local unit tests import this package
     eventmanager = None

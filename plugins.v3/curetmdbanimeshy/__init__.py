@@ -11,7 +11,7 @@ from app.sdk.cache import cached
 from app.sdk.config import settings
 from app.sdk.media import MediaInfo, MetaBase
 from app.sdk.logging import logger
-from app.plugins import _PluginBase
+from app.sdk.plugin import _PluginBase
 from app.sdk.network import RequestUtils
 from app.sdk.utilities import SystemUtils
 

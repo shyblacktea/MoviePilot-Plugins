@@ -3,7 +3,7 @@
 `FollowUpShy` 是原版 `FollowUp` 的独立 V3 适配版，用于检查媒体库和订阅历史中的电影、电视剧是否有即将上映的续作，并通过通知按钮追加订阅。
 
 - 插件 ID：`FollowUpShy`
-- 当前版本：`0.0.3`
+- 当前版本：`0.0.4`
 - 插件目录：`plugins.v3/followupshy/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`Attente, shyblacktea`
@@ -42,6 +42,10 @@
 
 ## 版本记录
 
+### v0.0.4
+
+- 全面适配 MoviePilot V3 SDK 规范，移除废弃的 app.core 与 app.helper 依赖，规范订阅历史查询接口。
+
 ### v0.0.3
 
 - 修复追加订阅时传入旧版字段（`tmdbid`/`doubanid`/`bangumiid`）导致 V3 订阅写入报“未知字段”错误的问题。
@@ -64,7 +68,7 @@
 
 - 插件 ID：`FollowUpShy`
 - 插件目录：`followupshy`
-- 当前版本：`0.0.3`
+- 当前版本：`0.0.4`
 - Release 标签：`FollowUpShy_v0.0.3`
 - Release 安装包：`followupshy_v0.0.3.zip`
 - [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/FollowUpShy_v0.0.3)
