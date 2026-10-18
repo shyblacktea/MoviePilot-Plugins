@@ -26,7 +26,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "观众站守护者"
     plugin_desc = "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.7"
+    plugin_version = "0.0.8"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -283,17 +283,25 @@ class AudiencesKeeper(_PluginBase):
 
     def api_signin(self) -> dict[str, Any]:
         """
-        API: 立即签到
+        API: 立即签到（与定时任务一致，会推送带按钮的通知）
         """
-        success, msg = self.do_signin()
-        return {"success": success, "message": msg}
+        self.run_signin_job()
+        state = self.get_data("state") or {}
+        return {
+            "success": bool(state.get("last_signin_success")),
+            "message": state.get("last_signin_message") or "",
+        }
 
     def api_refresh_cookie(self) -> dict[str, Any]:
         """
-        API: 立即过盾刷新
+        API: 立即过盾刷新（与定时任务一致，会推送带按钮的通知）
         """
-        success, msg = self.do_refresh_cf()
-        return {"success": success, "message": msg}
+        self.run_cf_job()
+        state = self.get_data("state") or {}
+        return {
+            "success": bool(state.get("last_cf_success")),
+            "message": state.get("last_cf_message") or "",
+        }
 
     def api_clear_history(self) -> dict[str, Any]:
         """
@@ -851,7 +859,7 @@ class AudiencesKeeper(_PluginBase):
         """
         try:
             self.post_message(
-                mtype=NotificationType.SiteMessage,
+                mtype=NotificationType.Plugin,
                 title=title,
                 text=text,
                 buttons=buttons,
