@@ -58,10 +58,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Iterator, List, Optional
 
-from app.core.config import settings
-from app.log import logger
+from app.sdk.config import settings
+from app.sdk.logging import logger
 from app.schemas.types import MediaType
-from app.utils.http import RequestUtils
+from app.sdk.network import RequestUtils
 
 from ..core.models import FieldSpec, ProviderSpec, RankMediaItem
 from ..core.provider import ProviderContext, RankProvider

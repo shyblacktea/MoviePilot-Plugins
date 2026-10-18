@@ -35,10 +35,10 @@ from urllib.parse import quote
 
 from bs4 import BeautifulSoup
 
-from app.log import logger
+from app.sdk.logging import logger
 from app.schemas.types import MediaType
-from app.core.config import settings
-from app.utils.http import RequestUtils
+from app.sdk.config import settings
+from app.sdk.network import RequestUtils
 
 from ..core.models import FieldSpec, ProviderSpec, RankMediaItem
 from ..core.provider import ProviderContext, RankProvider

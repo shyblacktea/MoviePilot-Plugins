@@ -8,9 +8,9 @@ from __future__ import annotations
 
 from typing import Iterator, List, Optional
 
-from app.core.config import settings
-from app.helper.server import MoviePilotServerHelper
-from app.log import logger
+from app.sdk.config import settings
+from app.adapters.external.server import MoviePilotServerHelper
+from app.sdk.logging import logger
 from app.schemas.types import MediaType
 
 from ..core.models import FieldSpec, ProviderSpec, RankMediaItem

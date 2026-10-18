@@ -12,11 +12,11 @@ import re
 import xml.dom.minidom
 from typing import Iterator, List
 
-from app.core.config import settings
-from app.log import logger
+from app.sdk.config import settings
+from app.sdk.logging import logger
 from app.schemas.types import MediaType
-from app.utils.dom import DomUtils
-from app.utils.http import RequestUtils
+from app.sdk.string import DomUtils
+from app.sdk.network import RequestUtils
 
 from ..core.models import FieldSpec, ProviderSpec, RankMediaItem
 from ..core.provider import ProviderContext, RankProvider

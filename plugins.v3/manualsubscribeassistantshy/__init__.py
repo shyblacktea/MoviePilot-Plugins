@@ -16,12 +16,12 @@ from apscheduler.triggers.cron import CronTrigger
 
 from app.chain.download import DownloadChain
 from app.chain.subscribe import SubscribeChain
-from app.core.config import settings
-from app.core.event import eventmanager
-from app.db.subscribe_oper import SubscribeOper
-from app.domain.metainfo import MetaInfo
-from app.log import logger
-from app.plugins import _PluginBase
+from app.sdk.config import settings
+from app.sdk.events import eventmanager
+from app.db.oper.subscribe import SubscribeOper
+from app.sdk.media import MetaInfo
+from app.sdk.logging import logger
+from app.sdk.plugin import _PluginBase
 from app.schemas.event import ConfigChangeEventData
 from app.schemas.types import EventType, MediaSource, MediaType
 
@@ -52,7 +52,7 @@ class ManualSubscribeAssistantShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/manualsubscribeassistantshy.png"
     # 插件版本
-    plugin_version = "0.1.1"
+    plugin_version = "0.1.2"
     # 插件作者
     plugin_author = "shyblacktea"
     # 作者主页

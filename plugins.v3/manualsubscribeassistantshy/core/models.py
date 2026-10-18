@@ -11,7 +11,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 if TYPE_CHECKING:
-    from app.core.context import MediaInfo
+    from app.sdk.media import MediaInfo
     from app.schemas.types import MediaType
 
 

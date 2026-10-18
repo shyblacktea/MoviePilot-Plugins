@@ -14,15 +14,15 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 
-from app.core.metainfo import MetaInfo
-from app.log import logger
+from app.sdk.media import MetaInfo
+from app.sdk.logging import logger
 from app.schemas.types import MediaSource, MediaType
 
 from .dedup import SubscribedIndex
 from .models import HistoryRecord, RankMediaItem, SubscribeOutcome, SubscribeStatus, media_identity
 
 if TYPE_CHECKING:
-    from app.core.context import MediaInfo
+    from app.sdk.media import MediaInfo
 
     from .config import GlobalConfig
     from .filters import FilterChain

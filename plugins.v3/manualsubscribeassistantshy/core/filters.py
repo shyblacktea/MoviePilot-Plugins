@@ -13,7 +13,7 @@ from app.schemas.types import MediaType
 from .models import FilterVerdict, RankMediaItem
 
 if TYPE_CHECKING:
-    from app.core.context import MediaInfo
+    from app.sdk.media import MediaInfo
 
 
 def _to_int(value) -> int:

@@ -19,11 +19,10 @@ import re
 from datetime import date, timedelta
 from typing import Dict, Iterator, List, Optional
 
-from app.helper.browser import BrowserPage, PlaywrightHelper
-from app.log import logger
+from app.sdk.logging import logger
 from app.schemas.types import MediaType
-from app.core.config import settings
-from app.utils.http import RequestUtils
+from app.sdk.config import settings
+from app.sdk.network import RequestUtils
 
 from ..core.models import FieldSpec, ProviderSpec, RankMediaItem
 from ..core.provider import ProviderContext, RankProvider
@@ -324,12 +323,12 @@ class MaoyanRankProvider(RankProvider):
     @staticmethod
     def _get_cookies() -> dict:
         """通过 MoviePilot 浏览器适配层获取猫眼 Cookie，失败降级空 dict。"""
-        def handler(page: BrowserPage) -> dict:
-            return {c["name"]: c["value"] for c in page.context.cookies()}
-
         try:
-            return PlaywrightHelper().action(
-                url=MAOYAN_URL, callback=handler, headless=True) or {}
+            from app.sdk.browser import launch_browser_context
+            with launch_browser_context(headless=True) as ctx:
+                page = ctx.pages[0] if ctx.pages else ctx.new_page()
+                page.goto(MAOYAN_URL, wait_until="domcontentloaded", timeout=15000)
+                return {c["name"]: c["value"] for c in ctx.cookies()}
         except Exception as err:  # noqa: BLE001 - 浏览器不可用时降级
             logger.warn(f"{MaoyanRankProvider.provider_name}：获取 Cookie 失败，降级无 Cookie 请求：{err}")
             return {}
