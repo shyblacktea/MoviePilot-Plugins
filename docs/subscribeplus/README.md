@@ -3,7 +3,7 @@
 `SubscribePlus` 用于检测电视剧订阅：按订阅目标集数与媒体库/整理历史实际已下载集数计算缺集，插件会优先复用 MoviePilot 原生订阅搜索结果，并分析原因是暂无资源、识别问题，还是订阅规则没有命中。
 
 - 插件 ID：`SubscribePlus`
-- 当前版本：`1.1.12`
+- 当前版本：`1.1.13`
 - 插件目录：`plugins.v3/subscribeplus/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`shyblacktea`
@@ -117,6 +117,13 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 - Telegram、站点和下载器凭据属于敏感配置，不应写入日志或提交到仓库。
 
 ## 版本记录
+
+### v1.1.13
+
+- 新增：诊断单个订阅时，插件日志自动并入该订阅的原生执行日志 `subscriptions/{id}.log`。在 MoviePilot「订阅活动」里即可按订阅看到「原生搜索 → 插件诊断 → 下载」的完整链路，不必再去全局日志里检索。
+- 新增：扫描结果卡片增加「查看日志」按钮，原地查看该订阅最近 400 行日志，包含 MoviePilot 与插件两边的输出。
+- 修复：单订阅诊断在构造扫描器时同时传了位置参数与关键字参数，导致一直报 `SubscriptionScanner.__init__() got multiple values for argument 'load_categories'`，该入口此前不可用。
+- 修复：单订阅诊断会把整轮扫描结果列表清空的问题，现改为只更新该订阅对应的条目。
 
 ### v1.1.12
 
@@ -376,7 +383,7 @@ Telegram 保留 `/ci 媒体文件名` 作为自定义识别词交互入口。
 
 - 插件 ID：`SubscribePlus`
 - 插件目录：`subscribeplus`
-- 当前版本：`1.1.12`
+- 当前版本：`1.1.13`
 - Release tag：`SubscribePlus_v1.1.12`
 - Release 资产：`subscribeplus_v1.1.12.zip`
 - [下载发布版本](https://github.com/shyblacktea/MoviePilot-Plugins/releases/tag/SubscribePlus_v1.1.12)

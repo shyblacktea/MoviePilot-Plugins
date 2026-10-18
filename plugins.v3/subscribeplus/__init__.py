@@ -125,6 +125,7 @@ from .season_cleanup import (
 )
 from .sites import SiteResolver
 from .storage import JsonStore
+from .subscription_log import log_scope as subscribe_log_scope, tail as subscribe_log_tail
 from .telegram import (
     build_ci_done_menu,
     build_ci_manual_type_menu,
@@ -161,7 +162,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "按订阅目标集数检测电视剧缺集，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.12"
+    plugin_version = "1.1.13"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -279,6 +280,7 @@ class SubscribePlus(_PluginBase):
             {"path": "/results", "endpoint": self.get_results_api, "methods": ["GET"], "auth": "bear", "summary": "获取最近诊断结果"},
             {"path": "/results/clear", "endpoint": self.clear_results_api, "methods": ["POST"], "auth": "bear", "summary": "清除最近诊断结果"},
             {"path": "/results/delete", "endpoint": self.delete_result_api, "methods": ["POST"], "auth": "bear", "summary": "删除单条诊断结果"},
+            {"path": "/subscribe_log", "endpoint": self.subscribe_log_api, "methods": ["POST"], "auth": "bear", "summary": "查看某订阅的原生执行日志"},
             {"path": "/rule_records/clear", "endpoint": self.clear_rule_records_api, "methods": ["POST"], "auth": "bear", "summary": "清空规则修改记录"},
             {"path": "/rule_records/delete", "endpoint": self.delete_rule_record_api, "methods": ["POST"], "auth": "bear", "summary": "删除单条规则修改记录"},
             {"path": "/identifier_records/clear", "endpoint": self.clear_identifier_records_api, "methods": ["POST"], "auth": "bear", "summary": "清空识别词操作记录"},
@@ -598,6 +600,21 @@ class SubscribePlus(_PluginBase):
         self._ensure_store().clear_scan_results()
         return {"success": True}
 
+    def subscribe_log_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
+        """回读指定订阅的原生日志尾部，包含 MoviePilot 搜索与插件本轮的输出。"""
+        data = self._extract_payload(payload)
+        subscribe_id = data.get("subscribe_id")
+        try:
+            lines = int(data.get("lines") or 300)
+        except (TypeError, ValueError):
+            lines = 300
+        info = subscribe_log_tail(subscribe_id, lines)
+        return {
+            "success": True,
+            "data": info,
+            "message": "" if info.get("exists") else "该订阅还没有日志（可能尚未执行过搜索或检查）",
+        }
+
     def delete_result_api(self, payload: Optional[Dict[str, Any]] = Body(default=None)) -> Dict[str, Any]:
         data = self._extract_payload(payload)
         result_id = str(data.get("result_id") or "").strip()
@@ -635,8 +652,16 @@ class SubscribePlus(_PluginBase):
             return {"success": False, "count": 0, "message": error or "no diagnosable subscription item"}
 
         diagnosis = self._diagnose_item(item)
-        results = self._refresh_scan_results([diagnosis.to_dict()]) if diagnosis else []
-        self._ensure_store().save_scan_results(results)
+        fresh = self._refresh_scan_results([diagnosis.to_dict()]) if diagnosis else []
+        # 单条诊断只更新该订阅对应的条目，不能把整轮扫描结果表清空。
+        store = self._ensure_store()
+        merged = [
+            row for row in store.load_scan_results()
+            if str(row.get("subscribe_id")) != str(item.subscribe_id)
+        ]
+        merged.extend(fresh)
+        store.replace_scan_results(merged)
+        results = fresh
         if notify and self._plugin_config.notify_tg and results:
             self._notify_each_show(results)
         return {
@@ -1264,8 +1289,6 @@ class SubscribePlus(_PluginBase):
             single_config.selected_categories = [category]
         scanner = SubscriptionScanner(
             lambda: [subscribe],
-            lambda *_args, **_kwargs: [],
-            self._is_episode_downloaded,
             load_categories=self._load_tv_categories,
             resolve_subscribe_category=self._resolve_subscribe_category,
             load_downloaded_episodes=self._load_downloaded_episodes,
@@ -1279,10 +1302,12 @@ class SubscribePlus(_PluginBase):
         return inputs[0], ""
 
     def _diagnose_item(self, item: DiagnosisInput) -> Optional[DiagnosisItem]:
-        result = self._diagnose_item_inner(item)
-        if result is not None:
-            self._fill_site_names(result)
-        return result
+        """诊断单个订阅，并把本轮日志并入该订阅的原生「订阅活动」日志。"""
+        with subscribe_log_scope(getattr(item, "subscribe_id", 0)):
+            result = self._diagnose_item_inner(item)
+            if result is not None:
+                self._fill_site_names(result)
+            return result
 
     def _fill_site_names(self, result: DiagnosisItem) -> None:
         """将诊断结果里的站点 ID 解析为站点名称，供通知展示。"""
