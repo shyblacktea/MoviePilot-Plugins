@@ -25,8 +25,8 @@ class AudiencesKeeper(_PluginBase):
 
     plugin_name = "观众站守护者"
     plugin_desc = "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。"
-    plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/downloaddirfilter.png"
-    plugin_version = "0.0.1"
+    plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
+    plugin_version = "0.0.2"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -35,7 +35,7 @@ class AudiencesKeeper(_PluginBase):
 
     # 运行配置
     _enabled: bool = False
-    _site_id: int = 12
+    _site_id: int = 0
     _site_url: str = "https://audiences.me/"
     _signin_enabled: bool = True
     _signin_cron: str = "0 9 * * *"
@@ -50,7 +50,7 @@ class AudiencesKeeper(_PluginBase):
         """
         config = config or {}
         self._enabled = bool(config.get("enabled", False))
-        self._site_id = int(config.get("site_id", 12))
+        self._site_id = int(config.get("site_id") or 0)
         self._site_url = str(config.get("site_url") or "https://audiences.me/").strip()
         self._signin_enabled = bool(config.get("signin_enabled", True))
         self._signin_cron = str(config.get("signin_cron") or "0 9 * * *").strip()
@@ -64,7 +64,6 @@ class AudiencesKeeper(_PluginBase):
             self._onlyonce = False
             config["onlyonce"] = False
             self.update_config(config)
-            # 在后台线程中执行，避免阻塞配置保存
             import threading
             threading.Thread(target=self._run_all, daemon=True).start()
 
@@ -194,6 +193,8 @@ class AudiencesKeeper(_PluginBase):
             "data": {
                 **data,
                 "site_configured": site is not None,
+                "site_name": site.get("name") if site else "",
+                "site_id": site.get("id") if site else 0,
                 "cookie_length": cookie_len,
                 "has_cf_clearance": has_cf,
                 "current_ua": site.get("ua", "") if site else "",
@@ -251,51 +252,73 @@ class AudiencesKeeper(_PluginBase):
         """
         site = self._get_site()
         if not site:
-            msg = f"未找到 ID 为 {self._site_id} 的观众站点配置，请检查站点 ID 设置。"
+            msg = "未找到观众站站点配置（自动匹配 audiences.me 失败），请确认是否已在站点管理中添加观众站。"
             self._append_history("每日签到", False, msg)
             return False, msg
 
         raw_cookie = site.get("cookie") or ""
         if not raw_cookie:
-            msg = "观众站尚未配置任何基础 Cookie，无法进行登录态签到。"
+            msg = f"观众站（ID: {site['id']}）尚未配置基础 Cookie，请先在站点管理填入 Cookie。"
             self._append_history("每日签到", False, msg)
             return False, msg
 
         cookies = self._parse_cookie_list(raw_cookie, site.get("url") or self._site_url)
         target_url = urllib.parse.urljoin(site.get("url") or self._site_url, "attendance.php")
 
-        logger.info(f"【观众站守护者】启动浏览器访问 {target_url} 执行签到...")
+        logger.info(f"【观众站守护者】启动浏览器访问 {target_url} 执行签到（站点 ID: {site['id']}）...")
         try:
             with launch_browser_context(headless=True) as ctx:
                 ctx.add_cookies(cookies)
                 page = ctx.pages[0] if ctx.pages else ctx.new_page()
-                page.goto(target_url, timeout=35000)
-                page.wait_for_timeout(2500)
+                page.goto(target_url, wait_until="domcontentloaded", timeout=35000)
+                page.wait_for_timeout(2000)
 
-                # 检查是否已签到
-                initial_text = page.content()
-                if "您今天已经签到过了" in initial_text or "已经签到" in initial_text:
+                already_keywords = [
+                    "您今天已经签到过了",
+                    "您今日已经签到过了",
+                    "今日已签到",
+                    "今天已签到",
+                    "已签到",
+                    "请勿重复刷新",
+                    "明天再来吧",
+                ]
+
+                success_keywords = [
+                    "签到成功",
+                    "本次签到奖励",
+                    "获得",
+                    "粒爆米花",
+                    "点魔力",
+                    "奖励已发放",
+                ]
+
+                # 1. 检查是否已经签到过
+                init_html = page.content()
+                if any(k in init_html for k in already_keywords):
                     msg = "您今日已经签到过了，无需重复签到。"
+                    self._save_cookies_from_context(ctx, site)
                     self._update_signin_state(True, msg)
                     self._append_history("每日签到", True, msg)
                     return True, msg
 
-                # 寻找并点击 Turnstile iframe
-                clicked = self._click_turnstile_if_present(page)
-                if clicked:
-                    logger.info("【观众站守护者】已检测到并点击 Cloudflare Turnstile 验证框，等待验证提交...")
+                # 2. 若未签到，尝试寻找并点击 Turnstile
+                for _ in range(3):
+                    if self._click_turnstile_if_present(page):
+                        logger.info("【观众站守护者】已检测到并点击 Cloudflare Turnstile 验证框，等待验证提交...")
+                        break
+                    page.wait_for_timeout(1500)
 
-                # 轮询等待结果返回
+                # 3. 轮询等待验证结果
                 final_msg = ""
                 success = False
-                for _ in range(6):
+                for _ in range(8):
                     page.wait_for_timeout(2000)
                     html = page.content()
-                    if "签到成功" in html or "本次签到奖励" in html:
+                    if any(k in html for k in success_keywords):
                         success = True
                         final_msg = "签到成功！本次签到奖励已发放到账户。"
                         break
-                    if "您今天已经签到过了" in html:
+                    if any(k in html for k in already_keywords):
                         success = True
                         final_msg = "今日已签到（已确认）。"
                         break
@@ -304,7 +327,13 @@ class AudiencesKeeper(_PluginBase):
                         break
 
                 if not final_msg:
-                    final_msg = "签到结果未在限定时间内明确确认，请查看网页端。"
+                    # 最后兜底检查一次页面文本
+                    html = page.content()
+                    if any(k in html for k in already_keywords):
+                        success = True
+                        final_msg = "今日已签到（已确认）。"
+                    else:
+                        final_msg = "签到结果未在限定时间内明确确认，请查看网页端。"
 
                 # 提取并回存最新 Cookies
                 self._save_cookies_from_context(ctx, site)
@@ -324,7 +353,7 @@ class AudiencesKeeper(_PluginBase):
         """
         site = self._get_site()
         if not site:
-            msg = f"未找到 ID 为 {self._site_id} 的观众站点配置。"
+            msg = "未找到观众站站点配置（自动匹配 audiences.me 失败）。"
             self._append_history("过盾与刷新", False, msg)
             return False, msg
 
@@ -332,18 +361,22 @@ class AudiencesKeeper(_PluginBase):
         cookies = self._parse_cookie_list(raw_cookie, site.get("url") or self._site_url)
         target_url = urllib.parse.urljoin(site.get("url") or self._site_url, "torrents.php")
 
-        logger.info(f"【观众站守护者】启动浏览器访问种子列表页 {target_url} 穿透 CF 并洗白搜索限制...")
+        logger.info(f"【观众站守护者】启动浏览器访问种子列表页 {target_url} 穿透 CF 并洗白搜索限制（站点 ID: {site['id']}）...")
         try:
             with launch_browser_context(headless=True) as ctx:
                 if cookies:
                     ctx.add_cookies(cookies)
                 page = ctx.pages[0] if ctx.pages else ctx.new_page()
-                page.goto(target_url, timeout=35000)
-                page.wait_for_timeout(3000)
+                page.goto(target_url, wait_until="domcontentloaded", timeout=35000)
+                page.wait_for_timeout(2500)
 
                 # 检查并穿透 Turnstile
-                self._click_turnstile_if_present(page)
-                page.wait_for_timeout(3000)
+                for _ in range(3):
+                    if self._click_turnstile_if_present(page):
+                        break
+                    page.wait_for_timeout(1000)
+
+                page.wait_for_timeout(2500)
 
                 # 提取 Cookie 与 UA
                 new_cookie_str, new_ua, has_cf = self._save_cookies_from_context(ctx, site)
@@ -370,7 +403,7 @@ class AudiencesKeeper(_PluginBase):
                 try:
                     cb = frame.locator("input[type=checkbox], .ctp-checkbox-label, body")
                     if cb.count() > 0:
-                        cb.first.click(timeout=4000)
+                        cb.first.click(timeout=3000)
                         return True
                 except Exception as e:
                     logger.debug(f"点击 Turnstile 略过: {e}")
@@ -402,7 +435,7 @@ class AudiencesKeeper(_PluginBase):
                 has_cf = True
 
         new_cookie_str = "; ".join([f"{k}={v}" for k, v in cookie_map.items()])
-        self._update_site(cookie=new_cookie_str, ua=current_ua or None)
+        self._update_site(site_id=site["id"], cookie=new_cookie_str, ua=current_ua or None)
         return new_cookie_str, current_ua, has_cf
 
     def _parse_cookie_list(self, raw_cookie: str, base_url: str) -> list[dict[str, str]]:
@@ -425,14 +458,27 @@ class AudiencesKeeper(_PluginBase):
     @db_query
     def _get_site(self, db: Session = None) -> Optional[dict[str, Any]]:
         """
-        查询当前配置的观众站点信息。
+        自动识别并获取观众站点信息：优先全量扫描识别 audiences.me 或观众站点；
+        若未扫描到则使用配置的 _site_id。
         """
-        site = db.query(Site).filter(Site.id == self._site_id).first()
-        if not site:
-            # 兼容：尝试按名称模糊查找
-            site = db.query(Site).filter(Site.name.ilike("%观众%")).first()
+        site = None
+        # 1. 优先自动扫描所有站点
+        all_sites = db.query(Site).all()
+        for s in all_sites:
+            domain = (s.domain or "").lower()
+            url = (s.url or "").lower()
+            name = (s.name or "").lower()
+            if "audiences.me" in domain or "audiences.me" in url or "观众" in name or "audiences" in name:
+                site = s
+                break
+
+        # 2. 如果自动匹配未找到，尝试用配置的 _site_id
+        if not site and self._site_id:
+            site = db.query(Site).filter(Site.id == self._site_id).first()
+
         if not site:
             return None
+
         return {
             "id": site.id,
             "name": site.name,
@@ -442,13 +488,11 @@ class AudiencesKeeper(_PluginBase):
         }
 
     @db_update
-    def _update_site(self, db: Session = None, cookie: str = None, ua: str = None) -> bool:
+    def _update_site(self, site_id: int, db: Session = None, cookie: str = None, ua: str = None) -> bool:
         """
         热更新观众站点 Cookie 与 UA。
         """
-        site = db.query(Site).filter(Site.id == self._site_id).first()
-        if not site:
-            site = db.query(Site).filter(Site.name.ilike("%观众%")).first()
+        site = db.query(Site).filter(Site.id == site_id).first()
         if not site:
             return False
         if cookie:
@@ -508,7 +552,7 @@ class AudiencesKeeper(_PluginBase):
                             "type": "info",
                             "variant": "tonal",
                             "class": "mb-4",
-                            "text": "本插件针对观众站（audiences.me）设计：通过内置仿真浏览器（CloakBrowser）模拟穿透 Cloudflare Turnstile 验证，自动更新 cf_clearance 凭据与 User-Agent，同时解除 NexusPHP 搜索频次防刷限制，并提供带人机穿透的每日自动签到功能。",
+                            "text": "本插件针对观众站（audiences.me）设计：自动识别观众站点，模拟穿透 Cloudflare Turnstile 挑战，自动更新 cf_clearance 与真实 UA，解除搜索频次防刷限制，并提供每日自动签到功能。",
                         },
                     },
                     {
@@ -553,9 +597,9 @@ class AudiencesKeeper(_PluginBase):
                                         "component": "VTextField",
                                         "props": {
                                             "model": "site_id",
-                                            "label": "观众站点 ID",
+                                            "label": "观众站点 ID (自动识别)",
                                             "type": "number",
-                                            "hint": "MoviePilot 中观众站的 ID，默认通常为 12",
+                                            "hint": "默认 0 为自动识别观众站，无需手动指定",
                                         },
                                     },
                                 ],
@@ -666,7 +710,7 @@ class AudiencesKeeper(_PluginBase):
             }
         ], {
             "enabled": False,
-            "site_id": 12,
+            "site_id": 0,
             "site_url": "https://audiences.me/",
             "signin_enabled": True,
             "signin_cron": "0 9 * * *",
@@ -687,9 +731,12 @@ class AudiencesKeeper(_PluginBase):
         site = self._get_site()
         has_cf = False
         cookie_len = 0
-        if site and site.get("cookie"):
-            cookie_len = len(site["cookie"])
-            has_cf = "cf_clearance=" in site["cookie"]
+        site_desc = "未找到观众站"
+        if site:
+            site_desc = f"{site.get('name', '观众')} (ID: {site.get('id')})"
+            if site.get("cookie"):
+                cookie_len = len(site["cookie"])
+                has_cf = "cf_clearance=" in site["cookie"]
 
         history = self.get_data("history") or []
         history_rows = []
@@ -742,6 +789,11 @@ class AudiencesKeeper(_PluginBase):
                                                 },
                                             },
                                         ],
+                                    },
+                                    {
+                                        "component": "div",
+                                        "props": {"class": "text-caption text-medium-emphasis mb-1"},
+                                        "text": f"绑定站点：{site_desc}",
                                     },
                                     {
                                         "component": "div",

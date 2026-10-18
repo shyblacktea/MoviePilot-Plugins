@@ -19,7 +19,7 @@ def test_audienceskeeper_form():
     form, defaults = plugin.get_form()
     assert isinstance(form, list)
     assert isinstance(defaults, dict)
-    assert defaults["site_id"] == 12
+    assert defaults["site_id"] == 0
     assert defaults["enabled"] is False
     assert defaults["signin_enabled"] is True
 
