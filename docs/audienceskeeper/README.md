@@ -3,7 +3,7 @@
 `AudiencesKeeper` 是专为观众站（`audiences.me`）定制的自动化守护插件。针对观众站频繁出现的 Cloudflare Turnstile 验证及 NexusPHP 搜索防刷限制，利用 MoviePilot 内置的仿真浏览器实现全自动过盾、更新 `cf_clearance` 凭据以及带人机穿透的每日自动签到。
 
 - 插件 ID：`AudiencesKeeper`
-- 当前版本：`0.0.3`
+- 当前版本：`0.0.4`
 - 插件目录：`plugins.v3/audienceskeeper/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`shyblacktea`
@@ -36,6 +36,12 @@
 - `保存后立即运行一次`：保存配置后在后台立即执行一次过盾和签到。
 
 ## 版本记录
+
+### v0.0.4
+
+- 修复：彻底重构签到判定算法，严格根据 DOM 卡片状态（`.attendance-card__icon--success`、`.attendance-card--done`）与标题校验，杜绝静态奖励规则文本导致的“假成功”误报。
+- 功能：配置中增加「清空执行历史记录」开关及 `/clear_history` 接口，支持一键清空日志。
+- 体验：详情页全面改版，将「每日签到记录」与「CF 过盾记录」拆分为独立专属看板，附带彩色标签分类，一目了然。
 
 ### v0.0.3
 

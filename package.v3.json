@@ -134,7 +134,7 @@
     "name": "观众站守护者",
     "description": "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。",
     "labels": "站点,签到,Cookie",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg",
     "author": "shyblacktea",
     "level": 1,
@@ -143,7 +143,8 @@
     "history": {
       "v0.0.1": "首次发布，支持观众站自动模拟过 CF Turnstile 盾更新 Cookie、洗白搜索防刷频次及自动签到。",
       "v0.0.2": "自动智能识别观众站点（无需手动配站点ID），增强签到判定与关键字兼容，优化过盾与签到等待时序，更换独立 Cloudflare 图标。",
-      "v0.0.3": "修复 MoviePilot db_update 装饰器参数位置冲突引发的 site_id 异常。"
+      "v0.0.3": "修复 MoviePilot db_update 装饰器参数位置冲突引发的 site_id 异常。",
+      "v0.0.4": "彻底重构签到判定逻辑（严格校验 DOM 卡片状态与成功标识，杜绝静态规则文本引发的假成功误报）；增加清空执行历史配置开关；详情页拆分签到与过盾为独立分类看板。"
     }
   }
 }

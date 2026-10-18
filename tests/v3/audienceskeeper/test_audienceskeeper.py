@@ -22,14 +22,13 @@ def test_audienceskeeper_form():
     assert defaults["site_id"] == 0
     assert defaults["enabled"] is False
     assert defaults["signin_enabled"] is True
+    assert defaults["clear_history"] is False
 
 
 def test_audienceskeeper_services():
     plugin = AudiencesKeeper()
-    # disabled -> no services
     assert plugin.get_service() == []
 
-    # enabled -> 2 services
     plugin.init_plugin({"enabled": True, "signin_enabled": True, "cf_enabled": True})
     services = plugin.get_service()
     assert len(services) == 2

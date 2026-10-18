@@ -26,7 +26,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "观众站守护者"
     plugin_desc = "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.3"
+    plugin_version = "0.0.4"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -58,6 +58,14 @@ class AudiencesKeeper(_PluginBase):
         self._cf_cron = str(config.get("cf_cron") or "0 */2 * * *").strip()
         self._notify = bool(config.get("notify", True))
         self._onlyonce = bool(config.get("onlyonce", False))
+
+        if bool(config.get("clear_history", False)):
+            logger.info("【观众站守护者】收到清空历史记录请求，正在清空...")
+            self.save_data("cf_history", [])
+            self.save_data("signin_history", [])
+            self.save_data("history", [])
+            config["clear_history"] = False
+            self.update_config(config)
 
         if self._enabled and self._onlyonce:
             logger.info("【观众站守护者】保存配置后触发立即运行一次...")
@@ -175,6 +183,13 @@ class AudiencesKeeper(_PluginBase):
                 "auth": "bear",
                 "summary": "立即过盾并更新 Cookie",
             },
+            {
+                "path": "/clear_history",
+                "endpoint": self.api_clear_history,
+                "methods": ["POST"],
+                "auth": "bear",
+                "summary": "清空执行记录",
+            },
         ]
 
     def api_status(self) -> dict[str, Any]:
@@ -215,6 +230,15 @@ class AudiencesKeeper(_PluginBase):
         success, msg = self.do_refresh_cf()
         return {"success": success, "message": msg}
 
+    def api_clear_history(self) -> dict[str, Any]:
+        """
+        API: 清空历史
+        """
+        self.save_data("cf_history", [])
+        self.save_data("signin_history", [])
+        self.save_data("history", [])
+        return {"success": True, "message": "历史记录已全部清空"}
+
     def _run_all(self) -> None:
         """
         立即执行全部任务（先过盾刷新 Cookie，再签到）。
@@ -248,7 +272,7 @@ class AudiencesKeeper(_PluginBase):
 
     def do_signin(self) -> tuple[bool, str]:
         """
-        核心方法：打开浏览器模拟过 Turnstile 签到。
+        核心方法：打开浏览器模拟过 Turnstile 签到，严格基于 DOM 元素卡片状态验证结果。
         """
         site = self._get_site()
         if not site:
@@ -265,7 +289,7 @@ class AudiencesKeeper(_PluginBase):
         cookies = self._parse_cookie_list(raw_cookie, site.get("url") or self._site_url)
         target_url = urllib.parse.urljoin(site.get("url") or self._site_url, "attendance.php")
 
-        logger.info(f"【观众站守护者】启动浏览器访问 {target_url} 执行签到（站点 ID: {site['id']}）...")
+        logger.info(f"【观众站守护者】启动仿真浏览器访问 {target_url} 执行签到（站点 ID: {site['id']}）...")
         try:
             with launch_browser_context(headless=True) as ctx:
                 ctx.add_cookies(cookies)
@@ -273,67 +297,72 @@ class AudiencesKeeper(_PluginBase):
                 page.goto(target_url, wait_until="domcontentloaded", timeout=35000)
                 page.wait_for_timeout(2000)
 
-                already_keywords = [
-                    "您今天已经签到过了",
-                    "您今日已经签到过了",
-                    "今日已签到",
-                    "今天已签到",
-                    "已签到",
-                    "请勿重复刷新",
-                    "明天再来吧",
-                ]
+                # 1. 精准检查是否已经签到过（基于卡片类名与顶部用户栏状态，杜绝匹配静态文字）
+                is_attended_userbar = page.locator(".site-userbar__compact-tool--attended").count() > 0
+                has_done_card = page.locator(".attendance-card--done, .attendance-card__icon--done").count() > 0
 
-                success_keywords = [
-                    "签到成功",
-                    "本次签到奖励",
-                    "获得",
-                    "粒爆米花",
-                    "点魔力",
-                    "奖励已发放",
-                ]
+                card_title = (
+                    page.locator(".attendance-card__title").first.inner_text().strip()
+                    if page.locator(".attendance-card__title").count() > 0
+                    else ""
+                )
+                card_desc = (
+                    page.locator(".attendance-card__desc").first.inner_text().strip()
+                    if page.locator(".attendance-card__desc").count() > 0
+                    else ""
+                )
 
-                # 1. 检查是否已经签到过
-                init_html = page.content()
-                if any(k in init_html for k in already_keywords):
-                    msg = "您今日已经签到过了，无需重复签到。"
+                if is_attended_userbar or has_done_card or "今天已签到" in card_title or "已签到" in card_title:
+                    msg = card_desc or "您今天已经签到过了，请勿重复刷新。"
                     self._save_cookies_from_context(ctx, site)
                     self._update_signin_state(True, msg)
                     self._append_history("每日签到", True, msg)
                     return True, msg
 
-                # 2. 若未签到，尝试寻找并点击 Turnstile
-                for _ in range(3):
+                # 2. 若未签到，寻找 Turnstile iframe 并模拟点击
+                logger.info("【观众站守护者】检测到尚未签到，正在寻找 Turnstile 人机验证框...")
+                for attempt in range(4):
                     if self._click_turnstile_if_present(page):
-                        logger.info("【观众站守护者】已检测到并点击 Cloudflare Turnstile 验证框，等待验证提交...")
+                        logger.info("【观众站守护者】已定位并点击 Cloudflare Turnstile 验证框，等待验证提交...")
                         break
                     page.wait_for_timeout(1500)
 
-                # 3. 轮询等待验证结果
+                # 3. 严格轮询等待提交完成（必须出现成功图标、今天已签到卡片或顶部状态栏变绿）
                 final_msg = ""
                 success = False
-                for _ in range(8):
+                for _ in range(12):
                     page.wait_for_timeout(2000)
-                    html = page.content()
-                    if any(k in html for k in success_keywords):
+                    has_success = page.locator(".attendance-card__icon--success").count() > 0
+                    has_done = page.locator(".attendance-card--done, .attendance-card__icon--done").count() > 0
+                    is_now_attended = page.locator(".site-userbar__compact-tool--attended").count() > 0
+
+                    cur_title = (
+                        page.locator(".attendance-card__title").first.inner_text().strip()
+                        if page.locator(".attendance-card__title").count() > 0
+                        else ""
+                    )
+                    cur_desc = (
+                        page.locator(".attendance-card__desc").first.inner_text().strip()
+                        if page.locator(".attendance-card__desc").count() > 0
+                        else ""
+                    )
+
+                    if has_success or "签到成功" in cur_title:
                         success = True
-                        final_msg = "签到成功！本次签到奖励已发放到账户。"
+                        final_msg = cur_desc or "签到成功！本次签到奖励已发放到账户。"
                         break
-                    if any(k in html for k in already_keywords):
+                    if has_done or is_now_attended or "今天已签到" in cur_title or "已签到" in cur_title:
                         success = True
-                        final_msg = "今日已签到（已确认）。"
-                        break
-                    if "人机验证未通过" in html or "验证失败" in html:
-                        final_msg = "人机验证提交失败，请稍后重试。"
+                        final_msg = cur_desc or "今日已签到（已确认）。"
                         break
 
                 if not final_msg:
-                    # 最后兜底检查一次页面文本
-                    html = page.content()
-                    if any(k in html for k in already_keywords):
-                        success = True
-                        final_msg = "今日已签到（已确认）。"
+                    # 如果仍然停留在人机验证卡片，明确反馈人机未通过或未提交，绝不谎报成功
+                    has_form = page.locator(".attendance-card__form").count() > 0
+                    if has_form or "人机" in cur_title:
+                        final_msg = "Turnstile 人机验证未在限定时间内完成自动提交，请稍后重试或检查网络。"
                     else:
-                        final_msg = "签到结果未在限定时间内明确确认，请查看网页端。"
+                        final_msg = cur_desc or "签到结果未能明确确认，请前往网页端查看。"
 
                 # 提取并回存最新 Cookies
                 self._save_cookies_from_context(ctx, site)
@@ -519,14 +548,26 @@ class AudiencesKeeper(_PluginBase):
         self.save_data("state", state)
 
     def _append_history(self, op_type: str, success: bool, detail: str) -> None:
-        histories = self.get_data("history") or []
-        histories.insert(0, {
+        record = {
             "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "type": op_type,
             "success": success,
             "detail": detail,
-        })
-        self.save_data("history", histories[:15])
+        }
+        # 综合记录
+        histories = self.get_data("history") or []
+        histories.insert(0, record)
+        self.save_data("history", histories[:20])
+
+        # 分类独立记录
+        if "签到" in op_type:
+            signin_hist = self.get_data("signin_history") or []
+            signin_hist.insert(0, record)
+            self.save_data("signin_history", signin_hist[:15])
+        else:
+            cf_hist = self.get_data("cf_history") or []
+            cf_hist.insert(0, record)
+            self.save_data("cf_history", cf_hist[:15])
 
     def _send_notify(self, title: str, text: str) -> None:
         try:
@@ -693,13 +734,27 @@ class AudiencesKeeper(_PluginBase):
                         "content": [
                             {
                                 "component": "VCol",
-                                "props": {"cols": 12},
+                                "props": {"cols": 12, "md": 6},
                                 "content": [
                                     {
                                         "component": "VSwitch",
                                         "props": {
                                             "model": "onlyonce",
                                             "label": "保存配置后立即运行一次",
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                "component": "VCol",
+                                "props": {"cols": 12, "md": 6},
+                                "content": [
+                                    {
+                                        "component": "VSwitch",
+                                        "props": {
+                                            "model": "clear_history",
+                                            "label": "清空执行历史记录",
+                                            "hint": "开启后保存配置即可清空所有过盾和签到记录",
                                         },
                                     },
                                 ],
@@ -718,11 +773,12 @@ class AudiencesKeeper(_PluginBase):
             "cf_cron": "0 */2 * * *",
             "notify": True,
             "onlyonce": False,
+            "clear_history": False,
         }
 
     def get_page(self) -> list[dict]:
         """
-        插件详情页（展示运行状态与历史）。
+        插件详情页（展示运行状态与清晰分类的历史记录）。
         """
         state = self.get_data("state") or {}
         today = datetime.now().strftime("%Y-%m-%d")
@@ -738,30 +794,60 @@ class AudiencesKeeper(_PluginBase):
                 cookie_len = len(site["cookie"])
                 has_cf = "cf_clearance=" in site["cookie"]
 
-        history = self.get_data("history") or []
-        history_rows = []
-        for h in history:
-            history_rows.append({
-                "component": "tr",
-                "content": [
-                    {"component": "td", "text": h.get("time", "-")},
-                    {"component": "td", "text": h.get("type", "-")},
-                    {
-                        "component": "td",
-                        "content": [
-                            {
-                                "component": "VChip",
-                                "props": {
-                                    "size": "x-small",
-                                    "color": "success" if h.get("success") else "error",
-                                    "text": "成功" if h.get("success") else "失败",
-                                },
-                            }
-                        ],
-                    },
-                    {"component": "td", "text": h.get("detail", "-")},
-                ],
-            })
+        def _make_table_rows(records: list) -> list:
+            rows = []
+            for h in records:
+                is_cf = "过盾" in h.get("type", "")
+                rows.append({
+                    "component": "tr",
+                    "content": [
+                        {"component": "td", "text": h.get("time", "-")},
+                        {
+                            "component": "td",
+                            "content": [
+                                {
+                                    "component": "VChip",
+                                    "props": {
+                                        "size": "x-small",
+                                        "color": "warning" if is_cf else "primary",
+                                        "variant": "tonal",
+                                        "text": "🛡️ 过盾" if is_cf else "📅 签到",
+                                    },
+                                }
+                            ],
+                        },
+                        {
+                            "component": "td",
+                            "content": [
+                                {
+                                    "component": "VChip",
+                                    "props": {
+                                        "size": "x-small",
+                                        "color": "success" if h.get("success") else "error",
+                                        "text": "成功" if h.get("success") else "失败",
+                                    },
+                                }
+                            ],
+                        },
+                        {"component": "td", "text": h.get("detail", "-")},
+                    ],
+                })
+            return rows
+
+        cf_history = self.get_data("cf_history") or []
+        signin_history = self.get_data("signin_history") or []
+
+        # 兼容旧单列表
+        if not cf_history and not signin_history:
+            old_h = self.get_data("history") or []
+            for item in old_h:
+                if "签到" in item.get("type", ""):
+                    signin_history.append(item)
+                else:
+                    cf_history.append(item)
+
+        cf_rows = _make_table_rows(cf_history[:10])
+        signin_rows = _make_table_rows(signin_history[:10])
 
         return [
             {
@@ -849,37 +935,92 @@ class AudiencesKeeper(_PluginBase):
                 ],
             },
             {
-                "component": "VCard",
-                "props": {"variant": "outlined", "class": "pa-4 mt-2"},
+                "component": "VRow",
                 "content": [
-                    {"component": "h4", "props": {"class": "mb-3"}, "text": "📜 最近执行记录"},
                     {
-                        "component": "VTable",
-                        "props": {"density": "compact"},
+                        "component": "VCol",
+                        "props": {"cols": 12, "md": 6},
                         "content": [
                             {
-                                "component": "thead",
+                                "component": "VCard",
+                                "props": {"variant": "outlined", "class": "pa-3"},
                                 "content": [
+                                    {"component": "h4", "props": {"class": "mb-2"}, "text": "📅 每日签到记录"},
                                     {
-                                        "component": "tr",
+                                        "component": "VTable",
+                                        "props": {"density": "compact"},
                                         "content": [
-                                            {"component": "th", "text": "时间"},
-                                            {"component": "th", "text": "动作"},
-                                            {"component": "th", "text": "状态"},
-                                            {"component": "th", "text": "详情"},
+                                            {
+                                                "component": "thead",
+                                                "content": [
+                                                    {
+                                                        "component": "tr",
+                                                        "content": [
+                                                            {"component": "th", "text": "时间"},
+                                                            {"component": "th", "text": "类型"},
+                                                            {"component": "th", "text": "状态"},
+                                                            {"component": "th", "text": "反馈"},
+                                                        ],
+                                                    }
+                                                ],
+                                            },
+                                            {
+                                                "component": "tbody",
+                                                "content": signin_rows if signin_rows else [
+                                                    {
+                                                        "component": "tr",
+                                                        "content": [
+                                                            {"component": "td", "props": {"colspan": 4, "class": "text-center text-medium-emphasis"}, "text": "暂无签到记录"}
+                                                        ]
+                                                    }
+                                                ],
+                                            },
                                         ],
-                                    }
+                                    },
                                 ],
                             },
+                        ],
+                    },
+                    {
+                        "component": "VCol",
+                        "props": {"cols": 12, "md": 6},
+                        "content": [
                             {
-                                "component": "tbody",
-                                "content": history_rows if history_rows else [
+                                "component": "VCard",
+                                "props": {"variant": "outlined", "class": "pa-3"},
+                                "content": [
+                                    {"component": "h4", "props": {"class": "mb-2"}, "text": "🛡️ CF 过盾与 Cookie 更新记录"},
                                     {
-                                        "component": "tr",
+                                        "component": "VTable",
+                                        "props": {"density": "compact"},
                                         "content": [
-                                            {"component": "td", "props": {"colspan": 4, "class": "text-center text-medium-emphasis"}, "text": "暂无执行记录"}
-                                        ]
-                                    }
+                                            {
+                                                "component": "thead",
+                                                "content": [
+                                                    {
+                                                        "component": "tr",
+                                                        "content": [
+                                                            {"component": "th", "text": "时间"},
+                                                            {"component": "th", "text": "类型"},
+                                                            {"component": "th", "text": "状态"},
+                                                            {"component": "th", "text": "反馈"},
+                                                        ],
+                                                    }
+                                                ],
+                                            },
+                                            {
+                                                "component": "tbody",
+                                                "content": cf_rows if cf_rows else [
+                                                    {
+                                                        "component": "tr",
+                                                        "content": [
+                                                            {"component": "td", "props": {"colspan": 4, "class": "text-center text-medium-emphasis"}, "text": "暂无过盾记录"}
+                                                        ]
+                                                    }
+                                                ],
+                                            },
+                                        ],
+                                    },
                                 ],
                             },
                         ],
