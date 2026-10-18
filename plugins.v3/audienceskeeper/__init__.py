@@ -26,7 +26,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "观众站守护者"
     plugin_desc = "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.5"
+    plugin_version = "0.0.6"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -295,9 +295,14 @@ class AudiencesKeeper(_PluginBase):
         try:
             with launch_browser_context(headless=True, **self._browser_kwargs()) as ctx:
                 ctx.add_cookies(cookies)
+                self._harden_page(ctx)
                 page = ctx.pages[0] if ctx.pages else ctx.new_page()
-                page.goto(target_url, wait_until="domcontentloaded", timeout=35000)
-                page.wait_for_timeout(2000)
+                nav_ok, nav_msg = self._goto_robust(page, target_url)
+                if not nav_ok:
+                    msg = f"打开签到页失败（{nav_msg}），请检查网络或填写浏览器专用代理。"
+                    self._append_history("每日签到", False, msg)
+                    return False, msg
+                page.wait_for_timeout(1500)
 
                 # 1. 精准检查是否已经签到过（基于卡片类名与顶部用户栏状态，杜绝匹配静态文字）
                 is_attended_userbar = page.locator(".site-userbar__compact-tool--attended").count() > 0
@@ -386,9 +391,14 @@ class AudiencesKeeper(_PluginBase):
             with launch_browser_context(headless=True, **self._browser_kwargs()) as ctx:
                 if cookies:
                     ctx.add_cookies(cookies)
+                self._harden_page(ctx)
                 page = ctx.pages[0] if ctx.pages else ctx.new_page()
-                page.goto(target_url, wait_until="domcontentloaded", timeout=35000)
-                page.wait_for_timeout(2500)
+                nav_ok, nav_msg = self._goto_robust(page, target_url)
+                if not nav_ok:
+                    msg = f"打开种子列表页失败（{nav_msg}），请检查网络或填写浏览器专用代理。"
+                    self._append_history("过盾与刷新", False, msg)
+                    return False, msg
+                page.wait_for_timeout(1500)
 
                 # 检查并穿透 Turnstile
                 for _ in range(3):
@@ -426,6 +436,62 @@ class AudiencesKeeper(_PluginBase):
         if self._proxy:
             kw["proxy"] = self._proxy
         return kw
+
+    def _harden_page(self, ctx: Any) -> None:
+        """
+        屏蔽图片/字体/媒体等非必要资源，显著缩短观众站大页面加载时间。
+        """
+        try:
+            ctx.route(
+                "**/*",
+                lambda route: route.abort()
+                if route.request.resource_type in ("image", "font", "media")
+                else route.continue_(),
+            )
+        except Exception as e:
+            logger.debug(f"【观众站守护者】资源拦截设置失败（不影响功能）: {e}")
+
+    def _goto_robust(self, page: Any, url: str, rounds: int = 3) -> tuple[bool, str]:
+        """
+        健壮导航：先 commit 抢到达，再给 DOM 就绪留时间；失败自动重试。
+
+        观众站列表页体积大且依赖外链资源，`domcontentloaded` 在网络抖动时极易 35s 超时，
+        但这不代表页面真的打不开。故采用 commit 优先 + 多轮重试 + 软成功判定。
+
+        :return: (是否可用, 说明)
+        """
+        last_err = ""
+        for i in range(rounds):
+            try:
+                page.goto(url, wait_until="commit", timeout=20000)
+                try:
+                    page.wait_for_load_state("domcontentloaded", timeout=12000)
+                except Exception:
+                    pass
+                page.wait_for_timeout(1200)
+                title = ""
+                try:
+                    title = page.title() or ""
+                except Exception:
+                    pass
+                if "Audiences" in title or page.url.startswith(url.split("/torrents.php")[0]):
+                    return True, f"页面已就绪（第 {i + 1} 次尝试）"
+                last_err = f"页面标题异常：{title!r}"
+            except Exception as e:
+                last_err = f"{type(e).__name__}: {str(e)[:80]}"
+            logger.warning(f"【观众站守护者】导航第 {i + 1} 次未完成（{url}）：{last_err}")
+            try:
+                page.wait_for_timeout(1500)
+            except Exception:
+                pass
+
+        # 软成功：虽然导航超时，但可能已拿到响应并写入 Cookie
+        try:
+            if page.url and url.split("/")[2] in page.url:
+                return True, "导航超时但已进入目标站点，按部分成功继续"
+        except Exception:
+            pass
+        return False, last_err
 
     def _get_cf_token(self, page: Any) -> str:
         """
@@ -516,10 +582,20 @@ class AudiencesKeeper(_PluginBase):
         """
         import time as _time
 
-        # 等组件渲染
+        # 等组件渲染；若组件不存在，先判定是否其实已签到 / 页面未渲染
         try:
             page.wait_for_selector(".cf-turnstile", timeout=12000)
         except Exception:
+            try:
+                title_now = page.locator(".attendance-card__title").all_text_contents()
+                joined = "".join(title_now)
+                if "已签到" in joined or "签到成功" in joined:
+                    return True, "页面已显示签到完成"
+                if not title_now:
+                    # 连签到卡片都没有：页面没真正渲染出来
+                    return False, "签到页未完成渲染（可能是网络抖动或 Cloudflare 拦截），请重试"
+            except Exception:
+                pass
             return False, "页面上未找到 Turnstile 组件（页面结构可能已变更）"
 
         deadline = _time.time() + timeout_s
