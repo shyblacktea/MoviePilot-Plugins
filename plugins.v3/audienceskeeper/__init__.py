@@ -26,7 +26,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "观众站守护者"
     plugin_desc = "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.8"
+    plugin_version = "0.0.6"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
