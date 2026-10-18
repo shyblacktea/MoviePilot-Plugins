@@ -26,7 +26,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "观众站守护者"
     plugin_desc = "观众站（audiences.me）自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.2"
+    plugin_version = "0.0.3"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -435,7 +435,7 @@ class AudiencesKeeper(_PluginBase):
                 has_cf = True
 
         new_cookie_str = "; ".join([f"{k}={v}" for k, v in cookie_map.items()])
-        self._update_site(site_id=site["id"], cookie=new_cookie_str, ua=current_ua or None)
+        self._update_site(db=None, site_id=site["id"], cookie=new_cookie_str, ua=current_ua or None)
         return new_cookie_str, current_ua, has_cf
 
     def _parse_cookie_list(self, raw_cookie: str, base_url: str) -> list[dict[str, str]]:
@@ -488,7 +488,7 @@ class AudiencesKeeper(_PluginBase):
         }
 
     @db_update
-    def _update_site(self, site_id: int, db: Session = None, cookie: str = None, ua: str = None) -> bool:
+    def _update_site(self, db: Session = None, site_id: int = 0, cookie: str = None, ua: str = None) -> bool:
         """
         热更新观众站点 Cookie 与 UA。
         """
