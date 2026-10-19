@@ -16,7 +16,7 @@ https://github.com/shyblacktea/MoviePilot-Plugins/
 
 - [清理无效插件](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/cleaninvalidplugin)：扫描、清理或重新安装数据库中无法加载的插件记录。
 - [下载目录滤镜](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/downloaddirfilter)：根据自定义格式修改 MP 下载种子的保存路径、种子名称。
-- [观众站守护者](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/audienceskeeper)：针对观众站（audiences.me）自动模拟穿透 Cloudflare 盾更新 Cookie 与 UA，洗白搜索防刷频次并支持每日自动签到。
+- [人人人守护者](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/audienceskeeper)：针对人人人自动模拟穿透 Cloudflare 盾更新 Cookie 与 UA，洗白搜索防刷频次并支持每日自动签到。
 - [静默清理残留浏览器](https://github.com/shyblacktea/MoviePilot-Plugins/tree/main/docs/silentbrowsercleanup)：定时清理容器内超时的 Playwright/Chromium 浏览器进程，防止进程堆积。
 
 ### 订阅类
