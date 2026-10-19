@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import re
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
+import pytz
 from apscheduler.triggers.cron import CronTrigger
 from sqlalchemy.orm import Session
 
@@ -16,6 +17,7 @@ from app.sdk.config import settings
 from app.sdk.events import Event, eventmanager
 from app.sdk.logging import logger
 from app.sdk.plugin import _PluginBase
+from app.sdk.utilities import TimerUtils
 
 
 class AudiencesKeeper(_PluginBase):
@@ -33,10 +35,17 @@ class AudiencesKeeper(_PluginBase):
     plugin_order = 80
     auth_level = 1
 
+    # 随机调度常量（复用站点自动签到规范）
+    _RANDOM_EXECUTIONS = 2
+    _RANDOM_BEGIN_HOUR = 9
+    _RANDOM_END_HOUR = 23
+    _RANDOM_SCHEDULE_KEY = "random_schedule"
+
     # 运行配置
     _enabled: bool = False
     _site_id: int = 0
     _site_url: str = "https://audiences.me/"
+    _cron: str = ""
     _signin_enabled: bool = True
     _signin_cron: str = "0 9 * * *"
     _cf_enabled: bool = True
@@ -44,6 +53,8 @@ class AudiencesKeeper(_PluginBase):
     _notify: bool = True
     _onlyonce: bool = False
     _proxy: str = ""
+    _start_time: Optional[int] = None
+    _end_time: Optional[int] = None
 
     def init_plugin(self, config: dict | None = None) -> None:
         """
@@ -53,6 +64,7 @@ class AudiencesKeeper(_PluginBase):
         self._enabled = bool(config.get("enabled", False))
         self._site_id = int(config.get("site_id") or 0)
         self._site_url = str(config.get("site_url") or "https://audiences.me/").strip()
+        self._cron = str(config.get("cron") or "").strip()
         self._signin_enabled = bool(config.get("signin_enabled", True))
         self._signin_cron = str(config.get("signin_cron") or "0 9 * * *").strip()
         self._cf_enabled = bool(config.get("cf_enabled", True))
@@ -60,6 +72,19 @@ class AudiencesKeeper(_PluginBase):
         self._notify = bool(config.get("notify", True))
         self._onlyonce = bool(config.get("onlyonce", False))
         self._proxy = str(config.get("proxy") or "").strip()
+
+        # 解析主周期时间范围（例如 2.3/9-23）
+        self._start_time = None
+        self._end_time = None
+        if self._cron and "/" in self._cron:
+            try:
+                parts = self._cron.split("/")
+                if len(parts) == 2 and "-" in parts[1]:
+                    time_range = parts[1].split("-")
+                    self._start_time = int(time_range[0])
+                    self._end_time = int(time_range[1])
+            except Exception as e:
+                logger.error(f"【观众站守护者】解析时间范围异常: {e}")
 
         if bool(config.get("clear_history", False)):
             logger.info("【观众站守护者】收到清空历史记录请求，正在清空...")
@@ -92,24 +117,84 @@ class AudiencesKeeper(_PluginBase):
     def get_service(self) -> list[dict]:
         """
         注册周期定时服务。
+        支持三种周期格式：
+        1. 5 位 cron 表达式（例如 0 9 * * *）
+        2. 间隔小时与时间范围（例如 2.3/9-23 或纯数字 2）
+        3. 留空默认 9-23 点随机执行 2 次
         """
         if not self._enabled:
             return []
 
         services = []
-        if self._signin_enabled and self._signin_cron:
+
+        # 1. 优先根据主周期 cron 进行调度注册
+        if self._cron:
+            cron_str = self._cron.strip()
+            try:
+                if cron_str.count(" ") == 4:
+                    # 5 位标准 cron 表达式
+                    services.append({
+                        "id": f"{self.__class__.__name__}.MainJob",
+                        "name": "观众站守护服务",
+                        "trigger": CronTrigger.from_crontab(cron_str),
+                        "func": self.run_scheduled_job,
+                        "kwargs": {},
+                    })
+                elif "/" in cron_str:
+                    # 2.3/9-23
+                    parts = cron_str.split("/")
+                    hours = float(parts[0].strip())
+                    services.append({
+                        "id": f"{self.__class__.__name__}.MainJob",
+                        "name": "观众站守护服务",
+                        "trigger": "interval",
+                        "func": self.run_scheduled_job,
+                        "kwargs": {"hours": hours},
+                    })
+                else:
+                    # 纯数字小时间隔，如 2 或 2.5
+                    hours = float(cron_str)
+                    services.append({
+                        "id": f"{self.__class__.__name__}.MainJob",
+                        "name": "观众站守护服务",
+                        "trigger": "interval",
+                        "func": self.run_scheduled_job,
+                        "kwargs": {"hours": hours},
+                    })
+            except Exception as e:
+                logger.error(f"【观众站守护者】注册主定时任务失败 ({cron_str}): {e}")
+        elif self._signin_enabled and self._signin_cron and self._signin_cron != "0 9 * * *":
+            # 兼容老配置显式填写的 signin_cron
             try:
                 services.append({
                     "id": f"{self.__class__.__name__}.SignIn",
                     "name": "观众站每日自动签到",
                     "trigger": CronTrigger.from_crontab(self._signin_cron),
-                    "func": self.run_signin_job,
+                    "func": self.run_scheduled_job,
                     "kwargs": {},
                 })
             except Exception as e:
                 logger.error(f"【观众站守护者】注册签到定时任务失败: {e}")
+        else:
+            # 周期不填：默认 9-23 点随机执行 2 次
+            try:
+                triggers = self._get_random_schedule()
+                for trigger in triggers:
+                    services.append({
+                        "id": f"{self.__class__.__name__}_{trigger.hour:02d}_{trigger.minute:02d}",
+                        "name": "观众站守护服务(随机)",
+                        "trigger": "cron",
+                        "func": self.run_scheduled_job,
+                        "kwargs": {
+                            "hour": trigger.hour,
+                            "minute": trigger.minute,
+                        },
+                    })
+            except Exception as e:
+                logger.error(f"【观众站守护者】生成随机调度任务失败: {e}")
 
-        if self._cf_enabled and self._cf_cron:
+        # 2. 独立过盾任务兼容（若单独开启且主周期未完全覆盖）
+        if self._cf_enabled and self._cf_cron and self._cf_cron != "0 */2 * * *" and not self._cron:
             try:
                 services.append({
                     "id": f"{self.__class__.__name__}.RefreshCF",
@@ -122,6 +207,201 @@ class AudiencesKeeper(_PluginBase):
                 logger.error(f"【观众站守护者】注册过盾定时任务失败: {e}")
 
         return services
+
+    def _get_random_schedule(self) -> list[datetime]:
+        """
+        读取当天已保存的随机计划，首次生成时避免所有时间都落在当前时刻之前。
+        """
+        timezone = pytz.timezone(settings.TZ)
+        now = datetime.now(timezone)
+        if now.tzinfo is None:
+            now = timezone.localize(now)
+        today = now.date().isoformat()
+        saved = self.get_data(self._RANDOM_SCHEDULE_KEY) or {}
+        if saved.get("date") == today:
+            triggers = self._parse_random_schedule(today, saved.get("times"))
+            if triggers:
+                return triggers
+
+        triggers = self._create_random_schedule(now)
+        self.save_data(
+            self._RANDOM_SCHEDULE_KEY,
+            {
+                "date": today,
+                "times": [{"hour": t.hour, "minute": t.minute} for t in triggers],
+            },
+        )
+        return triggers
+
+    @staticmethod
+    def _parse_random_schedule(date_text: str, raw_times: Any) -> list[datetime]:
+        """
+        将持久化的小时分钟列表还原为当天的调度时间，忽略损坏的记录。
+        """
+        try:
+            year, month, day = (int(value) for value in date_text.split("-"))
+        except (AttributeError, TypeError, ValueError):
+            return []
+        triggers = []
+        for item in raw_times or []:
+            try:
+                hour = int(item["hour"])
+                minute = int(item["minute"])
+                if not (0 <= hour <= 23 and 0 <= minute <= 59):
+                    continue
+                triggers.append(datetime(year, month, day, hour, minute))
+            except (KeyError, TypeError, ValueError):
+                continue
+        return sorted(set(triggers))
+
+    def _create_random_schedule(self, now: datetime) -> list[datetime]:
+        """
+        生成当天随机计划，并在较晚初始化时重新生成至少一个未来时间。
+        """
+        current = now.replace(tzinfo=None, second=0, microsecond=0)
+        triggers = TimerUtils.random_scheduler(
+            num_executions=self._RANDOM_EXECUTIONS,
+            begin_hour=self._RANDOM_BEGIN_HOUR,
+            end_hour=self._RANDOM_END_HOUR,
+            max_interval=6 * 60,
+            min_interval=2 * 60,
+        )
+        if any(trigger > current for trigger in triggers):
+            return sorted(triggers)
+
+        if current.hour < self._RANDOM_END_HOUR:
+            triggers = TimerUtils.random_scheduler(
+                num_executions=self._RANDOM_EXECUTIONS,
+                begin_hour=max(self._RANDOM_BEGIN_HOUR, current.hour),
+                end_hour=self._RANDOM_END_HOUR,
+                max_interval=6 * 60,
+                min_interval=2 * 60,
+            )
+            if any(trigger > current for trigger in triggers):
+                return sorted(triggers)
+
+            fallback = current + timedelta(minutes=2)
+            if fallback.hour <= self._RANDOM_END_HOUR:
+                return [fallback]
+        return sorted(triggers)
+
+    def run_scheduled_job(self) -> None:
+        """
+        主调度任务入口：
+        1. 检查配置的小时范围限制；
+        2. 每天首次全量执行（先过盾刷新 Cookie，再签到）；
+        3. 其余周期重试未确认登录或未签到的任务，已签到且正常则自动跳过。
+        """
+        if not self._enabled:
+            return
+
+        now = datetime.now()
+        # 检查时间范围
+        if self._start_time is not None and self._end_time is not None:
+            if now.hour < self._start_time or now.hour > self._end_time:
+                logger.info(
+                    f"【观众站守护者】当前时间 {now.hour} 不在 {self._start_time}-{self._end_time} 范围内，暂不执行任务"
+                )
+                return
+
+        today = now.strftime("%Y-%m-%d")
+        state = self.get_data("state") or {}
+        is_today_first = state.get("last_run_date") != today
+        is_signed_today = (state.get("last_signin_date") == today and state.get("last_signin_success"))
+
+        if is_today_first:
+            logger.info(f"【观众站守护者】今日 {today} 首次执行任务，开始全量过盾与签到...")
+            state["last_run_date"] = today
+            self.save_data("state", state)
+
+            # 首次全量执行：先刷新 Cookie 与 CF 盾，再执行签到
+            cf_ok, cf_msg = self.do_refresh_cf()
+            sign_ok, sign_msg = self.do_signin()
+
+            # 统一通知评判
+            if sign_ok:
+                self._notify_job_result(
+                    key="signin",
+                    success=True,
+                    title="🎬 观众站每日签到成功",
+                    body=f"状态：✅ 成功\n结果反馈：{sign_msg}",
+                    is_manual=False,
+                )
+            else:
+                self._notify_job_result(
+                    key="signin",
+                    success=False,
+                    title="🎬 观众站每日签到未完成",
+                    body=f"状态：⚠️ 需关注\n结果反馈：{sign_msg}",
+                    is_manual=False,
+                )
+        else:
+            # 之后的周期：重试未确认登录或未完成签到的状态
+            if is_signed_today and state.get("has_cf_clearance"):
+                logger.info(f"【观众站守护者】今日 {today} 已确认签到成功且 Cookie 正常，无重试需求，本次任务结束。")
+                return
+
+            logger.info(f"【观众站守护者】今日 {today} 签到尚未确认或过盾失效，开始重试任务...")
+            cf_ok, cf_msg = self.do_refresh_cf()
+            sign_ok, sign_msg = self.do_signin()
+
+            if sign_ok:
+                self._notify_job_result(
+                    key="signin",
+                    success=True,
+                    title="🎬 观众站每日签到成功（重试）",
+                    body=f"状态：✅ 成功\n结果反馈：{sign_msg}",
+                    is_manual=False,
+                )
+            else:
+                self._notify_job_result(
+                    key="signin",
+                    success=False,
+                    title="🎬 观众站每日签到未完成（重试）",
+                    body=f"状态：⚠️ 需关注\n结果反馈：{sign_msg}",
+                    is_manual=False,
+                )
+
+    def _notify_job_result(self, key: str, success: bool, title: str, body: str,
+                           is_manual: bool = False, **kwargs: Any) -> None:
+        """
+        通知分发与防刷规则：
+        1. 成功通知：每天只通知一次（除非手动触发）；
+        2. 失败通知：支持用户点击「今天不再通知」后当天完全静默。
+        """
+        if not self._notify and not is_manual:
+            return
+
+        today = datetime.now().strftime("%Y-%m-%d")
+        state = self.get_data("state") or {}
+
+        if success:
+            if not is_manual:
+                if state.get("last_success_notify_date") == today:
+                    logger.info("【观众站守护者】今日已发送过成功通知，本次执行成功保持静默，不再重复打扰。")
+                    return
+                # 记录今天已发送成功通知
+                state["last_success_notify_date"] = today
+                self.save_data("state", state)
+
+            self._send_notify(
+                title=title,
+                text=f"{body}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                buttons=self._action_buttons(key, is_failed=False),
+                **kwargs,
+            )
+        else:
+            if not is_manual:
+                if state.get("mute_fail_date") == today:
+                    logger.info("【观众站守护者】用户已设置今日静默失败通知，本次重试失败保持静默。")
+                    return
+
+            self._send_notify(
+                title=title,
+                text=f"{body}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                buttons=self._action_buttons(key, is_failed=True),
+                **kwargs,
+            )
 
     def get_command(self) -> list[dict[str, Any]]:
         """
@@ -154,10 +434,10 @@ class AudiencesKeeper(_PluginBase):
         action = (event.event_data or {}).get("action")
         if action == "audiences_signin":
             logger.info("【观众站守护者】收到远程命令，立即执行签到...")
-            self.run_signin_job()
+            self.run_signin_job(is_manual=True)
         elif action == "audiences_cookie":
             logger.info("【观众站守护者】收到远程命令，立即过盾更新 Cookie...")
-            self.run_cf_job()
+            self.run_cf_job(is_manual=True)
 
     @eventmanager.register(EventType.MessageAction)
     def message_action(self, event: Event) -> None:
@@ -172,14 +452,54 @@ class AudiencesKeeper(_PluginBase):
             return
 
         action = str(data.get("text") or "").strip().lower()
-        if action not in ("signin", "cf"):
-            return
-
         channel = data.get("channel")
         source = data.get("source")
         userid = data.get("userid")
         msg_id = data.get("original_message_id")
         chat_id = data.get("original_chat_id")
+        today = datetime.now().strftime("%Y-%m-%d")
+
+        # 1. 响应「🔕 今天不再通知」
+        if action == "mute_fail_today":
+            logger.info(f"【观众站守护者】用户设置今日不再接收失败通知（来自 {userid}）")
+            state = self.get_data("state") or {}
+            state["mute_fail_date"] = today
+            self.save_data("state", state)
+            self._send_notify(
+                title="🔕 今日失败通知已静默",
+                text=f"已设置今日不再推送失败告警通知，今日后续重试失败将保持静默，次日自动恢复。\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                buttons=[[
+                    {"text": "🔔 恢复通知", "callback_data": f"[PLUGIN]{self.__class__.__name__}|unmute_fail_today"}
+                ]],
+                channel=channel,
+                source=source,
+                userid=userid,
+                original_message_id=msg_id,
+                original_chat_id=chat_id,
+            )
+            return
+
+        # 2. 响应「🔔 恢复通知」
+        if action == "unmute_fail_today":
+            logger.info(f"【观众站守护者】用户取消今日静默，恢复失败通知（来自 {userid}）")
+            state = self.get_data("state") or {}
+            state["mute_fail_date"] = ""
+            self.save_data("state", state)
+            self._send_notify(
+                title="🔔 今日失败通知已恢复",
+                text=f"已恢复正常推送失败告警通知。\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                buttons=self._action_buttons("signin", is_failed=True),
+                channel=channel,
+                source=source,
+                userid=userid,
+                original_message_id=msg_id,
+                original_chat_id=chat_id,
+            )
+            return
+
+        if action not in ("signin", "cf"):
+            return
+
         logger.info(f"【观众站守护者】收到按钮回调：{action}（来自 {userid}）")
 
         def _run() -> None:
@@ -211,7 +531,7 @@ class AudiencesKeeper(_PluginBase):
             self._send_notify(
                 title=title,
                 text=f"{body}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-                buttons=self._action_buttons(key),
+                buttons=self._action_buttons(key, is_failed=not success),
                 channel=channel,
                 source=source,
                 userid=userid,
@@ -283,9 +603,9 @@ class AudiencesKeeper(_PluginBase):
 
     def api_signin(self) -> dict[str, Any]:
         """
-        API: 立即签到（与定时任务一致，会推送带按钮的通知）
+        API: 立即签到（带按钮的通知，属于手动触发）
         """
-        self.run_signin_job()
+        self.run_signin_job(is_manual=True)
         state = self.get_data("state") or {}
         return {
             "success": bool(state.get("last_signin_success")),
@@ -294,9 +614,9 @@ class AudiencesKeeper(_PluginBase):
 
     def api_refresh_cookie(self) -> dict[str, Any]:
         """
-        API: 立即过盾刷新（与定时任务一致，会推送带按钮的通知）
+        API: 立即过盾刷新（带按钮的通知，属于手动触发）
         """
-        self.run_cf_job()
+        self.run_cf_job(is_manual=True)
         state = self.get_data("state") or {}
         return {
             "success": bool(state.get("last_cf_success")),
@@ -314,54 +634,62 @@ class AudiencesKeeper(_PluginBase):
 
     def _run_all(self) -> None:
         """
-        立即执行全部任务（先过盾刷新 Cookie，再签到）。
+        立即执行全部任务（手动全量）。
         """
-        self.run_cf_job()
-        self.run_signin_job()
+        self.run_cf_job(is_manual=True)
+        self.run_signin_job(is_manual=True)
 
-    def _action_buttons(self, primary: str) -> list[list[dict]]:
+    def _action_buttons(self, primary: str, is_failed: bool = False) -> list[list[dict]]:
         """
-        构造交互按钮：主操作 + 另一项操作，点击后即时执行。
+        构造交互按钮：主操作 + 辅助操作；失败时附带「🔕 今天不再通知」。
         """
         pid = self.__class__.__name__
         pairs = {
             "signin": [("🔁 重新签到", "signin"), ("🛡️ 刷新CF盾", "cf")],
             "cf": [("🛡️ 重新过盾", "cf"), ("📅 立即签到", "signin")],
         }
-        return [[
+        buttons = [[
             {"text": text, "callback_data": f"[PLUGIN]{pid}|{action}"}
             for text, action in pairs.get(primary, [])
         ]]
+        if is_failed:
+            buttons.append([
+                {"text": "🔕 今天不再通知", "callback_data": f"[PLUGIN]{pid}|mute_fail_today"}
+            ])
+        return buttons
 
-    def run_signin_job(self) -> None:
+    def run_signin_job(self, is_manual: bool = False) -> None:
         """
         执行签到任务包装。
         """
         success, msg = self.do_signin()
         logger.info(f"【观众站守护者】签到任务执行结果: {msg}")
-        if self._notify:
-            self._send_notify(
-                title="🎬 观众站每日签到" + ("成功" if success else "未完成"),
-                text=f"状态：{'✅ 成功' if success else '⚠️ 需关注'}\n结果反馈：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-                buttons=self._action_buttons("signin"),
-            )
+        self._notify_job_result(
+            key="signin",
+            success=success,
+            title="🎬 观众站每日签到" + ("成功" if success else "未完成"),
+            body=f"状态：{'✅ 成功' if success else '⚠️ 需关注'}\n结果反馈：{msg}",
+            is_manual=is_manual,
+        )
 
-    def run_cf_job(self) -> None:
+    def run_cf_job(self, is_manual: bool = False) -> None:
         """
         执行过盾与刷新 Cookie 任务包装。
         """
         success, msg = self.do_refresh_cf()
         logger.info(f"【观众站守护者】过盾与刷新 Cookie 结果: {msg}")
-        if self._notify:
-            self._send_notify(
-                title="🛡️ 观众站 CF 盾更新" + ("成功" if success else "失败"),
-                text=f"状态：{'✅ 成功' if success else '❌ 失败'}\n详情：{msg}\n时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-                buttons=self._action_buttons("cf"),
-            )
+        self._notify_job_result(
+            key="cf",
+            success=success,
+            title="🛡️ 观众站 CF 盾更新" + ("成功" if success else "失败"),
+            body=f"状态：{'✅ 成功' if success else '❌ 失败'}\n详情：{msg}",
+            is_manual=is_manual,
+        )
 
     def do_signin(self) -> tuple[bool, str]:
         """
         核心方法：打开浏览器模拟过 Turnstile 签到，严格基于 DOM 元素卡片状态验证结果。
+        若已确认登录但签到未完成，会单独记录登录成功。
         """
         site = self._get_site()
         if not site:
@@ -391,10 +719,18 @@ class AudiencesKeeper(_PluginBase):
                     return False, msg
                 page.wait_for_timeout(1500)
 
-                # 1. 精准检查是否已经签到过（基于卡片类名与顶部用户栏状态，杜绝匹配静态文字）
+                # 判定站点登录态证据（是否已确认登录）
                 is_attended_userbar = page.locator(".site-userbar__compact-tool--attended").count() > 0
                 has_done_card = page.locator(".attendance-card--done, .attendance-card__icon--done").count() > 0
+                has_login_evidence = (
+                    is_attended_userbar
+                    or has_done_card
+                    or page.locator(".attendance-card, .site-userbar, a[href*='logout.php'], a[href*='userdetails.php']").count() > 0
+                )
+                if has_login_evidence:
+                    self._update_login_state(True, "站点已确认登录（登录保号有效）")
 
+                # 1. 精准检查是否已经签到过
                 card_title = (
                     page.locator(".attendance-card__title").first.inner_text().strip()
                     if page.locator(".attendance-card__title").count() > 0
@@ -449,6 +785,10 @@ class AudiencesKeeper(_PluginBase):
 
                 # 提取并回存最新 Cookies
                 self._save_cookies_from_context(ctx, site)
+
+                # 4. 如果已确认登录但签到未完成：单独记录登录成功
+                if not success and has_login_evidence:
+                    self._append_history("站点登录", True, "站点已确认登录（登录保号有效），签到待重试")
 
                 self._update_signin_state(success, final_msg)
                 self._append_history("每日签到", success, final_msg)
@@ -541,11 +881,6 @@ class AudiencesKeeper(_PluginBase):
     def _goto_robust(self, page: Any, url: str, rounds: int = 3) -> tuple[bool, str]:
         """
         健壮导航：先 commit 抢到达，再给 DOM 就绪留时间；失败自动重试。
-
-        观众站列表页体积大且依赖外链资源，`domcontentloaded` 在网络抖动时极易 35s 超时，
-        但这不代表页面真的打不开。故采用 commit 优先 + 多轮重试 + 软成功判定。
-
-        :return: (是否可用, 说明)
         """
         last_err = ""
         for i in range(rounds):
@@ -572,7 +907,6 @@ class AudiencesKeeper(_PluginBase):
             except Exception:
                 pass
 
-        # 软成功：虽然导航超时，但可能已拿到响应并写入 Cookie
         try:
             if page.url and url.split("/")[2] in page.url:
                 return True, "导航超时但已进入目标站点，按部分成功继续"
@@ -582,7 +916,7 @@ class AudiencesKeeper(_PluginBase):
 
     def _get_cf_token(self, page: Any) -> str:
         """
-        读取 Turnstile 当前令牌（兼容 cf-token 隐藏域与标准 response 输入）。
+        读取 Turnstile 当前令牌。
         """
         try:
             token = page.evaluate(
@@ -642,7 +976,7 @@ class AudiencesKeeper(_PluginBase):
 
     def _turnstile_state(self, page: Any) -> str:
         """
-        读取 Turnstile iframe 当前状态文本，用于失败诊断。
+        读取 Turnstile iframe 当前状态文本。
         """
         for frame in page.frames:
             if "challenges.cloudflare.com" in frame.url:
@@ -660,16 +994,10 @@ class AudiencesKeeper(_PluginBase):
 
     def _solve_turnstile(self, page: Any, timeout_s: int = 60) -> tuple[bool, str]:
         """
-        求解 Turnstile：多策略点击 + 长轮询令牌，返回 (是否成功, 诊断描述)。
-
-        失败诊断可区分三类原因：
-        - 当前网络出口被 Cloudflare 风控（长期停在 Checking your Browser）；
-        - 组件未渲染 / 页面结构异常；
-        - 点击后仍未下发令牌（需人工介入）。
+        求解 Turnstile：多策略点击 + 长轮询令牌。
         """
         import time as _time
 
-        # 等组件渲染；若组件不存在，先判定是否其实已签到 / 页面未渲染
         try:
             page.wait_for_selector(".cf-turnstile", timeout=12000)
         except Exception:
@@ -679,7 +1007,6 @@ class AudiencesKeeper(_PluginBase):
                 if "已签到" in joined or "签到成功" in joined:
                     return True, "页面已显示签到完成"
                 if not title_now:
-                    # 连签到卡片都没有：页面没真正渲染出来
                     return False, "签到页未完成渲染（可能是网络抖动或 Cloudflare 拦截），请重试"
             except Exception:
                 pass
@@ -702,7 +1029,6 @@ class AudiencesKeeper(_PluginBase):
                 if "Checking your Browser" in state:
                     stuck_rounds += 1
 
-            # 仍在人机验证环节且点击次数未用尽 → 继续尝试点击
             if clicks < 3:
                 if self._click_turnstile_if_present(page):
                     clicks += 1
@@ -710,7 +1036,6 @@ class AudiencesKeeper(_PluginBase):
 
             page.wait_for_timeout(2000)
 
-        # 超时诊断
         if stuck_rounds >= 5 or "Checking your Browser" in last_state:
             return False, (
                 "Turnstile 长时间停留在『Checking your Browser』，说明当前网络的出口 IP 被 "
@@ -730,7 +1055,6 @@ class AudiencesKeeper(_PluginBase):
         page = ctx.pages[0] if ctx.pages else None
         current_ua = page.evaluate("() => navigator.userAgent") if page else ""
 
-        # 合并已有与新获取的 Cookie
         cookie_map: dict[str, str] = {}
         for item in (site.get("cookie") or "").split(";"):
             if "=" in item:
@@ -770,11 +1094,9 @@ class AudiencesKeeper(_PluginBase):
     @db_query
     def _get_site(self, db: Session = None) -> Optional[dict[str, Any]]:
         """
-        自动识别并获取观众站点信息：优先全量扫描识别 audiences.me 或观众站点；
-        若未扫描到则使用配置的 _site_id。
+        自动识别并获取观众站点信息。
         """
         site = None
-        # 1. 优先自动扫描所有站点
         all_sites = db.query(Site).all()
         for s in all_sites:
             domain = (s.domain or "").lower()
@@ -784,7 +1106,6 @@ class AudiencesKeeper(_PluginBase):
                 site = s
                 break
 
-        # 2. 如果自动匹配未找到，尝试用配置的 _site_id
         if not site and self._site_id:
             site = db.query(Site).filter(Site.id == self._site_id).first()
 
@@ -814,6 +1135,14 @@ class AudiencesKeeper(_PluginBase):
         db.flush()
         return True
 
+    def _update_login_state(self, success: bool, msg: str) -> None:
+        state = self.get_data("state") or {}
+        state["last_login_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        state["last_login_success"] = success
+        state["last_login_message"] = msg
+        state["last_login_date"] = datetime.now().strftime("%Y-%m-%d")
+        self.save_data("state", state)
+
     def _update_signin_state(self, success: bool, msg: str) -> None:
         state = self.get_data("state") or {}
         state["last_signin_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -837,20 +1166,20 @@ class AudiencesKeeper(_PluginBase):
             "success": success,
             "detail": detail,
         }
-        # 综合记录
+        # 综合记录保留 50 条
         histories = self.get_data("history") or []
         histories.insert(0, record)
-        self.save_data("history", histories[:20])
+        self.save_data("history", histories[:50])
 
         # 分类独立记录
-        if "签到" in op_type:
+        if "签到" in op_type or "登录" in op_type:
             signin_hist = self.get_data("signin_history") or []
             signin_hist.insert(0, record)
-            self.save_data("signin_history", signin_hist[:15])
+            self.save_data("signin_history", signin_hist[:50])
         else:
             cf_hist = self.get_data("cf_history") or []
             cf_hist.insert(0, record)
-            self.save_data("cf_history", cf_hist[:15])
+            self.save_data("cf_history", cf_hist[:50])
 
     def _send_notify(self, title: str, text: str,
                      buttons: Optional[list[list[dict]]] = None, **kwargs: Any) -> None:
@@ -910,6 +1239,8 @@ class AudiencesKeeper(_PluginBase):
                                         "props": {
                                             "model": "notify",
                                             "label": "发送通知",
+                                            "hint": "成功通知每日仅首次推送一次；失败通知可一键设为今日不再提醒。",
+                                            "persistent-hint": True,
                                         },
                                     },
                                 ],
@@ -974,59 +1305,17 @@ class AudiencesKeeper(_PluginBase):
                         "content": [
                             {
                                 "component": "VCol",
-                                "props": {"cols": 12, "md": 6},
-                                "content": [
-                                    {
-                                        "component": "VSwitch",
-                                        "props": {
-                                            "model": "signin_enabled",
-                                            "label": "启用自动每日签到",
-                                        },
-                                    },
-                                ],
-                            },
-                            {
-                                "component": "VCol",
-                                "props": {"cols": 12, "md": 6},
+                                "props": {"cols": 12},
                                 "content": [
                                     {
                                         "component": "VTextField",
                                         "props": {
-                                            "model": "signin_cron",
-                                            "label": "每日签到时间 (Cron)",
-                                            "hint": "默认 0 9 * * * (每天 09:00)",
-                                        },
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        "component": "VRow",
-                        "content": [
-                            {
-                                "component": "VCol",
-                                "props": {"cols": 12, "md": 6},
-                                "content": [
-                                    {
-                                        "component": "VSwitch",
-                                        "props": {
-                                            "model": "cf_enabled",
-                                            "label": "启用自动过盾与洗白搜索",
-                                        },
-                                    },
-                                ],
-                            },
-                            {
-                                "component": "VCol",
-                                "props": {"cols": 12, "md": 6},
-                                "content": [
-                                    {
-                                        "component": "VTextField",
-                                        "props": {
-                                            "model": "cf_cron",
-                                            "label": "过盾与洗白周期 (Cron)",
-                                            "hint": "默认 0 */2 * * * (每 2 小时执行一次)",
+                                            "model": "cron",
+                                            "label": "执行周期",
+                                            "placeholder": "5位cron表达式，或间隔小时如 2.3/9-23，留空默认9-23点随机2次",
+                                            "hint": "支持：1、5位cron表达式；2、配置间隔如 2.3/9-23（9-23点间每隔2.3小时执行）；3、留空默认9-23点随机执行2次。每天首次全量执行，其余重试未确认登录或未签到站点。",
+                                            "persistent-hint": True,
+                                            "clearable": True,
                                         },
                                     },
                                 ],
@@ -1071,6 +1360,7 @@ class AudiencesKeeper(_PluginBase):
             "enabled": False,
             "site_id": 0,
             "site_url": "https://audiences.me/",
+            "cron": "",
             "signin_enabled": True,
             "signin_cron": "0 9 * * *",
             "cf_enabled": True,
@@ -1083,11 +1373,12 @@ class AudiencesKeeper(_PluginBase):
 
     def get_page(self) -> list[dict]:
         """
-        插件详情页（展示运行状态与清晰分类的历史记录）。
+        插件详情页（状态总览 + 支持独立滚动的记录面板）。
         """
         state = self.get_data("state") or {}
         today = datetime.now().strftime("%Y-%m-%d")
         is_today_signed = state.get("last_signin_date") == today and state.get("last_signin_success")
+        is_today_logged = state.get("last_login_date") == today and state.get("last_login_success")
 
         site = self._get_site()
         has_cf = False
@@ -1103,26 +1394,31 @@ class AudiencesKeeper(_PluginBase):
             rows = []
             for h in records:
                 is_cf = "过盾" in h.get("type", "")
+                is_login = "登录" in h.get("type", "")
+                chip_text = "🛡️ 过盾" if is_cf else ("🔑 登录" if is_login else "📅 签到")
+                chip_color = "warning" if is_cf else ("info" if is_login else "primary")
                 rows.append({
                     "component": "tr",
                     "content": [
-                        {"component": "td", "text": h.get("time", "-")},
+                        {"component": "td", "props": {"class": "text-no-wrap"}, "text": h.get("time", "-")},
                         {
                             "component": "td",
+                            "props": {"class": "text-no-wrap"},
                             "content": [
                                 {
                                     "component": "VChip",
                                     "props": {
                                         "size": "x-small",
-                                        "color": "warning" if is_cf else "primary",
+                                        "color": chip_color,
                                         "variant": "tonal",
-                                        "text": "🛡️ 过盾" if is_cf else "📅 签到",
+                                        "text": chip_text,
                                     },
                                 }
                             ],
                         },
                         {
                             "component": "td",
+                            "props": {"class": "text-no-wrap"},
                             "content": [
                                 {
                                     "component": "VChip",
@@ -1158,17 +1454,20 @@ class AudiencesKeeper(_PluginBase):
         cf_history = self.get_data("cf_history") or []
         signin_history = self.get_data("signin_history") or []
 
-        # 兼容旧单列表
+        # 兼容旧历史
         if not cf_history and not signin_history:
             old_h = self.get_data("history") or []
             for item in old_h:
-                if "签到" in item.get("type", ""):
+                if "签到" in item.get("type", "") or "登录" in item.get("type", ""):
                     signin_history.append(item)
                 else:
                     cf_history.append(item)
 
-        cf_rows = _make_table_rows(cf_history[:10])
-        signin_rows = _make_table_rows(signin_history[:10])
+        cf_rows = _make_table_rows(cf_history[:30])
+        signin_rows = _make_table_rows(signin_history[:30])
+
+        signin_status_text = "今日已签到" if is_today_signed else ("今日仅登录" if is_today_logged else "今日未签到")
+        signin_status_color = "success" if is_today_signed else ("info" if is_today_logged else "warning")
 
         return [
             {
@@ -1186,13 +1485,13 @@ class AudiencesKeeper(_PluginBase):
                                         "component": "div",
                                         "props": {"class": "d-flex justify-space-between align-center mb-2"},
                                         "content": [
-                                            {"component": "h3", "text": "📅 观众每日签到"},
+                                            {"component": "h3", "text": "📅 观众每日签到与登录"},
                                             {
                                                 "component": "VChip",
                                                 "props": {
-                                                    "color": "success" if is_today_signed else "warning",
+                                                    "color": signin_status_color,
                                                     "size": "small",
-                                                    "text": "今日已签到" if is_today_signed else "今日未签到",
+                                                    "text": signin_status_text,
                                                 },
                                             },
                                         ],
@@ -1276,7 +1575,12 @@ class AudiencesKeeper(_PluginBase):
                                     },
                                     {
                                         "component": "VTable",
-                                        "props": {"density": "compact"},
+                                        "props": {
+                                            "density": "compact",
+                                            "height": "320px",
+                                            "fixed-header": True,
+                                            "style": "overflow-y: auto;",
+                                        },
                                         "content": [
                                             {
                                                 "component": "thead",
@@ -1298,8 +1602,12 @@ class AudiencesKeeper(_PluginBase):
                                                     {
                                                         "component": "tr",
                                                         "content": [
-                                                            {"component": "td", "props": {"colspan": 4, "class": "text-center text-medium-emphasis"}, "text": "暂无签到记录"}
-                                                        ]
+                                                            {
+                                                                "component": "td",
+                                                                "props": {"colspan": 4, "class": "text-center text-medium-emphasis"},
+                                                                "text": "暂无签到记录",
+                                                            }
+                                                        ],
                                                     }
                                                 ],
                                             },
@@ -1327,7 +1635,12 @@ class AudiencesKeeper(_PluginBase):
                                     },
                                     {
                                         "component": "VTable",
-                                        "props": {"density": "compact"},
+                                        "props": {
+                                            "density": "compact",
+                                            "height": "320px",
+                                            "fixed-header": True,
+                                            "style": "overflow-y: auto;",
+                                        },
                                         "content": [
                                             {
                                                 "component": "thead",
@@ -1349,8 +1662,12 @@ class AudiencesKeeper(_PluginBase):
                                                     {
                                                         "component": "tr",
                                                         "content": [
-                                                            {"component": "td", "props": {"colspan": 4, "class": "text-center text-medium-emphasis"}, "text": "暂无过盾记录"}
-                                                        ]
+                                                            {
+                                                                "component": "td",
+                                                                "props": {"colspan": 4, "class": "text-center text-medium-emphasis"},
+                                                                "text": "暂无过盾记录",
+                                                            }
+                                                        ],
                                                     }
                                                 ],
                                             },
