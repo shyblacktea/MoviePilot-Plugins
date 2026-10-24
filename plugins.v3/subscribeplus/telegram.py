@@ -584,6 +584,28 @@ def render_notification_text(
     return "\n".join(lines)
 
 
+def _clean_summary_message(msg: Any) -> str:
+    """清理扫描汇总中的冗余说明，剔除'其他 PT'及其后的废话，收束为关键原因或'待复核'。"""
+    import re
+    text = str(msg or "").strip()
+    if not text:
+        return "待复核"
+    cleaned = re.split(r'[\s/；;,，]*其他\s*PT', text, maxsplit=1, flags=re.IGNORECASE)[0].strip()
+    if "本轮订阅范围" in cleaned or not cleaned:
+        return "待复核"
+    reason_map = {
+        "search_unconfirmed": "待复核",
+        "rule_blocked": "规则拦截",
+        "recognition_issue": "识别异常",
+        "downloadable": "可下载",
+        "no_candidate": "无候选",
+    }
+    if cleaned in reason_map:
+        return reason_map[cleaned]
+    cleaned = cleaned.rstrip('；;，,/。 ')
+    return cleaned or "待复核"
+
+
 def render_scan_summary_text(items: List[Dict[str, Any]], scan_stats: Optional[Dict[str, Any]] = None) -> str:
     """渲染扫描完成后的可处理项目汇总文本。
 
@@ -591,14 +613,16 @@ def render_scan_summary_text(items: List[Dict[str, Any]], scan_stats: Optional[D
     :return: 汇总消息文本
     """
     stats = scan_stats or {}
-    rows = [f"扫描完成，共有 {len(items or [])} 部需确认："]
-    if stats:
-        rows.append(
-            "扫描统计："
-            f"订阅 {stats.get('total', 0)} 条，暂停 {stats.get('paused', 0)} 条，"
-            f"分类跳过 {stats.get('category_skipped', 0)} 条，"
-            f"身份缺失 {stats.get('missing_identity', 0)} 条。"
-        )
+    total_scanned = stats.get("total")
+    paused_scanned = stats.get("paused")
+    item_count = len(items or [])
+
+    if total_scanned is not None and paused_scanned is not None:
+        header = f"本次共扫描 {total_scanned} 条订阅（暂停 {paused_scanned} 条），其中 {item_count} 部作品需要你确认："
+    else:
+        header = f"本次扫描共有 {item_count} 部作品需要你确认："
+
+    rows = [header]
     for index, item in enumerate(items or [], start=1):
         title = _short_title(str(item.get("title") or "未命名"), limit=48)
         season = int(item.get("season") or 0)
@@ -621,7 +645,14 @@ def render_scan_summary_text(items: List[Dict[str, Any]], scan_stats: Optional[D
         coverage = "/".join(f"E{ep:02d}" for ep in sorted(covered)[:10]) or "未确认"
         if len(covered) > 10:
             coverage += f" 等，共 {len(covered)} 集"
-        rows.append(f"{index}. {title}{season_text}；目标尚未入库：{episode_text or '未知'}")
-        rows.append(f"候选覆盖：{coverage}（不代表全部可下载）；{item.get('message') or item.get('reason') or '待复核'}")
+
+        raw_msg = item.get("message") or item.get("reason") or "待复核"
+        clean_msg = _clean_summary_message(raw_msg)
+
+        rows.append(f"\n{index}. {title}{season_text}")
+        rows.append(f"• 缺失集数: {episode_text or '未知'}")
+        rows.append(f"• 候选覆盖: {coverage}")
+        rows.append(f"• 说明: {clean_msg}")
+
     rows.append("\n请选择编号查看详情，或点击“关闭”删除本次扫描提示。")
     return "\n".join(rows)
