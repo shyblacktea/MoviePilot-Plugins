@@ -618,9 +618,9 @@ def render_scan_summary_text(items: List[Dict[str, Any]], scan_stats: Optional[D
     item_count = len(items or [])
 
     if total_scanned is not None and paused_scanned is not None:
-        header = f"本次共扫描 {total_scanned} 条订阅（暂停 {paused_scanned} 条），其中 {item_count} 部作品需要你确认："
+        header = f"本次共扫描 {total_scanned} 条订阅（暂停 {paused_scanned} 条），共有 {item_count} 部需确认："
     else:
-        header = f"本次扫描共有 {item_count} 部作品需要你确认："
+        header = f"本次扫描共有 {item_count} 部需确认："
 
     rows = [header]
     for index, item in enumerate(items or [], start=1):

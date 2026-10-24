@@ -40,7 +40,7 @@ def test_summary_separates_target_and_candidate_coverage():
     with plugin_modules() as (_, _, telegram):
         text = telegram.render_scan_summary_text([diagnosis()])
         assert "需确认" in text and "等，共 10 集" in text
-        assert "候选覆盖：E01（不代表全部可下载）" in text
+        assert "• 候选覆盖: E01" in text
         assert "包含规则拦截" in text
 
 
