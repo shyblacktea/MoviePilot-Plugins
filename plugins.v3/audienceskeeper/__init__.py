@@ -28,7 +28,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "人人人守护者"
     plugin_desc = "人人人自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.6"
+    plugin_version = "0.0.7"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -335,6 +335,13 @@ class AudiencesKeeper(_PluginBase):
                 return
 
         today = now.strftime("%Y-%m-%d")
+
+        # 已签到成功则当天不再自动触发（手动触发不受限制）
+        if not is_manual:
+            _state = self.get_data("state") or {}
+            if _state.get("last_signin_date") == today and _state.get("last_signin_success"):
+                logger.info(f"【人人人守护者】今日 {today} 已签到成功，跳过本次自动签到（手动可强制）")
+                return
         state = self.get_data("state") or {}
         is_today_first = state.get("last_run_date") != today
         is_signed_today = (state.get("last_signin_date") == today and state.get("last_signin_success"))
