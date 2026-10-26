@@ -11,7 +11,7 @@ from app.sdk.cache import cached
 from app.sdk.config import settings
 from app.sdk.media import MediaInfo, MetaBase
 from app.sdk.logging import logger
-from app.sdk.plugin import _PluginBase
+from app.plugins import _PluginBase
 from app.sdk.network import RequestUtils
 from app.sdk.utilities import SystemUtils
 
@@ -45,6 +45,10 @@ class CureTMDbAnimeShyConfig(BaseModel):
     prefer_source_season: bool = Field(default=True)
     # 运行端口
     port: int = Field(default=8632, ge=1024, le=65535)
+    # 排除关键词开关：命中排除词的标题跳过识别增强（不影响 MP 正常识别下载）
+    exclude_enabled: bool = Field(default=False)
+    # 排除关键词，逗号分隔，不区分大小写
+    exclude_keywords: str = Field(default="")
 
 
 class CureTMDbAnimeShy(_PluginBase):
@@ -55,7 +59,7 @@ class CureTMDbAnimeShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/curetmdbanimeshy.png"
     # 插件版本
-    plugin_version = "0.0.6"
+    plugin_version = "0.0.7"
     # 插件作者
     plugin_author = "Attente,shyblacktea"
     # 作者主页
@@ -1327,6 +1331,25 @@ class CureTMDbAnimeShy(_PluginBase):
         """
         if not meta or not mediainfo or mediainfo.type.name != "TV":
             return meta
+
+        # 排除关键词：命中的标题跳过识别增强
+        if self._hit_exclude_keywords(meta.title or ""):
+            logger.debug(
+                f"标题 `{meta.title}` 命中排除关键词，跳过识别增强"
+            )
+            return meta
+
+    def _hit_exclude_keywords(self, title: str) -> bool:
+        if not self.config.exclude_enabled:
+            return False
+        raw = (self.config.exclude_keywords or "").strip()
+        if not raw:
+            return False
+        keywords = [k.strip().lower() for k in raw.split(",") if k.strip()]
+        if not keywords:
+            return False
+        low = title.lower()
+        return any(k in low for k in keywords)
 
         if set(mediainfo.genre_ids).isdisjoint(settings.ANIME_GENREIDS):
             return meta
