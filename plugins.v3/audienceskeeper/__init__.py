@@ -28,7 +28,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "人人人守护者"
     plugin_desc = "人人人自动模拟过 CF 盾更新 Cookie 及自动签到。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.7"
+    plugin_version = "0.0.8"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -361,7 +361,7 @@ class AudiencesKeeper(_PluginBase):
                     key="signin",
                     success=True,
                     title="🎬 人人人每日签到成功",
-                    body=f"状态：✅ 成功\n结果反馈：{sign_msg}",
+                    body=f"状态：✅ 成功\n结果反馈：{sign_msg}\n连续签到：{self._streak_text(today)}",
                     is_manual=is_manual,
                 )
             else:
@@ -387,7 +387,7 @@ class AudiencesKeeper(_PluginBase):
                     key="signin",
                     success=True,
                     title="🎬 人人人每日签到成功（重试）",
-                    body=f"状态：✅ 成功\n结果反馈：{sign_msg}",
+                    body=f"状态：✅ 成功\n结果反馈：{sign_msg}\n连续签到：{self._streak_text(today)}",
                     is_manual=False,
                 )
             else:
@@ -788,6 +788,7 @@ class AudiencesKeeper(_PluginBase):
 
                 if is_attended_userbar or has_done_card or "今天已签到" in card_title or "已签到" in card_title:
                     msg = card_desc or "您今天已经签到过了，请勿重复刷新。"
+                    self._streak_from_page = self._extract_streak_from_page(page)
                     self._save_cookies_from_context(ctx, site)
                     self._update_signin_state(True, msg)
                     self._append_history("每日签到", True, msg)
@@ -828,6 +829,7 @@ class AudiencesKeeper(_PluginBase):
                     final_msg = f"签到未完成：{ts_diag}"
 
                 # 提取并回存最新 Cookies
+                self._streak_from_page = self._extract_streak_from_page(page)
                 self._save_cookies_from_context(ctx, site)
 
                 # 4. 如果已确认登录但签到未完成：单独记录登录成功
@@ -1182,6 +1184,65 @@ class AudiencesKeeper(_PluginBase):
         state["last_login_message"] = msg
         state["last_login_date"] = datetime.now().strftime("%Y-%m-%d")
         self.save_data("state", state)
+
+
+    def _extract_streak_from_page(self, page) -> Optional[str]:
+        """从签到页面读取站点显示的连续签到天数（卡片优先，整页兜底）。"""
+        try:
+            texts = []
+            for sel in (".attendance-card", ".attendance-card__desc", ".attendance-card__title"):
+                loc = page.locator(sel)
+                if loc.count() > 0:
+                    texts.append(loc.first.inner_text())
+            try:
+                texts.append(page.locator("body").inner_text())
+            except Exception:
+                pass
+            blob = " ".join(texts)
+            for pat in (r"连续签到[^0-9]{0,8}(\d+)\s*天",
+                        r"连续[^0-9]{0,8}(\d+)\s*天",
+                        r"已签到[^0-9]{0,8}(\d+)\s*天",
+                        r"签到[^0-9]{0,8}(\d+)\s*天"):
+                m = re.search(pat, blob)
+                if m:
+                    return m.group(1)
+            return None
+        except Exception:
+            return None
+
+    def _streak_text(self, today_str: str = None) -> str:
+        """生成通知中的连续签到天数文本，优先使用站点页面值。"""
+        v = getattr(self, "_streak_from_page", None)
+        if v:
+            return f"{v} 天（站点）"
+        n = self._compute_streak(today_str)
+        return f"{n} 天（本地记录）" if n else "未知"
+
+    def _compute_streak(self, today_str: str = None) -> int:
+        """按签到历史计算连续签到天数（今天未签到时从昨天往前数）。"""
+        from datetime import datetime as _dt, timedelta as _td
+
+        hist = self.get_data("signin_history") or []
+        days = set()
+        for r in hist:
+            if r.get("type") != "每日签到" or not r.get("success"):
+                continue
+            d = (r.get("time") or "")[:10]
+            if len(d) == 10:
+                days.add(d)
+        if not days:
+            return 0
+        try:
+            base = _dt.strptime(today_str, "%Y-%m-%d").date() if today_str else _dt.now().date()
+        except Exception:
+            base = _dt.now().date()
+        if base.strftime("%Y-%m-%d") not in days:
+            base = base - _td(days=1)
+        n = 0
+        while base.strftime("%Y-%m-%d") in days:
+            n += 1
+            base = base - _td(days=1)
+        return n
 
     def _update_signin_state(self, success: bool, msg: str) -> None:
         state = self.get_data("state") or {}
