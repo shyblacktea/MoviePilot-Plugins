@@ -135,15 +135,16 @@
   },
   "AudiencesKeeper": {
     "name": "人人人守护者",
-    "description": "人人人自动模拟过 CF 盾更新 Cookie 及自动签到。",
-    "labels": "站点,签到,Cookie",
-    "version": "0.0.8",
+    "description": "人人人自动模拟过 CF 盾、更新 Cookie 并洗白搜索防刷计数。",
+    "labels": "站点,Cookie,CF盾",
+    "version": "0.0.9",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg",
     "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
+      "v0.0.9": "移除全部签到功能：站点已下线签到页（attendance.php 404），插件不再注册签到任务与按钮，只保留过盾、Cookie 更新与搜索洗白；同步清理历史遗留签到记录。",
       "v0.0.8": "签到成功通知新增连续签到天数（优先读站点页面，抓不到时用本地签到记录兜底）",
       "v0.0.7": "签到去重修复：当天签到成功后，自动调度不再重复签到。原逻辑要求 has_cf_clearance 为真才跳过，而站点未触发 CF 盾时不会下发 cf_clearance，该值恒为假，导致每次调度都重复签到（站点返回「今天已经签到过了」）；现改为只看当天签到结果，手动触发不受限制。",
       "v0.0.6": "合并增强：1. 插件页记录支持固定高度（320px）与吸顶表头，支持独立纵向平滑滚动；2. Telegram 通知防刷优化：成功通知每日仅首次推送，失败通知支持一键「🔕 今天不再通知」原地静默；3. 调度周期全面升级：支持 5 位 cron 表达式、小时范围间隔如 2.3/9-23 以及留空默认 9-23 点随机 2 次；每天首次全量执行，其余重试未确认登录或未签到，已确认登录但签到未确认单独记录登录成功；4. 自动识别人人人站点、Turnstile 三策略求解与原生内联按钮原地交互刷新。"
