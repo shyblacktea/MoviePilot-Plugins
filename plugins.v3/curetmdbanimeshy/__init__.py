@@ -1,4 +1,5 @@
 import os
+import re
 import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -59,7 +60,7 @@ class CureTMDbAnimeShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/curetmdbanimeshy.png"
     # 插件版本
-    plugin_version = "0.0.7"
+    plugin_version = "0.0.8"
     # 插件作者
     plugin_author = "Attente,shyblacktea"
     # 作者主页
@@ -1322,34 +1323,21 @@ class CureTMDbAnimeShy(_PluginBase):
 
         return mapping
 
-    def correct_meta(self, meta: MetaBase, mediainfo: MediaInfo) -> MetaBase:
+    def correct_meta(self, meta: MetaBase, mediainfo: MediaInfo, downloadhistory=None) -> MetaBase:
         """
         根据逻辑季信息调整元数据对象中的季号和集号。
 
         :param meta: 原始元数据对象
         :param mediainfo: 媒体信息对象
+        :param downloadhistory: 下载历史（存在且带季集信息时优先采用）
         """
         if not meta or not mediainfo or mediainfo.type.name != "TV":
             return meta
 
         # 排除关键词：命中的标题跳过识别增强
         if self._hit_exclude_keywords(meta.title or ""):
-            logger.debug(
-                f"标题 `{meta.title}` 命中排除关键词，跳过识别增强"
-            )
+            logger.debug(f"标题 `{meta.title}` 命中排除关键词，跳过识别增强")
             return meta
-
-    def _hit_exclude_keywords(self, title: str) -> bool:
-        if not self.config.exclude_enabled:
-            return False
-        raw = (self.config.exclude_keywords or "").strip()
-        if not raw:
-            return False
-        keywords = [k.strip().lower() for k in raw.split(",") if k.strip()]
-        if not keywords:
-            return False
-        low = title.lower()
-        return any(k in low for k in keywords)
 
         if set(mediainfo.genre_ids).isdisjoint(settings.ANIME_GENREIDS):
             return meta
@@ -1366,6 +1354,17 @@ class CureTMDbAnimeShy(_PluginBase):
             )
         ):
             logger.info(f"存在应用的集数偏移识别词 `{matched_word}`, 跳过调整元数据")
+            return meta
+
+        # 下载历史已记录明确季集时直接采用（上游 3.0.0 行为）
+        if downloadhistory is not None and getattr(downloadhistory, "seasons", None) and getattr(downloadhistory, "episodes", None):
+            season_episode = meta.season_episode
+            meta.set_season(self._extract_ints(downloadhistory.seasons))
+            meta.set_episode(self._extract_ints(downloadhistory.episodes))
+            if season_episode != meta.season_episode:
+                logger.info(
+                    f"{meta.title}: 识别季集 {season_episode} → 使用下载历史记录值 {meta.season_episode}"
+                )
             return meta
 
         tmdb_mapping = self._get_logical_mapping(mediainfo.tmdb_id)
@@ -1409,3 +1408,29 @@ class CureTMDbAnimeShy(_PluginBase):
         )
 
         return meta
+
+    @staticmethod
+    def _extract_ints(value) -> List[int]:
+        """从 'S01-S02' 这类字符串或列表里取出全部整数，供下载历史季集使用。"""
+        if isinstance(value, (list, tuple, set)):
+            out: List[int] = []
+            for item in value:
+                try:
+                    out.append(int(item))
+                except (TypeError, ValueError):
+                    continue
+            return out
+        return [int(x) for x in re.findall(r"\d+", str(value or ""))]
+
+    def _hit_exclude_keywords(self, title: str) -> bool:
+        """标题命中排除关键词时返回 True（用于跳过识别增强）。"""
+        if not self.config.exclude_enabled:
+            return False
+        raw = (self.config.exclude_keywords or "").strip()
+        if not raw:
+            return False
+        keywords = [k.strip().lower() for k in raw.split(",") if k.strip()]
+        if not keywords:
+            return False
+        low = title.lower()
+        return any(k in low for k in keywords)
