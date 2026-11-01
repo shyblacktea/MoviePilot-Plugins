@@ -7,21 +7,25 @@ from typing import Any, Dict, List, Optional, Union
 # 第三方库
 from apscheduler.triggers.cron import CronTrigger
 from pydantic import BaseModel, Field
-from sqlalchemy import tuple_
-from sqlalchemy.orm import Session
 
 # 项目库
 from app.chain.mediaserver import MediaServerChain
 from app.chain.subscribe import SubscribeChain
-from app.db import db_query
 from app.db.oper.subscribe import SubscribeOper
-from app.db.oper.subscribehistory import SubscribeHistory
+from app.db.oper.subscribehistory import SubscribeHistoryOper
+from app.schemas.query import (
+    QueryPageRequest,
+    QuerySort,
+    QuerySortDirection,
+    QuerySortField,
+    SubscriptionHistoryFilter,
+)
 from app.modules.themoviedb.tmdbapi import TmdbApi
 from app.schemas.types import EventType, MediaSource, MediaType, NotificationType
 from app.sdk.config import global_vars
 from app.sdk.events import Event, eventmanager
 from app.sdk.logging import logger
-from app.sdk.media import MediaInfo
+from app.sdk.media import MediaInfo, normalize_media_source
 from app.sdk.plugin import _PluginBase
 from app.sdk.services import ServiceConfigHelper
 
@@ -52,7 +56,7 @@ class FollowUpShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/notifytogroupshy.png"
     # 插件版本
-    plugin_version = "0.0.4"
+    plugin_version = "0.0.5"
     # 插件作者
     plugin_author = "Attente,shyblacktea"
     # 作者主页
@@ -591,7 +595,7 @@ class FollowUpShy(_PluginBase):
 
         # 媒体服务器
         serveritems = self.get_media_server_items(exclude=excluded_items)
-        subscribehis = {(sub.type, int(sub.media_id)) for sub in self.get_subscribe_history(exclude=excluded_items) if str(sub.media_source) == str(MediaSource.TMDB) and sub.media_id} if self.config.check_sub_history else set()
+        subscribehis = {(sub.type, int(sub.media_id)) for sub in self.get_subscribe_history(exclude=excluded_items) if normalize_media_source(sub.media_source) == MediaSource.TMDB and sub.media_id} if self.config.check_sub_history else set()
         return serveritems.union(subscribehis)
 
     @staticmethod
@@ -641,24 +645,28 @@ class FollowUpShy(_PluginBase):
 
     def _prepare_subscribe_payload(self, data: dict) -> dict:
         """
-        规范化订阅新增参数，剔除旧版残留字段 (tmdbid/doubanid/bangumiid) 并适配 V3
+        规范化订阅新增参数：剔除旧版残留字段 (tmdbid/doubanid/bangumiid)，
+        按 V3 媒体身份合同处理 media_source / media_id（身份不完整时两者一并移除）。
         """
         if not data:
             return {}
         payload = dict(data)
-        media_id = payload.pop("tmdbid", None) or payload.get("media_id")
+        legacy_tmdb_id = payload.pop("tmdbid", None)
         payload.pop("doubanid", None)
         payload.pop("bangumiid", None)
 
-        media_source = payload.get("media_source") or MediaSource.TMDB
-        if isinstance(media_source, str):
-            try:
-                media_source = MediaSource(media_source)
-            except Exception:
-                media_source = MediaSource.TMDB
-        payload["media_source"] = media_source
-        if media_id is not None:
-            payload["media_id"] = str(media_id)
+        media_source = normalize_media_source(payload.get("media_source"))
+        media_id = str(payload.get("media_id") or "").strip()
+        if not media_source and legacy_tmdb_id:
+            media_source = MediaSource.TMDB
+            media_id = str(legacy_tmdb_id).strip()
+
+        if media_source and media_id and media_id != "0":
+            payload["media_source"] = media_source
+            payload["media_id"] = media_id
+        else:
+            payload.pop("media_source", None)
+            payload.pop("media_id", None)
 
         mtype = payload.get("mtype")
         if isinstance(mtype, str):
@@ -724,7 +732,7 @@ class FollowUpShy(_PluginBase):
                 logger.info(f"正在获取 {server_name} 媒体库 {library.name} ...")
 
                 for item in serverchain.items(server=server_name, library_id=library.id):
-                    if not item or not item.media_id or str(item.media_source) != str(MediaSource.TMDB):
+                    if not item or not item.media_id or normalize_media_source(item.media_source) != MediaSource.TMDB:
                         continue
                     # 类型
                     item_type = "电视剧" if item.item_type in ["Series", "show"] else "电影"
@@ -784,17 +792,47 @@ class FollowUpShy(_PluginBase):
     def save_collections(self, collections: dict):
         self.save_data("collections", collections)
 
-    @db_query
-    def get_subscribe_history(self, db: Session = None, media_id: str = None, type: MediaType = None, exclude: set[tuple] = set()) -> list[SubscribeHistory]:
-        query = db.query(SubscribeHistory)
-        conditions = []
-        if media_id: conditions.append(SubscribeHistory.media_id == media_id)
-        if type: conditions.append(SubscribeHistory.type == type.value)
-        if exclude: conditions.append(tuple_(SubscribeHistory.type, SubscribeHistory.media_id).notin_(exclude))
+    @staticmethod
+    def get_subscribe_history(media_id: str = None, type: MediaType = None, exclude: set = None) -> list:
+        """通过订阅历史 Oper 分页查询 TMDB 来源记录，避免全表加载与字段类型硬编码。"""
         try:
-            return query.filter(*conditions).all()
+            kwargs = {}
+            if media_id:
+                kwargs["media_source"] = MediaSource.TMDB
+                kwargs["media_id"] = str(media_id)
+            if type:
+                kwargs["media_types"] = (type,)
+            filters = SubscriptionHistoryFilter(**kwargs)
+
+            page_size = 200
+            page_number = 1
+            histories = []
+            exclude_pairs = {(str(t), str(m)) for t, m in (exclude or set())}
+            while True:
+                records, total = SubscribeHistoryOper().query(
+                    filters=filters,
+                    page=QueryPageRequest(
+                        page=page_number,
+                        count=page_size,
+                        sort=QuerySort(field=QuerySortField.ID, direction=QuerySortDirection.ASC),
+                    ),
+                )
+                for record in records:
+                    if normalize_media_source(getattr(record, "media_source", None)) != MediaSource.TMDB:
+                        continue
+                    media_id_val = getattr(record, "media_id", None)
+                    if not media_id_val:
+                        continue
+                    type_val = getattr(getattr(record, "type", None), "value", getattr(record, "type", None))
+                    if exclude_pairs and (str(type_val), str(media_id_val)) in exclude_pairs:
+                        continue
+                    histories.append(record)
+                if page_number * page_size >= total:
+                    break
+                page_number += 1
+            return histories
         except Exception as e:
-            logger.error(f"获取订阅历史失败: {str(e)}")
+            logger.error(f"获取订阅历史失败: {e!s}")
             return []
 
     @staticmethod
