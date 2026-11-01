@@ -28,7 +28,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "人人人守护者"
     plugin_desc = "人人人自动模拟过 CF 盾、更新 Cookie 并洗白搜索防刷计数。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.9"
+    plugin_version = "0.0.10"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -471,21 +471,41 @@ class AudiencesKeeper(_PluginBase):
                     return False, msg
                 page.wait_for_timeout(1500)
 
-                # 检查并穿透 Turnstile
-                for _ in range(3):
-                    if self._click_turnstile_if_present(page):
-                        break
-                    page.wait_for_timeout(1000)
+                # 检查并穿透 Turnstile（列表页）：没挑战就不点，省掉无谓等待
+                list_challenge = self._has_cf_challenge(page)
+                if list_challenge:
+                    for _ in range(3):
+                        if self._click_turnstile_if_present(page):
+                            break
+                        page.wait_for_timeout(1000)
+                    page.wait_for_timeout(2500)
+                    list_challenge = self._has_cf_challenge(page)
+                list_title = page.title()
 
-                page.wait_for_timeout(2500)
+                # 关键：CF 的挑战通常出现在搜索路径而不是列表页。
+                # 只访问 torrents.php 会让插件一直误以为「站点无盾」，也就永远拿不到 cf_clearance。
+                search_ok, search_items, search_challenge = self._probe_search_page(page, site)
+                challenge_seen = list_challenge or search_challenge
 
                 # 提取 Cookie 与 UA
                 new_cookie_str, new_ua, has_cf = self._save_cookies_from_context(ctx, site)
 
-                title = page.title()
-                logger.info(f"【人人人守护者】列表页加载完成，标题: {title}，包含 cf_clearance: {has_cf}")
+                logger.info(
+                    f"【人人人守护者】列表页标题: {list_title} | 列表页挑战: {'有' if list_challenge else '无'}"
+                    f" | 搜索页: {'访问成功' if search_ok else '访问失败'}，挑战: {'有' if search_challenge else '无'}"
+                    f"，结果 {search_items} 条 | cf_clearance: {has_cf}"
+                )
 
-                msg = f"已访问种子列表页洗白防刷计数；Cookie 已更新（长度 {len(new_cookie_str)}，包含 CF 凭据: {'是' if has_cf else '否'}）。"
+                if has_cf:
+                    cf_text = "已获取 cf_clearance"
+                elif challenge_seen:
+                    cf_text = "触发了 CF 挑战但未拿到 clearance"
+                else:
+                    cf_text = "列表页与搜索页均未触发挑战，无需 cf_clearance"
+                msg = (
+                    f"列表页与搜索页均已访问（搜索页结果 {search_items} 条）；"
+                    f"Cookie 已更新（长度 {len(new_cookie_str)}，{cf_text}）。"
+                )
                 self._update_cf_state(True, msg, has_cf)
                 self._append_history("过盾与刷新", True, msg)
                 return True, msg
@@ -494,6 +514,51 @@ class AudiencesKeeper(_PluginBase):
             logger.error(f"【人人人守护者】{err}")
             self._append_history("过盾与刷新", False, err)
             return False, err
+
+
+    @staticmethod
+    def _has_cf_challenge(page: Any) -> bool:
+        """判断当前页面是否处于 Cloudflare 挑战中（只看标题/iframe/组件，不抓整页 HTML）。"""
+        try:
+            if any("challenges.cloudflare.com" in (f.url or "") for f in page.frames):
+                return True
+            title = (page.title() or "").lower()
+            if "just a moment" in title or "attention required" in title:
+                return True
+            return page.locator(".cf-turnstile, input[name='cf-turnstile-response']").count() > 0
+        except Exception:
+            return False
+
+    def _probe_search_page(self, page: Any, site: dict) -> tuple[bool, int, bool]:
+        """
+        走一次搜索路径：CF 的挑战常常只出现在搜索上，只访问列表页会一直误判为「无盾」。
+        返回 (是否访问成功, 结果条数, 是否出现挑战)。
+        """
+        base = site.get("url") or self._site_url
+        keyword = urllib.parse.quote("1080p")
+        url = urllib.parse.urljoin(
+            base,
+            f"torrents.php?search_mode=0&search_area=0&page=0&notnewword=1&search={keyword}",
+        )
+        ok, _msg = self._goto_robust(page, url)
+        if not ok:
+            return False, 0, False
+
+        page.wait_for_timeout(1200)
+        challenge = self._has_cf_challenge(page)
+        if challenge:
+            for _ in range(3):
+                if self._click_turnstile_if_present(page):
+                    break
+                page.wait_for_timeout(800)
+            page.wait_for_timeout(2500)
+            challenge = self._has_cf_challenge(page)
+
+        try:
+            items = page.locator("a[href*='details.php?id=']").count()
+        except Exception:
+            items = 0
+        return True, items, challenge
 
     def _browser_kwargs(self) -> dict:
         """
