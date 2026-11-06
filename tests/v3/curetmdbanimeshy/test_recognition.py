@@ -68,9 +68,14 @@ def test_recognition_wrappers():
 
 def test_structured_season_context():
     """实际修正用例兼容结构化季集和旧字典，累计 1163 定位 S23E08。"""
-    ns = {"date": date, "datetime": datetime, "timedelta": timedelta,
+    ns = {"__name__": __name__, "date": date, "datetime": datetime, "timedelta": timedelta,
           "logger": SimpleNamespace(debug=lambda *a: None)}
-    exec(compile((SOURCE / "models.py").read_text(encoding="utf-8"), str(SOURCE / "models.py"), "exec"), ns)
+    models_tree = ast.parse((SOURCE / "models.py").read_text(encoding="utf-8"))
+    # MetaBase 仅用于延迟类型注解，测试保留标准库导入并隔离宿主包。
+    models_tree.body = [node for node in models_tree.body if not (
+        isinstance(node, ast.ImportFrom) and node.module == "app.sdk.media"
+    )]
+    exec(compile(ast.fix_missing_locations(models_tree), str(SOURCE / "models.py"), "exec"), ns)
     use_case_class = load_class("engine.py", "MetaCorrectionUseCase", ns)
     point = ns["EpisodePoint"]
     counts = [61, 16, 14, 39, 13, 52, 33, 35, 73, 45, 26, 14, 101, 58, 62, 50, 56, 55, 74, 14, 197, 67, 25]
