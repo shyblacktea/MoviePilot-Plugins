@@ -322,11 +322,12 @@ class MonkeyPatchManager:
         original_match_season_episodes = TorrentHelper.match_season_episodes
 
         @staticmethod
-        def new_match_torrent(mediainfo, torrent_meta, torrent) -> bool:
-            # 补丁此方法用于非订阅搜索
+        @wraps(original_match_torrent)
+        def new_match_torrent(mediainfo, torrent_meta, torrent, *args, **kwargs) -> bool:
+            """保留宿主的季集范围等调用参数，仅在匹配成功后修正元数据。"""
 
             if result := original_match_torrent(
-                mediainfo=mediainfo, torrent_meta=torrent_meta, torrent=torrent
+                mediainfo, torrent_meta, torrent, *args, **kwargs
             ):
                 func(torrent_meta, mediainfo)
             return result
