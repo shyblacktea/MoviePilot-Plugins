@@ -2,12 +2,13 @@
   "CleanInvalidPlugin": {
     "name": "清理无效插件",
     "description": "扫描、清理或重新安装数据库中无法加载的插件记录。（小k自用版）",
-    "version": "1.7",
+    "version": "1.8",
     "author": "shyblacktea",
     "level": 1,
     "v2": true,
     "release": true,
     "history": {
+      "v1.8": ["fix: 移除插件产物中 309KB 的 Vuetify 全量基础样式（__federation_shared_vuetify），改为复用宿主样式，避免全局 CSS 污染主程序界面", "ci: 接入联邦插件 CSS 门禁"],
       "v1.7": [
         "feat: 移除清理与重装完成后的通知推送"
       ],

@@ -52,7 +52,7 @@ class ManualSubscribeAssistantShy(_PluginBase):
     # 插件图标
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/manualsubscribeassistantshy.png"
     # 插件版本
-    plugin_version = "0.1.2"
+    plugin_version = "0.1.3"
     # 插件作者
     plugin_author = "shyblacktea"
     # 作者主页
@@ -137,8 +137,8 @@ class ManualSubscribeAssistantShy(_PluginBase):
 
     @staticmethod
     def get_render_mode() -> Tuple[str, str]:
-        """使用 Vue 联邦组件渲染，产物位于 frontend/dist/assets。"""
-        return "vue", "frontend/dist/assets"
+        """使用 Vue 联邦组件渲染，产物位于 dist/assets。"""
+        return "vue", "dist/assets"
 
     def get_form(self) -> Tuple[Optional[List[dict]], Dict[str, Any]]:
         """Vue 模式：表单为 None，第二项返回由 spec 反射生成的完整默认配置。"""

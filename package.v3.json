@@ -25,12 +25,13 @@
     "name": "手动订阅助手",
     "description": "完整保留自动订阅助手的多来源抓取、配置和筛选界面，改为用户确认后手动订阅。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/manualsubscribeassistantshy.png",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
+      "v0.1.3": "前端工程合并回插件根目录（frontend/ → 根，渲染目录改为 dist/assets），新增 remove-unreachable-shared-assets 与 CSS 门禁；移除产物中 321KB 的 Vuetify 全量基础样式，避免污染宿主页面。",
       "v0.1.1": "fix: 修复订阅配置中的清空历史逻辑，改为只清空订阅管理候选，不影响实际 MoviePilot 订阅和订阅历史；同步更新界面提示；ui: 候选状态筛选改为单选，待确认、已订阅、被过滤、未识别互斥。",
       "v0.1.0": "重做：完整迁移自动订阅助手的多来源抓取、动态配置、过滤器、运行状态、候选筛选和订阅管理界面；抓取只保存候选，改为用户确认后手动创建订阅。",
       "v0.0.1": "初版支持 Mikan 季番抓取、Bangumi/TMDB 跳转与手动创建订阅。",
@@ -54,12 +55,13 @@
     "name": "下载目录滤镜",
     "description": "根据自定义格式修改MP下载种子的保存路径、种子名称。（小k自用版）",
     "icon": "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/downloaddirfilter.png",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": "shyblacktea",
     "level": 1,
     "system_version": ">=3.0.0",
     "release": true,
     "history": {
+      "v0.0.3": "移除产物中 240KB 的 Vuetify 全量基础样式（__federation_shared_vuetify），改为复用宿主样式，避免全局 CSS 污染主程序界面。",
       "v0.0.2": "全面适配 MoviePilot V3 SDK 规范，移除废弃的 app.core 与 app.helper 依赖，修复下载历史多条件更新查询逻辑。",
       "v0.0.1": "fix: 适配 MoviePilot V3 媒体身份 API，修复 DownloadHistory.tmdbid 与 TransferHistoryOper.get_by_type_tmdbid 报错；feat: 由路径名称格式化改造为独立插件「下载目录滤镜」，首次加载自动迁移原插件配置与处理记录。"
     }

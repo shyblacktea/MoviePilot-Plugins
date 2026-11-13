@@ -1,16 +1,23 @@
 {
-  "name": "manualsubscribeassistantshy-ui",
+  "name": "moviepilot-plugin-component",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "vite build"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@originjs/vite-plugin-federation": "^1.4.1",
-    "@vitejs/plugin-vue": "^5.0.4",
-    "vite": "^5.4.11",
     "vue": "^3.5.13",
-    "vuetify": "3.7.3"
+    "vuetify": "3.7.3",
+    "echarts": "^5.4.3",
+    "vue-echarts": "^6.6.1",
+    "@vueuse/core": "^12.4.0"
+  },
+  "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.4.1",
+    "@vitejs/plugin-vue": "^4.4.0",
+    "vite": "^5.4.11"
   }
 }
