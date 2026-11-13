@@ -64,13 +64,18 @@ jobs:
               release_title="${plugin_name} v${plugin_version}"
               plugin_id_lc="$(echo "$plugin_id" | tr '[:upper:]' '[:lower:]')"
 
-              dir1="plugins/${plugin_id_lc}"
-              dir2="plugins.v2/${plugin_id_lc}"
-              dir3="plugins.v3/${plugin_id_lc}"
+              # 按索引所属代际选目录：v2/v3 同名插件两代并存时，v2 条目不能再取到 v3 目录。
               plugin_dir=""
-              if [ -d "$dir1" ]; then plugin_dir="$dir1"; fi
-              if [ -d "$dir2" ]; then plugin_dir="$dir2"; fi
-              if [ -d "$dir3" ]; then plugin_dir="$dir3"; fi
+              if [ "$pkg_file" = "package.v3.json" ]; then
+                [ -d "plugins.v3/${plugin_id_lc}" ] && plugin_dir="plugins.v3/${plugin_id_lc}"
+                [ -z "$plugin_dir" ] && [ -d "plugins/${plugin_id_lc}" ] && plugin_dir="plugins/${plugin_id_lc}"
+              elif [ "$pkg_file" = "package.v2.json" ]; then
+                [ -d "plugins.v2/${plugin_id_lc}" ] && plugin_dir="plugins.v2/${plugin_id_lc}"
+                [ -z "$plugin_dir" ] && [ -d "plugins/${plugin_id_lc}" ] && plugin_dir="plugins/${plugin_id_lc}"
+              else
+                [ -d "plugins/${plugin_id_lc}" ] && plugin_dir="plugins/${plugin_id_lc}"
+                [ -z "$plugin_dir" ] && [ -d "plugins.v2/${plugin_id_lc}" ] && plugin_dir="plugins.v2/${plugin_id_lc}"
+              fi
 
               if [ -z "$plugin_dir" ]; then
                 echo "WARN: directory for $plugin_id not found under plugins/ or plugins.v2/, skip."
@@ -89,8 +94,29 @@ jobs:
                 continue
               fi
 
-              # Existing per-plugin tags make unchanged directories a no-op.
-              prev_tag="$(git tag --list "${plugin_id}_v*" --sort=-version:refname | head -n 1 || true)"
+              # 基准 tag 只取「版本号 <= 当前版本、且真的包含该代目录」的最新一个。
+              # 之前的写法直接取版本最高的 tag，v2/v3 同 ID 插件会互相拿对方的 tag 当基准
+              # （如 v0.24 的条目拿 v1.1.14 对比），判定「有变化」后删掉同版本 tag 重建。
+              prev_tag=""
+              while read -r candidate; do
+                [ -n "$candidate" ] || continue
+                cand_ver="${candidate#${plugin_id}_v}"
+                if [ "$(printf '%s\n%s\n' "$cand_ver" "$plugin_version" | sort -V | tail -n 1)" != "$plugin_version" ]; then
+                  continue
+                fi
+                if git cat-file -e "${candidate}:${plugin_dir}" 2>/dev/null; then
+                  prev_tag="$candidate"
+                  break
+                fi
+              done < <(git tag --list "${plugin_id}_v*" --sort=-version:refname)
+
+              # 当前版本号的 tag 已存在但目录有改动：拒绝发布，绝不同版本重建 tag。
+              cur_tag="${plugin_id}_v${plugin_version}"
+              if git rev-parse -q --verify "refs/tags/${cur_tag}" >/dev/null 2>&1 \
+                 && ! git diff --quiet "$cur_tag" -- "$plugin_dir"; then
+                echo "ERROR: ${plugin_dir} 自 ${cur_tag} 之后有改动，但版本号仍是 ${plugin_version}；请先升版本号再发布。" >&2
+                exit 1
+              fi
 
               changed=1
               if [ -n "$prev_tag" ]; then
