@@ -28,7 +28,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "人人人守护者"
     plugin_desc = "人人人自动模拟过 CF 盾、更新 Cookie 并洗白搜索防刷计数。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.11"
+    plugin_version = "0.0.12"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -150,7 +150,7 @@ class AudiencesKeeper(_PluginBase):
 
         return services
 
-    def run_cf_job(self, is_manual: bool = False) -> None:
+    def run_cf_job(self, is_manual: bool = False) -> Optional[tuple[bool, str]]:
         """
         过盾与洗白搜索任务入口（独立周期调度）。
         """
@@ -185,6 +185,7 @@ class AudiencesKeeper(_PluginBase):
                 body=f"状态：❌ 失败\n详情：{msg}",
                 is_manual=False,
             )
+        return success, msg
 
     def _notify_job_result(self, key: str, success: bool, title: str, body: str,
                            is_manual: bool = False, **kwargs: Any) -> None:
@@ -197,7 +198,12 @@ class AudiencesKeeper(_PluginBase):
             return
 
         today = datetime.now().strftime("%Y-%m-%d")
-        state = self.get_data("state") or {}
+        state = {}
+        if not is_manual:
+            try:
+                state = self.get_data("state") or {}
+            except Exception as e:
+                logger.warning(f"【人人人守护者】通知状态读取异常（{type(e).__name__}），按空状态继续发送通知。")
 
         if success:
             if not is_manual:
@@ -403,12 +409,13 @@ class AudiencesKeeper(_PluginBase):
         """
         API: 立即过盾刷新（带按钮的通知，属于手动触发）
         """
-        self.run_cf_job(is_manual=True)
-        state = self.get_data("state") or {}
-        return {
-            "success": bool(state.get("last_cf_success")),
-            "message": state.get("last_cf_message") or "",
-        }
+        if not self._enabled:
+            return {"success": False, "message": "插件未启用，本次未执行。"}
+        result = self.run_cf_job(is_manual=True)
+        if result is None:
+            return {"success": False, "message": "本次未执行过盾刷新。"}
+        success, msg = result
+        return {"success": success, "message": msg}
 
     def api_clear_history(self) -> dict[str, Any]:
         """
@@ -444,88 +451,146 @@ class AudiencesKeeper(_PluginBase):
         return buttons
 
     def do_refresh_cf(self) -> tuple[bool, str]:
-        """
-        核心方法：打开浏览器访问列表页，穿透 CF 盾拿新 clearance，并洗白搜索防刷频次。
-        """
-        site = self._get_site()
-        if not site:
-            msg = "未找到人人人站点配置。"
-            self._append_history("过盾与刷新", False, msg)
-            return False, msg
-
-        raw_cookie = site.get("cookie") or ""
-        cookies = self._parse_cookie_list(raw_cookie, site.get("url") or self._site_url)
-        target_url = urllib.parse.urljoin(site.get("url") or self._site_url, "torrents.php")
-
-        logger.info(f"【人人人守护者】启动浏览器访问种子列表页穿透 CF 并洗白搜索限制（站点 ID: {site['id']}）...")
+        """每轮只结算一次；浏览器清理异常不覆盖已确认的业务结果。"""
+        result = None
+        has_cf = None
         try:
-            with launch_browser_context(headless=True, **self._browser_kwargs()) as ctx:
-                if cookies:
-                    ctx.add_cookies(cookies)
-                self._harden_page(ctx)
-                page = ctx.pages[0] if ctx.pages else ctx.new_page()
-                nav_ok, nav_msg = self._goto_robust(page, target_url)
-                if not nav_ok:
-                    msg = f"打开种子列表页失败（{nav_msg}），请检查网络连接。"
-                    self._append_history("过盾与刷新", False, msg)
-                    return False, msg
-                page.wait_for_timeout(1500)
-
-                # 检查并穿透 Turnstile（列表页）：没挑战就不点，省掉无谓等待
-                list_challenge = self._has_cf_challenge(page)
-                if list_challenge:
-                    for _ in range(3):
-                        if self._click_turnstile_if_present(page):
-                            break
-                        page.wait_for_timeout(1000)
-                    page.wait_for_timeout(2500)
-                    list_challenge = self._has_cf_challenge(page)
-                list_title = page.title()
-
-                # 关键：CF 的挑战通常出现在搜索路径而不是列表页。
-                # 只访问 torrents.php 会让插件一直误以为「站点无盾」，也就永远拿不到 cf_clearance。
-                search_ok, search_items, search_challenge = self._probe_search_page(page, site)
-                challenge_seen = list_challenge or search_challenge
-
-                # 提取 Cookie 与 UA
-                new_cookie_str, new_ua, has_cf = self._save_cookies_from_context(ctx, site)
-
-                logger.info(
-                    f"【人人人守护者】列表页标题: {list_title} | 列表页挑战: {'有' if list_challenge else '无'}"
-                    f" | 搜索页: {'访问成功' if search_ok else '访问失败'}，挑战: {'有' if search_challenge else '无'}"
-                    f"，结果 {search_items} 条 | cf_clearance: {has_cf}"
-                )
-
-                if has_cf:
-                    cf_text = "已获取 cf_clearance"
-                elif challenge_seen:
-                    cf_text = "触发了 CF 挑战但未拿到 clearance"
-                else:
-                    cf_text = "列表页与搜索页均未触发挑战，无需 cf_clearance"
-                msg = (
-                    f"列表页与搜索页均已访问（搜索页结果 {search_items} 条）；"
-                    f"Cookie 已更新（长度 {len(new_cookie_str)}，{cf_text}）。"
-                )
-                self._update_cf_state(True, msg, has_cf)
-                self._append_history("过盾与刷新", True, msg)
-                return True, msg
+            site = self._get_site()
+            if not site:
+                result = (False, "未找到人人人站点配置。", False)
+            else:
+                has_cf = "cf_clearance=" in (site.get("cookie") or "")
+                try:
+                    with launch_browser_context(headless=True, **self._browser_kwargs()) as ctx:
+                        result = self._refresh_with_context(ctx, site)
+                except Exception:
+                    if result is None:
+                        raise
+                    success, msg, has_cf = result
+                    warning = "浏览器资源清理异常，业务结果保持不变"
+                    logger.warning(f"【人人人守护者】{warning}")
+                    result = (success, f"{msg}（{warning}）", has_cf)
         except Exception as e:
-            err = f"过盾与刷新 Cookie 异常: {str(e)}"
-            logger.error(f"【人人人守护者】{err}")
-            self._append_history("过盾与刷新", False, err)
-            return False, err
+            # 不把浏览器异常里的完整 URL / 查询参数发送到通知。
+            msg = f"过盾与刷新 Cookie 异常（{type(e).__name__}），请检查网络与浏览器服务。"
+            logger.error(f"【人人人守护者】{msg}")
+            result = (False, msg, has_cf)
+        if result is None:
+            result = (False, "本轮未取得可验证的业务结果。", has_cf)
+        success, msg, has_cf = result
+        # 持久化只是结算：失败时仍尝试另一份记录，绝不重跑已完成的 Cookie 回写。
+        try:
+            self._update_cf_state(success, msg, has_cf)
+        except Exception as e:
+            warning = f"本次状态持久化异常（{type(e).__name__}），业务结果保持不变"
+            logger.warning(f"【人人人守护者】{warning}")
+            msg = f"{msg}（{warning}）"
+        try:
+            self._append_history("过盾与刷新", success, msg)
+        except Exception as e:
+            warning = f"本次历史持久化异常（{type(e).__name__}），业务结果保持不变"
+            logger.warning(f"【人人人守护者】{warning}")
+            msg = f"{msg}（{warning}）"
+        return success, msg
+
+    def _refresh_with_context(self, ctx: Any, site: dict) -> tuple[bool, str, bool]:
+        """浏览器内的业务步骤，不在这里写执行状态或历史。"""
+        raw_cookie = site.get("cookie") or ""
+        has_cf = "cf_clearance=" in raw_cookie
+        cookies = self._parse_cookie_list(raw_cookie, site.get("url") or self._site_url)
+        if cookies:
+            ctx.add_cookies(cookies)
+        self._harden_page(ctx)
+        page = ctx.pages[0] if ctx.pages else ctx.new_page()
+        target_url = urllib.parse.urljoin(site.get("url") or self._site_url, "torrents.php")
+        logger.info("【人人人守护者】启动浏览器验证列表页与搜索页...")
+        nav_ok, nav_msg = self._goto_robust(page, target_url)
+        if not nav_ok:
+            return False, f"打开种子列表页失败（{nav_msg}），未更新 Cookie。", has_cf
+        page.wait_for_timeout(1500)
+        list_challenge = self._has_cf_challenge(page)
+        if list_challenge:
+            for _ in range(3):
+                if self._click_turnstile_if_present(page):
+                    break
+                page.wait_for_timeout(1000)
+            page.wait_for_timeout(2500)
+            list_challenge = self._has_cf_challenge(page)
+        list_ok, _, list_msg = self._validate_page(page, site)
+        if not list_ok:
+            return False, f"列表页校验失败：{list_msg}；未更新 Cookie。", has_cf
+        search_ok, search_items, search_challenge = self._probe_search_page(page, site)
+        if not search_ok or search_challenge:
+            return False, "搜索页验证失败，未更新 Cookie。", has_cf
+        new_cookie_str, new_ua, has_cf = self._save_cookies_from_context(ctx, site)
+        cf_text = "含 cf_clearance" if has_cf else "无需 cf_clearance"
+        msg = (f"列表页与搜索页验证通过（搜索结果 {search_items} 条）；"
+               f"Cookie 与 UA 已回写（长度 {len(new_cookie_str)}，{cf_text}）。")
+        return True, msg, has_cf
 
 
     @staticmethod
-    def _has_cf_challenge(page: Any) -> bool:
-        """判断当前页面是否处于 Cloudflare 挑战中（只看标题/iframe/组件，不抓整页 HTML）。"""
+    def _page_snapshot(page: Any) -> dict:
+        """只返回结构化证据，不序列化整页 HTML 或账号正文。"""
+        return page.evaluate(r"""() => {
+            const text = (document.body?.innerText || '').slice(0, 20000);
+            const table = document.querySelector('#torrenttable, table.torrents');
+            const loginForm = !!document.querySelector('form[action*="takelogin"], input[type="password"]');
+            const loggedIn = !loginForm && !!document.querySelector(
+                '.site-userbar a[href*="userdetails.php"], #info_block a[href*="userdetails.php"], a[href*="logout"]');
+            // 种子与推荐标题不是错误提示；仅剔除同域详情链接，保留表内外普通提示。
+            const notices = document.body?.cloneNode(true);
+            notices?.querySelectorAll('a[href]').forEach(a => {
+                const url = new URL(a.getAttribute('href'), location.href);
+                if (url.origin === location.origin && /\/details\.php$/.test(url.pathname)) a.remove();
+            });
+            notices?.querySelectorAll('script, style, noscript').forEach(el => el.remove());
+            const noticeText = (notices?.textContent || '').slice(0, 20000);
+            const blocked = /搜索人机验证未通过|请返回种子列表页重新进行验证|搜索次数过多|搜索频率过高|访问过于频繁|access denied|you have been blocked/i.test(noticeText);
+            const empty = /没有找到.*(?:种子|结果)|没有符合.*(?:种子|结果)|没有种子|无搜索结果|no torrents found|no results found/i.test(text);
+            const activeWidget = [...document.querySelectorAll('.cf-turnstile, iframe[src*="challenges.cloudflare.com"]')].some(el => {
+                const rect = el.getBoundingClientRect();
+                const style = getComputedStyle(el);
+                return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden';
+            });
+            const titleChallenge = /just a moment|attention required|checking your browser/i.test(document.title);
+            const challenge = titleChallenge || (activeWidget && !(loggedIn && table && !blocked));
+            const ids = table ? [...table.querySelectorAll('a[href*="details.php?id="]')].map(a => {
+                const u = new URL(a.href, location.href);
+                return u.origin === location.origin ? u.searchParams.get('id') : null;
+            }).filter(id => id && /^[1-9]\d*$/.test(id)) : [];
+            return {url: location.href, logged_in: loggedIn, login_form: loginForm,
+                blocked, challenge, table: !!table, empty, ids,
+                search_form: !!document.querySelector('input[name="search"]')};
+        }""")
+
+    def _validate_page(self, page: Any, site: dict) -> tuple[bool, int, str]:
+        """同域导航不是成功；必须有登录态与可解释的种子结果页。"""
         try:
-            if any("challenges.cloudflare.com" in (f.url or "") for f in page.frames):
-                return True
-            title = (page.title() or "").lower()
-            if "just a moment" in title or "attention required" in title:
-                return True
-            return page.locator(".cf-turnstile, input[name='cf-turnstile-response']").count() > 0
+            facts = self._page_snapshot(page)
+            current = urllib.parse.urlparse(facts.get("url") or "")
+            expected = urllib.parse.urlparse(site.get("url") or self._site_url)
+            if current.netloc != expected.netloc or current.path.rstrip("/").split("/")[-1] != "torrents.php":
+                return False, 0, "未停留在目标种子页"
+            if facts.get("login_form") or not facts.get("logged_in"):
+                return False, 0, "登录态未确认"
+            if facts.get("blocked"):
+                return False, 0, "站点仍提示搜索防刷或访问受限"
+            if facts.get("challenge"):
+                return False, 0, "人机挑战尚未解除"
+            count = len({str(x) for x in facts.get("ids", []) if re.fullmatch(r"[1-9]\d*", str(x))})
+            if facts.get("table") and count:
+                return True, count, "已确认登录与有效种子表"
+            if facts.get("search_form") and facts.get("empty"):
+                return True, 0, "已确认登录，页面明确显示无搜索结果"
+            return False, 0, "未识别到有效种子表或明确的空结果状态"
+        except Exception as e:
+            return False, 0, f"页面校验异常（{type(e).__name__}）"
+
+    def _has_cf_challenge(self, page: Any) -> bool:
+        """静态组件存在不等于被拦截；无法读页时交给业务校验判失败。"""
+        try:
+            return bool(self._page_snapshot(page).get("challenge"))
         except Exception:
             return False
 
@@ -554,11 +619,10 @@ class AudiencesKeeper(_PluginBase):
             page.wait_for_timeout(2500)
             challenge = self._has_cf_challenge(page)
 
-        try:
-            items = page.locator("a[href*='details.php?id=']").count()
-        except Exception:
-            items = 0
-        return True, items, challenge
+        valid, items, reason = self._validate_page(page, site)
+        if not valid:
+            logger.warning(f"【人人人守护者】搜索页校验失败：{reason}")
+        return valid, items, challenge
 
     def _browser_kwargs(self) -> dict:
         """
@@ -585,39 +649,31 @@ class AudiencesKeeper(_PluginBase):
             logger.debug(f"【人人人守护者】资源拦截设置失败（不影响功能）: {e}")
 
     def _goto_robust(self, page: Any, url: str, rounds: int = 3) -> tuple[bool, str]:
-        """
-        健壮导航：先 commit 抢到达，再给 DOM 就绪留时间；失败自动重试。
-        """
-        last_err = ""
+        """只确认导航完成；HTTP 错误或超时不再因同域名而算成功。"""
+        last_err = "未取得页面响应"
         for i in range(rounds):
             try:
-                page.goto(url, wait_until="commit", timeout=20000)
+                response = page.goto(url, wait_until="commit", timeout=20000)
                 try:
                     page.wait_for_load_state("domcontentloaded", timeout=12000)
                 except Exception:
                     pass
                 page.wait_for_timeout(1200)
-                title = ""
-                try:
-                    title = page.title() or ""
-                except Exception:
-                    pass
-                if "NexusPHP" in title or "种子" in title or "Audiences" in title or page.url.startswith(url.split("/torrents.php")[0]):
-                    return True, f"页面已就绪（第 {i + 1} 次尝试）"
-                last_err = f"页面标题异常：{title!r}"
+                status = response.status if response else 0
+                if 200 <= status < 300:
+                    return True, f"导航完成（第 {i + 1} 次尝试）"
+                # 403/503 可能是可处理的挑战页，但仍需后续独立业务校验。
+                if status in (403, 503) and self._has_cf_challenge(page):
+                    return True, "已进入挑战页，等待验证"
+                last_err = f"HTTP {status}" if status else "未取得页面响应"
             except Exception as e:
-                last_err = f"{type(e).__name__}: {str(e)[:80]}"
+                last_err = f"导航异常（{type(e).__name__}）"
             logger.warning(f"【人人人守护者】导航第 {i + 1} 次未完成：{last_err}")
-            try:
-                page.wait_for_timeout(1500)
-            except Exception:
-                pass
-
-        try:
-            if page.url and url.split("/")[2] in page.url:
-                return True, "导航超时但已进入目标站点，按部分成功继续"
-        except Exception:
-            pass
+            if i + 1 < rounds:
+                try:
+                    page.wait_for_timeout(1500)
+                except Exception:
+                    break
         return False, last_err
 
     def _get_cf_token(self, page: Any) -> str:
@@ -702,7 +758,7 @@ class AudiencesKeeper(_PluginBase):
         """
         从浏览器上下文中抓取全部 Cookie 并热更新到 MoviePilot Site 表。
         """
-        domain = urllib.parse.urlparse(site.get("url") or self._site_url).netloc or "audiences.me"
+        domain = urllib.parse.urlparse(site.get("url") or self._site_url).hostname or "audiences.me"
         all_cookies = ctx.cookies()
         page = ctx.pages[0] if ctx.pages else None
         current_ua = page.evaluate("() => navigator.userAgent") if page else ""
@@ -717,13 +773,17 @@ class AudiencesKeeper(_PluginBase):
         for c in all_cookies:
             c_name = c["name"]
             c_val = c["value"]
-            if domain in c.get("domain", "") or not c.get("domain"):
+            cookie_domain = (c.get("domain") or "").lstrip(".").lower()
+            if cookie_domain and (domain == cookie_domain or domain.endswith("." + cookie_domain)):
                 cookie_map[c_name] = c_val
-            if c_name == "cf_clearance":
-                has_cf = True
+                if c_name == "cf_clearance" and c_val:
+                    has_cf = True
 
         new_cookie_str = "; ".join([f"{k}={v}" for k, v in cookie_map.items()])
-        self._update_site(db=None, site_id=site["id"], cookie=new_cookie_str, ua=current_ua or None)
+        if not new_cookie_str or not current_ua:
+            raise RuntimeError("未取得有效 Cookie 或浏览器 UA")
+        if not self._update_site(db=None, site_id=site["id"], cookie=new_cookie_str, ua=current_ua):
+            raise RuntimeError("站点 Cookie 与 UA 回写失败")
         return new_cookie_str, current_ua, has_cf
 
     def _parse_cookie_list(self, raw_cookie: str, base_url: str) -> list[dict[str, str]]:
@@ -787,12 +847,18 @@ class AudiencesKeeper(_PluginBase):
         db.flush()
         return True
 
-    def _update_cf_state(self, success: bool, msg: str, has_cf: bool) -> None:
+    def _update_cf_state(self, success: bool, msg: str, has_cf: Optional[bool]) -> None:
         state = self.get_data("state") or {}
-        state["last_cf_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        state["last_cf_time"] = now
         state["last_cf_success"] = success
         state["last_cf_message"] = msg
-        state["has_cf_clearance"] = has_cf
+        if has_cf is not None:
+            state["has_cf_clearance"] = has_cf
+        if success:
+            state["last_cf_success_time"] = now
+        else:
+            state["last_cf_failure_time"] = now
         self.save_data("state", state)
 
     def _append_history(self, op_type: str, success: bool, detail: str) -> None:
@@ -802,15 +868,18 @@ class AudiencesKeeper(_PluginBase):
             "success": success,
             "detail": detail,
         }
-        # 综合记录保留 50 条
-        histories = self.get_data("history") or []
-        histories.insert(0, record)
-        self.save_data("history", histories[:50])
-
-        # 过盾/刷新分类记录
-        cf_hist = self.get_data("cf_history") or []
-        cf_hist.insert(0, record)
-        self.save_data("cf_history", cf_hist[:50])
+        # 两类记录各尝试一次；部分写入后不重试，避免同一轮重复插入。
+        errors = []
+        for key in ("history", "cf_history"):
+            try:
+                histories = self.get_data(key) or []
+                histories.insert(0, record)
+                self.save_data(key, histories[:50])
+            except Exception as e:
+                logger.warning(f"【人人人守护者】本次 {key} 持久化异常（{type(e).__name__}）")
+                errors.append(e)
+        if errors:
+            raise errors[0]
 
     def _send_notify(self, title: str, text: str,
                      buttons: Optional[list[list[dict]]] = None, **kwargs: Any) -> None:
@@ -1086,7 +1155,12 @@ class AudiencesKeeper(_PluginBase):
                                     {
                                         "component": "div",
                                         "props": {"class": "text-caption text-medium-emphasis mb-1"},
-                                        "text": f"最近刷新时间：{state.get('last_cf_time', '暂无记录')}",
+                                        "text": f"最近执行时间：{state.get('last_cf_time', '暂无记录')}",
+                                    },
+                                    {
+                                        "component": "div",
+                                        "props": {"class": "text-caption text-medium-emphasis mb-1"},
+                                        "text": f"最近成功时间：{state.get('last_cf_success_time', '暂无新版验证记录')}",
                                     },
                                     {
                                         "component": "div",
