@@ -28,7 +28,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "人人人守护者"
     plugin_desc = "人人人自动模拟过 CF 盾、更新 Cookie 并洗白搜索防刷计数。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.12"
+    plugin_version = "0.0.13"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -594,35 +594,57 @@ class AudiencesKeeper(_PluginBase):
         except Exception:
             return False
 
+    def _wait_search_verification(self, page: Any) -> bool:
+        """Wait for the search form's lazy verification without logging token values."""
+        for _ in range(20):
+            facts = page.evaluate(r"""() => {
+                const visible = el => {
+                    const r = el.getBoundingClientRect(), s = getComputedStyle(el);
+                    return r.width > 0 && r.height > 0 && s.display !== 'none' && s.visibility !== 'hidden';
+                };
+                const tokens = [...document.querySelectorAll('[name="cf-turnstile-response"], #cf-token')];
+                const widgets = [...document.querySelectorAll('.cf-turnstile, iframe[src*="challenges.cloudflare.com"]')];
+                return {required: tokens.length > 0 || widgets.some(visible),
+                    ready: tokens.some(el => !!el.value),
+                    challenge: /just a moment|attention required|checking your browser/i.test(document.title)};
+            }""")
+            if facts.get("ready"):
+                return True
+            if not facts.get("required") and not facts.get("challenge"):
+                return True
+            page.wait_for_timeout(1000)
+        return False
+
     def _probe_search_page(self, page: Any, site: dict) -> tuple[bool, int, bool]:
-        """
-        走一次搜索路径：CF 的挑战常常只出现在搜索上，只访问列表页会一直误判为「无盾」。
-        返回 (是否访问成功, 结果条数, 是否出现挑战)。
-        """
-        base = site.get("url") or self._site_url
-        keyword = urllib.parse.quote("1080p")
-        url = urllib.parse.urljoin(
-            base,
-            f"torrents.php?search_mode=0&search_area=0&page=0&notnewword=1&search={keyword}",
-        )
-        ok, _msg = self._goto_robust(page, url)
-        if not ok:
-            return False, 0, False
-
-        page.wait_for_timeout(1200)
-        challenge = self._has_cf_challenge(page)
-        if challenge:
-            for _ in range(3):
-                if self._click_turnstile_if_present(page):
-                    break
-                page.wait_for_timeout(800)
-            page.wait_for_timeout(2500)
+        """Use the visible native form so the site's event handlers and fields are preserved."""
+        try:
+            field = page.locator('#searchinput:visible, input[name="search"]:visible').first
+            if not field.count():
+                logger.warning("【人人人守护者】未找到可见搜索框，保留原 Cookie")
+                return False, 0, False
+            field.click(timeout=5000)
+            field.fill("1080p", timeout=5000)
+            page.wait_for_timeout(1500)
+            if not self._wait_search_verification(page):
+                logger.warning("【人人人守护者】搜索表单验证尚未完成，保留原 Cookie")
+                return False, 0, True
+            field.press("Enter", timeout=15000)
+            try:
+                page.wait_for_load_state("domcontentloaded", timeout=12000)
+            except Exception:
+                pass
+            page.wait_for_timeout(1500)
+            if urllib.parse.parse_qs(urllib.parse.urlsplit(page.url).query).get("search") != ["1080p"]:
+                logger.warning("【人人人守护者】未确认搜索提交完成，保留原 Cookie")
+                return False, 0, self._has_cf_challenge(page)
             challenge = self._has_cf_challenge(page)
-
-        valid, items, reason = self._validate_page(page, site)
-        if not valid:
-            logger.warning(f"【人人人守护者】搜索页校验失败：{reason}")
-        return valid, items, challenge
+            valid, items, reason = self._validate_page(page, site)
+            if not valid:
+                logger.warning(f"【人人人守护者】搜索页校验失败：{reason}")
+            return valid, items, challenge
+        except Exception as exc:
+            logger.warning(f"【人人人守护者】原生搜索操作失败（{type(exc).__name__}），保留原 Cookie")
+            return False, 0, False
 
     def _browser_kwargs(self) -> dict:
         """

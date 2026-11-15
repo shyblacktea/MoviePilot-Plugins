@@ -5,7 +5,7 @@
 > 站点已于 2026-10 下线签到页（`attendance.php` 返回 404），本插件自 `v0.0.9` 起**移除全部签到功能**，只保留过盾与 Cookie 维护。
 
 - 插件 ID：`AudiencesKeeper`
-- 当前版本：`0.0.12`
+- 当前版本：`0.0.13`
 - 插件目录：`plugins.v3/audienceskeeper/`
 - 适用版本：MoviePilot V3（`>=3.0.0`）
 - 作者：`shyblacktea`
@@ -54,11 +54,15 @@
 
 ## 发布信息
 
-- Tag：`AudiencesKeeper_v0.0.12`
-- 资产：`audienceskeeper_v0.0.12.zip`
-- [下载当前发布包](https://github.com/shyblacktea/MoviePilot-Plugins/releases/download/AudiencesKeeper_v0.0.12/audienceskeeper_v0.0.12.zip)
+- Tag：`AudiencesKeeper_v0.0.13`
+- 资产：`audienceskeeper_v0.0.13.zip`
+- [下载当前发布包](https://github.com/shyblacktea/MoviePilot-Plugins/releases/download/AudiencesKeeper_v0.0.13/audienceskeeper_v0.0.13.zip)
 
 ## 版本记录
+
+### v0.0.13
+
+- 更新版本。
 
 ### v0.0.12
 
