@@ -61,6 +61,8 @@ class PluginConfig:
     paused_external_recovery_days: int = 7
     custom_release_groups: List[str] = field(default_factory=list)
     custom_platforms: List[str] = field(default_factory=list)
+    # 缺失判定上限收敛到已播出集（TMDB 提前给出未播集元数据时不再误报）
+    only_aired_episodes: bool = True
 
 
     @classmethod
@@ -106,6 +108,7 @@ class PluginConfig:
             for item in _as_list(config.custom_platforms)
             if str(item).strip()
         ]
+        config.only_aired_episodes = bool(config.only_aired_episodes)
 
         from .season_cleanup import normalize_qb_cleanup_mode
 

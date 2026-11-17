@@ -70,6 +70,11 @@ except Exception:  # pragma: no cover - lets local unit tests import this packag
         IndexerSites = "IndexerSites"
         CustomIdentifiers = "CustomIdentifiers"
 
+from .aired import (
+    aired_max_and_count,
+    ceiling_from_merged_season,
+    preceding_episode_count,
+)
 from .diagnosis import TorrentDiagnoser, normalize_search_result
 from .diagnosis_service import DiagnosisService
 from .download_service import DownloadService
@@ -162,7 +167,7 @@ class SubscribePlus(_PluginBase):
     plugin_name = "订阅下载增强"
     plugin_desc = "按订阅目标集数检测电视剧缺集，并分析 PT 资源、识别和订阅规则原因。（小k自用版）"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/subscribeplus.png"
-    plugin_version = "1.1.15"
+    plugin_version = "1.1.16"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "subscribeplus_"
@@ -206,12 +211,15 @@ class SubscribePlus(_PluginBase):
             load_categories=self._load_tv_categories,
             resolve_subscribe_category=self._resolve_subscribe_category,
             load_downloaded_episodes=self._load_downloaded_episodes,
+            aired_episode_ceiling=self._aired_episode_ceiling,
         )
         self._diagnoser = TorrentDiagnoser(self._search_torrents)
         self._download_service = None
         self._search_service = None
         self._download_contexts = {}
         self._category_cache = {}
+        self._aired_ceiling_cache = {}
+        self._split_counts_cache = {}
         self._custom_release_groups_cache = []
 
     def get_state(self) -> bool:
@@ -1292,6 +1300,7 @@ class SubscribePlus(_PluginBase):
             load_categories=self._load_tv_categories,
             resolve_subscribe_category=self._resolve_subscribe_category,
             load_downloaded_episodes=self._load_downloaded_episodes,
+            aired_episode_ceiling=self._aired_episode_ceiling,
         )
         inputs = scanner.scan(
             single_config,
@@ -4937,6 +4946,154 @@ class SubscribePlus(_PluginBase):
             logger.warning(f"订阅下载增强读取整理历史已下载集失败: {exc}")
 
         return {episode for episode in episodes if episode > 0}
+
+    _AIRED_CEILING_TTL = 3600
+
+    def _aired_episode_ceiling(self, media_source: str, media_id: str, season: int) -> Optional[int]:
+        """返回该季「已播出」的最大集号，供缺失判定收口。
+
+        TMDB 会提前给出未播剧集的元数据（例如已播到 E210，E211 也有条目），
+        把这类集当缺失会误报，所以扫描上限收敛到 air_date <= 今天 的最后一集。
+        返回 0 表示本季尚无已播剧集；返回 None 表示无法判断（调用方回落到总集数）。
+        """
+        if not getattr(self._plugin_config, "only_aired_episodes", True):
+            return None
+        source = str(media_source or "").strip().lower()
+        if source not in {"themoviedb", "tmdb"}:
+            return None
+        identity = str(media_id or "").strip()
+        try:
+            season_no = int(season or 0)
+        except (TypeError, ValueError):
+            return None
+        if not identity.isdigit() or season_no <= 0:
+            return None
+
+        cache_key = (identity, season_no)
+        cached = self._aired_ceiling_cache.get(cache_key)
+        now = datetime.now().timestamp()
+        if cached and now - cached[0] < self._AIRED_CEILING_TTL:
+            return cached[1]
+        ceiling = self._fetch_aired_ceiling(identity, season_no)
+        self._aired_ceiling_cache[cache_key] = (now, ceiling)
+        return ceiling
+
+    def _fetch_aired_ceiling(self, tmdbid: str, season: int) -> Optional[int]:
+        """查询一季的已播进度；TMDB 把番剧合并成一季时按分季偏移换算。"""
+        payload = self._tmdb_json(f"/3/tv/{tmdbid}/season/{season}")
+        if payload is not None:
+            aired_max, _ = self._aired_progress(payload)
+            if aired_max:
+                return aired_max
+            last = payload.get("last_episode_to_air")
+            if isinstance(last, dict) and safe_int(last.get("season_number"), 0) == season:
+                number = safe_int(last.get("episode_number"), 0)
+                if number > 0:
+                    return number
+            return 0
+        # 该季在 TMDB 不存在：多半是番剧被合并成一季（CureTMDb 分季修正），按偏移换算。
+        return self._ceiling_from_split_seasons(tmdbid, season)
+
+    def _ceiling_from_split_seasons(self, tmdbid: str, season: int) -> Optional[int]:
+        """分季修正场景：合并季已播集数减去前面各分季集数，得到本分季已播集号。"""
+        counts = self._split_season_counts(tmdbid)
+        preceding = preceding_episode_count(counts, season)
+        if preceding <= 0:
+            return None
+        show = self._tmdb_json(f"/3/tv/{tmdbid}")
+        if not show:
+            return None
+        merged_number = 0
+        for item in show.get("seasons") or []:
+            if not isinstance(item, dict):
+                continue
+            number = safe_int(item.get("season_number"), 0)
+            count = safe_int(item.get("episode_count"), 0)
+            if number > 0 and count >= preceding + 1:
+                merged_number = number
+                break
+        if not merged_number:
+            return None
+        merged = self._tmdb_json(f"/3/tv/{tmdbid}/season/{merged_number}")
+        if not merged:
+            return None
+        _, aired_count = self._aired_progress(merged)
+        ceiling = ceiling_from_merged_season(aired_count, preceding)
+        if ceiling is None:
+            return None
+        if ceiling <= 0:
+            return 0
+        logger.info(
+            f"订阅下载增强按分季换算已播进度：tmdb={tmdbid} S{season:02d} "
+            f"= 合并季 S{merged_number:02d} 已播 {aired_count} - 前置 {preceding} = {ceiling}"
+        )
+        return ceiling
+
+    def _split_season_counts(self, tmdbid: str) -> Dict[int, int]:
+        """读取 CureTMDb 分季表（各分季集数），仅用于换算已播进度。"""
+        now = datetime.now().timestamp()
+        cached = self._split_counts_cache.get(tmdbid)
+        if cached and now - cached[0] < self._AIRED_CEILING_TTL:
+            return cached[1]
+        counts: Dict[int, int] = {}
+        try:
+            from app.sdk.config import settings
+
+            base = Path(str(getattr(settings, "PLUGIN_DATA_PATH", "") or ""))
+            candidate = base / "curetmdbanimeshy" / "curetmdb.json"
+            if candidate.is_file():
+                data = json.loads(candidate.read_text(encoding="utf-8"))
+                entry = data.get(str(tmdbid)) if isinstance(data, dict) else None
+                seasons = entry.get("seasons") if isinstance(entry, dict) else entry
+                for item in seasons or []:
+                    if not isinstance(item, dict):
+                        continue
+                    number = safe_int(item.get("season_number"), 0)
+                    count = safe_int(item.get("episode_count"), 0)
+                    if number > 0 and count > 0:
+                        counts[number] = count
+        except Exception as exc:
+            logger.debug(f"订阅下载增强读取 CureTMDb 分季表失败：{exc}")
+        self._split_counts_cache[tmdbid] = (now, counts)
+        return counts
+
+    @staticmethod
+    def _aired_progress(payload: Dict[str, Any]) -> Tuple[int, int]:
+        """返回一季里 (已播最大集号, 已播集数)。"""
+        return aired_max_and_count(
+            payload.get("episodes") or [], datetime.now().date().isoformat()
+        )
+
+    def _tmdb_json(self, path: str) -> Optional[Dict[str, Any]]:
+        """带告警的 TMDB v3 GET，失败返回 None（不抛异常）。"""
+        try:
+            from app.sdk.config import settings
+            from app.sdk.network import RequestUtils
+        except Exception:
+            return None
+        domain = str(getattr(settings, "TMDB_API_DOMAIN", "") or "api.themoviedb.org").strip()
+        key = str(getattr(settings, "TMDB_API_KEY", "") or "").strip()
+        if not key:
+            return None
+        try:
+            response = RequestUtils(timeout=15, verify=True).get_res(
+                f"https://{domain}{path}",
+                params={"api_key": key, "language": "zh-CN"},
+            )
+        except Exception as exc:
+            logger.warning(f"订阅下载增强读取 TMDB {path} 异常：{exc}")
+            return None
+        if response is None:
+            return None
+        status = int(getattr(response, "status_code", 0) or 0)
+        if not 200 <= status < 300:
+            logger.debug(f"订阅下载增强 TMDB {path} 返回 {status}")
+            return None
+        try:
+            payload = response.json()
+        except Exception:
+            return None
+        return payload if isinstance(payload, dict) else None
 
     def _load_mediaserver_item(self, media_source: str, media_id: str) -> Any:
         """按规范媒体身份读取媒体库缓存条目。

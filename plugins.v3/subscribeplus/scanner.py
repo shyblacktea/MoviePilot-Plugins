@@ -131,7 +131,7 @@ class SubscriptionScanner:
         load_categories: Optional[Callable[[], List[Any]]] = None,
         resolve_subscribe_category: Optional[Callable[[Any], Optional[str]]] = None,
         load_downloaded_episodes: Optional[Callable[[str, str, int], set[int]]] = None,
-
+        aired_episode_ceiling: Optional[Callable[[str, str, int], Optional[int]]] = None,
     ):
         self.load_subscribes = load_subscribes
 
@@ -140,6 +140,7 @@ class SubscriptionScanner:
         self.load_categories = load_categories
         self.resolve_subscribe_category = resolve_subscribe_category
         self.load_downloaded_episodes = load_downloaded_episodes
+        self.aired_episode_ceiling = aired_episode_ceiling
 
     def collect_categories(self) -> List[str]:
         strategy_categories = self.load_categories() if self.load_categories else []
@@ -239,7 +240,21 @@ class SubscriptionScanner:
                 stats["missing_episode_metadata"] = stats.get("missing_episode_metadata", 0) + 1
                 record_skip(subscribe, "missing_episode_metadata", state)
                 continue
-            target_episodes = range(max(1, start_episode), total_episode + 1)
+            # 上限收敛到「已播出」的最后一集：TMDB 会提前给出未播集的元数据，
+            # 把下一播放日的集数当缺失会误报（例如已播到 E210，E211 有数据但未播）。
+            upper_episode = total_episode
+            if self.aired_episode_ceiling is not None:
+                try:
+                    ceiling = self.aired_episode_ceiling(media_source, media_id, season)
+                except Exception:
+                    ceiling = None
+                if ceiling is not None and ceiling >= 0:
+                    if ceiling == 0:
+                        stats["not_aired_yet"] = stats.get("not_aired_yet", 0) + 1
+                        record_skip(subscribe, "not_aired_yet", state)
+                        continue
+                    upper_episode = min(total_episode, ceiling)
+            target_episodes = range(max(1, start_episode), upper_episode + 1)
             for episode_number in target_episodes:
                 if episode_number in downloaded_episodes:
                     continue
