@@ -52,4 +52,23 @@ class NativeSearchTests(unittest.TestCase):
             self.assertEqual(p._wait_search_verification(page),expected)
             self.assertLessEqual(page.evaluate.call_count,20)
 
+    def test_route_allows_cloudflare_resources_and_blocks_site_media(self):
+        cls, _ = load_plugin()
+        self.assertTrue(cls._should_allow_route('https://challenges.cloudflare.com/turnstile/v0/api.js', 'script'))
+        self.assertTrue(cls._should_allow_route('https://challenges.cloudflare.com/cdn-cgi/challenge-platform/font.woff2', 'font'))
+        self.assertTrue(cls._should_allow_route('https://audiences.me/torrents.php', 'document'))
+        self.assertFalse(cls._should_allow_route('https://audiences.me/pic/poster.jpg', 'image'))
+        self.assertFalse(cls._should_allow_route('https://audiences.me/static/font.woff2', 'font'))
+
+    def test_solve_cf_challenge_polls_and_clicks_until_cleared(self):
+        cls, _ = load_plugin()
+        p = cls()
+        page = Mock()
+        states = iter([True, True, False, False])
+        p._has_cf_challenge = Mock(side_effect=lambda pg: next(states, False))
+        p._turnstile_state = Mock(return_value='')
+        p._click_turnstile_if_present = Mock(return_value=True)
+        self.assertTrue(p._solve_cf_challenge(page, timeout_s=5))
+        p._click_turnstile_if_present.assert_called()
+
 if __name__=='__main__': unittest.main()

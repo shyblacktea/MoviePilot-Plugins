@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app.db import db_query, db_update
 from app.db.oper.site import Site
 from app.schemas.types import EventType, NotificationType
-from app.sdk.browser import launch_browser_context
+from app.sdk.browser import browser_context, launch_browser_context
 from app.sdk.events import Event, eventmanager
 from app.sdk.logging import logger
 from app.sdk.plugin import _PluginBase
@@ -28,7 +28,7 @@ class AudiencesKeeper(_PluginBase):
     plugin_name = "人人人守护者"
     plugin_desc = "人人人自动模拟过 CF 盾、更新 Cookie 并洗白搜索防刷计数。"
     plugin_icon = "https://raw.githubusercontent.com/shyblacktea/MoviePilot-Plugins/main/icons/cloudflare.jpg"
-    plugin_version = "0.0.13"
+    plugin_version = "0.0.14"
     plugin_author = "shyblacktea"
     author_url = "https://github.com/shyblacktea"
     plugin_config_prefix = "audienceskeeper_"
@@ -461,7 +461,12 @@ class AudiencesKeeper(_PluginBase):
             else:
                 has_cf = "cf_clearance=" in (site.get("cookie") or "")
                 try:
-                    with launch_browser_context(headless=True, **self._browser_kwargs()) as ctx:
+                    launcher = globals().get("browser_context")
+                    if launcher is not None:
+                        ctx_cm = launcher(headless=True, queue_timeout=30, **self._browser_kwargs())
+                    else:
+                        ctx_cm = launch_browser_context(headless=True, **self._browser_kwargs())
+                    with ctx_cm as ctx:
                         result = self._refresh_with_context(ctx, site)
                 except Exception:
                     if result is None:
@@ -504,22 +509,16 @@ class AudiencesKeeper(_PluginBase):
         page = ctx.pages[0] if ctx.pages else ctx.new_page()
         target_url = urllib.parse.urljoin(site.get("url") or self._site_url, "torrents.php")
         logger.info("【人人人守护者】启动浏览器验证列表页与搜索页...")
-        nav_ok, nav_msg = self._goto_robust(page, target_url)
+        nav_ok, nav_msg = self._goto_robust(page, target_url, rounds=2)
         if not nav_ok:
             return False, f"打开种子列表页失败（{nav_msg}），未更新 Cookie。", has_cf
-        page.wait_for_timeout(1500)
-        list_challenge = self._has_cf_challenge(page)
-        if list_challenge:
-            for _ in range(3):
-                if self._click_turnstile_if_present(page):
-                    break
-                page.wait_for_timeout(1000)
-            page.wait_for_timeout(2500)
-            list_challenge = self._has_cf_challenge(page)
+        page.wait_for_timeout(1200)
+        if self._has_cf_challenge(page):
+            self._solve_cf_challenge(page, ctx=ctx, site=site, timeout_s=45)
         list_ok, _, list_msg = self._validate_page(page, site)
         if not list_ok:
             return False, f"列表页校验失败：{list_msg}；未更新 Cookie。", has_cf
-        search_ok, search_items, search_challenge = self._probe_search_page(page, site)
+        search_ok, search_items, search_challenge = self._probe_search_page(page, site, ctx=ctx)
         if not search_ok or search_challenge:
             return False, "搜索页验证失败，未更新 Cookie。", has_cf
         new_cookie_str, new_ua, has_cf = self._save_cookies_from_context(ctx, site)
@@ -527,6 +526,40 @@ class AudiencesKeeper(_PluginBase):
         msg = (f"列表页与搜索页验证通过（搜索结果 {search_items} 条）；"
                f"Cookie 与 UA 已回写（长度 {len(new_cookie_str)}，{cf_text}）。")
         return True, msg, has_cf
+
+    def _solve_cf_challenge(self, page: Any, ctx: Any = None,
+                            site: Optional[dict] = None, timeout_s: int = 45) -> bool:
+        """轮询等待 Cloudflare 5 秒盾 / Turnstile 自动完成或触发点击，最长 timeout_s 秒。"""
+        import time
+        deadline = time.monotonic() + timeout_s
+        last_click = 0.0
+        clicks = 0
+        checking_since: Optional[float] = None
+        warned_checking = False
+
+        while time.monotonic() < deadline:
+            if not self._has_cf_challenge(page):
+                page.wait_for_timeout(1000)
+                if not self._has_cf_challenge(page):
+                    return True
+            state_txt = self._turnstile_state(page)
+            now = time.monotonic()
+            if "Checking your Browser" in state_txt:
+                if checking_since is None:
+                    checking_since = now
+                elif not warned_checking and now - checking_since >= 20:
+                    warned_checking = True
+                    logger.warning("【人人人守护者】CF 挑战持续停留 Checking your Browser，可能是出口 IP 受限")
+            else:
+                checking_since = None
+
+            if clicks < 4 and (now - last_click) >= 4.0:
+                if self._click_turnstile_if_present(page):
+                    clicks += 1
+                    last_click = now
+            page.wait_for_timeout(2000)
+
+        return not self._has_cf_challenge(page)
 
 
     @staticmethod
@@ -548,12 +581,12 @@ class AudiencesKeeper(_PluginBase):
             const noticeText = (notices?.textContent || '').slice(0, 20000);
             const blocked = /搜索人机验证未通过|请返回种子列表页重新进行验证|搜索次数过多|搜索频率过高|访问过于频繁|access denied|you have been blocked/i.test(noticeText);
             const empty = /没有找到.*(?:种子|结果)|没有符合.*(?:种子|结果)|没有种子|无搜索结果|no torrents found|no results found/i.test(text);
-            const activeWidget = [...document.querySelectorAll('.cf-turnstile, iframe[src*="challenges.cloudflare.com"]')].some(el => {
+            const activeWidget = [...document.querySelectorAll('.cf-turnstile, iframe[src*="challenges.cloudflare.com"], #cf-challenge-running, #cf-please-wait, #challenge-spinner')].some(el => {
                 const rect = el.getBoundingClientRect();
                 const style = getComputedStyle(el);
                 return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden';
             });
-            const titleChallenge = /just a moment|attention required|checking your browser/i.test(document.title);
+            const titleChallenge = /just a moment|attention required|checking your browser|请稍候|正在检查您的浏览器|安全验证|安全检查/i.test(document.title);
             const challenge = titleChallenge || (activeWidget && !(loggedIn && table && !blocked));
             const ids = table ? [...table.querySelectorAll('a[href*="details.php?id="]')].map(a => {
                 const u = new URL(a.href, location.href);
@@ -596,7 +629,7 @@ class AudiencesKeeper(_PluginBase):
 
     def _wait_search_verification(self, page: Any) -> bool:
         """Wait for the search form's lazy verification without logging token values."""
-        for _ in range(20):
+        for attempt in range(20):
             facts = page.evaluate(r"""() => {
                 const visible = el => {
                     const r = el.getBoundingClientRect(), s = getComputedStyle(el);
@@ -606,34 +639,41 @@ class AudiencesKeeper(_PluginBase):
                 const widgets = [...document.querySelectorAll('.cf-turnstile, iframe[src*="challenges.cloudflare.com"]')];
                 return {required: tokens.length > 0 || widgets.some(visible),
                     ready: tokens.some(el => !!el.value),
-                    challenge: /just a moment|attention required|checking your browser/i.test(document.title)};
+                    challenge: /just a moment|attention required|checking your browser|请稍候|正在检查您的浏览器|安全验证|安全检查/i.test(document.title)};
             }""")
             if facts.get("ready"):
                 return True
             if not facts.get("required") and not facts.get("challenge"):
                 return True
-            page.wait_for_timeout(1000)
+            if facts.get("required") and attempt in (1, 5, 9, 13):
+                try:
+                    self._click_turnstile_if_present(page)
+                except Exception:
+                    pass
+            page.wait_for_timeout(1500)
         return False
 
-    def _probe_search_page(self, page: Any, site: dict) -> tuple[bool, int, bool]:
+    def _probe_search_page(self, page: Any, site: dict, ctx: Any = None) -> tuple[bool, int, bool]:
         """Use the visible native form so the site's event handlers and fields are preserved."""
         try:
             field = page.locator('#searchinput:visible, input[name="search"]:visible').first
             if not field.count():
                 logger.warning("【人人人守护者】未找到可见搜索框，保留原 Cookie")
                 return False, 0, False
-            field.click(timeout=5000)
-            field.fill("1080p", timeout=5000)
+            field.click(timeout=10000)
+            field.fill("1080p", timeout=10000)
             page.wait_for_timeout(1500)
             if not self._wait_search_verification(page):
                 logger.warning("【人人人守护者】搜索表单验证尚未完成，保留原 Cookie")
                 return False, 0, True
-            field.press("Enter", timeout=15000)
+            field.press("Enter", timeout=25000)
             try:
-                page.wait_for_load_state("domcontentloaded", timeout=12000)
+                page.wait_for_load_state("domcontentloaded", timeout=15000)
             except Exception:
                 pass
             page.wait_for_timeout(1500)
+            if self._has_cf_challenge(page):
+                self._solve_cf_challenge(page, ctx=ctx, site=site, timeout_s=35)
             if urllib.parse.parse_qs(urllib.parse.urlsplit(page.url).query).get("search") != ["1080p"]:
                 logger.warning("【人人人守护者】未确认搜索提交完成，保留原 Cookie")
                 return False, 0, self._has_cf_challenge(page)
@@ -656,16 +696,24 @@ class AudiencesKeeper(_PluginBase):
             "viewport": {"width": 1600, "height": 1000},
         }
 
+    @staticmethod
+    def _should_allow_route(url: str, resource_type: str) -> bool:
+        """放行 Cloudflare 挑战域下的全部资源，其余页面屏蔽图片/字体/媒体加速加载。"""
+        lower = (url or "").lower()
+        if "cloudflare.com" in lower or "turnstile" in lower:
+            return True
+        return resource_type not in ("image", "font", "media")
+
     def _harden_page(self, ctx: Any) -> None:
         """
-        屏蔽图片/字体/媒体等非必要资源，显著缩短大页面加载时间。
+        屏蔽非必要图片/字体/媒体资源，同时放行 Cloudflare 挑战相关域。
         """
         try:
             ctx.route(
                 "**/*",
-                lambda route: route.abort()
-                if route.request.resource_type in ("image", "font", "media")
-                else route.continue_(),
+                lambda route: route.continue_()
+                if self._should_allow_route(route.request.url, route.request.resource_type)
+                else route.abort(),
             )
         except Exception as e:
             logger.debug(f"【人人人守护者】资源拦截设置失败（不影响功能）: {e}")
